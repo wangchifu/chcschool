@@ -35,9 +35,11 @@ class GLoginController extends Controller
                 return back()->withErrors(['gsuite_error'=>['非教職員 GSuite 帳號']]);
             }
 
+            /*
             if($obj['code'] != env('SCHOOL_CODE')){
                 return back()->withErrors(['gsuite_error'=>['非本校教職員 GSuite 帳號']]);
             }
+            */
 
             //是否已有此帳號
             $user = User::where('username',$request->input('username'))

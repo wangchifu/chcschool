@@ -1,4 +1,12 @@
 <?php
+//若是瀏覽器用DNS連線，取得該校的database，否則是使用示範database
+$database = config('app.database');
+if($_SERVER['HTTP_HOST']){
+    $d = $database[$_SERVER['HTTP_HOST']];
+}else{
+    $d = env('DB_DATABASE');
+}
+
 
 return [
 
@@ -44,7 +52,8 @@ return [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
+            //'database' => env('DB_DATABASE', 'forge'),
+            'database' => $d,
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
