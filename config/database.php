@@ -7,7 +7,6 @@ if($_SERVER['HTTP_HOST']){
     $d = env('DB_DATABASE');
 }
 
-
 return [
 
     /*

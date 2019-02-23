@@ -10,11 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('index');
-})->name('index');
-
+Route::get('/','HomeController@index')->name('index');
 
 //Auth::routes();
 #登入
@@ -48,5 +44,14 @@ Route::group(['middleware' => 'auth'],function(){
 
 //管理者可用
 Route::group(['middleware' => 'admin'],function(){
-    Route::get('/admin', 'HomeController@admin')->name('admin');
+    //網站管理
+    Route::get('setups','SetupController@index')->name('setups.index');
+    Route::post('setups/add_logo', 'SetupController@add_logo')->name('setups.add_logo');
+    //Route::post('setups/add_img', 'SetupController@add_img')->name('setups.add_img');
+    Route::post('setups/add_imgs', 'SetupController@add_imgs')->name('setups.add_imgs');
+    Route::get('setups/{folder}/del_img/{filename}', 'SetupController@del_img')->name('setups.del_img');
+    //Route::patch('setups/{setup}', 'SetupController@update')->where('setup', '[0-9]+')->name('setups.update');
+    //Route::patch('setups/{setup}/nav_color', 'SetupController@nav_color')->where('setup', '[0-9]+')->name('setups.nav_color');
+    //Route::get('setups/nav_default/', 'SetupController@nav_default')->name('setups.nav_default');
+
 });

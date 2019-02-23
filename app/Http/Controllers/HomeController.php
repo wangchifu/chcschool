@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -23,11 +23,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
-    }
+        $school_code = school_code();
+        $photos = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
 
-    public function admin()
-    {
-        return view('admin');
+        $data = [
+            'school_code'=>$school_code,
+            'photos'=>$photos,
+        ];
+        return view('index',$data);
     }
 }

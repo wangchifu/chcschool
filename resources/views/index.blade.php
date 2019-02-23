@@ -1,36 +1,24 @@
 @extends('layouts.master')
 
+@section('nav_home_active', 'active')
+
 @section('title', '首頁')
 
 @section('top_image')
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            @foreach($photos as $k=>$v)
+                <?php $active = ($k==0)?"active":""; ?>
+                <li data-target="#carouselExampleIndicators" data-slide-to="{{ $k }}" class="{{ $active }}"></li>
+            @endforeach
         </ol>
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="d-block w-100" src="{{ asset('images/top1.svg') }}" alt="First slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>圖片一</h5>
-                    <p>此處可放置圖片一</p>
+            @foreach($photos as $k=>$v)
+                <?php $active = ($k==0)?"active":""; ?>
+                <div class="carousel-item {{ $active }}">
+                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v) }}">
                 </div>
-            </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="{{ asset('images/top2.svg') }}" alt="Second slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>圖片二</h5>
-                    <p>此處可放置圖片二</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="{{ asset('images/top3.svg') }}" alt="Third slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>圖片三</h5>
-                    <p>此處可放置圖片三</p>
-                </div>
-            </div>
+            @endforeach
         </div>
         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>

@@ -1,7 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="mainNav">
     <div class="container">
         <a href="#page-top">
-            <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="d-inline-block align-top" alt="">
+            @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
+                <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="d-inline-block align-top" alt="">
+            @else
+                <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="d-inline-block align-top" alt="">
+            @endif
         </a>　
         <a class="navbar-brand js-scroll-trigger" href="{{  route('index') }}">
             {{ env('APP_NAME') }}
@@ -11,13 +15,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item @yield('nav_home_active')">
+                    <a class="nav-link" href="{{ route('index') }}"><i class="fas fa-home"></i> 首頁 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item @yield('nav_open_files_active')">
+                    <a class="nav-link" href="#"><i class="fas fa-inbox"></i> 檔案庫</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-info-circle"></i> 公開資訊
+                        <i class="fas fa-link"></i> 好站連結
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href=""><i class="fas fa-bullhorn"></i> 公告系統</a>
-                        <a class="dropdown-item" href=""><i class="fas fa-box-open"></i> 公開文件</a>
+                        <a class="dropdown-item" href="">
+                            <i class="fas fa-globe"></i> Link1
+                        </a>
                     </div>
                 </li>
             </ul>
@@ -25,7 +36,34 @@
                 @auth
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                            <i class="fab fa-linkedin"></i> 校務行政
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="">
+                                <i class="fas fa-wrench"></i> 報修系統
+                            </a>
+                            <a class="dropdown-item" href="">
+                                <i class="fas fa-comments"></i> 會議文稿
+                            </a>
+                        </div>
+                    </li>
+                    @if(auth()->user()->admin)
+                        <li class="nav-item dropdown @yield('nav_setup_active')">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-cogs"></i> 系統設定
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href=""><i class="fas fa-user"></i> 帳號管理</a>
+                                <a class="dropdown-item" href=""><i class="fas fa-users"></i> 群組管理</a>
+                                <a class="dropdown-item" href=""><i class="fas fa-file-alt"></i> 內容管理</a>
+                                <a class="dropdown-item" href=""><i class="fas fa-link"></i> 連結管理</a>
+                                <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>
+                            </div>
+                        </li>
+                    @endif
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i> {{ auth()->user()->title }} {{ auth()->user()->name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
