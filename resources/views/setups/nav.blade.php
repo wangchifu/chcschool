@@ -1,14 +1,14 @@
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active" href="#">首頁圖片</a>
+        <a class="nav-link {{ $active[1] }}" href="{{ route('setups.index') }}">基本資料</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link {{ $active[2] }}" href="{{ route('setups.photo') }}">首頁圖片</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link {{ $active[3] }}" href="{{ route('setups.col') }}">首頁欄位</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        <a class="nav-link {{ $active[4] }}" href="#">模組功能</a>
     </li>
 </ul>

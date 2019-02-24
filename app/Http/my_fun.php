@@ -26,3 +26,10 @@ if (! function_exists('get_files')) {
         return $files;
     }
 }
+
+if (! function_exists('run_sql')) {
+    function run_sql($file)
+    {
+        DB::unprepared(File::get($file));
+    }
+}

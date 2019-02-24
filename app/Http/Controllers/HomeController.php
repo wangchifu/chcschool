@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\SetupCol;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,10 +26,14 @@ class HomeController extends Controller
     {
         $school_code = school_code();
         $photos = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
+        $setup = \App\Setup::find(1);
 
+        $setup_cols = SetupCol::all();
         $data = [
             'school_code'=>$school_code,
             'photos'=>$photos,
+            'setup'=>$setup,
+            'setup_cols'=>$setup_cols,
         ];
         return view('index',$data);
     }

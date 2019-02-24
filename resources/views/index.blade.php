@@ -5,6 +5,7 @@
 @section('title', '首頁')
 
 @section('top_image')
+    @if($setup->title_image)
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             @foreach($photos as $k=>$v)
@@ -29,9 +30,18 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
+    @endif
 @endsection
 
 @section('content')
+    <div class="row">
+        @foreach($setup_cols as $setup_col)
+            <div class="col-{{ $setup_col->num }}">
+                <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;margin-bottom: 10px">
+                    {{ $setup_col->num }}
+                </div>
+            </div>
+        @endforeach
 
-123
+    </div>
 @endsection

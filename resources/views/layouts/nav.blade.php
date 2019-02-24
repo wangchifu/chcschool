@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="mainNav">
+<nav class="navbar navbar-expand-lg {{ $nav_color }}" id="mainNav">
     <div class="container">
         <a href="#page-top">
             @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
@@ -8,7 +8,7 @@
             @endif
         </a>　
         <a class="navbar-brand js-scroll-trigger" href="{{  route('index') }}">
-            {{ env('APP_NAME') }}
+            {{ $setup->site_name }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

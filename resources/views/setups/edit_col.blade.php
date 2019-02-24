@@ -1,0 +1,41 @@
+@extends('layouts.master_clean')
+
+@section('title', '編輯欄位')
+
+@section('content')
+    {{ Form::open(['route' => ['setups.update_col',$setup_col->id], 'method' => 'patch']) }}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>
+                欄 id
+            </th>
+            <th>
+                所佔比例 ( bootstrap 網頁一行佔 12 )
+            </th>
+            <th>
+                動作
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                {{ $setup_col->id }}
+            </td>
+            <td>
+                {{ Form::text('num',$setup_col->num,['class' => 'form-control','required'=>'required','maxlength'=>'2']) }}
+            </td>
+            <td>
+                <button class="btn btn-primary btn-sm">儲存變更</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {{ Form::close() }}
+    <form action="{{ route('setups.delete_col',$setup_col->id) }}" method="post">
+        @csrf
+        @method('delete')
+        <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？若有區塊放置在此欄位，記得去變更！')">刪除</button>
+    </form>
+@endsection

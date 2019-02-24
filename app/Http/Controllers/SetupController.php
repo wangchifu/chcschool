@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Setup;
+use App\SetupCol;
 use Illuminate\Http\Request;
 
 class SetupController extends Controller
@@ -13,13 +15,31 @@ class SetupController extends Controller
      */
     public function index()
     {
+        $setup = Setup::first();
+        $data = [
+            'setup'=>$setup,
+        ];
+        return view('setups.index',$data);
+    }
+
+    public function photo()
+    {
         $school_code = school_code();
+        $setup = Setup::first();
         $photos = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
         $data = [
             'school_code'=>$school_code,
+            'setup'=>$setup,
             'photos'=>$photos,
         ];
-        return view('setups.index',$data);
+        return view('setups.photo',$data);
+    }
+
+    public function update_title_image(Request $request,Setup $setup)
+    {
+        $att['title_image'] = $request->input('title_image');
+        $setup->update($att);
+        return redirect()->route('setups.photo');
     }
 
     public function add_logo(Request $request)
@@ -43,7 +63,7 @@ class SetupController extends Controller
             $logo->storeAs($new_path, 'logo.ico');
 
         }
-        return redirect()->route('setups.index');
+        return redirect()->route('setups.photo');
     }
 
     public function del_img($folder,$filename)
@@ -51,7 +71,7 @@ class SetupController extends Controller
         $school_code = school_code();
         $folder = str_replace('&','/',$folder);
         unlink(storage_path('app/public/'.$school_code.'/'.$folder.'/'.$filename));
-        return redirect()->route('setups.index');
+        return redirect()->route('setups.photo');
     }
 
     public function add_imgs(Request $request)
@@ -75,6 +95,70 @@ class SetupController extends Controller
             }
         }
 
+        return redirect()->route('setups.photo');
+    }
+
+    public function nav_color(Request $request,Setup $setup)
+    {
+        $nav_color = $request->input('color');
+        $att['nav_color'] = "";
+        foreach($nav_color as $v){
+            $att['nav_color'] .= $v.",";
+        }
+        $setup->update($att);
         return redirect()->route('setups.index');
+    }
+
+    public function nav_default()
+    {
+        $setup = Setup::first();
+        $att['nav_color'] = null;
+        $setup->update($att);
+        return redirect()->route('setups.index');
+    }
+
+    public function text(Request $request,Setup $setup)
+    {
+        $att['site_name'] = $request->input('site_name');
+        $att['views'] = $request->input('views');
+        $setup->update($att);
+        return redirect()->route('setups.index');
+    }
+
+    public function col()
+    {
+        $setup_cols = SetupCol::all();
+        $data = [
+            'setup_cols'=>$setup_cols,
+        ];
+        return view('setups.col',$data);
+    }
+
+    public function add_col(Request $request)
+    {
+        $att['num'] = $request->input('num');
+        SetupCol::create($att);
+        return redirect()->route('setups.col');
+    }
+
+    public function edit_col(SetupCol $setup_col)
+    {
+        $data = [
+            'setup_col'=>$setup_col,
+        ];
+        return view('setups.edit_col',$data);
+    }
+
+    public function update_col(Request $request,SetupCol $setup_col)
+    {
+        $att['num'] = $request->input('num');
+        $setup_col->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function delete_col(SetupCol $setup_col)
+    {
+        $setup_col->delete();
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 }

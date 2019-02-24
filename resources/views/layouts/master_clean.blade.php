@@ -26,32 +26,9 @@
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
 </head>
 
-<body id="page-top" style="background-color:#f0f0f0;">
-<style>
-    .navbar-custom {
-        background-color: {{ $navbar_custom[0] }};
-    }
-    /* change the brand and text color */
-    .navbar-custom .navbar-brand,
-    .navbar-custom .navbar-text {
-        color: {{ $navbar_custom[1] }};
-    }
-    /* change the link color */
-    .navbar-custom .navbar-nav .nav-link {
-        color: {{ $navbar_custom[2] }};
-    }
-    /* change the color of active or hovered links */
-    .navbar-custom .nav-item.active .nav-link,
-    .navbar-custom .nav-item:hover .nav-link {
-        color: {{ $navbar_custom[3] }};
-    }
-</style>
-@include('layouts.nav')
-@yield('top_image')
-<br>
-<div class="container-fluid">
+<body id="page-top">
+<div class="container">
     @yield('content')
 </div>
-@include('layouts.footer')
 </body>
 </html>
