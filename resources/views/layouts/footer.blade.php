@@ -1,6 +1,6 @@
-<footer class="footer bg-dark">
+<footer class="footer bg-light">
     <div class="container">
-        <p class="text-center text-white">Copyright &copy; {{ env('APP_NAME') }}</p>
+        <p class="text-center text-secondary">Copyright &copy; {{ $setup->site_name }}</p>
     </div>
 </footer>
 <script src="{{ asset('bootstrap-4.1.1/js/bootstrap.min.js') }}"></script>

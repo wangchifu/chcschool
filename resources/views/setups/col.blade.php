@@ -30,7 +30,7 @@
             </div>
             {{ Form::close() }}
             <table class="table table-striped">
-                <thead>
+                <thead class="thead-light">
                 <tr>
                     <th>
                         欄 id

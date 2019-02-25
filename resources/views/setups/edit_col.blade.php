@@ -5,7 +5,7 @@
 @section('content')
     {{ Form::open(['route' => ['setups.update_col',$setup_col->id], 'method' => 'patch']) }}
     <table class="table table-striped">
-        <thead>
+        <thead class="thead-light">
         <tr>
             <th>
                 欄 id

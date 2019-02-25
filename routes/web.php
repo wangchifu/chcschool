@@ -37,13 +37,39 @@ Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-//使用者可用
+
+//公告系統
+Route::get('posts' , 'PostsController@index')->name('posts.index');
+//Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
+//Route::post('posts/search' , 'PostsController@search')->name('posts.search');
+//Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
+
+
+//登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
+//結束模擬
+    Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
+});
+
+//行政人員可用
+Route::group(['middleware' => 'exec'],function(){
+    Route::get('posts/create' , 'PostController@create')->name('posts.create');
+    Route::post('posts' , 'PostController@store')->name('posts.store');
+    Route::get('posts/{post}/edit' , 'PostController@edit')->name('posts.edit');
+    Route::patch('posts/{post}' , 'PostController@update')->name('posts.update');
+    Route::delete('posts/{post}', 'PostController@destroy')->name('posts.destroy');
+    //刪檔案
+    Route::get('posts/{file}/fileDel' , 'PostController@fileDel')->name('posts.fileDel');
 
 });
 
 //管理者可用
 Route::group(['middleware' => 'admin'],function(){
+    //更改密碼
+    Route::get('edit_password','HomeController@edit_password')->name('edit_password');
+    Route::patch('update_password','HomeController@update_password')->name('update_password');
+    //模擬登入
+    Route::get('sims/{user}/impersonate', 'SimulationController@impersonate')->name('sims.impersonate');
     //網站管理
     Route::get('setups','SetupController@index')->name('setups.index');
     Route::post('setups/add_logo', 'SetupController@add_logo')->name('setups.add_logo');
@@ -61,4 +87,10 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('setups/{setup_col}/edit_col','SetupController@edit_col')->name('setups.edit_col');
     Route::patch('setups/{setup_col}/update_col','SetupController@update_col')->name('setups.update_col');
     Route::delete('setups/{setup_col}/delete_col','SetupController@delete_col')->name('setups.delete_col');
+
+    //使用者管理
+    Route::get('users', 'UsersController@index')->name('users.index');
+    Route::get('users/leave', 'UsersController@leave')->name('users.leave');
+    Route::get('users/{user}', 'UsersController@edit')->name('users.edit');
+    Route::patch('users/{user}/update', 'UsersController@update')->name('users.update');
 });

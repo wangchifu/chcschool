@@ -56,12 +56,6 @@ class GLoginController extends Controller
                 $att['kind'] = $obj['kind'];
                 $att['title'] = $obj['title'];
                 $att['login_type'] = "gsuite";
-                $per_e_school = ['6','7','8'];
-                if(in_array(substr($obj['code'],3,1),$per_e_school)){
-                    $att['group_id'] = "1";
-                }else{
-                    $att['group_id'] = "2";
-                }
 
                 User::create($att);
 

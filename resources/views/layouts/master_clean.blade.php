@@ -27,7 +27,7 @@
 </head>
 
 <body id="page-top">
-<div class="container">
+<div class="container-fluid">
     @yield('content')
 </div>
 </body>

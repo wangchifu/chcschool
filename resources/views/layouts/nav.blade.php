@@ -18,6 +18,9 @@
                 <li class="nav-item @yield('nav_home_active')">
                     <a class="nav-link" href="{{ route('index') }}"><i class="fas fa-home"></i> 首頁 <span class="sr-only">(current)</span></a>
                 </li>
+                <li class="nav-item @yield('nav_post_active')">
+                    <a class="nav-link" href="{{ route('posts.index') }}"><i class="fas fa-bullhorn"></i> 公告系統</a>
+                </li>
                 <li class="nav-item @yield('nav_open_files_active')">
                     <a class="nav-link" href="#"><i class="fas fa-inbox"></i> 檔案庫</a>
                 </li>
@@ -53,21 +56,27 @@
                                 <i class="fas fa-cogs"></i> 系統設定
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href=""><i class="fas fa-user"></i> 帳號管理</a>
-                                <a class="dropdown-item" href=""><i class="fas fa-users"></i> 群組管理</a>
+                                <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-user"></i> 帳號管理</a>
                                 <a class="dropdown-item" href=""><i class="fas fa-file-alt"></i> 內容管理</a>
                                 <a class="dropdown-item" href=""><i class="fas fa-link"></i> 連結管理</a>
                                 <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>
                             </div>
                         </li>
                     @endif
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown @yield('nav_user_active')">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user"></i> {{ auth()->user()->title }} {{ auth()->user()->name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                            @if(auth()->user()->username=="admin")
+                                <a class="dropdown-item" href="{{ route('edit_password') }}"><i class="fas fa-key"></i> 更改密碼</a>
+                            @endif
+                            @impersonating
+                            <a class="dropdown-item" href="{{ route('sims.impersonate_leave') }}" onclick="return confirm('確定返回原本帳琥？')"><i class="fab fa-snapchat-ghost"></i> 結束模擬</a>
+                            @endImpersonating
+                            <a class="dropdown-item" href="#" onclick="
+                            if(confirm('您確定登出嗎?')) document.getElementById('logout-form').submit();
+                                else return false">
                                 <i class="fas fa-sign-out-alt"></i> 登出
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
