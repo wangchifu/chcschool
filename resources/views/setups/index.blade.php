@@ -10,90 +10,94 @@
     <style type="text/css">
         .colorpicker-component{margin-top: 10px;}
     </style>
-    <h1>
-        網站設定
-    </h1>
-    <?php
-        $active[1] = "active";
-        $active[2] = "";
-        $active[3] = "";
-        $active[4] = "";
-     ?>
-    @include('setups.nav',$active)
-    <div class="card my-4">
-        <h3 class="card-header">文字標題</h3>
-        <div class="card-body">
-            {{ Form::open(['route' => ['setups.text',$setup->id], 'method' => 'patch']) }}
-            <div class="form-group">
-                <label for="site_name">網站名稱</label>
-                {{ Form::text('site_name',$setup->site_name,['class' => 'form-control','required'=>'required']) }}
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <h1>
+                網站設定
+            </h1>
+            <?php
+            $active[1] = "active";
+            $active[2] = "";
+            $active[3] = "";
+            $active[4] = "";
+            ?>
+            @include('setups.nav',$active)
+            <div class="card my-4">
+                <h3 class="card-header">文字標題</h3>
+                <div class="card-body">
+                    {{ Form::open(['route' => ['setups.text',$setup->id], 'method' => 'patch']) }}
+                    <div class="form-group">
+                        <label for="site_name">網站名稱</label>
+                        {{ Form::text('site_name',$setup->site_name,['class' => 'form-control','required'=>'required']) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="views">瀏覽人數</label>
+                        {{ Form::text('views',$setup->views,['class' => 'form-control','required'=>'required']) }}
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
+                            <i class="fas fa-save"></i> 儲存設定
+                        </button>
+                    </div>
+                    {{ Form::close() }}
+                </div>
             </div>
-            <div class="form-group">
-                <label for="views">瀏覽人數</label>
-                {{ Form::text('views',$setup->views,['class' => 'form-control','required'=>'required']) }}
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
-                    <i class="fas fa-save"></i> 儲存設定
-                </button>
+            {{ Form::open(['route' => ['setups.nav_color',$setup->id], 'method' => 'patch','id'=>'color']) }}
+            <div class="card my-4">
+                <h3 class="card-header">顏色設定</h3>
+                <div class="card-body">
+                    <div id="cp1" class="input-group mb-3 colorpicker-component">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">導覽列顏色</span>
+                        </div>
+                        <input type="text" class="form-control input-lg" value="#DD0F20" id="nav_color1" name="color[]">
+                        <div class="input-group-append">
+                            <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
+                        </div>
+                    </div>
+                    <div id="cp2" class="input-group mb-3 colorpicker-component">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon2">文字顏色</span>
+                        </div>
+                        <input type="text" class="form-control input-lg" value="#F18A31" id="nav_color2" name="color[]">
+                        <div class="input-group-append">
+                            <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
+                        </div>
+                    </div>
+                    <div id="cp3" class="input-group mb-3 colorpicker-component">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon3">連結文字顏色</span>
+                        </div>
+                        <input type="text" class="form-control input-lg" value="#F8EB48" id="nav_color3" name="color[]">
+                        <div class="input-group-append">
+                            <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
+                        </div>
+                    </div>
+                    <div id="cp4" class="input-group mb-3 colorpicker-component">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon4">連結文字移上時顏色</span>
+                        </div>
+                        <input type="text" class="form-control input-lg" value="#16813D" id="nav_color4" name="color[]">
+                        <div class="input-group-append">
+                            <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
+                            <i class="fas fa-save"></i> 儲存設定
+                        </button>
+                        @if(!empty($setup->nav_color))
+                            <a href="{{ route('setups.nav_default') }}" class="btn btn-danger btn-sm" id="default_color" onclick="return confirm('確定還原嗎')">
+                                <i class="fas fa-trash"></i> 還原預設
+                            </a>
+                        @endif
+                    </div>
+                </div>
             </div>
             {{ Form::close() }}
         </div>
     </div>
-    {{ Form::open(['route' => ['setups.nav_color',$setup->id], 'method' => 'patch','id'=>'color']) }}
-    <div class="card my-4">
-        <h3 class="card-header">顏色設定</h3>
-        <div class="card-body">
-            <div id="cp1" class="input-group mb-3 colorpicker-component">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">導覽列顏色</span>
-                </div>
-                <input type="text" class="form-control input-lg" value="#DD0F20" id="nav_color1" name="color[]">
-                <div class="input-group-append">
-                    <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
-                </div>
-            </div>
-            <div id="cp2" class="input-group mb-3 colorpicker-component">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon2">文字顏色</span>
-                </div>
-                <input type="text" class="form-control input-lg" value="#F18A31" id="nav_color2" name="color[]">
-                <div class="input-group-append">
-                    <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
-                </div>
-            </div>
-            <div id="cp3" class="input-group mb-3 colorpicker-component">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon3">連結文字顏色</span>
-                </div>
-                <input type="text" class="form-control input-lg" value="#F8EB48" id="nav_color3" name="color[]">
-                <div class="input-group-append">
-                    <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
-                </div>
-            </div>
-            <div id="cp4" class="input-group mb-3 colorpicker-component">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon4">連結文字移上時顏色</span>
-                </div>
-                <input type="text" class="form-control input-lg" value="#16813D" id="nav_color4" name="color[]">
-                <div class="input-group-append">
-                    <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
-                    <i class="fas fa-save"></i> 儲存設定
-                </button>
-                @if(!empty($setup->nav_color))
-                    <a href="{{ route('setups.nav_default') }}" class="btn btn-danger btn-sm" id="default_color" onclick="return confirm('確定還原嗎')">
-                        <i class="fas fa-trash"></i> 還原預設
-                    </a>
-                @endif
-            </div>
-        </div>
-    </div>
-    {{ Form::close() }}
     <script src="{{ asset('colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
     <script type="text/javascript">
         $(function () {

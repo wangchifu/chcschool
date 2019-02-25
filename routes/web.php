@@ -40,9 +40,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //公告系統
 Route::get('posts' , 'PostsController@index')->name('posts.index');
-//Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
-//Route::post('posts/search' , 'PostsController@search')->name('posts.search');
-//Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
+Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
+Route::post('posts/search' , 'PostsController@search')->name('posts.search');
+Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
 
 
 //登入的使用者可用
@@ -53,11 +53,11 @@ Route::group(['middleware' => 'auth'],function(){
 
 //行政人員可用
 Route::group(['middleware' => 'exec'],function(){
-    Route::get('posts/create' , 'PostController@create')->name('posts.create');
-    Route::post('posts' , 'PostController@store')->name('posts.store');
-    Route::get('posts/{post}/edit' , 'PostController@edit')->name('posts.edit');
-    Route::patch('posts/{post}' , 'PostController@update')->name('posts.update');
-    Route::delete('posts/{post}', 'PostController@destroy')->name('posts.destroy');
+    Route::get('posts/create' , 'PostsController@create')->name('posts.create');
+    Route::post('posts' , 'PostsController@store')->name('posts.store');
+    Route::get('posts/{post}/edit' , 'PostsController@edit')->name('posts.edit');
+    Route::patch('posts/{post}' , 'PostsController@update')->name('posts.update');
+    Route::delete('posts/{post}', 'PostsController@destroy')->name('posts.destroy');
     //刪檔案
     Route::get('posts/{file}/fileDel' , 'PostController@fileDel')->name('posts.fileDel');
 
