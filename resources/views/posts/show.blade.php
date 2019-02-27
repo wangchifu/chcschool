@@ -100,7 +100,7 @@
             @endif
         </div>
 
-        <div class="col-md-3">
+        <div class="col-lg-3">
 
             <div class="card my-4">
                 <h5 class="card-header">近月內熱門公告</h5>

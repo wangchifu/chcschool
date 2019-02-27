@@ -36,7 +36,7 @@
 @section('content')
     <div class="row">
         @foreach($setup_cols as $setup_col)
-            <div class="col-{{ $setup_col->num }}">
+            <div class="col-lg-{{ $setup_col->num }}">
                 <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;margin-bottom: 10px;padding: 10px">
                     {{ $setup_col->num }}
                 </div>

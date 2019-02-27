@@ -14,7 +14,7 @@
         @include('layouts.errors')
     </form>
 </div>
-<table class="table table-striped">
+<table class="table table-striped" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
         <th>日期</th>

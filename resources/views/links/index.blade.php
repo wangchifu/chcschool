@@ -15,7 +15,7 @@
                 </ol>
             </nav>
             <a href="{{ route('links.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增連結</a>
-            <table class="table table-striped">
+            <table class="table table-striped" style="word-break:break-all;">
                 <thead class="thead-light">
                 <tr>
                     <th>id</th>

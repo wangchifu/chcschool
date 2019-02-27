@@ -17,7 +17,7 @@
                 </ol>
             </nav>
             <a href="{{ route('contents.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增內容</a>
-            <table class="table table-striped">
+            <table class="table table-striped" style="word-break:break-all;">
                 <thead class="thead-light">
                 <tr>
                     <th>id</th>

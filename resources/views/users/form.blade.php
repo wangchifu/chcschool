@@ -1,7 +1,7 @@
 <div class="card my-4">
     <h3 class="card-header">在職列表</h3>
     <div class="card-body">
-        <table class="table table-striped">
+        <table class="table table-striped" style="word-break:break-all;">
             <thead class="thead-light">
             <tr>
                 <th>序號</th>
