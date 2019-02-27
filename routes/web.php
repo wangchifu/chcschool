@@ -110,4 +110,12 @@ Route::group(['middleware' => 'admin'],function(){
 
     Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
     Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
+
+    //連結管理
+    Route::get('links', 'LinksController@index')->name('links.index');
+    Route::get('links/create', 'LinksController@create')->name('links.create');
+    Route::post('links', 'LinksController@store')->name('links.store');
+    Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');
+    Route::get('links/{link}/edit', 'LinksController@edit')->name('links.edit');
+    Route::patch('links/{link}', 'LinksController@update')->name('links.update');
 });

@@ -28,10 +28,15 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-link"></i> 好站連結
                     </a>
+                    <?php
+                        $links = \App\Link::orderBy('order_by')->get();
+                    ?>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="">
-                            <i class="fas fa-globe"></i> Link1
+                    @foreach($links as $link)
+                        <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
+                            <i class="fas fa-globe"></i> {{ $link->name }}
                         </a>
+                    @endforeach
                     </div>
                 </li>
             </ul>
@@ -58,7 +63,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-user"></i> 帳號管理</a>
                                 <a class="dropdown-item" href="{{ route('contents.index') }}"><i class="fas fa-file-alt"></i> 內容管理</a>
-                                <a class="dropdown-item" href=""><i class="fas fa-link"></i> 連結管理</a>
+                                <a class="dropdown-item" href="{{ route('links.index') }}"><i class="fas fa-link"></i> 連結管理</a>
                                 <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>
                             </div>
                         </li>
