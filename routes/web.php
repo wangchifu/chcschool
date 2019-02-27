@@ -93,6 +93,13 @@ Route::group(['middleware' => 'admin'],function(){
     Route::patch('setups/{setup_col}/update_col','SetupController@update_col')->name('setups.update_col');
     Route::delete('setups/{setup_col}/delete_col','SetupController@delete_col')->name('setups.delete_col');
 
+    //區塊管理
+    Route::get('block','SetupController@block')->name('setups.block');
+    Route::post('setups/add_block', 'SetupController@add_block')->name('setups.add_block');
+    Route::get('setups/{block}/edit_block','SetupController@edit_block')->name('setups.edit_block');
+    Route::patch('setups/{block}/update_block','SetupController@update_block')->name('setups.update_block');
+    Route::delete('setups/{block}/delete_block','SetupController@delete_block')->name('setups.delete_block');
+
     //使用者管理
     Route::get('users', 'UsersController@index')->name('users.index');
     Route::get('users/leave', 'UsersController@leave')->name('users.leave');

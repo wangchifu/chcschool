@@ -24,6 +24,7 @@ if (! function_exists('get_files')) {
                 closedir($handle);
             }
         }
+        sort($files);
         return $files;
     }
 }

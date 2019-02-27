@@ -9,6 +9,9 @@
         <a class="nav-link {{ $active[3] }}" href="{{ route('setups.col') }}">首頁欄位</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ $active[4] }}" href="#">模組功能</a>
+        <a class="nav-link {{ $active[4] }}" href="{{ route('setups.block') }}">區塊內容</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ $active[5] }}" href="#">模組功能</a>
     </li>
 </ul>

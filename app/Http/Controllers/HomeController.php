@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Block;
 use App\SetupCol;
 use App\User;
 use Illuminate\Http\Request;
@@ -42,11 +43,20 @@ class HomeController extends Controller
         $setup = \App\Setup::find(1);
 
         $setup_cols = SetupCol::all();
+        foreach($setup_cols as $setup_col){
+            $bs = Block::where('setup_col_id',$setup_col->id)
+                ->orderBy('order_by')
+                ->get();
+
+            $blocks[$setup_col->id] = $bs;
+
+        }
         $data = [
             'school_code'=>$school_code,
             'photos'=>$photos,
             'setup'=>$setup,
             'setup_cols'=>$setup_cols,
+            'blocks'=>$blocks,
         ];
         return view('index',$data);
     }

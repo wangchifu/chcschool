@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Block;
 use App\Setup;
 use App\SetupCol;
 use Illuminate\Http\Request;
@@ -159,6 +160,49 @@ class SetupController extends Controller
     public function delete_col(SetupCol $setup_col)
     {
         $setup_col->delete();
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function block()
+    {
+        $setup_cols = SetupCol::pluck('id', 'id')->toArray();
+        $blocks = Block::orderBy('setup_col_id')
+            ->orderBy('order_by')
+            ->get();
+        $data = [
+            'setup_cols'=>$setup_cols,
+            'blocks'=>$blocks,
+        ];
+        return view('setups.block',$data);
+    }
+
+    public function add_block(Request $request)
+    {
+        $att = $request->all();
+        Block::create($att);
+        return redirect()->route('setups.block');
+    }
+
+    public function edit_block(Block $block)
+    {
+        $setup_cols = SetupCol::pluck('id', 'id')->toArray();
+        $data = [
+            'setup_cols'=>$setup_cols,
+            'block'=>$block,
+        ];
+        return view('setups.edit_block',$data);
+    }
+
+    function update_block(Request $request,Block $block)
+    {
+        $att = $request->all();
+        $block->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function delete_block(Block $block)
+    {
+        $block->delete();
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 }
