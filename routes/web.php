@@ -44,6 +44,9 @@ Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->na
 Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
 
+//內容頁面
+Route::get('contents/{content}' , 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
+
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
@@ -95,4 +98,16 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('users/leave', 'UsersController@leave')->name('users.leave');
     Route::get('users/{user}', 'UsersController@edit')->name('users.edit');
     Route::patch('users/{user}/update', 'UsersController@update')->name('users.update');
+
+    //內容管理
+    Route::get('contents', 'ContentsController@index')->name('contents.index');
+    Route::get('contents/create', 'ContentsController@create')->name('contents.create');
+    Route::post('contents', 'ContentsController@store')->name('contents.store');
+    Route::delete('contents/{content}', 'ContentsController@destroy')->name('contents.destroy');
+    Route::get('contents/{content}/edit', 'ContentsController@edit')->name('contents.edit');
+    Route::patch('contents/{content}', 'ContentsController@update')->name('contents.update');
+    Route::post('contents/upload', 'ContentsController@upload')->name('contents.upload');
+
+    Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
+    Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
 });

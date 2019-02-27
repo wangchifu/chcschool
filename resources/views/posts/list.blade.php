@@ -11,6 +11,7 @@
                 </td>
             </tr>
         </table>
+        @include('layouts.errors')
     </form>
 </div>
 <table class="table table-striped">
