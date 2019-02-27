@@ -1,0 +1,119 @@
+@extends('layouts.master')
+
+@section('nav_post_active', 'active')
+
+@section('title', '顯示公告 | 公告系統')
+
+@section('content')
+    <div class="row justify-content-center">
+
+        <!-- Post Content Column -->
+        <div class="col-lg-8">
+
+            <!-- Title -->
+            <?php
+            if($post->insite){
+                if(auth()->check()){
+                    $can_see = 1;
+                }else{
+                    $can_see = 0;
+                }
+            }else{
+                $can_see = 1;
+            };
+            ?>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('posts.index') }}">公告列表</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">公告內容</li>
+                </ol>
+            </nav>
+            @if($can_see)
+                <h1>{{ $post->title }}</h1>
+            @else
+                <h1 class="text-danger"><i class="fas fa-ban"></i> 內部公告</h1>
+            @endif
+
+
+            @if($last_id)
+                <a href="{{ route('posts.show',$last_id) }}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-alt-circle-left"></i> 上一則公告</a>
+            @else
+                <a href="#" class="btn btn-secondary btn-sm disabled"><i class="fas fa-arrow-alt-circle-left"></i> 上一則公告</a>
+            @endif
+            @if($next_id)
+                <a href="{{ route('posts.show',$next_id) }}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-alt-circle-right"></i> 下一則公告</a>
+            @else
+                <a href="#" class="btn btn-secondary btn-sm disabled"><i class="fas fa-arrow-alt-circle-right"></i> 下一則公告</a>
+            @endif
+
+            <br><br>
+            <p class="lead">
+                張貼者
+                <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>　　　
+                @can('update',$post)
+                <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                {{ Form::open(['route' => ['posts.destroy',$post->id], 'method' => 'DELETE','id'=>'delete','onsubmit'=>'return false;']) }}
+                {{ Form::close() }}
+                @endcan
+            </p>
+
+            <hr>
+
+            <!-- Date/Time -->
+            <p>
+                張貼日期： {{ $post->created_at }}　　　
+                點閱：{{ $post->views }}
+            </p>
+
+            <hr>
+
+            <!-- Preview Image -->
+            @if(!empty($post->title_image) and $can_see)
+                <img class="img-fluid rounded" src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" alt="標題圖片">
+
+                <hr>
+            @endif
+
+            <!-- Post Content -->
+            <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
+                <p style="font-size: 1.2rem;">
+                    @if($can_see)
+                        <?php $content = str_replace(chr(13) . chr(10), '<br>', $post->content);?>
+                        {!! $content !!}
+                    @else
+                    <p class="text-danger">[ 內部公告 ] 請登入後瀏覽！</p>
+                    @endif
+                </p>
+            </div>
+            @if(!empty($files) and $can_see)
+            <hr>
+            <div class="card my-4">
+                <h5 class="card-header">附件下載</h5>
+                <div class="card-body">
+                @foreach($files as $k=>$v)
+                    <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" class="btn btn-primary btn-sm" style="margin:3px" target="_blank"><i class="fas fa-download"></i> {{ $v }}</a>
+                @endforeach
+                </div>
+            </div>
+            @endif
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card my-4">
+                <h5 class="card-header">近月內熱門公告</h5>
+                <div class="card-body">
+                @foreach($hot_posts as $hot_post)
+                        <li>{{ substr($hot_post->created_at,0,10) }} <span class="badge badge-danger">{{ $hot_post->views }}</span><br>
+                            　　<a href="{{ route('posts.show',$hot_post->id) }}">{{ str_limit($hot_post->title,60) }}</a>
+                        </li>
+                @endforeach
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+@endsection

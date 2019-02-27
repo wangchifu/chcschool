@@ -2,11 +2,18 @@
 
 @section('nav_post_active', 'active')
 
-@section('title', '公告系統')
+@section('title', '新增公告 | 公告系統')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('posts.index') }}">公告列表</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">新增公告</li>
+                </ol>
+            </nav>
             <h1>公告系統</h1>
             {{ Form::open(['route' => 'posts.store', 'method' => 'POST','id'=>'setup', 'files' => true]) }}
             <div class="card my-4">
@@ -24,7 +31,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="content">3.標題圖片</label>
+                        <label for="content">3.標題圖片( 不大於5MB )
+                        <small class="text-secondary">jpeg, png 檔</small>
+                        </label>
                         {{ Form::file('title_image', ['class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
@@ -36,7 +45,9 @@
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10,'required'=>'required', 'placeholder' => '請輸入內容']) }}
                     </div>
                     <div class="form-group">
-                        <label for="files[]">6.附件( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )</label>
+                        <label for="files[]">6.附件( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )
+                        <small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small>
+                        </label>
                         {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
                     </div>
                     <div class="form-group">

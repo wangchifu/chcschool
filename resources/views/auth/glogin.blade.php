@@ -9,7 +9,7 @@
             <div class="card-header"><h4>國中小學登入</h4></div>
 
             <div class="card-body">
-                <img src="{{ asset('images/gsuite_logo.png') }}">
+                <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}"></a>
                 <form id="form" method="POST" action="{{ route('gauth') }}">
                     @csrf
                     <div class="form-group row">

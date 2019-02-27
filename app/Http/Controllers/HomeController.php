@@ -26,7 +26,19 @@ class HomeController extends Controller
     public function index()
     {
         $school_code = school_code();
-        $photos = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
+        $files = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
+        if($files) {
+            foreach ($files as $k=>$v) {
+                $photos[$k] = asset('storage/'.$school_code.'/title_image/random/'.$v);
+            }
+        }else{
+            $photos = [
+                '0'=>asset('images/top0.svg'),
+                '1'=>asset('images/top1.svg'),
+                '2'=>asset('images/top2.svg'),
+            ];
+        }
+
         $setup = \App\Setup::find(1);
 
         $setup_cols = SetupCol::all();

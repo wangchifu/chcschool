@@ -33,7 +33,9 @@
                     </td>
                     <td>
                         <?php $groups = config('chcschool.groups'); ?>
-                        {{ $groups[$user->group_id] }}
+                        @if($user->group_id)
+                            {{ $groups[$user->group_id] }}
+                        @endif
                     </td>
                     <td>
                         <a href="javascript:open_window('{{ route('users.edit',$user->id) }}','新視窗')" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
@@ -52,6 +54,6 @@
     }
     function open_window(url,name)
     {
-        window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=230');
+        window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=230');
     }
 </script>

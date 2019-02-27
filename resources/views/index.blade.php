@@ -17,7 +17,7 @@
             @foreach($photos as $k=>$v)
                 <?php $active = ($k==0)?"active":""; ?>
                 <div class="carousel-item {{ $active }}">
-                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v) }}">
+                    <img class="d-block w-100" src="{{ $v }}">
                 </div>
             @endforeach
         </div>
@@ -37,7 +37,7 @@
     <div class="row">
         @foreach($setup_cols as $setup_col)
             <div class="col-{{ $setup_col->num }}">
-                <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;margin-bottom: 10px">
+                <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;margin-bottom: 10px;padding: 10px">
                     {{ $setup_col->num }}
                 </div>
             </div>

@@ -7,25 +7,25 @@
     <table class="table table-striped">
         <thead class="thead-light">
         <tr>
-            <th>
+            <th nowrap>
                 id 序號
             </th>
-            <th>
+            <th nowrap>
                 帳號
             </th>
-            <th>
+            <th nowrap>
                 排序
             </th>
-            <th>
+            <th nowrap>
                 姓名
             </th>
-            <th>
+            <th nowrap>
                 職稱
             </th>
-            <th>
+            <th nowrap>
                 群組
             </th>
-            <th>
+            <th nowrap>
                 動作
             </th>
         </tr>
@@ -48,7 +48,7 @@
                 {{ $user->title }}
             </td>
             <td>
-                {{ Form::select('group_id', $groups,$user->group_id, ['class' => 'form-control']) }}
+                {{ Form::select('group_id', $groups,$user->group_id, ['class' => 'form-control','placeholder'=>'']) }}
             </td>
             <td>
                 <?php

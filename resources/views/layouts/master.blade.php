@@ -5,6 +5,14 @@
     <?php
         $school_code = school_code();
         $setup = \App\Setup::find(1);
+
+        $setup_key = "setup".$school_code;
+        if(!session($setup_key)){
+            $att['views'] = $setup->views+1;
+            $setup->update($att);
+        }
+        session([$setup_key => '1']);
+
         $nav_color = (empty($setup->nav_color))?"navbar-dark bg-dark":"navbar-custom";
         $navbar_custom = (empty($setup->nav_color))?['0'=>'','1'=>'','2'=>'','3'=>'']:explode(",",$setup->nav_color);
     ?>

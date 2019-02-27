@@ -41,7 +41,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 //公告系統
 Route::get('posts' , 'PostsController@index')->name('posts.index');
 Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
-Route::post('posts/search' , 'PostsController@search')->name('posts.search');
+Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
 
 
@@ -58,8 +58,10 @@ Route::group(['middleware' => 'exec'],function(){
     Route::get('posts/{post}/edit' , 'PostsController@edit')->name('posts.edit');
     Route::patch('posts/{post}' , 'PostsController@update')->name('posts.update');
     Route::delete('posts/{post}', 'PostsController@destroy')->name('posts.destroy');
+    //刪標題圖片
+    Route::get('posts/{post}/delete_title_image' , 'PostsController@delete_title_image')->name('posts.delete_title_image');
     //刪檔案
-    Route::get('posts/{file}/fileDel' , 'PostController@fileDel')->name('posts.fileDel');
+    Route::get('posts/{post}/delete_file/{filename}' , 'PostsController@delete_file')->name('posts.delete_file');
 
 });
 

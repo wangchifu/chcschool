@@ -8,6 +8,7 @@ if (! function_exists('school_code')) {
     }
 }
 
+
 if (! function_exists('get_files')) {
     function get_files($folder){
         $files = [];
@@ -31,5 +32,41 @@ if (! function_exists('run_sql')) {
     function run_sql($file)
     {
         DB::unprepared(File::get($file));
+    }
+}
+
+//刪除某目錄下的任何東西
+if (! function_exists('delete_dir')) {
+    function delete_dir($dir)
+    {
+        if (!file_exists($dir))
+        {
+            return true;
+        }
+
+        if (!is_dir($dir) || is_link($dir))
+        {
+            return unlink($dir);
+        }
+
+        foreach (scandir($dir) as $item)
+        {
+            if ($item == '.' || $item == '..')
+            {
+                continue;
+            }
+
+            if (!delete_dir($dir . "/" . $item))
+            {
+                chmod($dir . "/" . $item, 0777);
+
+                if (!delete_dir($dir . "/" . $item))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return rmdir($dir);
     }
 }
