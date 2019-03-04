@@ -7,55 +7,33 @@
     <table class="table table-striped">
         <thead class="thead-light">
         <tr>
-            <th nowrap>
-                id 序號
-            </th>
-            <th nowrap>
-                帳號
-            </th>
-            <th nowrap>
-                排序
-            </th>
-            <th nowrap>
-                姓名
-            </th>
-            <th nowrap>
-                職稱
-            </th>
-            <th nowrap>
-                群組
-            </th>
-            <th nowrap>
-                動作
+            <th colspan="4">
+                帳號：{{ $user->username }}
             </th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>
-                {{ $user->id }}
+                <h4>{{ $user->title }} {{ $user->name }}</h4>
             </td>
-            <td>
-                {{ $user->username }}
-            </td>
-            <td>
+            <td width="100">
+                排序：
                 {{ Form::text('order_by',$user->order_by,['class' => 'form-control','maxlength'=>'3']) }}
             </td>
-            <td>
-                {{ $user->name }}
-            </td>
-            <td>
-                {{ $user->title }}
-            </td>
-            <td>
+            <td width="200">
+                群組：
                 {{ Form::select('group_id', $groups,$user->group_id, ['class' => 'form-control','placeholder'=>'']) }}
             </td>
             <td>
                 <?php
                     $check1 = ($user->disable)?"":"checked";
                     $check2 = ($user->disable)?"checked":"";
+                    $admin = ($user->admin)?"checked":"";
                 ?>
                 <input type="radio" name="disable" value="" id="enable" {{ $check1 }}> <label for="enable">在職</label>　<input type="radio" name="disable" value="1" id="disable" {{ $check2 }}> <label for="disable" class="text-danger">離職</label>
+                <br>
+                <input type="checkbox" name="admin" value="1" id="admin" {{ $admin }}> <label for="admin">網站管理者</label>
             </td>
         </tr>
         </tbody>

@@ -302,4 +302,18 @@ class PostsController extends Controller
         ];
         return view('posts.job_title',$data);
     }
+
+    public function top_up(Post $post)
+    {
+        $att['top'] = 1;
+        $post->update($att);
+        return redirect()->route('posts.index');
+    }
+
+    public function top_down(Post $post)
+    {
+        $att['top'] = null;
+        $post->update($att);
+        return redirect()->route('posts.index');
+    }
 }

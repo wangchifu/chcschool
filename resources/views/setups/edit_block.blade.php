@@ -21,16 +21,22 @@
             <td>
                 <div class="form-group">
                     <label for="site_name">3.名稱</label>
-                    {{ Form::text('title',$block->title,['class' => 'form-control','required'=>'required']) }}
+                    @if($block->id == 1)
+                        {{ Form::text('title',$block->title,['class' => 'form-control','readonly'=>'readonly']) }}
+                    @else
+                        {{ Form::text('title',$block->title,['class' => 'form-control','required'=>'required']) }}
+                    @endif
                 </div>
             </td>
         </tr>
         <tr>
             <td colspan="3">
+                @if($block->id != 1)
                 <div class="form-group">
                     <label for="content">4.內文*</label>
                     {{ Form::textarea('content',$block->content,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
                 </div>
+                @endif
             </td>
         </tr>
     </table>
@@ -50,9 +56,11 @@
         </button>
     </div>
     {{ Form::close() }}
+    @if($block->id != 1)
     <form action="{{ route('setups.delete_block',$block->id) }}" method="post">
         @csrf
         @method('delete')
         <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？若有區塊放置在此欄位，記得去變更！')">刪除</button>
     </form>
+    @endif
 @endsection

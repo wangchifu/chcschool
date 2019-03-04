@@ -125,4 +125,8 @@ Route::group(['middleware' => 'admin'],function(){
     Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');
     Route::get('links/{link}/edit', 'LinksController@edit')->name('links.edit');
     Route::patch('links/{link}', 'LinksController@update')->name('links.update');
+
+    //置頂公告
+    Route::get('posts/{post}/top_up', 'PostsController@top_up')->name('posts.top_up');
+    Route::get('posts/{post}/top_down', 'PostsController@top_down')->name('posts.top_down');
 });

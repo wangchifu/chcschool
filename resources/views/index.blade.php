@@ -39,7 +39,11 @@
             <div class="col-lg-{{ $setup_col->num }}">
                     @foreach($blocks[$setup_col->id] as $block)
                     <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;margin-bottom: 10px;padding: 10px">
-                        {!! $block->content !!}
+                        @if($block->id != 1)
+                            {!! $block->content !!}
+                        @else
+                            @include('layouts.news')
+                        @endif
                     </div>
                     @endforeach
             </div>

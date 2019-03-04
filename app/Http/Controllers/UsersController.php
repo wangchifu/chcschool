@@ -99,6 +99,7 @@ class UsersController extends Controller
         $att['order_by'] = $request->input('order_by');
         $att['group_id'] = $request->input('group_id');
         $att['disable'] = $request->input('disable');
+        $att['admin'] = $request->input('admin');
         $user->update($att);
         echo "<body onload='opener.location.reload();window.close();'>";
     }

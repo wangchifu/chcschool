@@ -51,6 +51,15 @@
             <p class="lead">
                 張貼者
                 <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>　　　
+                @auth
+                    @if(auth()->user()->admin)
+                        @if($post->top)
+                            <a href="{{ route('posts.top_down',$post->id) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定要取消置頂？')"><i class="fas fa-sort-amount-down"></i> 取消置頂</a>
+                        @else
+                            <a href="{{ route('posts.top_up',$post->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定要置頂？')"><i class="fas fa-sort-amount-up"></i> 置頂</a>
+                        @endif
+                    @endif
+                @endauth
                 @can('update',$post)
                 <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
                 <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>

@@ -26,6 +26,9 @@
                         {{ $user->order_by }}
                     </td>
                     <td>
+                        @if($user->admin)
+                            <i class="fas fa-crown"></i>
+                        @endif
                         {{ $user->name }}
                     </td>
                     <td>
