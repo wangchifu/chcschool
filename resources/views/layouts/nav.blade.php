@@ -50,24 +50,19 @@
             <ul class="nav navbar-nav navbar-right">
                 @auth
                     @if(isset($module_setup['校務行政']))
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown @yield('nav_school_active')">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fab fa-linkedin"></i> 校務行政
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                @if(isset($module_setup['報修系統']))
-                                    <a class="dropdown-item" href="">
-                                        <i class="fas fa-wrench"></i> 報修系統
-                                    </a>
-                                @endif
                                 @if(isset($module_setup['會議文稿']))
                                     <a class="dropdown-item" href="">
                                         <i class="fas fa-comments"></i> 會議文稿
                                     </a>
                                 @endif
-                                @if(isset($module_setup['校務行事曆']))
-                                    <a class="dropdown-item" href="">
-                                        <i class="fas fa-calendar"></i> 校務行事曆
+                                @if(isset($module_setup['報修系統']))
+                                    <a class="dropdown-item" href="{{ route('fixes.index') }}">
+                                        <i class="fas fa-wrench"></i> 報修系統
                                     </a>
                                 @endif
                             </div>

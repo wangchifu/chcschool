@@ -30,11 +30,11 @@ class ModulesTableSeeder extends Seeder
             'active'=>1,
         ]);
         \App\Module::create([
-            'name'=>'報修系統',
+            'name'=>'會議文稿',
             'active'=>1,
         ]);
         \App\Module::create([
-            'name'=>'會議文稿',
+            'name'=>'報修系統',
             'active'=>1,
         ]);
 

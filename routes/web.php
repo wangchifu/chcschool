@@ -68,6 +68,16 @@ Route::get('contents/{content}' , 'ContentsController@show')->where('content', '
 Route::group(['middleware' => 'auth'],function(){
 //結束模擬
     Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
+
+    //報修系統
+    Route::get('fixes', 'FixController@index')->name('fixes.index');
+    Route::get('fixes_search/{situation}/type', 'FixController@search')->name('fixes.search');
+    Route::get('fixes/{fix}' , 'FixController@show')->where('fix', '[0-9]+')->name('fixes.show');
+    Route::get('fixes/create', 'FixController@create')->name('fixes.create');
+    Route::post('fixes', 'FixController@store')->name('fixes.store');
+    Route::delete('fixes/{fix}', 'FixController@destroy')->name('fixes.destroy');
+    Route::patch('fixes/{fix}', 'FixController@update')->name('fixes.update');
+
 });
 
 //行政人員可用
