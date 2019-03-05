@@ -56,6 +56,10 @@ Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->na
 Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
 
+//公開文件
+Route::get('open_files/{path?}' , 'OpenFileController@index')->name('open_files.index');
+Route::get('open_files_download/{path}' , 'OpenFileController@download')->name('open_files.download');
+
 //內容頁面
 Route::get('contents/{content}' , 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
 
@@ -77,6 +81,12 @@ Route::group(['middleware' => 'exec'],function(){
     Route::get('posts/{post}/delete_title_image' , 'PostsController@delete_title_image')->name('posts.delete_title_image');
     //刪檔案
     Route::get('posts/{post}/delete_file/{filename}' , 'PostsController@delete_file')->name('posts.delete_file');
+
+    //公開文件
+    Route::get('open_files_create' , 'OpenFileController@create')->name('open_files.create');
+    Route::get('open_files_delete/{path}' , 'OpenFileController@delete')->name('open_files.delete');
+    Route::post('open_files_create_folder' , 'OpenFileController@create_folder')->name('open_files.create_folder');
+    Route::post('open_files_upload_file' , 'OpenFileController@upload_file')->name('open_files.upload_file');
 
 });
 

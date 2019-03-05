@@ -26,7 +26,7 @@
                 @endif
                 @if(isset($module_setup['檔案庫']))
                     <li class="nav-item @yield('nav_open_files_active')">
-                        <a class="nav-link" href="#"><i class="fas fa-inbox"></i> 檔案庫</a>
+                        <a class="nav-link" href="{{ route('open_files.index') }}"><i class="fas fa-inbox"></i> 檔案庫</a>
                     </li>
                 @endif
                 @if(isset($module_setup['好站連結']))

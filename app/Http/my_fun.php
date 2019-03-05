@@ -84,3 +84,11 @@ function get_module_setup(){
     }
     return $module_setup;
 }
+
+//轉為kb
+if(! function_exists('filesizekb')) {
+    function filesizekb($file)
+    {
+        return number_format(filesize($file) / pow(1024, 1), 2, '.', '');
+    }
+}
