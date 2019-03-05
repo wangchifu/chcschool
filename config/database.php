@@ -1,7 +1,7 @@
 <?php
 //若是瀏覽器用DNS連線，取得該校的database，否則是使用示範database
 $database = config('app.database');
-if($_SERVER['HTTP_HOST']){
+if(isset($_SERVER['HTTP_HOST'])){
     $d = $database[$_SERVER['HTTP_HOST']];
 }else{
     $d = env('DB_DATABASE');

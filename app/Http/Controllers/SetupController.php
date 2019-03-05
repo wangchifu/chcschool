@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Block;
+use App\Module;
 use App\Setup;
 use App\SetupCol;
 use Illuminate\Http\Request;
@@ -204,5 +205,31 @@ class SetupController extends Controller
     {
         $block->delete();
         echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function module()
+    {
+        $modules = config('chcschool.modules');
+        $data = [
+            'modules'=>$modules,
+        ];
+        return view('setups.module',$data);
+    }
+
+    public function update_module(Request $request)
+    {
+        $module = $request->input('module');
+        foreach($module as $k=>$v){
+            $m = Module::where('name',$k)->first();
+            if($m){
+                $att['active'] = $v;
+                $m->update($att);
+            }else{
+                $att['name'] = $k;
+                $att['active'] = $v;
+                Module::create($att);
+            }
+        }
+        return redirect()->route('setups.module');
     }
 }

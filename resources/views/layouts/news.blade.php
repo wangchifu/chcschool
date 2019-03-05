@@ -29,7 +29,7 @@
             </td>
             @if($can_see)
                 @if($post->title_image)
-                    <td>
+                    <td width="200">
                         <a href="{{ route('posts.show',$post->id) }}">
                             <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded">
                         </a>

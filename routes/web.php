@@ -1,5 +1,17 @@
 <?php
-
+//檢查有無新版本的sql檔
+$sqls= get_files(database_path('sqls'));
+if(isset($_SERVER['HTTP_HOST'])){
+    foreach($sqls as $k=>$v){
+        $sql = \App\Sql::where('name',$v)
+            ->where('install','1')
+            ->first();
+        if(!$sql){
+            $file = database_path('sqls') .'/'.$v;
+            \Illuminate\Support\Facades\DB::unprepared(file_get_contents($file));
+        }
+    }
+}
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -94,11 +106,15 @@ Route::group(['middleware' => 'admin'],function(){
     Route::delete('setups/{setup_col}/delete_col','SetupController@delete_col')->name('setups.delete_col');
 
     //區塊管理
-    Route::get('block','SetupController@block')->name('setups.block');
+    Route::get('setups/block','SetupController@block')->name('setups.block');
     Route::post('setups/add_block', 'SetupController@add_block')->name('setups.add_block');
     Route::get('setups/{block}/edit_block','SetupController@edit_block')->name('setups.edit_block');
     Route::patch('setups/{block}/update_block','SetupController@update_block')->name('setups.update_block');
     Route::delete('setups/{block}/delete_block','SetupController@delete_block')->name('setups.delete_block');
+
+    //模組功能
+    Route::get('setups/module','SetupController@module')->name('setups.module');
+    Route::post('setups/module','SetupController@update_module')->name('setups.update_module');
 
     //使用者管理
     Route::get('users', 'UsersController@index')->name('users.index');

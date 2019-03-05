@@ -3,7 +3,11 @@
 if (! function_exists('school_code')) {
     function school_code(){
         $database = config('app.database');
-        $code = substr($database[$_SERVER['HTTP_HOST']],1,6);
+        if(isset($_SERVER['HTTP_HOST'])) {
+            $code = substr($database[$_SERVER['HTTP_HOST']], 1, 6);
+        }else{
+            $code = "";
+        }
         return $code;
     }
 }
@@ -70,4 +74,13 @@ if (! function_exists('delete_dir')) {
 
         return rmdir($dir);
     }
+}
+
+function get_module_setup(){
+    $modules = \App\Module::where('active',1)->get();
+    $module_setup = [];
+    foreach($modules as $module){
+        $module_setup[$module->name] = 1;
+    }
+    return $module_setup;
 }

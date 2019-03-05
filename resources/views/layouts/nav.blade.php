@@ -1,3 +1,4 @@
+<?php $module_setup = get_module_setup(); ?>
 <nav class="navbar navbar-expand-lg {{ $nav_color }}" id="mainNav">
     <div class="container">
         <a href="#page-top">
@@ -18,43 +19,60 @@
                 <li class="nav-item @yield('nav_home_active')">
                     <a class="nav-link" href="{{ route('index') }}"><i class="fas fa-home"></i> 首頁 <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item @yield('nav_post_active')">
-                    <a class="nav-link" href="{{ route('posts.index') }}"><i class="fas fa-bullhorn"></i> 公告系統</a>
-                </li>
-                <li class="nav-item @yield('nav_open_files_active')">
-                    <a class="nav-link" href="#"><i class="fas fa-inbox"></i> 檔案庫</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-link"></i> 好站連結
-                    </a>
-                    <?php
-                        $links = \App\Link::orderBy('order_by')->get();
-                    ?>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    @foreach($links as $link)
-                        <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
-                            <i class="fas fa-globe"></i> {{ $link->name }}
+                @if(isset($module_setup['公告系統']))
+                    <li class="nav-item @yield('nav_post_active')">
+                        <a class="nav-link" href="{{ route('posts.index') }}"><i class="fas fa-bullhorn"></i> 公告系統</a>
+                    </li>
+                @endif
+                @if(isset($module_setup['檔案庫']))
+                    <li class="nav-item @yield('nav_open_files_active')">
+                        <a class="nav-link" href="#"><i class="fas fa-inbox"></i> 檔案庫</a>
+                    </li>
+                @endif
+                @if(isset($module_setup['好站連結']))
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-link"></i> 好站連結
                         </a>
-                    @endforeach
-                    </div>
-                </li>
+                        <?php
+                            $links = \App\Link::orderBy('order_by')->get();
+                        ?>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @foreach($links as $link)
+                            <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
+                                <i class="fas fa-globe"></i> {{ $link->name }}
+                            </a>
+                        @endforeach
+                        </div>
+                    </li>
+                @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 @auth
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fab fa-linkedin"></i> 校務行政
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="">
-                                <i class="fas fa-wrench"></i> 報修系統
+                    @if(isset($module_setup['校務行政']))
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fab fa-linkedin"></i> 校務行政
                             </a>
-                            <a class="dropdown-item" href="">
-                                <i class="fas fa-comments"></i> 會議文稿
-                            </a>
-                        </div>
-                    </li>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @if(isset($module_setup['報修系統']))
+                                    <a class="dropdown-item" href="">
+                                        <i class="fas fa-wrench"></i> 報修系統
+                                    </a>
+                                @endif
+                                @if(isset($module_setup['會議文稿']))
+                                    <a class="dropdown-item" href="">
+                                        <i class="fas fa-comments"></i> 會議文稿
+                                    </a>
+                                @endif
+                                @if(isset($module_setup['校務行事曆']))
+                                    <a class="dropdown-item" href="">
+                                        <i class="fas fa-calendar"></i> 校務行事曆
+                                    </a>
+                                @endif
+                            </div>
+                        </li>
+                    @endif
                     @if(auth()->user()->admin)
                         <li class="nav-item dropdown @yield('nav_setup_active')">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
