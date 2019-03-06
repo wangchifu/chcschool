@@ -7,6 +7,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
+            <h1>新增報修</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
@@ -14,7 +15,6 @@
                     <li class="breadcrumb-item active" aria-current="page">新增報修</li>
                 </ol>
             </nav>
-            <h1>新增報修</h1>
             {{ Form::open(['route' => 'fixes.store', 'method' => 'POST','id'=>'setup', 'files' => true]) }}
             <div class="card my-4">
                 <h3 class="card-header">報修資料</h3>

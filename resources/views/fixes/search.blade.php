@@ -8,6 +8,7 @@
     <?php $situations=['1'=>'處理完畢','2'=>'處理中','3'=>'申報中'];$types=['1'=>'1.資訊設備','2'=>'2.總務設備']; ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
+            <h1>{{ $situations[$situation] }}</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
@@ -15,7 +16,6 @@
                     <li class="breadcrumb-item active" aria-current="page">分類搜尋-{{ $situations[$situation] }}</li>
                 </ol>
             </nav>
-            <h1>{{ $situations[$situation] }}</h1>
             <a href="{{ route('fixes.search',1) }}" class="btn btn-outline-success btn-sm"><i class="fas fa-check-square"></i> 處理完畢列表</a>
             <a href="{{ route('fixes.search',2) }}" class="btn btn-outline-warning btn-sm"><i class="fas fa-exclamation-triangle"></i> 處理中列表</a>
             <a href="{{ route('fixes.search',3) }}" class="btn btn-outline-danger btn-sm"><i class="fas fa-phone-square"></i> 申報中列表</a>

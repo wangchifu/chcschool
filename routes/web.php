@@ -69,6 +69,12 @@ Route::group(['middleware' => 'auth'],function(){
 //結束模擬
     Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
 
+
+    //會議文稿
+    Route::get('meetings' , 'MeetingController@index')->name('meetings.index');
+    Route::get('meetings/{meeting}' , 'MeetingController@show')->where('meeting', '[0-9]+')->name('meetings.show');
+    Route::get('meetings/{meeting}/download' , 'MeetingController@txtDown')->name('meetings.txtDown');
+
     //報修系統
     Route::get('fixes', 'FixController@index')->name('fixes.index');
     Route::get('fixes_search/{situation}/type', 'FixController@search')->name('fixes.search');
@@ -76,7 +82,6 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('fixes/create', 'FixController@create')->name('fixes.create');
     Route::post('fixes', 'FixController@store')->name('fixes.store');
     Route::delete('fixes/{fix}', 'FixController@destroy')->name('fixes.destroy');
-    Route::patch('fixes/{fix}', 'FixController@update')->name('fixes.update');
 
 });
 
@@ -97,6 +102,22 @@ Route::group(['middleware' => 'exec'],function(){
     Route::get('open_files_delete/{path}' , 'OpenFileController@delete')->name('open_files.delete');
     Route::post('open_files_create_folder' , 'OpenFileController@create_folder')->name('open_files.create_folder');
     Route::post('open_files_upload_file' , 'OpenFileController@upload_file')->name('open_files.upload_file');
+
+    //報修回復
+    Route::patch('fixes/{fix}', 'FixController@update')->name('fixes.update');
+
+
+    //會議文稿
+    Route::get('meetings/create' , 'MeetingController@create')->name('meetings.create');
+    Route::post('meetings' , 'MeetingController@store')->name('meetings.store');
+    //報告內容
+    Route::get('meetings_reports/{meeting}/create' , 'ReportController@create')->name('meetings_reports.create');
+    Route::post('meetings_reports' , 'ReportController@store')->name('meetings_reports.store');
+    Route::get('meetings_reports/{report}/edit' , 'ReportController@edit')->name('meetings_reports.edit');
+    Route::patch('meetings_reports/{report}' , 'ReportController@update')->name('meetings_reports.update');
+    Route::delete('meetings_reports/{report}', 'ReportController@destroy')->name('meetings_reports.destroy');
+    //刪檔案
+    Route::get('meetings_reports/{file}/fileDel' , 'ReportController@fileDel')->name('meetings_reports.fileDel');
 
 });
 

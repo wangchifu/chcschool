@@ -7,6 +7,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
+            <h1>顯示報修</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
@@ -14,7 +15,6 @@
                     <li class="breadcrumb-item active" aria-current="page">顯示報修</li>
                 </ol>
             </nav>
-            <h1>顯示報修</h1>
             <p class="lead">
                 <?php
                 $s=['1'=>'處理完畢','2'=>'處理中','3'=>'申報中'];

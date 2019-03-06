@@ -56,7 +56,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 @if(isset($module_setup['會議文稿']))
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{ route('meetings.index') }}">
                                         <i class="fas fa-comments"></i> 會議文稿
                                     </a>
                                 @endif

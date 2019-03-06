@@ -92,3 +92,12 @@ if(! function_exists('filesizekb')) {
         return number_format(filesize($file) / pow(1024, 1), 2, '.', '');
     }
 }
+
+//查某日為中文星期幾
+if(! function_exists('get_chinese_weekday')){
+    function get_chinese_weekday($datetime)
+    {
+        $weekday = date('w', strtotime($datetime));
+        return '星期' . ['日', '一', '二', '三', '四', '五', '六'][$weekday];
+    }
+}

@@ -8,13 +8,13 @@
     <?php $types=['1'=>'1.資訊設備','2'=>'2.總務設備']; ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
+            <h1>報修系統</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
                     <li class="breadcrumb-item active" aria-current="page">報修列表</li>
                 </ol>
             </nav>
-            <h1>報修系統</h1>
             @include('fixes.nav')
             <table class="table table-striped">
                 <thead class="thead-light">

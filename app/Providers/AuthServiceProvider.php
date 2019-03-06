@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Meeting;
+use App\Policies\MeetingPolicy;
 use App\Policies\PostPolicy;
 use App\Policies\UploadPolicy;
 use App\Post;
@@ -20,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
         Post::class => PostPolicy::class,
         Upload::class => UploadPolicy::class,
+        Meeting::class => MeetingPolicy::class,
     ];
 
     /**

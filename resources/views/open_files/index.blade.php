@@ -68,7 +68,7 @@
                             <?php $n = \App\Upload::where('folder_id',$folder->id)->count();?>
                             <strong>目錄</strong>
                             @auth
-                            @if($folder->user_id == auth()->user()->id or auth()->user()->admin==1)
+                            @if(($folder->user_id == auth()->user()->id and auth()->user()->group_id==1) or auth()->user()->admin==1)
                                 @if($n == 0)
                                     <a href="{{ route('open_files.delete',$folder_p) }}" id="delete_folder{{ $folder->id }}" onclick="return confirm('確定刪除目錄嗎？')"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
@@ -97,7 +97,7 @@
                         <td>
                             檔案
                             @auth
-                                @if($file->user_id == auth()->user()->id or auth()->user()->admin==1)
+                                @if(($file->user_id == auth()->user()->id and auth()->user()->group_id==1)or auth()->user()->admin==1)
                                 <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $file->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
                             @endauth
