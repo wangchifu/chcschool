@@ -151,6 +151,9 @@ CREATE TABLE `sqls` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `sqls` (`id`, `name`, `install`, `created_at`, `updated_at`) VALUES
+(1, '2019-03-06_init.sql', 1, '2019-03-06 03:34:56', '2019-03-06 03:34:56');
+
 CREATE TABLE `uploads` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
