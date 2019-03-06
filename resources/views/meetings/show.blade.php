@@ -25,15 +25,16 @@
             @foreach($reports as $report)
                 <?php
                 //有無附件
-                $files = get_files(storage_path('app/public/reports/'.$report->id));
+                $school_code = school_code();
+                $files = get_files(storage_path('app/privacy/'.$school_code.'/reports/'.$report->id));
                 ?>
                 <div class="card my-4">
                     <h3 class="card-header">
                         {{ $i }}.{{ $report->job_title }}
                         @if($has_report == "1" and $report->user_id == auth()->user()->id and $die_line =="0")
                             <a href="{{ route('meetings_reports.edit',$report->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                            <a href="#" class="btn btn-danger btn-sm" onclick="bbconfirm_Form('delete{{ $report->id }}','當真要刪除？')"><i class="fas fa-trash"></i> 刪除</a>
-                            {{ Form::open(['route' => ['meetings_reports.destroy',$report->id], 'method' => 'DELETE','id'=>'delete'.$report->id,'onsubmit'=>'return false;']) }}
+                            <a href="#" class="btn btn-danger btn-sm" onclick="confirm_form('delete{{ $report->id }}','確定刪除？')"><i class="fas fa-trash"></i> 刪除</a>
+                            {{ Form::open(['route' => ['meetings_reports.destroy',$report->id], 'method' => 'DELETE','id'=>'delete'.$report->id]) }}
                             {{ Form::close() }}
                         @endif
                     </h3>
@@ -48,7 +49,7 @@
                             附件：
                             @foreach($files as $k=>$v)
                                 <?php
-                                $file = "reports/".$report->id."/".$v;
+                                $file = $school_code."/reports/".$report->id."/".$v;
                                 $file = str_replace('/','&',$file);
                                 ?>
                                 <a href="{{ url('file/'.$file) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> {{ $v }}</a>
@@ -70,14 +71,15 @@
                     <p class="lead">
                         報告人次：{{ $meeting->reports->count() }}
                     </p>
-                    <p class="lead">
-                        觀看人次：
-                    </p>
-                    <p class="lead">
-                        已觀看名單：
-                    </p>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        function confirm_form($id,$message){
+            if(confirm($message))
+                return document.getElementById($id).submit();
+            else return false
+        }
+    </script>
 @endsection

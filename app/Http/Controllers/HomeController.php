@@ -83,4 +83,11 @@ class HomeController extends Controller
         $user->update($att);
         return redirect()->route('index');
     }
+
+    public function getFile($file)
+    {
+        $file = str_replace('&','/',$file);
+        $file = storage_path('app/privacy/'.$file);
+        return response()->download($file);
+    }
 }

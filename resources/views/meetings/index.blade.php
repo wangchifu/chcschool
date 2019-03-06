@@ -23,7 +23,7 @@
                     <th>會議日期</th>
                     <th>會議名稱</th>
                     <th>報告人次</th>
-                    <th></th>
+                    <th colspan="2">動作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,8 +44,12 @@
                         <td>
                             @can('update',$meeting)
                                 <a href="{{ route('meetings.edit',$meeting->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                <a href="#" class="btn btn-danger btn-sm" onclick="bbconfirm_Form('delete{{ $meeting->id }}','當真要刪除？')"><i class="fas fa-trash"></i> 刪除</a>
-                                {{ Form::open(['route' => ['meetings.destroy',$meeting->id], 'method' => 'DELETE','id'=>'delete'.$meeting->id,'onsubmit'=>'return false;']) }}
+                            @endcan
+                        </td>
+                        <td>
+                            @can('update',$meeting)
+                                {{ Form::open(['route' => ['meetings.destroy',$meeting->id], 'method' => 'DELETE','id'=>'delete'.$meeting->id]) }}
+                                    <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？')"><i class="fas fa-trash"></i> 刪除</button>
                                 {{ Form::close() }}
                             @endcan
                         </td>

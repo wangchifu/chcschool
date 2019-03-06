@@ -37,8 +37,9 @@ class ReportController extends Controller
      */
     public function store(ReportRequest $request)
     {
+        $school_code = school_code();
         $att['user_id'] = auth()->user()->id;
-        $att['job_title'] = auth()->user()->job_title;
+        $att['job_title'] = auth()->user()->title;
         $att['meeting_id'] = $request->input('meeting_id');
         $att['content'] = $request->input('content');
         $att['order_by'] = auth()->user()->order_by;
@@ -56,7 +57,7 @@ class ReportController extends Controller
                     'size' => $file->getClientSize(),
                 ];
 
-                $file->storeAs('public/' . $folder, $info['original_filename']);
+                $file->storeAs('privacy/'.$school_code.'/'. $folder, $info['original_filename']);
 
             }
         }
@@ -83,10 +84,6 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        if($report->user_id != auth()->user()->id){
-            $words = "你想做什麼？";
-            return view('layouts.error',compact('words'));
-        }
         //有無附件
         $files = get_files(storage_path('app/public/reports/'.$report->id));
 
@@ -106,11 +103,9 @@ class ReportController extends Controller
      */
     public function update(ReportRequest $request,Report $report)
     {
-        if($report->user_id != auth()->user()->id){
-            $words = "你想做什麼？";
-            return view('layouts.error',compact('words'));
-        }
-        $att['job_title'] = auth()->user()->job_title;
+        $school_code = school_code();
+
+        $att['job_title'] = auth()->user()->title;
         $att['content'] = $request->input('content');
         $report->update($att);
 
@@ -126,7 +121,7 @@ class ReportController extends Controller
                     'size' => $file->getClientSize(),
                 ];
 
-                $file->storeAs('public/' . $folder, $info['original_filename']);
+                $file->storeAs('privacy/'.$school_code.'/'. $folder, $info['original_filename']);
 
             }
         }
@@ -142,12 +137,9 @@ class ReportController extends Controller
      */
     public function destroy(Report $report)
     {
-        if($report->user_id != auth()->user()->id){
-            $words = "你想做什麼？";
-            return view('layouts.error',compact('words'));
-        }
+        $school_code = school_code();
 
-        $folder = storage_path('app/public/reports/'.$report->id);
+        $folder = storage_path('app/privacy/'.$school_code.'/reports/'.$report->id);
         if (is_dir($folder)) {
             if ($handle = opendir($folder)) { //開啟現在的資料夾
                 while (false !== ($file = readdir($handle))) {

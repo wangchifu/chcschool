@@ -69,6 +69,8 @@ Route::group(['middleware' => 'auth'],function(){
 //結束模擬
     Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
 
+    //下載上傳的檔案
+    Route::get('file/{file}', 'HomeController@getFile');
 
     //會議文稿
     Route::get('meetings' , 'MeetingController@index')->name('meetings.index');
@@ -186,4 +188,9 @@ Route::group(['middleware' => 'admin'],function(){
     //置頂公告
     Route::get('posts/{post}/top_up', 'PostsController@top_up')->name('posts.top_up');
     Route::get('posts/{post}/top_down', 'PostsController@top_down')->name('posts.top_down');
+
+    //會議文稿
+    Route::get('meetings/{meeting}/edit' , 'MeetingController@edit')->name('meetings.edit');
+    Route::patch('meetings/{meeting}' , 'MeetingController@update')->name('meetings.update');
+    Route::delete('meetings/{meeting}', 'MeetingController@destroy')->name('meetings.destroy');
 });

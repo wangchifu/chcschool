@@ -2,25 +2,25 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '會議文稿')
+@section('title', '修改 | 會議文稿')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>新增會議</h1>
+            <h1>修改會議</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('meetings.index') }}">會議列表</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">新增會議</li>
+                    <li class="breadcrumb-item active" aria-current="page">修改會議</li>
                 </ol>
             </nav>
             @include('layouts.errors')
             <?php
-            $default_date = date('Y-m-d');
-            $default_name="教師晨會";
+            $default_date = $meeting->open_date;
+            $default_name=$meeting->name;
             ?>
-            {{ Form::open(['route' => 'meetings.store', 'method' => 'POST','id'=>'setup']) }}
+            {{ Form::model($meeting,['route' => ['meetings.update',$meeting->id], 'method' => 'PATCH','id'=>'setup']) }}
             @include('meetings.form')
             {{ Form::close() }}
         </div>
