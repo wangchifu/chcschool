@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SetupColsTableSeeder::class);
         $this->call(BlocksTableSeeder::class);
         $this->call(ModulesTableSeeder::class);
+        $this->call(SqlsTableSeeder::class);
     }
 }

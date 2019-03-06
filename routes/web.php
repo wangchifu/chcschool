@@ -63,7 +63,6 @@ Route::get('open_files_download/{path}' , 'OpenFileController@download')->name('
 //內容頁面
 Route::get('contents/{content}' , 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
 
-
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
 //結束模擬
