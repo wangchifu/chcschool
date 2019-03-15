@@ -13,4 +13,16 @@ php artisan migrate<br>
 php artisan db:seed<br>
 新增資料庫名為 chcschool 編碼 utf8mb4_vietnamese_ci	<br>
 新增該校代碼資料庫，如 s074xxx<br>
+### 設計模組功能
+編輯 ./config/chcschool.php<br>
+    'modules'=>[<br>
+        'posts'=>'公告系統',<br>
+        'open_files'=>'檔案庫',<br>
+        'links'=>'好站連結',<br>
+        'schools'=>'校務行政',<br>
+        'fixes'=>'報修系統',<br>
+        'meetings'=>'會議文稿',<br>
+    ],<br>
 
+新增一組數據<br>
+編輯 ./resource/views/layout/nav.blade.php 添加該模組的連結(參考其他模組 )
