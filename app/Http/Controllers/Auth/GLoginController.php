@@ -36,10 +36,18 @@ class GLoginController extends Controller
             }
 
             /*
-            if($obj['code'] != env('SCHOOL_CODE')){
+            if(isset($_SERVER['HTTP_HOST'])){
+                $d = $database[$_SERVER['HTTP_HOST']];
+            }else{
+                $d = env('DB_DATABASE');
+            }
+
+
+            if($obj['code'] != substr($d,1,6)){
                 return back()->withErrors(['gsuite_error'=>['非本校教職員 GSuite 帳號']]);
             }
-            */
+
+             */
 
             //是否已有此帳號
             $user = User::where('username',$request->input('username'))
