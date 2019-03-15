@@ -106,7 +106,7 @@
                             {{ filesizekb(storage_path($f.'/'.$file->name)) }} kB
                         </td>
                         <td>
-                            {{ $folder->user->name }}
+                            {{ $file->user->name }}
                         </td>
                         <td>
                             {{ date ("Y-m-d H:i:s",filemtime(storage_path($f.'/'.$file->name))) }}
