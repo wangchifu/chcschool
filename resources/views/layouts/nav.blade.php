@@ -55,14 +55,14 @@
                                 校務行政
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                @if(isset($module_setup['會議文稿']))
-                                    <a class="dropdown-item" href="{{ route('meetings.index') }}">
-                                        <i class="fas fa-comments"></i> 會議文稿
-                                    </a>
-                                @endif
                                 @if(isset($module_setup['報修系統']))
                                     <a class="dropdown-item" href="{{ route('fixes.index') }}">
                                         <i class="fas fa-wrench"></i> 報修系統
+                                    </a>
+                                @endif
+                                @if(isset($module_setup['會議文稿']))
+                                    <a class="dropdown-item" href="{{ route('meetings.index') }}">
+                                        <i class="fas fa-comments"></i> 會議文稿
                                     </a>
                                 @endif
                             </div>

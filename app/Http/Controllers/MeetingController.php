@@ -116,6 +116,29 @@ class MeetingController extends Controller
      */
     public function destroy(Meeting $meeting)
     {
+        $reports = Report::where('meeting_id',$meeting->id)
+            ->get();
+        $school_code = school_code();
+
+        foreach($reports as $report){
+
+            $folder = storage_path('app/privacy/'.$school_code.'/reports/'.$report->id);
+            if (is_dir($folder)) {
+                if ($handle = opendir($folder)) { //開啟現在的資料夾
+                    while (false !== ($file = readdir($handle))) {
+                        //避免搜尋到的資料夾名稱是false,像是0
+                        if ($file != "." && $file != "..") {
+                            //去除掉..跟.
+                            unlink($folder.'/'.$file);
+                        }
+                    }
+                    closedir($handle);
+                }
+                rmdir($folder);
+            }
+
+            $report->delete();
+        }
         $meeting->delete();
         return redirect()->route('meetings.index');
     }

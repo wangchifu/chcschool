@@ -45,11 +45,10 @@
                             @can('update',$meeting)
                                 <a href="{{ route('meetings.edit',$meeting->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
                             @endcan
-                        </td>
-                        <td>
                             @can('update',$meeting)
+                                <button class="btn btn-danger btn-sm" onclick="if(confirm('您確定要刪除嗎?')) document.getElementById('delete{{ $meeting->id }}').submit();else return false"><i class="fas fa-trash"></i> 刪除</button>
                                 {{ Form::open(['route' => ['meetings.destroy',$meeting->id], 'method' => 'DELETE','id'=>'delete'.$meeting->id]) }}
-                                    <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？')"><i class="fas fa-trash"></i> 刪除</button>
+
                                 {{ Form::close() }}
                             @endcan
                         </td>
