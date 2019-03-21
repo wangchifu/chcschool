@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Post;
+use App\UserGroup;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PostPolicy
@@ -30,7 +31,10 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        return $user->group_id === 1;
+        $check = UserGroup::where('user_id',$user->id)
+            ->where('group_id',1)
+            ->first();
+        return !empty($check);
     }
 
     /**

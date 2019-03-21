@@ -3,6 +3,7 @@
 @section('title', '編輯帳號')
 
 @section('content')
+    <br>
     {{ Form::open(['route' => ['users.update',$user->id], 'method' => 'patch']) }}
     <table class="table table-striped">
         <thead class="thead-light">
@@ -23,7 +24,7 @@
             </td>
             <td width="200">
                 群組：
-                {{ Form::select('group_id', $groups,$user->group_id, ['class' => 'form-control','placeholder'=>'']) }}
+                {{ Form::select('group_id[]', $groups,$default_group, ['id' => 'group_id', 'class' => 'form-control','multiple'=>'multiple', 'placeholder' => '---可多選群組---']) }}
             </td>
             <td>
                 <?php

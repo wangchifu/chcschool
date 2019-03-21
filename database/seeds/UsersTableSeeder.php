@@ -15,7 +15,6 @@ class UsersTableSeeder extends Seeder
         \App\User::create([
             'username' => 'admin',
             'name' => '系統管理員',
-            'group_id' => '99',
             'password' => bcrypt('demo1234'),
             'admin'=>'1',
             'login_type'=>'local',

@@ -21,7 +21,6 @@ class User extends Authenticatable
         'username',
         'name',
         'order_by',
-        'group_id',
         'email',
         'password',
         'admin',
@@ -41,4 +40,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function groups()
+    {
+        return $this->hasMany(UserGroup::class);
+    }
 }

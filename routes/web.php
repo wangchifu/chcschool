@@ -164,6 +164,18 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('users/{user}', 'UsersController@edit')->name('users.edit');
     Route::patch('users/{user}/update', 'UsersController@update')->name('users.update');
 
+    Route::get('groups', 'GroupController@index')->name('groups.index');
+    Route::get('groups/create', 'GroupController@create')->name('groups.create');
+    Route::post('groups', 'GroupController@store')->name('groups.store');
+    Route::delete('groups/{group}', 'GroupController@destroy')->name('groups.destroy');
+    Route::get('groups/{group}', 'GroupController@edit')->name('groups.edit');
+    Route::patch('groups/{group}', 'GroupController@update')->name('groups.update');
+    //記錄使用者群組
+    Route::get('users_groups/{group}', 'GroupController@users_groups')->name('users_groups');
+    Route::post('users_groups', 'GroupController@users_groups_store')->name('users_groups.store');
+    Route::delete('users_groups', 'GroupController@users_groups_destroy')->name('users_groups.destroy');
+
+
     //內容管理
     Route::get('contents', 'ContentsController@index')->name('contents.index');
     Route::get('contents/create', 'ContentsController@create')->name('contents.create');

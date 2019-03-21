@@ -51,7 +51,7 @@
                         {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
                     </div>
                     <div class="form-group">
-                        <a href="{{ route('posts.index') }}" class="btn btn-secondary btm-sm"><i class="fas fa-backward"></i> 返回</a>
+                        <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
                             <i class="fas fa-save"></i> 儲存設定
                         </button>

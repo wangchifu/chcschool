@@ -31,7 +31,10 @@ class UploadPolicy
      */
     public function create(User $user)
     {
-        return $user->group_id === 1;
+        $check = UserGroup::where('user_id',$user->id)
+            ->where('group_id',1)
+            ->first();
+        return !empty($check);
     }
 
     /**

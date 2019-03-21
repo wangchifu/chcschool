@@ -7,7 +7,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>新增報告</h1>
+            <h1>修改報告</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>

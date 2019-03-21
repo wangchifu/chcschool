@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Group;
 use App\User;
+use App\UserGroup;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -17,7 +19,6 @@ class UsersController extends Controller
         $users = User::where('disable',null)
             ->where('username','<>','admin')
             ->orderBy('order_by')
-            ->orderBy('group_id')
             ->paginate('20');
 
         $data = [
@@ -79,10 +80,13 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        $groups = config('chcschool.groups');
+        $groups = Group::where('disable','=',null)->pluck('name', 'id')->toArray();
+
+        $default_group = UserGroup::where('user_id',$user->id)->pluck('group_id')->toArray();
         $data = [
             'user'=>$user,
             'groups'=>$groups,
+            'default_group'=>$default_group,
         ];
         return view('users.edit',$data);
     }
@@ -101,6 +105,29 @@ class UsersController extends Controller
         $att['disable'] = $request->input('disable');
         $att['admin'] = $request->input('admin');
         $user->update($att);
+
+
+        $group_id = $request->input('group_id');
+        //全刪使用者群組資料
+        UserGroup::where('user_id',$user->id)->delete();
+
+        //再批次insert的array
+        $all_insert = [];
+        if(!empty($group_id)) {
+            foreach ($group_id as $k => $v) {
+                if($v != null){
+                    $one = [
+                        'user_id' => $user->id,
+                        'group_id' => $v
+                    ];
+                    array_push($all_insert, $one);
+                }
+            }
+            if(!empty($all_insert)){
+                UserGroup::insert($all_insert);
+            }
+        }
+
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 

@@ -18,7 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique;
             $table->string('name');
             $table->unsignedInteger('order_by')->nullable();
-            $table->unsignedInteger('group_id')->nullable();
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

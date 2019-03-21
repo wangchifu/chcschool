@@ -84,8 +84,9 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
+        $school_code = school_code();
         //有無附件
-        $files = get_files(storage_path('app/public/reports/'.$report->id));
+        $files = get_files(storage_path('app/privacy/'.$school_code.'/reports/'.$report->id));
 
         $data = [
             'report'=>$report,
@@ -161,16 +162,16 @@ class ReportController extends Controller
 
     public function fileDel($file)
     {
+        $school_code = school_code();
         $file_array = explode('&',$file);
 
         $report = Report::where('id',$file_array[1])->first();
         if($report->user_id != auth()->user()->id){
-            $words = "你想做什麼？";
-            return view('layouts.error',compact('words'));
+            return back();
         }
 
         $file = str_replace('&','/',$file);
-        $file = storage_path('app/public/'.$file);
+        $file = storage_path('app/privacy/'.$school_code.'/'.$file);
         if(file_exists($file)){
             unlink($file);
         }
