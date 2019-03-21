@@ -34,7 +34,7 @@
 @endsection
 
 @section('content')
-    <div class="row">
+    <div class="row justify-content-center">
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
                     @foreach($blocks[$setup_col->id] as $block)

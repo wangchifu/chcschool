@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h4>國中小學登入</h4></div>
+            <div class="card-header"><h4>教職員登入</h4></div>
 
             <div class="card-body">
                 <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}"></a>
