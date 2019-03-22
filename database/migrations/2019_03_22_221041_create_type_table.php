@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLinksTable extends Migration
+class CreateTypeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateLinksTable extends Migration
      */
     public function up()
     {
-        Schema::create('links', function (Blueprint $table) {
+        Schema::create('types', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('type_id');//連結類別id
             $table->string('name');
-            $table->string('url');//網址
             $table->unsignedInteger('order_by')->nullable();//排序
             $table->timestamps();
         });
@@ -30,6 +28,6 @@ class CreateLinksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('links');
+        Schema::dropIfExists('types');
     }
 }

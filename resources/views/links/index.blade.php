@@ -14,11 +14,67 @@
                     <li class="breadcrumb-item active" aria-current="page">連結列表</li>
                 </ol>
             </nav>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    連結類別
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" style="word-break:break-all;">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>名稱</th>
+                            <th>排序</th>
+                            <th>動作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <form action="{{ route('links.store_type') }}" method="post">
+                            @csrf
+                        <tr>
+                            <td>
+                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                            </td>
+                            <td>
+                                {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                            </td>
+                            <td>
+                                <button class="btn btn-success btn-sm" onclick="return confirm('確定？')"><i class="fas fa-plus"></i> 新增</button>
+                            </td>
+                        </tr>
+                        </form>
+                        @foreach($types as $type)
+                            {{ Form::open(['route' => ['links.update_type',$type->id], 'method' => 'patch','id'=>'update'.$type->id]) }}
+                                @csrf
+                                @method('patch')
+                            <tr>
+                                <td>
+                                    {{ Form::text('name',$type->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('order_by',$type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                                </td>
+                                <td>
+                                    <button onclick="return confirm('儲存修改？')">存</button>
+                                    <a href="#" class="text-danger" onclick="if(confirm('確定刪除？會一併刪除所屬連結喔！')) document.getElementById('delete{{ $type->id }}').submit();else return false;"><i class="fas fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                            {{ Form::close() }}
+                            {{ Form::open(['route' => ['links.destroy_type',$type->id], 'method' => 'DELETE','id'=>'delete'.$type->id]) }}
+                            {{ Form::close() }}
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
             <a href="{{ route('links.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增連結</a>
             <table class="table table-striped" style="word-break:break-all;">
                 <thead class="thead-light">
                 <tr>
-                    <th>id</th>
+                    <th>類別</th>
                     <th>名稱</th>
                     <th>網址</th>
                     <th>排序</th>
@@ -30,7 +86,7 @@
                 @foreach($links as $link)
                     <tr>
                         <td>
-                            {{ $link->id }}
+                            {{ $link->type->name }}
                         </td>
                         <td>
                             {{ $link->name }}

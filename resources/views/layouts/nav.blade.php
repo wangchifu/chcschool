@@ -30,21 +30,25 @@
                     </li>
                 @endif
                 @if(isset($module_setup['好站連結']))
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            好站連結
-                        </a>
-                        <?php
-                            $links = \App\Link::orderBy('order_by')->get();
-                        ?>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        @foreach($links as $link)
-                            <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
-                                <i class="fas fa-globe"></i> {{ $link->name }}
+                    <?php $types = \App\Type::orderBy('order_by')->get();
+                    ?>
+                    @foreach($types as $type)
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ $type->name }}
                             </a>
-                        @endforeach
-                        </div>
-                    </li>
+                            <?php
+                            $links = \App\Link::where('type_id',$type->id)->orderBy('order_by')->get();
+                            ?>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @foreach($links as $link)
+                                    <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
+                                        <i class="fas fa-globe"></i> {{ $link->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </li>
+                    @endforeach
                 @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">

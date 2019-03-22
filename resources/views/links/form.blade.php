@@ -2,6 +2,10 @@
     <h3 class="card-header">連結資料</h3>
     <div class="card-body">
         <div class="form-group">
+            <label for="name">類別*</label>
+            {{ Form::select('type_id', $types,null, ['id' => 'type_id', 'class' => 'form-control','required'=>'required']) }}
+        </div>
+        <div class="form-group">
             <label for="name">名稱*</label>
             {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
         </div>

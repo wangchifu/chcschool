@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Link;
+use App\Type;
 use Illuminate\Http\Request;
 
 class LinksController extends Controller
@@ -14,9 +15,16 @@ class LinksController extends Controller
      */
     public function index()
     {
-        $links = Link::orderBy('order_by')
+        $types= Type::orderBy('order_by')
             ->get();
-        return view('links.index',compact('links'));
+        $links = Link::orderBy('type_id')
+            ->orderBy('order_by')
+            ->get();
+        $data = [
+            'types'=>$types,
+            'links'=>$links,
+        ];
+        return view('links.index',$data);
     }
 
     /**
@@ -26,7 +34,11 @@ class LinksController extends Controller
      */
     public function create()
     {
-        return view('links.create');
+        $types = Type::orderBy('order_by')->pluck('name', 'id')->toArray();
+        $data = [
+            'types'=>$types,
+        ];
+        return view('links.create',$data);
     }
 
     /**
@@ -35,6 +47,11 @@ class LinksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function store_type(Request $request)
+    {
+        Type::create($request->all());
+        return redirect()->route('links.index');
+    }
     public function store(Request $request)
     {
         Link::create($request->all());
@@ -60,7 +77,12 @@ class LinksController extends Controller
      */
     public function edit(Link $link)
     {
-        return view('links.edit',compact('link'));
+        $types = Type::orderBy('order_by')->pluck('name', 'id')->toArray();
+        $data = [
+            'link'=>$link,
+            'types'=>$types,
+        ];
+        return view('links.edit',$data);
     }
 
     /**
@@ -76,6 +98,12 @@ class LinksController extends Controller
         return redirect()->route('links.index');
     }
 
+    public function update_type(Request $request, Type $type)
+    {
+        $type->update($request->all());
+        return redirect()->route('links.index');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -85,6 +113,13 @@ class LinksController extends Controller
     public function destroy(Link $link)
     {
         $link->delete();
+        return redirect()->route('links.index');
+    }
+
+    public function destroy_type(Type $type)
+    {
+        $type->links()->delete();
+        $type->delete();
         return redirect()->route('links.index');
     }
 }
