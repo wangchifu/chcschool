@@ -35,6 +35,9 @@
                             <button tabindex="3" type="submit" class="btn btn-primary btn-sm">
                                 <i class="fas fa-sign-in-alt"></i> 登入
                             </button>
+                            <div class="text-right">
+                                <a href="{{ route('login') }}"><i class="fas fa-cog"></i>管理員</a>
+                            </div>
                         </div>
                     </div>
                     @include('layouts.errors')

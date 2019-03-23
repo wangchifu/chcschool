@@ -1,6 +1,6 @@
 <?php $module_setup = get_module_setup(); ?>
 <nav class="navbar navbar-expand-lg {{ $nav_color }}" id="mainNav">
-    <div class="container">
+    <div class="container-fluid">
         <a href="#page-top">
             @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
                 <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="d-inline-block align-top" alt="">
@@ -109,18 +109,8 @@
                     </li>
                 @endauth
                 @guest
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            登入
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{{ route('glogin') }}">
-                                <i class="fas fa-sign-in-alt"></i> 教職員
-                            </a>
-                            <a class="dropdown-item" href="{{ route('login') }}">
-                                <i class="fas fa-cogs"></i> 管理員
-                            </a>
-                        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('glogin') }}">教職員登入</a>
                     </li>
                 @endguest
             </ul>

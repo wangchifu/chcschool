@@ -158,6 +158,11 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('setups/module','SetupController@module')->name('setups.module');
     Route::post('setups/module','SetupController@update_module')->name('setups.update_module');
 
+    //使用者權限
+    Route::get('user_powers/{module}/{type}','UserPowerController@create')->name('user_powers.create');
+    Route::post('user_powers','UserPowerController@store')->name('user_powers.store');
+    Route::get('user_powers_destroy/{user_power}','UserPowerController@destroy')->name('user_powers.destroy');
+
     //使用者管理
     Route::get('users', 'UsersController@index')->name('users.index');
     Route::get('users/leave', 'UsersController@leave')->name('users.leave');

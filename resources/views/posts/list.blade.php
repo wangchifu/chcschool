@@ -14,27 +14,27 @@
         @include('layouts.errors')
     </form>
 </div>
-<table class="table table-striped" style="word-break:break-all;">
+<table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
-        <th>日期</th>
-        <th>
+        <th nowrap>日期</th>
+        <th nowrap>
             標題
         </th>
-        <th>發佈者</th>
-        <th>點閱</th>
+        <th nowrap>發佈者</th>
+        <th nowrap>點閱</th>
     </tr>
     </thead>
     <tbody>
     @foreach($posts as $post)
         <tr>
-            <td width="150">
+            <td data-th="日期">
                 @if($post->top)
                     <p class="badge badge-danger">置頂</p>
                 @endif
                 {{ substr($post->created_at,0,10) }}
             </td>
-            <td>
+            <td data-th="標題">
                 <?php
                 if($post->insite){
                     if(auth()->check()){
@@ -62,10 +62,10 @@
                     <span class="text-info"><i class="fas fa-file"></i> [附件]</span>
                 @endif
             </td>
-            <td width="100">
+            <td data-th="發佈者">
                 <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
             </td>
-            <td width="80">
+            <td data-th="點閱">
                 {{ $post->views }}
             </td>
         </tr>

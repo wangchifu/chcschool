@@ -63,8 +63,16 @@
                                             @elseif($v=="會議文稿")
                                                 行政人員可報告事項
                                             @elseif($v=="校務行政")
-                                            @else
-                                                <a href="" class="btn btn-info btn-sm">指定</a>
+                                            @elseif($v=="報修系統")
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm">新指定</a>
+                                                <?php
+                                                    $user_powers = \App\UserPower::where('name',$v)->where('type','A')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    <br>
+                                                    已指定「可回覆」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach
                                             @endif
                                         </td>
                                     </tr>
@@ -78,4 +86,10 @@
             </div>
         </div>
     </div>
+    <script>
+        function open_window(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=330');
+        }
+    </script>
 @endsection

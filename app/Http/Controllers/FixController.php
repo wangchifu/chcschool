@@ -71,7 +71,7 @@ class FixController extends Controller
      */
     public function show(Fix $fix)
     {
-        $fix_admin = (auth()->user()->group_id==1)?"1":"";
+        $fix_admin = check_power('報修系統','A',auth()->user()->id);
         $data = [
             'fix'=>$fix,
             'fix_admin'=>$fix_admin,

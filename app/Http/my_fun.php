@@ -125,3 +125,19 @@ if(! function_exists('get_date_semester')){
 
     }
 }
+
+//查指定日期為哪一個學期
+if(! function_exists('check_power')){
+    function check_power($module,$type,$user_id)
+    {
+        $user_power = \App\UserPower::where('user_id',$user_id)
+            ->where('name',$module)
+            ->where('type',$type)
+            ->first();
+        if(empty($user_power)){
+            return false;
+        }else{
+            return true;
+        }
+    }
+}
