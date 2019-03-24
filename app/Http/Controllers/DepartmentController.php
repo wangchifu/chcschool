@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Content;
+use App\Department;
 use Illuminate\Http\Request;
 
-class ContentsController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class ContentsController extends Controller
      */
     public function index()
     {
-        $contents = Content::all();
-        return view('contents.index',compact('contents'));
+        $departments = Department::orderBy('order_by')->get();
+        return view('departments.index',compact('departments'));
     }
 
     /**
@@ -25,7 +25,7 @@ class ContentsController extends Controller
      */
     public function create()
     {
-        return view('contents.create');
+        return view('departments.create');
     }
 
     /**
@@ -36,8 +36,7 @@ class ContentsController extends Controller
      */
     public function store(Request $request)
     {
-        Content::create($request->all());
-        return redirect()->route('contents.index');
+        //
     }
 
     /**
@@ -46,9 +45,9 @@ class ContentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Content $content)
+    public function show($id)
     {
-        return view('contents.show',compact('content'));
+        //
     }
 
     /**
@@ -57,9 +56,9 @@ class ContentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Content $content)
+    public function edit($id)
     {
-        return view('contents.edit',compact('content'));
+        //
     }
 
     /**
@@ -69,10 +68,9 @@ class ContentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Content $content)
+    public function update(Request $request, $id)
     {
-        $content->update($request->all());
-        return redirect()->route('contents.index');
+        //
     }
 
     /**
@@ -81,9 +79,8 @@ class ContentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Content $content)
+    public function destroy($id)
     {
-        $content->delete();
-        return redirect()->route('contents.index');
+        //
     }
 }

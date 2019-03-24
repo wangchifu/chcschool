@@ -80,6 +80,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-user"></i> 帳號管理</a>
                                 <a class="dropdown-item" href="{{ route('groups.index') }}"><i class="fas fa-users"></i> 群組管理</a>
+                                <a class="dropdown-item" href="{{ route('departments.index') }}"><i class="fas fa-puzzle-piece"></i> 處室管理</a>
                                 <a class="dropdown-item" href="{{ route('contents.index') }}"><i class="fas fa-file-alt"></i> 內容管理</a>
                                 <a class="dropdown-item" href="{{ route('links.index') }}"><i class="fas fa-link"></i> 連結管理</a>
                                 <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>

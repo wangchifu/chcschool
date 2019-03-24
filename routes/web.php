@@ -180,6 +180,13 @@ Route::group(['middleware' => 'admin'],function(){
     Route::post('users_groups', 'GroupController@users_groups_store')->name('users_groups.store');
     Route::delete('users_groups', 'GroupController@users_groups_destroy')->name('users_groups.destroy');
 
+    //處皺管理
+    Route::get('departments', 'DepartmentController@index')->name('departments.index');
+    Route::get('departments/create', 'DepartmentController@create')->name('departments.create');
+    Route::post('departments', 'DepartmentController@store')->name('departments.store');
+    Route::delete('departments/{department}', 'DepartmentController@destroy')->name('departments.destroy');
+    Route::get('departments/{department}/edit', 'DepartmentController@edit')->name('departments.edit');
+    Route::patch('departments/{department}', 'DepartmentController@update')->name('departments.update');
 
     //內容管理
     Route::get('contents', 'ContentsController@index')->name('contents.index');
@@ -188,7 +195,6 @@ Route::group(['middleware' => 'admin'],function(){
     Route::delete('contents/{content}', 'ContentsController@destroy')->name('contents.destroy');
     Route::get('contents/{content}/edit', 'ContentsController@edit')->name('contents.edit');
     Route::patch('contents/{content}', 'ContentsController@update')->name('contents.update');
-    Route::post('contents/upload', 'ContentsController@upload')->name('contents.upload');
 
     Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
     Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
