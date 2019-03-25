@@ -141,3 +141,54 @@ if(! function_exists('check_power')){
         }
     }
 }
+
+//秀某學期的每一天
+if(! function_exists('get_semester_dates')){
+    function get_semester_dates($semester)
+    {
+        $this_year = substr($semester,0,3)+1911;
+        $this_seme = substr($semester,-1,1);
+        $next_year = $this_year +1 ;
+        if($this_seme == 1){
+            $month_array = ["八月"=>$this_year."-08","九月"=>$this_year."-09","十月"=>$this_year."-10","十一月"=>$this_year."-11","十二月"=>$this_year."-12","一月"=>$next_year."-01"];
+        }else{
+            $month_array = ["二月"=>$next_year."-02","三月"=>$next_year."-03","四月"=>$next_year."-04","五月"=>$next_year."-05","六月"=>$next_year."-06"];
+        }
+
+
+        foreach($month_array as $k => $v) {
+            $semester_dates[$k] = get_month_date($v);
+        }
+        return $semester_dates;
+    }
+}
+
+if(! function_exists('get_month_date')){
+    //秀某年某月的每一天
+    function get_month_date($year_month)
+    {
+        $this_date = explode("-",$year_month);
+        $days=array("01"=>"31","02"=>"28","03"=>"31","04"=>"30","05"=>"31","06"=>"30","07"=>"31","08"=>"31","09"=>"30","10"=>"31","11"=>"30","12"=>"31");
+        //潤年的話，二月29天
+        if(checkdate(2,29,$this_date[0])){
+            $days['02'] = 29;
+        }else{
+            $days['02'] = 28;
+        }
+
+        for($i=1;$i<= $days[$this_date[1]];$i++){
+            $order_date[$i] = $this_date[0]."-".$this_date[1]."-".sprintf("%02s", $i);
+        }
+        return $order_date;
+    }
+}
+
+//查某日星期幾
+if(! function_exists('get_date_w')){
+    function get_date_w($d)
+    {
+        $arrDate=explode("-",$d);
+        $week=date("w",mktime(0,0,0,$arrDate[1],$arrDate[2],$arrDate[0]));
+        return $week;
+    }
+}

@@ -65,6 +65,10 @@ Route::get('contents/{content}/show' , 'ContentsController@show')->where('conten
 //處室
 Route::get('departments/{department}/show', 'DepartmentController@show')->name('departments.show');
 
+//校務行事曆
+Route::get('calendars/index/{semester?}' , 'CalendarController@index')->name('calendars.index');
+Route::get('calendars/print/{semester}' , 'CalendarController@print')->name('calendars.print');
+
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
 //結束模擬
@@ -85,6 +89,20 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('fixes/create', 'FixController@create')->name('fixes.create');
     Route::post('fixes', 'FixController@store')->name('fixes.store');
     Route::delete('fixes/{fix}', 'FixController@destroy')->name('fixes.destroy');
+
+    //午餐系統
+    Route::get('lunches', 'LunchController@index')->name('lunches.index');
+
+    Route::get('lunch_setup', 'LunchSetupController@index')->name('lunch_setups.index');
+    Route::get('lunch_setup/create', 'LunchSetupController@create')->name('lunch_setups.create');
+    Route::post('lunch_setup/store', 'LunchSetupController@store')->name('lunch_setups.store');
+    Route::get('lunch_setup/{lunch_setup}/edit', 'LunchSetupController@edit')->name('lunch_setups.edit');
+    Route::patch('lunch_setup/{lunch_setup}/update', 'LunchSetupController@update')->name('lunch_setups.update');
+    Route::delete('lunch_setup/{lunch_setup}/destroy', 'LunchSetupController@destroy')->name('lunch_setups.destroy');
+
+    Route::get('lunch_orders/{semester}/create', 'LunchOrderController@create')->name('lunch_orders.create');
+    Route::post('lunch_orders/store', 'LunchOrderController@store')->name('lunch_orders.store');
+    Route::get('lunch_orders/edit', 'LunchOrderController@edit')->name('lunch_orders.edit');
 
 });
 
@@ -121,6 +139,14 @@ Route::group(['middleware' => 'exec'],function(){
     Route::delete('meetings_reports/{report}', 'ReportController@destroy')->name('meetings_reports.destroy');
     //刪檔案
     Route::get('meetings_reports/{file}/fileDel' , 'ReportController@fileDel')->name('meetings_reports.fileDel');
+
+    //校務行事曆
+    Route::get('calendars/{semester}/create' , 'CalendarController@create')->name('calendars.create');
+    Route::post('calendars' , 'CalendarController@store')->name('calendars.store');
+    Route::get('calendars/{calendar}/edit' , 'CalendarController@edit')->name('calendars.edit');
+    Route::patch('calendars/{calendar}' , 'CalendarController@update')->name('calendars.update');
+    Route::delete('calendars/{calendar}', 'CalendarController@destroy')->name('calendars.destroy');
+    Route::get('calendars/{calendar}/delete' , 'CalendarController@delete')->name('calendars.delete');
 
 });
 
@@ -222,4 +248,10 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('meetings/{meeting}/edit' , 'MeetingController@edit')->name('meetings.edit');
     Route::patch('meetings/{meeting}' , 'MeetingController@update')->name('meetings.update');
     Route::delete('meetings/{meeting}', 'MeetingController@destroy')->name('meetings.destroy');
+
+    //校務行事曆
+    Route::get('calendar_weeks/index','CalendarWeekController@index')->name('calendar_weeks.index');
+    Route::post('calendar_weeks/create','CalendarWeekController@create')->name('calendar_weeks.create');
+    Route::post('calendar_weeks/store','CalendarWeekController@store')->name('calendar_weeks.store');
+    Route::get('calendar_weeks/{semester}/destroy','CalendarWeekController@destroy')->name('calendar_weeks.destroy');
 });

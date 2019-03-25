@@ -63,6 +63,9 @@
                                             @elseif($v=="會議文稿")
                                                 行政人員可報告事項
                                             @elseif($v=="校務行政")
+                                                --
+                                            @elseif($v=="處室介紹")
+                                                管理員編修
                                             @elseif($v=="報修系統")
                                                 <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm">新指定</a>
                                                 <?php
@@ -71,6 +74,18 @@
                                                 @foreach($user_powers as $user_power)
                                                     <br>
                                                     已指定「可回覆」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach
+                                            @elseif($v=="校務行事曆")
+                                                管理員設置年度後，行政人員可編行事
+                                            @elseif($v=="午餐系統")
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm">新指定</a>
+                                                <?php
+                                                $user_powers = \App\UserPower::where('name',$v)->where('type','A')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    <br>
+                                                    已指定「午餐業務」：
                                                     {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
                                                 @endforeach
                                             @endif

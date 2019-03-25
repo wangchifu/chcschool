@@ -1,5 +1,9 @@
 @if($errors->any())
     <div class="form-group">
-        <span class="text-danger">{{ $errors->first() }}</span>
+        <ul>
+            @foreach($errors->all() as $error)
+                <li class="text-danger">{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
 @endif

@@ -22,6 +22,10 @@ class ModulesTableSeeder extends Seeder
             'active'=>1,
         ]);
         \App\Module::create([
+            'name'=>'處室介紹',
+            'active'=>1,
+        ]);
+        \App\Module::create([
             'name'=>'好站連結',
             'active'=>1,
         ]);
