@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '午餐系統-設定日期')
+@section('title', '午餐系統-修改日期')
 
 @section('content')
     <?php
@@ -12,12 +12,13 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>供餐日設定</h1>
+            <h1>供餐日修改</h1>
+            <h3 class="text-danger">若有訂餐資料了，請勿再更動，請由特殊處理！！</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">午餐系統</li>
                     <li class="breadcrumb-item"><a href="{{ route('lunch_setups.index') }}">午餐設定</a></li>
-                    <li class="breadcrumb-item">供餐日設定</li>
+                    <li class="breadcrumb-item">供餐日修改</li>
                 </ol>
             </nav>
             <br>
@@ -29,7 +30,7 @@
                                 <h3>{{ $semester }}學期各月份選取供餐日</h3>
                             </div>
                             <div class="card-body">
-                                {{ Form::open(['route' => 'lunch_orders.store', 'method' => 'POST','id'=>'store']) }}
+                                {{ Form::open(['route' => 'lunch_orders.update', 'method' => 'patch','id'=>'store']) }}
                                 @foreach($semester_dates as $k=>$v)
                                     <h3>{{ $k }}</h3>
                                     <table class="table table-bordered">
@@ -51,16 +52,17 @@
                                         <tr>
                                             @foreach($v as $k2 => $v2)
                                                 <?php
+                                                $checked = ($order_date_data[$v2])?"checked":"";
                                                 $this_date_w = get_date_w($v2);
                                                 if($this_date_w==0){
                                                     $text_color = "btn btn-danger btn-sm";
-                                                    $checked = "";
+
                                                 }elseif($this_date_w==6){
                                                     $text_color = "btn btn-success btn-sm";
-                                                    $checked = "";
+
                                                 }else{
                                                     $text_color = "btn btn-outline-dark btn-sm";
-                                                    $checked = "checked";
+
                                                 }
                                                 ?>
                                                 @if($k2 == 1)
@@ -70,7 +72,7 @@
                                                 @endif
                                                 <td><input type="checkbox" name="order_date[{{ $v2 }}]" id="d{{ $v2 }}" {{ $checked }}>
                                                     <label for="d{{ $v2 }}" class="{{ $text_color }}">{{ substr($v2,5,5) }}</label>
-                                                    <input type="text" class="form-control" placeholder="備註" name="ps[{{ $v2 }}]">
+                                                    <input type="text" class="form-control" placeholder="備註" name="ps[{{ $v2 }}]" value="{{ $ps[$v2] }}">
                                                 </td>
                                                 @if($this_date_w == 6)
                                         </tr>
@@ -82,7 +84,7 @@
                                     <hr>
                                 @endforeach
                                 <input type="hidden" name="semester" value="{{ $semester }}">
-                                <button class="btn btn-success" onclick="return confirm('確定送出？')">確定送出</button>
+                                <button class="btn btn-success" onclick="return confirm('確定修改嗎？')">確定修改</button>
                                 {{ Form::close() }}
                             </div>
                         </div>

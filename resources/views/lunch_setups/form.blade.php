@@ -38,18 +38,22 @@
         <div class="form-group">
             <label for="all_rece_num">經手人印章圖檔</label>
             {{ Form::file('file1', ['class' => 'form-control']) }}
+            @yield('seal1')
         </div>
         <div class="form-group">
             <label for="all_rece_num">主辦出納印章圖檔</label>
             {{ Form::file('file2', ['class' => 'form-control']) }}
+            @yield('seal2')
         </div>
         <div class="form-group">
             <label for="all_rece_num">主辦會計印章圖檔</label>
             {{ Form::file('file3', ['class' => 'form-control']) }}
+            @yield('seal3')
         </div>
         <div class="form-group">
             <label for="all_rece_num">機關長官印章圖檔</label>
             {{ Form::file('file4', ['class' => 'form-control']) }}
+            @yield('seal4')
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary" onclick="return confirm('確定儲存嗎？')">

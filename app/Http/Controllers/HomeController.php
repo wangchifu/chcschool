@@ -6,6 +6,8 @@ use App\Block;
 use App\SetupCol;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 class HomeController extends Controller
 {
@@ -89,5 +91,18 @@ class HomeController extends Controller
         $file = str_replace('&','/',$file);
         $file = storage_path('app/privacy/'.$file);
         return response()->download($file);
+    }
+
+    public function getImg($path)
+    {
+        $school_code = school_code();
+        $path = str_replace('&','/',$path);
+        $path = storage_path('app/privacy/'.$school_code.'/'.$path);
+        $file = File::get($path);
+        $type = File::mimeType($path);
+
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
     }
 }

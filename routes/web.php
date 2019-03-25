@@ -102,7 +102,11 @@ Route::group(['middleware' => 'auth'],function(){
 
     Route::get('lunch_orders/{semester}/create', 'LunchOrderController@create')->name('lunch_orders.create');
     Route::post('lunch_orders/store', 'LunchOrderController@store')->name('lunch_orders.store');
-    Route::get('lunch_orders/edit', 'LunchOrderController@edit')->name('lunch_orders.edit');
+    Route::get('lunch_orders/{semester}/edit', 'LunchOrderController@edit')->name('lunch_orders.edit');
+    Route::patch('lunch_orders/update', 'LunchOrderController@update')->name('lunch_orders.update');
+
+    //顯示上傳的圖片
+    Route::get('img/{path}', 'HomeController@getImg')->name('getImg');
 
 });
 

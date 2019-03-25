@@ -4,6 +4,50 @@
 
 @section('title', '午餐系統-修改設定')
 
+@section('seal1')
+    <?php
+    $school_code = school_code();
+    $seal1 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal1.png');
+    $path = 'lunches&'.$lunch_setup->id.'&seal1.png';
+    ?>
+    @if(file_exists($seal1))
+        <img src="{{ route('getImg',$path) }}" width="180">
+    @endif
+@endsection
+
+@section('seal2')
+    <?php
+    $school_code = school_code();
+    $seal2 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal2.png');
+    $path = 'lunches&'.$lunch_setup->id.'&seal2.png';
+    ?>
+    @if(file_exists($seal2))
+        <img src="{{ route('getImg',$path) }}" width="180">
+    @endif
+@endsection
+
+@section('seal3')
+    <?php
+    $school_code = school_code();
+    $seal3 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal3.png');
+    $path = 'lunches&'.$lunch_setup->id.'&seal3.png';
+    ?>
+    @if(file_exists($seal3))
+        <img src="{{ route('getImg',$path) }}" width="180">
+    @endif
+@endsection
+
+@section('seal4')
+    <?php
+    $school_code = school_code();
+    $seal4 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal4.png');
+    $path = 'lunches&'.$lunch_setup->id.'&seal4.png';
+    ?>
+    @if(file_exists($seal4))
+        <img src="{{ route('getImg',$path) }}" width="180">
+    @endif
+@endsection
+
 @section('content')
     <?php
 
