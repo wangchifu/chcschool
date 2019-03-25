@@ -36,7 +36,8 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Department::create($request->all());
+        return redirect()->route('departments.index');
     }
 
     /**
@@ -45,9 +46,9 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Department $department)
     {
-        //
+        return view('departments.show',compact('department'));
     }
 
     /**
@@ -56,9 +57,9 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Department $department)
     {
-        //
+        return view('departments.edit',compact('department'));
     }
 
     /**
@@ -68,9 +69,10 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Department $department)
     {
-        //
+        $department->update($request->all());
+        return redirect()->route('departments.index');
     }
 
     /**
@@ -79,8 +81,9 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Department $department)
     {
-        //
+        $department->delete();
+        return redirect()->route('departments.index');
     }
 }

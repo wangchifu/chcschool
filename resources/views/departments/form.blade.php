@@ -2,8 +2,12 @@
     <h3 class="card-header">內容資料</h3>
     <div class="card-body">
         <div class="form-group">
-            <label for="title">標題*</label>
+            <label for="title">處室*</label>
             {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required', 'placeholder' => '標題']) }}
+        </div>
+        <div class="form-group">
+            <label for="order_by">排序</label>
+            {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control','maxlength'=>'3']) }}
         </div>
         <div class="form-group">
             <label for="content">內文*</label>

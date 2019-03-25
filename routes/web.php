@@ -61,7 +61,9 @@ Route::get('open_files/{path?}' , 'OpenFileController@index')->name('open_files.
 Route::get('open_files_download/{path}' , 'OpenFileController@download')->name('open_files.download');
 
 //內容頁面
-Route::get('contents/{content}' , 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
+Route::get('contents/{content}/show' , 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
+//處室
+Route::get('departments/{department}/show', 'DepartmentController@show')->name('departments.show');
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
@@ -180,7 +182,7 @@ Route::group(['middleware' => 'admin'],function(){
     Route::post('users_groups', 'GroupController@users_groups_store')->name('users_groups.store');
     Route::delete('users_groups', 'GroupController@users_groups_destroy')->name('users_groups.destroy');
 
-    //處皺管理
+    //處室管理
     Route::get('departments', 'DepartmentController@index')->name('departments.index');
     Route::get('departments/create', 'DepartmentController@create')->name('departments.create');
     Route::post('departments', 'DepartmentController@store')->name('departments.store');

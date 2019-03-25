@@ -16,8 +16,8 @@
                 </ol>
             </nav>
             @include('layouts.errors')
-            {{ Form::open(['route' => 'contents.store', 'method' => 'POST']) }}
-            @include('contents.form')
+            {{ Form::open(['route' => 'departments.store', 'method' => 'POST']) }}
+            @include('departments.form')
             {{ Form::close() }}
         </div>
     </div>

@@ -29,6 +29,19 @@
                         <a class="nav-link" href="{{ route('open_files.index') }}">檔案庫</a>
                     </li>
                 @endif
+                <li class="nav-item dropdown @yield('nav_departments_active')">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        處室介紹
+                    </a>
+                    <?php $departments = \App\Department::orderBy('order_by')->get(); ?>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @foreach($departments as $department)
+                            <a class="dropdown-item" href="{{ route('departments.show',$department->id) }}">
+                                <i class="fas fa-puzzle-piece"></i> {{ $department->title }}
+                            </a>
+                        @endforeach
+                    </div>
+                </li>
                 @if(isset($module_setup['好站連結']))
                     <?php $types = \App\Type::orderBy('order_by')->get();
                     ?>
