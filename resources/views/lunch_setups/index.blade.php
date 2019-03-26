@@ -8,6 +8,9 @@
     <?php
 
     $active['teacher'] ="";
+    $active['list'] ="";
+    $active['special'] ="";
+    $active['order'] ="";
     $active['setup'] ="active";
     ?>
     <div class="row justify-content-center">
@@ -42,18 +45,20 @@
                                 @endif
                                 {{ $lunch_setup->semester }}
                             </td>
-                            <td nowrap>
+                            <td>
                                 @if($lunch_setup->teacher_open)
                                     <strong class="text-danger">隨時可訂(請盡速關閉)</strong>
                                 @else
-                                    <strong class="text-primary">最晚餐期前 <span class="text-danger">{{ $lunch_setup->die_line }}</span> 天可訂餐</strong>
+                                    <strong class="text-primary">最晚前 <span class="text-danger">{{ $lunch_setup->die_line }}</span> 天可訂餐</strong><br>
+                                    <small class="text-secondary">(如，2月的餐期，最晚 含1月{{ 32-$lunch_setup->die_line }}日前要訂餐)</small>
                                 @endif
                             </td>
                             <td>
                                 @if($lunch_setup->disable)
                                     <strong class="text-danger">期末結算，停止退餐</strong>
                                 @else
-                                    <strong class="text-primary">最晚前 <span class="text-danger">{{ $lunch_setup->die_line }}</span> 天可退餐</strong>
+                                    <strong class="text-primary">最晚前 <span class="text-danger">{{ $lunch_setup->die_line }}</span> 天可退餐</strong><br>
+                                    <small class="text-secondary">(如，2月1日，可以退 含2月{{ $lunch_setup->die_line+1 }}日 以後的餐)</small>
                                 @endif
                             </td>
                             <td>
@@ -75,6 +80,150 @@
                     </tbody>
                 </table>
                 {{ $lunch_setups->links() }}
+                <hr>
+                <div class="card">
+                    <div class="card-header">
+                        取餐地點管理
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>
+                                    停用?
+                                </th>
+                                <th>
+                                    名稱
+                                </th>
+                                <th>
+                                    動作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <form action="{{ route('lunch_setups.place_add') }}" method="post">
+                                @csrf
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="disable" id="disable" value="1"> <label for="disable">停用</label>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" name="name" required>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" onclick="return confirm('確定？')">新增地點</button>
+                                </td>
+                            </tr>
+                            </form>
+                            @foreach($places as $place)
+                                <?php $bgcolor =($place->disable)?"#FFB7DD":""; ?>
+                                <form action="{{ route('lunch_setups.place_update',$place->id) }}" method="post">
+                                <tr style="background-color: {{ $bgcolor }}">
+                                    <td>
+                                        <?php $check = ($place->disable)?"checked":""; ?>
+                                        <input type="checkbox" name="disable" {{ $check }} value="1" id="disable{{ $place->id }}"> <label for="disable{{ $place->id }}"> 停用</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="name" value="{{ $place->name }}" required>
+                                    </td>
+                                    <td>
+
+                                            @csrf
+                                            @method('patch')
+                                            <button class="btn btn-primary btn-sm" onclick="return confirm('確定更新？')">更新資料</button>
+                                    </td>
+                                </tr>
+                                </form>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <div class="card">
+                    <div class="card-header">
+                        廠商管理
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>
+                                    停用?
+                                </th>
+                                <th>
+                                    名稱
+                                </th>
+                                <th width="100">
+                                    餐價
+                                </th>
+                                <th width="200">
+                                    帳號
+                                </th>
+                                <th width="200">
+                                    密碼
+                                </th>
+                                <th>
+                                    動作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <form action="{{ route('lunch_setups.factory_add') }}" method="post">
+                                @csrf
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="disable" id="disable_f" value="1"> <label for="disable_f">停用</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="name" required>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="teacher_money" required>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="fid" required>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="fpwd" required>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success btn-sm" onclick="return confirm('確定？')">新增廠商</button>
+                                    </td>
+                                </tr>
+                            </form>
+                            @foreach($factories as $factory)
+                                <?php $bgcolor =($factory->disable)?"#FFB7DD":""; ?>
+                                <form action="{{ route('lunch_setups.factory_update',$factory->id) }}" method="post">
+                                    <tr style="background-color: {{ $bgcolor }}">
+                                        <td>
+                                            <?php $check = ($factory->disable)?"checked":""; ?>
+                                            <input type="checkbox" name="disable" {{ $check }} value="1" id="disable_f{{ $factory->id }}"> <label for="disable_f{{ $factory->id }}"> 停用</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="name" value="{{ $factory->name }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="teacher_money" value="{{ $factory->teacher_money }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="fid" value="{{ $factory->fid }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="fpwd" value="{{ $factory->fpwd }}" required>
+                                        </td>
+                                        <td>
+                                            @csrf
+                                            @method('patch')
+                                            <button class="btn btn-primary btn-sm" onclick="return confirm('確定更新？')">更新資料</button>
+                                        </td>
+                                    </tr>
+                                </form>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             @else
                 <h1 class="text-danger">你不是管理者</h1>
             @endif

@@ -17,7 +17,6 @@ class CreateLunchOrdersTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->unsignedInteger('semester');
-            $table->tinyInteger('disable')->nullable();//1停用
             $table->string('rece_name');//收據抬頭
             $table->string('rece_date');//收據開立日期
             $table->unsignedInteger('rece_num');//收據起始號

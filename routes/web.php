@@ -99,11 +99,20 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('lunch_setup/{lunch_setup}/edit', 'LunchSetupController@edit')->name('lunch_setups.edit');
     Route::patch('lunch_setup/{lunch_setup}/update', 'LunchSetupController@update')->name('lunch_setups.update');
     Route::delete('lunch_setup/{lunch_setup}/destroy', 'LunchSetupController@destroy')->name('lunch_setups.destroy');
+    Route::get('lunch_setup/{path}/{id}/del_file', 'LunchSetupController@del_file')->name('lunch_setups.del_file');
+    Route::post('lunch_setup/place_add', 'LunchSetupController@place_add')->name('lunch_setups.place_add');
+    Route::patch('lunch_setup/{lunch_place}/place_update', 'LunchSetupController@place_update')->name('lunch_setups.place_update');
+    Route::post('lunch_setup/factory_add', 'LunchSetupController@factory_add')->name('lunch_setups.factory_add');
+    Route::patch('lunch_setup/{lunch_factory}/factory_update', 'LunchSetupController@factory_update')->name('lunch_setups.factory_update');
 
+    Route::get('lunch_orders/index', 'LunchOrderController@index')->name('lunch_orders.index');
     Route::get('lunch_orders/{semester}/create', 'LunchOrderController@create')->name('lunch_orders.create');
     Route::post('lunch_orders/store', 'LunchOrderController@store')->name('lunch_orders.store');
     Route::get('lunch_orders/{semester}/edit', 'LunchOrderController@edit')->name('lunch_orders.edit');
+    Route::get('lunch_orders/{lunch_order}/edit_order', 'LunchOrderController@edit_order')->name('lunch_orders.edit_order');
+    Route::patch('lunch_orders/{lunch_order}/order_save', 'LunchOrderController@order_save')->name('lunch_orders.order_save');
     Route::patch('lunch_orders/update', 'LunchOrderController@update')->name('lunch_orders.update');
+
 
     //顯示上傳的圖片
     Route::get('img/{path}', 'HomeController@getImg')->name('getImg');

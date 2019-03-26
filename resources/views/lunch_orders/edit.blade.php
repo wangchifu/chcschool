@@ -6,21 +6,17 @@
 
 @section('content')
     <?php
-
     $active['teacher'] ="";
+    $active['list'] ="";
+    $active['special'] ="";
+    $active['order'] ="";
     $active['setup'] ="active";
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>供餐日修改</h1>
             <h3 class="text-danger">若有訂餐資料了，請勿再更動，請由特殊處理！！</h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">午餐系統</li>
-                    <li class="breadcrumb-item"><a href="{{ route('lunch_setups.index') }}">午餐設定</a></li>
-                    <li class="breadcrumb-item">供餐日修改</li>
-                </ol>
-            </nav>
+            @include('lunches.nav')
             <br>
             @if($admin)
                 <div class="row">

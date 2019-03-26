@@ -9,7 +9,6 @@ class LunchOrder extends Model
     protected $fillable = [
         'name',
         'semester',
-        'disable',
         'rece_name',
         'rece_date',
         'rece_num',

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\LunchFactory;
+use App\LunchPlace;
 use App\LunchSetup;
 use Illuminate\Http\Request;
 
@@ -13,9 +15,13 @@ class LunchSetupController extends Controller
 
         $lunch_setups = LunchSetup::orderBy('semester','DESC')
             ->paginate(10);
+        $places = LunchPlace::orderBy('disable')->get();
+        $factories = LunchFactory::orderBy('disable')->get();
         $data = [
             'admin'=>$admin,
             'lunch_setups'=>$lunch_setups,
+            'places'=>$places,
+            'factories'=>$factories,
         ];
 
         return view('lunch_setups.index',$data);
@@ -150,6 +156,55 @@ class LunchSetupController extends Controller
         $school_code = school_code();
         delete_dir(storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id));
         $lunch_setup->delete();
+        return redirect()->route('lunch_setups.index');
+    }
+
+    public function del_file($path,$id)
+    {
+        $school_code = school_code();
+        $path = str_replace('&','/',$path);
+        $path = storage_path('app/privacy/'.$school_code.'/'.$path);
+        if(file_exists($path)){
+            unlink($path);
+        }
+        return redirect()->route('lunch_setups.edit',$id);
+    }
+
+    public function place_add(Request $request)
+    {
+        $att['name'] = $request->input('name');
+        $att['disable'] = ($request->input('disable'))?1:null;
+        LunchPlace::create($att);
+        return redirect()->route('lunch_setups.index');
+    }
+
+    public function place_update(Request $request , LunchPlace $lunch_place)
+    {
+        $att['name'] = $request->input('name');
+        $att['disable'] = ($request->input('disable'))?1:null;
+        $lunch_place->update($att);
+        return redirect()->route('lunch_setups.index');
+    }
+
+    public function factory_add(Request $request)
+    {
+        $att['name'] = $request->input('name');
+        $att['teacher_money'] = $request->input('teacher_money');
+        $att['fid'] = $request->input('fid');
+        $att['fpwd'] = $request->input('fpwd');
+        $att['disable'] = ($request->input('disable'))?1:null;
+        LunchFactory::create($att);
+        return redirect()->route('lunch_setups.index');
+    }
+
+    public function factory_update(Request $request , LunchFactory $lunch_factory)
+    {
+        $att['name'] = $request->input('name');
+        $att['teacher_money'] = $request->input('teacher_money');
+        $att['fid'] = $request->input('fid');
+        $att['fpwd'] = $request->input('fpwd');
+        $att['disable'] = ($request->input('disable'))?1:null;
+        $lunch_factory->update($att);
         return redirect()->route('lunch_setups.index');
     }
 }

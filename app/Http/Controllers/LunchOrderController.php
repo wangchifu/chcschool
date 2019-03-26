@@ -9,6 +9,17 @@ use Illuminate\Http\Request;
 
 class LunchOrderController extends Controller
 {
+    public function index()
+    {
+        $admin = check_power('午餐系統','A',auth()->user()->id);
+        $lunch_orders = LunchOrder::orderBy('name','DESC')->paginate(6);
+        $data = [
+            'admin'=>$admin,
+            'lunch_orders'=>$lunch_orders,
+        ];
+        return view('lunch_orders.index',$data);
+    }
+
     public function create($semester)
     {
         $admin = check_power('午餐系統','A',auth()->user()->id);
@@ -150,5 +161,24 @@ class LunchOrderController extends Controller
 
 
         return redirect()->route('lunch_setups.index');
+    }
+
+    public function edit_order(Lunchorder $lunch_order)
+    {
+        $data = [
+            'lunch_order'=>$lunch_order,
+        ];
+        return view('lunch_orders.edit_order',$data);
+    }
+
+    public function order_save(Request $request,Lunchorder $lunch_order)
+    {
+        $att['rece_name'] = $request->input('rece_name');
+        $att['rece_date'] = $request->input('rece_date');
+        $att['rece_num'] = $request->input('rece_num');
+        $att['order_ps'] = $request->input('order_ps');
+        $lunch_order->update($att);
+
+        return redirect()->route('lunch_orders.index');
     }
 }

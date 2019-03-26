@@ -8,6 +8,9 @@
     <?php
 
     $active['teacher'] ="active";
+    $active['list'] ="";
+    $active['special'] ="";
+    $active['order'] ="";
     $active['setup'] ="";
     ?>
     <div class="row justify-content-center">
