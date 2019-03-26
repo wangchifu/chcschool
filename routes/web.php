@@ -91,7 +91,9 @@ Route::group(['middleware' => 'auth'],function(){
     Route::delete('fixes/{fix}', 'FixController@destroy')->name('fixes.destroy');
 
     //午餐系統
-    Route::get('lunches', 'LunchController@index')->name('lunches.index');
+    Route::get('lunches/{lunch_order_id?}', 'LunchController@index')->name('lunches.index');
+    Route::post('lunches', 'LunchController@store')->name('lunches.store');
+    Route::patch('lunches', 'LunchController@update')->name('lunches.update');
 
     Route::get('lunch_setup', 'LunchSetupController@index')->name('lunch_setups.index');
     Route::get('lunch_setup/create', 'LunchSetupController@create')->name('lunch_setups.create');
@@ -113,6 +115,9 @@ Route::group(['middleware' => 'auth'],function(){
     Route::patch('lunch_orders/{lunch_order}/order_save', 'LunchOrderController@order_save')->name('lunch_orders.order_save');
     Route::patch('lunch_orders/update', 'LunchOrderController@update')->name('lunch_orders.update');
 
+    Route::get('lunch_specials/index', 'LunchSpecialController@index')->name('lunch_specials.index');
+
+    Route::get('lunch_lists/index', 'LunchListController@index')->name('lunch_lists.index');
 
     //顯示上傳的圖片
     Route::get('img/{path}', 'HomeController@getImg')->name('getImg');

@@ -142,6 +142,15 @@ if(! function_exists('check_power')){
     }
 }
 
+//查某日為中文星期幾
+if(! function_exists('get_chinese_weekday')){
+    function get_chinese_weekday($datetime)
+    {
+        $weekday = date('w', strtotime($datetime));
+        return '星期' . ['日', '一', '二', '三', '四', '五', '六'][$weekday];
+    }
+}
+
 //秀某學期的每一天
 if(! function_exists('get_semester_dates')){
     function get_semester_dates($semester)
