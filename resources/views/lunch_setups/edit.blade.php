@@ -5,6 +5,8 @@
 @section('title', '午餐系統-修改設定')
 
 @section('content')
+    <script src="{{ asset('gijgo/js/gijgo.min.js') }}" type="text/javascript"></script>
+    <link href="{{ asset('gijgo/css/gijgo.min.css') }}" rel="stylesheet" type="text/css">
     <?php
     $active['teacher'] ="";
     $active['list'] ="";
@@ -49,7 +51,15 @@
                     </div>
                     <div class="form-group">
                         <label for="all_rece_date"><strong>全學期收據開立日期*</strong><small class="text-danger">(如 2019-06-30)</small></label>
-                        {{ Form::text('all_rece_date',null,['id'=>'all_rece_date','class' => 'form-control','required'=>'required','maxlength'=>'10']) }}
+                        {{ Form::text('all_rece_date',null,['id'=>'all_rece_date','class' => 'form-control','required'=>'required','maxlength'=>'10','width'=>'276']) }}
+                        <script src="{{ asset('gijgo/js/messages/messages.zh-TW.js') }}"></script>
+                        <script>
+                            $('#all_rece_date').datepicker({
+                                uiLibrary: 'bootstrap4',
+                                format: 'yyyy-mm-dd',
+                                locale: 'zh-TW',
+                            });
+                        </script>
                     </div>
                     <div class="form-group">
                         <label for="all_rece_num"><strong>全學期收據起始號*</strong></label>

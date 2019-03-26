@@ -116,6 +116,9 @@ Route::group(['middleware' => 'auth'],function(){
     Route::patch('lunch_orders/update', 'LunchOrderController@update')->name('lunch_orders.update');
 
     Route::get('lunch_specials/index', 'LunchSpecialController@index')->name('lunch_specials.index');
+    Route::get('lunch_specials/one_day', 'LunchSpecialController@one_day')->name('lunch_specials.one_day');
+    Route::post('lunch_specials/one_day_store', 'LunchSpecialController@one_day_store')->name('lunch_specials.one_day_store');
+    Route::get('lunch_specials/late_teacher', 'LunchSpecialController@late_teacher')->name('lunch_specials.late_teacher');
 
     Route::get('lunch_lists/index', 'LunchListController@index')->name('lunch_lists.index');
 

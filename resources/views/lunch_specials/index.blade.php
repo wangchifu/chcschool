@@ -19,8 +19,8 @@
             @include('lunches.nav')
             <br>
             @if($admin)
-                <a href="" class="btn btn-info">逾期教師補訂餐</a>
-                <a href="" class="btn btn-info">單日統一不供餐</a>
+                <a href="{{ route('lunch_specials.late_teacher') }}" class="btn btn-info">逾期教師補訂餐</a>
+                <a href="{{ route('lunch_specials.one_day') }}" class="btn btn-info">單日供餐變更</a>
             @else
                 <h1 class="text-danger">你不是管理者</h1>
             @endif
