@@ -47,7 +47,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('glogin');
 Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('pic', 'HomeController@pic')->name('pic');
 
 
 //公告系統

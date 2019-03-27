@@ -31,6 +31,6 @@ class CreateLunchFactoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lunch_factoryies');
+        Schema::dropIfExists('lunch_factories');
     }
 }

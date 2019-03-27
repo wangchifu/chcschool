@@ -30,9 +30,23 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <div class="col-md-10 text-md-right">
+                            <img src="{{ route('pic') }}" class="img-fluid">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>
+
+                        <div class="col-md-6">
+                            <input tabindex="3" id="password" type="text" class="form-control" name="chaptcha" required placeholder="國字改數字" maxlength="5">
+                        </div>
+                    </div>
+
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
-                            <button tabindex="3" type="submit" class="btn btn-primary btn-sm">
+                            <button tabindex="4" type="submit" class="btn btn-primary btn-sm">
                                 <i class="fas fa-sign-in-alt"></i> 登入
                             </button>
                             <div class="text-right">

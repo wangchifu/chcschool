@@ -41,6 +41,14 @@ class ModulesTableSeeder extends Seeder
             'name'=>'報修系統',
             'active'=>1,
         ]);
+        \App\Module::create([
+            'name'=>'午餐系統',
+            'active'=>1,
+        ]);
+        \App\Module::create([
+            'name'=>'校務行事曆',
+            'active'=>1,
+        ]);
 
     }
 }

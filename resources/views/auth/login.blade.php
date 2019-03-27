@@ -39,6 +39,19 @@
                             @endif
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-md-10 text-md-right">
+                            <img src="{{ route('pic') }}" class="img-fluid">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>
+
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="chaptcha" required placeholder="國字改數字" maxlength="5">
+                        </div>
+                    </div>
 
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
