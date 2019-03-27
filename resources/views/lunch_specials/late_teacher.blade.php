@@ -26,6 +26,9 @@
                         選擇教師
                     </div>
                     <div class="card-body">
+                        @include('layouts.errors')
+                        <form action="{{ route('lunch_specials.late_teacher_show') }}" method="post">
+                            @csrf
                         <div class="form-group">
                             <label>
                                 選擇教職員
@@ -38,6 +41,10 @@
                             </label>
                             {{ Form::select('lunch_order_id', $lunch_order_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
                         </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary btn-sm">送出</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             @else

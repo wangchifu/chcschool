@@ -19,8 +19,10 @@
             @include('lunches.nav')
             <br>
             @if($admin)
+                <p class="text-danger">特殊處理功能強大，請務必謹慎操作！</p>
                 <a href="{{ route('lunch_specials.late_teacher') }}" class="btn btn-info">逾期教師補訂餐</a>
-                <a href="{{ route('lunch_specials.one_day') }}" class="btn btn-info">單日供餐變更</a>
+                <a href="{{ route('lunch_specials.one_day') }}" class="btn btn-info">單日供餐統一變更</a>
+                <a href="{{ route('lunch_specials.teacher_change') }}" class="btn btn-info">教師訂餐變更</a>
             @else
                 <h1 class="text-danger">你不是管理者</h1>
             @endif

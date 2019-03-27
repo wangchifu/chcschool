@@ -39,6 +39,7 @@ class LunchSetupController extends Controller
             'die_line'=>'required|numeric',
             'all_rece_name'=>'required',
             'all_rece_date'=>'required|date',
+            'all_rece_no'=>'required',
             'all_rece_num'=>'required|numeric',
             'file1'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'file2'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -55,6 +56,7 @@ class LunchSetupController extends Controller
         }
         $att['all_rece_name']=$request->input('all_rece_name');
         $att['all_rece_date']=$request->input('all_rece_date');
+        $att['all_rece_no']=$request->input('all_rece_no');
         $att['all_rece_num']=$request->input('all_rece_num');
 
         $lunch_setup = LunchSetup::create($att);
@@ -101,6 +103,7 @@ class LunchSetupController extends Controller
             'die_line'=>'required|numeric',
             'all_rece_name'=>'required',
             'all_rece_date'=>'required|date',
+            'all_rece_no'=>'required',
             'all_rece_num'=>'required|numeric',
             'file1'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'file2'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -121,6 +124,7 @@ class LunchSetupController extends Controller
         }
         $att['all_rece_name']=$request->input('all_rece_name');
         $att['all_rece_date']=$request->input('all_rece_date');
+        $att['all_rece_no']=$request->input('all_rece_no');
         $att['all_rece_num']=$request->input('all_rece_num');
 
         $lunch_setup->update($att);

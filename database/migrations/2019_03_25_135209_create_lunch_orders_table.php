@@ -19,6 +19,7 @@ class CreateLunchOrdersTable extends Migration
             $table->unsignedInteger('semester');
             $table->string('rece_name');//收據抬頭
             $table->string('rece_date');//收據開立日期
+            $table->unsignedInteger('rece_no');//收據字號
             $table->unsignedInteger('rece_num');//收據起始號
             $table->string('order_ps')->nullable();//說明
             $table->timestamps();

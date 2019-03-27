@@ -21,6 +21,7 @@ class CreateLunchSetupsTable extends Migration
             $table->tinyInteger('disable')->nullable();//停止退餐訂餐
             $table->string('all_rece_name');//收據抬頭
             $table->string('all_rece_date');//收據開立日期
+            $table->unsignedInteger('all_rece_no');//收據字號
             $table->unsignedInteger('all_rece_num');//收據起始號
             $table->timestamps();
         });

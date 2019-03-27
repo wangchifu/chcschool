@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="all_rece_name"><strong>全學期收據抬頭名稱*</strong><small class="text-danger">(如 xx國小x學期午餐費)</small></label>
+                        <label for="all_rece_name"><strong>全學期收據抬頭名稱*</strong><small class="text-danger">(如 彰化縣xx鎮xx國民小學)</small></label>
                         {{ Form::text('all_rece_name',null,['id'=>'all_rece_name','class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
@@ -60,6 +60,10 @@
                                 locale: 'zh-TW',
                             });
                         </script>
+                    </div>
+                    <div class="form-group">
+                        <label for="all_rece_name"><strong>全學期收據字號*</strong><small class="text-danger">(如 彰和東午字)</small></label>
+                        {{ Form::text('all_rece_no',null,['id'=>'all_rece_no','class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
                         <label for="all_rece_num"><strong>全學期收據起始號*</strong></label>

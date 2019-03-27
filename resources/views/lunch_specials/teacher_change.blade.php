@@ -17,7 +17,7 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>午餐系統-特殊處理：單日供餐變更</h1>
+            <h1>午餐系統-特殊處理：教師訂餐變</h1>
             @include('lunches.nav')
             <br>
             @if($admin)
@@ -26,18 +26,17 @@
                         變更資料
                     </div>
                     <div class="card-body">
-                        <ul class="text-danger">
-                            <li>
-                                注意！若該日變更為「供餐「後，所有人均仍未訂餐。
-                            </li>
-                            <li>
-                                若該日變更為「不供餐」後，所有人立即退訂！
-                            </li>
-                        </ul>
-                        <form action="{{ route('lunch_specials.one_day_store') }}" method="post">
+                        @include('layouts.errors')
+                        <form action="{{ route('lunch_specials.teacher_change_store') }}" method="post">
                             @csrf
-                        <label>1.欲變更的日期</label>
                         <div class="form-group">
+                            <label>
+                                1.選擇教職員
+                            </label>
+                            {{ Form::select('user_id', $user_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
+                        </div>
+                        <div class="form-group">
+                            <label>2.欲變更的日期</label>
                             {{ Form::text('order_date',null,['id'=>'order_date','class' => 'form-control','required'=>'required','maxlength'=>'10','width'=>'276']) }}
                             <script src="{{ asset('gijgo/js/messages/messages.zh-TW.js') }}"></script>
                             <script>
@@ -49,16 +48,15 @@
                             </script>
                         </div>
                         <div class="form-group">
-                            <label>2.變更選項</label>
+                            <label>3.變更選項</label>
                             <select name="action" class="form-control" required>
                                 <option value="">--請選擇--</option>
-                                <option value="eat">供餐</option>
-                                <option value="not_eat">不供餐</option>
+                                <option value="eat">訂餐</option>
+                                <option value="not_eat">不訂餐</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary btn-sm" onclick="return confirm('確定送出？')">送出變更</button>
-                            @include('layouts.errors')
                         </div>
                         </form>
                     </div>

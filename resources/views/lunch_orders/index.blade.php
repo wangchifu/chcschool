@@ -42,6 +42,7 @@
                                 <small>
                                     收據抬頭：{{ $lunch_order->rece_name }}<br>
                                     收據日期：{{ $lunch_order->rece_date }}<br>
+                                    收據字號：{{ $lunch_order->rece_no }}<br>
                                     收據啟始號：{{ $lunch_order->rece_num }}
                                 </small>
                             </td>

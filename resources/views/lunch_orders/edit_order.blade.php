@@ -44,6 +44,10 @@
                         </script>
                     </div>
                     <div class="form-group">
+                        <label>收據字號*</label>
+                        <input type="text" name="rece_no" value="{{ $lunch_order->rece_no }}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
                         <label>收據啟始號*</label>
                         <input type="text" name="rece_num" value="{{ $lunch_order->rece_num }}" class="form-control" required>
                     </div>

@@ -20,6 +20,7 @@
             <br>
             @if($admin)
                 <a href="" class="btn btn-info">廠商頁面</a>
+                <a href="{{ route('lunch_lists.every_day') }}" class="btn btn-info">教職餐期逐日訂餐</a>
                 <a href="" class="btn btn-info">匯出全學期收據</a>
             @else
                 <h1 class="text-danger">你不是管理者</h1>

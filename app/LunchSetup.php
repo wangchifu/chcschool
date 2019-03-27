@@ -13,6 +13,7 @@ class LunchSetup extends Model
         'disable',
         'all_rece_name',
         'all_rece_date',
+        'all_rece_no',
         'all_rece_num',
     ];
 }

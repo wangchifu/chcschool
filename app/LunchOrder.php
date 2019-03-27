@@ -11,6 +11,7 @@ class LunchOrder extends Model
         'semester',
         'rece_name',
         'rece_date',
+        'rece_no',
         'rece_num',
         'order_ps',
     ];
