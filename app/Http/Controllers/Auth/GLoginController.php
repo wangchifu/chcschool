@@ -38,7 +38,7 @@ class GLoginController extends Controller
                 return back()->withErrors(['gsuite_error'=>['非教職員 GSuite 帳號']]);
             }
 
-
+            $database = config('app.database');
             if(isset($_SERVER['HTTP_HOST'])){
                 $d = $database[$_SERVER['HTTP_HOST']];
             }else{
