@@ -38,7 +38,7 @@ class GLoginController extends Controller
                 return back()->withErrors(['gsuite_error'=>['非教職員 GSuite 帳號']]);
             }
 
-            /*
+
             if(isset($_SERVER['HTTP_HOST'])){
                 $d = $database[$_SERVER['HTTP_HOST']];
             }else{
@@ -50,7 +50,7 @@ class GLoginController extends Controller
                 return back()->withErrors(['gsuite_error'=>['非本校教職員 GSuite 帳號']]);
             }
 
-             */
+
 
             //是否已有此帳號
             $user = User::where('username',$request->input('username'))
