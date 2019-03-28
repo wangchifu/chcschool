@@ -31,7 +31,9 @@
                     </div>
 
                     <div class="form-group row">
-                        <div class="col-md-10 text-md-right">
+                        <div class="col-md-4 text-md-left">
+                        </div>
+                        <div class="col-md-6 text-md-left">
                             <img src="{{ route('pic') }}" class="img-fluid">
                         </div>
                     </div>
@@ -40,7 +42,7 @@
                         <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>
 
                         <div class="col-md-6">
-                            <input tabindex="3" id="password" type="text" class="form-control" name="chaptcha" required placeholder="國字改數字" maxlength="5">
+                            <input tabindex="3" id="password" type="text" class="form-control" name="chaptcha" required placeholder="上圖數字" maxlength="5">
                         </div>
                     </div>
 
