@@ -16,13 +16,26 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('top','DESC')
+        $posts = Post::where('insite',null)
+            ->orderBy('top','DESC')
             ->orderBy('created_at','DESC')
             ->paginate(20);
         $data = [
             'posts'=>$posts
         ];
         return view('posts.index',$data);
+    }
+
+    public function insite()
+    {
+        $posts = Post::where('insite','1')
+            ->orderBy('top','DESC')
+            ->orderBy('created_at','DESC')
+            ->paginate(20);
+        $data = [
+            'posts'=>$posts,
+        ];
+        return view('posts.insite',$data);
     }
 
     /**

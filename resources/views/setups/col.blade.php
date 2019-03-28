@@ -22,10 +22,29 @@
                 <h3 class="card-header">首頁欄位</h3>
                 <div class="card-body">
                     {{ Form::open(['route' => 'setups.add_col', 'method' => 'post']) }}
-                    <div class="form-group">
-                        <label for="site_name">欄位寬度比例 ( 1-12 整數 )</label>
-                        {{ Form::text('num',null,['class' => 'form-control','required'=>'required','maxlength'=>'2']) }}
-                    </div>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="order_by">1.排序</label>
+                                    {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="site_name">2.名稱</label>
+                                    {{ Form::text('title',null,['class' => 'form-control','required'=>'required']) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="site_name">3.欄位寬度比例 ( 1-12 整數 )</label>
+                                    {{ Form::text('num',null,['class' => 'form-control','required'=>'required','maxlength'=>'2']) }}
+                                </div>
+                            </td>
+
+                        </tr>
+                    </table>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('確定新增？')">
                             <i class="fas fa-plus"></i> 新增欄位
@@ -36,7 +55,10 @@
                         <thead class="thead-light">
                         <tr>
                             <th>
-                                欄 id
+                                名稱 (id)
+                            </th>
+                            <th>
+                                排序
                             </th>
                             <th>
                                 所佔比例 ( bootstrap 網頁一行佔 12 )
@@ -50,7 +72,10 @@
                         @foreach($setup_cols as $setup_col)
                             <tr>
                                 <td>
-                                    {{ $setup_col->id }}
+                                    {{ $setup_col->title }} ({{ $setup_col->id }})
+                                </td>
+                                <td>
+                                    {{ $setup_col->order_by }}
                                 </td>
                                 <td>
                                     {{ $setup_col->num }}

@@ -11,5 +11,6 @@ class Setup extends Model
         'nav_color',
         'title_image',
         'views',
+        'footer',
     ];
 }

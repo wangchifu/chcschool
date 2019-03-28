@@ -595,6 +595,7 @@ DROP TABLE IF EXISTS `setup_cols`;
 CREATE TABLE `setup_cols` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `num` tinyint(4) NOT NULL,
+  `order_by` int(10) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -624,6 +625,7 @@ CREATE TABLE `setups` (
   `nav_color` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `title_image` tinyint(4) DEFAULT NULL,
   `views` int(10) unsigned NOT NULL,
+  `footer` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)

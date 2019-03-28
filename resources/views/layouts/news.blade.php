@@ -1,9 +1,23 @@
 <?php
-    $posts = \App\Post::orderBy('top','DESC')->orderBy('created_at','DESC')->paginate(10);
-    $school_code = school_code();
     $i=1;
+    if($insite=="insite"){
+        $active1 = null;
+        $active2 = "active";
+    }
+    if($insite==null){
+        $active1 = "active";
+        $active2 = null;
+    }
 ?>
 <h1>最新公告</h1>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {{ $active1 }}" href="{{ route('index') }}">一般公告</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ $active2 }}" href="{{ route('insite','insite') }}">內部公告</a>
+    </li>
+</ul>
 <table class="table table-striped">
     <tbody>
     @foreach($posts as $post)
@@ -43,6 +57,9 @@
                         @if($post->top)
                             <p class="badge badge-danger">置頂</p>
                         @endif
+                        @if($post->insite)
+                            <p class="badge badge-danger">內部公告</p>
+                        @endif
                     <a href="{{ route('posts.show',$post->id) }}">{{ $post->title }}</a>
                     </h5>
                     <?php $content = str_limit($post->content,'320'); ?>
@@ -56,6 +73,9 @@
                     </div>
                 @else
                     <span class='text-danger'>[ 內部公告，請登入後瀏覽。 ]</span>
+                    <div class="text-secondary">
+                        {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
+                    </div>
                 @endif
             </td>
         </tr>

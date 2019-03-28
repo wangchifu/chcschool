@@ -49,6 +49,9 @@
 
             <br><br>
             <p class="lead">
+            @if($post->insite)
+                <p class="badge badge-danger">內部公告</p>
+            @endif
                 張貼者
                 <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>　　　
                 @auth

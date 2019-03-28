@@ -4,7 +4,11 @@
 <br>
 <footer class="footer bg-light">
     <div class="container">
-        <p class="text-center text-secondary">Copyright &copy; {{ $setup->site_name }} 訪客人次：{{ $setup->views }}</p>
+        <?php
+            $people = $setup->views;
+            $footer = str_replace('%訪客人次%','訪客人次：'.$people,$setup->footer);
+        ?>
+        {!! $footer !!}
     </div>
 </footer>
 <script src="{{ asset('bootstrap-4.1.1/js/bootstrap.min.js') }}"></script>

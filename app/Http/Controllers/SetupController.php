@@ -123,13 +123,14 @@ class SetupController extends Controller
     {
         $att['site_name'] = $request->input('site_name');
         $att['views'] = $request->input('views');
+        $att['footer'] = $request->input('footer');
         $setup->update($att);
         return redirect()->route('setups.index');
     }
 
     public function col()
     {
-        $setup_cols = SetupCol::all();
+        $setup_cols = SetupCol::orderBy('order_by')->get();
         $data = [
             'setup_cols'=>$setup_cols,
         ];
@@ -138,7 +139,9 @@ class SetupController extends Controller
 
     public function add_col(Request $request)
     {
+        $att['title'] = $request->input('title');
         $att['num'] = $request->input('num');
+        $att['order_by'] = $request->input('order_by');
         SetupCol::create($att);
         return redirect()->route('setups.col');
     }
@@ -166,12 +169,16 @@ class SetupController extends Controller
 
     public function block()
     {
-        $setup_cols = SetupCol::pluck('id', 'id')->toArray();
+        $setup_cols = SetupCol::orderBy('order_by')->get();
+        foreach($setup_cols as $setup_col){
+            $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
+        }
+
         $blocks = Block::orderBy('setup_col_id')
             ->orderBy('order_by')
             ->get();
         $data = [
-            'setup_cols'=>$setup_cols,
+            'setup_array'=>$setup_array,
             'blocks'=>$blocks,
         ];
         return view('setups.block',$data);

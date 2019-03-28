@@ -15,7 +15,9 @@ class CreateSetupColTable extends Migration
     {
         Schema::create('setup_cols', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('title');
             $table->tinyInteger('num');
+            $table->unsignedInteger('order_by')->nullable();//排序
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Block;
+use App\Post;
 use App\SetupCol;
 use App\User;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($insite=null)
     {
         $school_code = school_code();
         $files = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
@@ -44,7 +45,7 @@ class HomeController extends Controller
 
         $setup = \App\Setup::find(1);
 
-        $setup_cols = SetupCol::all();
+        $setup_cols = SetupCol::orderBy('order_by')->get();
         foreach($setup_cols as $setup_col){
             $bs = Block::where('setup_col_id',$setup_col->id)
                 ->orderBy('order_by')
@@ -53,12 +54,26 @@ class HomeController extends Controller
             $blocks[$setup_col->id] = $bs;
 
         }
+        if($insite=="insite"){
+            $posts = Post::where('insite','1')
+                ->orderBy('top','DESC')
+                ->orderBy('created_at','DESC')
+                ->paginate(10);
+        }elseif($insite==null){
+            $posts = Post::where('insite',null)
+                ->orderBy('top','DESC')
+                ->orderBy('created_at','DESC')
+                ->paginate(10);
+        }
+
         $data = [
             'school_code'=>$school_code,
             'photos'=>$photos,
             'setup'=>$setup,
             'setup_cols'=>$setup_cols,
             'blocks'=>$blocks,
+            'posts'=>$posts,
+            'insite'=>$insite,
         ];
         return view('index',$data);
     }

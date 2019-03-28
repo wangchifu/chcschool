@@ -23,7 +23,7 @@ if(isset($_SERVER['HTTP_HOST'])){
 |
 */
 Route::get('/','HomeController@index')->name('index');
-
+Route::get('insite/{insite}','HomeController@index')->name('insite');
 //Auth::routes();
 #登入
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -52,6 +52,7 @@ Route::get('pic', 'HomeController@pic')->name('pic');
 
 //公告系統
 Route::get('posts' , 'PostsController@index')->name('posts.index');
+Route::get('posts/insite' , 'PostsController@insite')->name('posts.insite');
 Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
 Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');

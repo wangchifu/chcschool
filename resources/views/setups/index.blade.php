@@ -36,6 +36,20 @@
                         {{ Form::text('views',$setup->views,['class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
+                        <label for="footer">置底 <small>( 變數 %訪客人次% 可顯示訪客人次)</small></label>
+                        {{ Form::textarea('footer',$setup->footer,['id'=>'footer','class'=>'form-control']) }}
+                    </div>
+                    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+                    <script>
+                        CKEDITOR.replace('footer'
+                            ,{
+                                filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+                                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
+                                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
+                            });
+                    </script>
+                    <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
                             <i class="fas fa-save"></i> 儲存設定
                         </button>

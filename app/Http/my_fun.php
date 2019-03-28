@@ -20,7 +20,7 @@ if (! function_exists('get_files')) {
             if ($handle = opendir($folder)) { //開啟現在的資料夾
                 while (false !== ($file = readdir($handle))) {
                     //避免搜尋到的資料夾名稱是false,像是0
-                    if ($file != "." && $file != "..") {
+                    if ($file != "." && $file != ".." && $file !=".DS_Store") {
                         //去除掉..跟.
                         array_push($files,$file);
                     }

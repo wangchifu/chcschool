@@ -27,7 +27,7 @@
                             <td>
                                 <div class="form-group">
                                     <label for="site_name">1.放置欄位</label>
-                                    {{ Form::select('setup_col_id', $setup_cols,null, ['class' => 'form-control','placeholder'=>'']) }}
+                                    {{ Form::select('setup_col_id', $setup_array,null, ['class' => 'form-control','placeholder'=>'']) }}
                                 </div>
                             </td>
                             <td>

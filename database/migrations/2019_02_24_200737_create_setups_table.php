@@ -19,6 +19,7 @@ class CreateSetupsTable extends Migration
             $table->string('nav_color')->nullable();
             $table->tinyInteger('title_image')->nullable();
             $table->unsignedInteger('views');
+            $table->text('footer')->nullable();//置底
             $table->timestamps();
         });
     }
