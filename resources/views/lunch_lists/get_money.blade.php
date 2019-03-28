@@ -1,6 +1,7 @@
 <?php
 echo "<body onload='window.print()'>";
 ?>
+<h2>餐期：{{ $lunch_order->name }}</h2>
 <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
     <tr bgcolor='#005DBE' style='color:white;'>
         <th>
@@ -14,7 +15,7 @@ echo "<body onload='window.print()'>";
             金額
         </th>
         <th>
-            已收打勾
+            已收費者打勾
         </th>
     </tr>
     <?php $total_money = 0;$total_days=0; ?>

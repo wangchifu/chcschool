@@ -7,11 +7,11 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1><i class="fas fa-link"></i> 新增連結</h1>
+            <h1>新增連結</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('links.index') }}">內容列表</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('links.index') }}">連結列表</a></li>
                     <li class="breadcrumb-item active" aria-current="page">新增連結</li>
                 </ol>
             </nav>

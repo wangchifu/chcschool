@@ -19,7 +19,7 @@
             @include('lunches.nav')
             <br>
             <form name=myform>
-            <div class="form-control">
+            <div class="form-group">
                 {{ Form::select('lunch_order_id', $lunch_order_array,$lunch_order_id, ['class' => 'form-control','placeholder'=>'--請選擇--','onchange'=>'jump()']) }}
             </div>
             </form>

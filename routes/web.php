@@ -69,6 +69,9 @@ Route::get('departments/{department}/show', 'DepartmentController@show')->name('
 Route::get('calendars/index/{semester?}' , 'CalendarController@index')->name('calendars.index');
 Route::get('calendars/print/{semester}' , 'CalendarController@print')->name('calendars.print');
 
+//廠商頁面
+Route::get('lunch_lists/factory', 'LunchListController@factory')->name('lunch_lists.factory');
+
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
 //結束模擬
@@ -125,10 +128,13 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('lunch_specials/teacher_change_store', 'LunchSpecialController@teacher_change_store')->name('lunch_specials.teacher_change_store');
 
     Route::get('lunch_lists/index', 'LunchListController@index')->name('lunch_lists.index');
+    Route::get('lunch_lists/more_list/{lunch_setup_id?}', 'LunchListController@more_list')->name('lunch_lists.more_list');
+    Route::post('lunch_lists/show_more', 'LunchListController@show_more_list')->name('lunch_lists.show_more_list');
     Route::get('lunch_lists/every_day/{lunch_order_id?}', 'LunchListController@every_day')->name('lunch_lists.every_day');
     Route::get('lunch_lists/teacher_money_print/{lunch_order_id}', 'LunchListController@teacher_money_print')->name('lunch_lists.teacher_money_print');
     Route::get('lunch_lists/get_money/{lunch_order_id}', 'LunchListController@get_money')->name('lunch_lists.get_money');
-
+    Route::get('lunch_lists/all_semester', 'LunchListController@all_semester')->name('lunch_lists.all_semester');
+    Route::post('lunch_lists/semester_print', 'LunchListController@semester_print')->name('lunch_lists.semester_print');
     //顯示上傳的圖片
     Route::get('img/{path}', 'HomeController@getImg')->name('getImg');
 
