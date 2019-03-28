@@ -280,7 +280,7 @@ return [
         'www.dces.chc.edu.tw'=>'s074629',
         'www.dres.chc.edu.tw'=>'s074630',
         'www.hres.chc.edu.tw'=>'s074769',
-        'www.hdes.chc.edu.tw'=>'s074628',
+        'wwwtest.hdes.chc.edu.tw'=>'s074628',
         'www.hmps.chc.edu.tw'=>'s074627',
         'www.pyps.chc.edu.tw'=>'s074632',
         'www.ssjes.chc.edu.tw'=>'s074631',
