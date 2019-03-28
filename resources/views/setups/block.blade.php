@@ -72,7 +72,7 @@
                         <thead class="thead-light">
                         <tr>
                             <th>
-                                放置欄 id
+                                放置欄位名稱 (id)
                             </th>
                             <th>
                                 排序
@@ -89,7 +89,7 @@
                         @foreach($blocks as $block)
                             <tr>
                                 <td>
-                                    {{ $block->setup_col_id }}
+                                    {{ $block->setup_col->title }} ({{ $block->setup_col_id }})
                                 </td>
                                 <td>
                                     {{ $block->order_by }}
