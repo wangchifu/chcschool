@@ -47,6 +47,16 @@ class LunchSetupController extends Controller
             'file4'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
         $att['semester']=$request->input('semester');
+
+        $eat_styles = $request->input('eat_styles');
+
+        $eat_str = "";
+        foreach($eat_styles as $eat_style){
+            $eat_str .= $eat_style.",";
+        }
+        $eat_str = substr($eat_str,0,-1);
+        $att['eat_styles'] = $eat_str;
+
         $att['die_line']=$request->input('die_line');
         if($request->input('teacher_open')){
             $att['teacher_open'] =1;
@@ -111,6 +121,14 @@ class LunchSetupController extends Controller
             'file4'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
         $att['semester']=$request->input('semester');
+        $eat_styles = $request->input('eat_styles');
+
+        $eat_str = "";
+        foreach($eat_styles as $eat_style){
+            $eat_str .= $eat_style.",";
+        }
+        $eat_str = substr($eat_str,0,-1);
+        $att['eat_styles'] = $eat_str;
         $att['die_line']=$request->input('die_line');
         if($request->input('teacher_open')){
             $att['teacher_open'] =1;

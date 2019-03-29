@@ -8,6 +8,7 @@ class LunchSetup extends Model
 {
     protected $fillable = [
         'semester',
+        'eat_styles',
         'die_line',
         'teacher_open',
         'disable',

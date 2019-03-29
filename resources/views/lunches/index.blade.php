@@ -63,7 +63,7 @@
                                     3.選擇葷素
                                 </div>
                                 <div class="card-body">
-                                    {{ Form::select('eat_style', $eat_styles,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
+                                    {{ Form::select('eat_style', $eat_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
                                 </div>
                             </div>
                             <hr>

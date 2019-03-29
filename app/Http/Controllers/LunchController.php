@@ -41,14 +41,25 @@ class LunchController extends Controller
         $lunch_place_array = LunchPlace::where('disable',null)
             ->pluck('name','id')
             ->toArray();
-        $eat_styles = ['1'=>'葷食','2'=>'素食'];
         $lunch_order = [];
+        $eat_array=[];
         if($lunch_order_id){
             $lunch_order = LunchOrder::find($lunch_order_id);
             $has_order = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
                 ->where('user_id',auth()->user()->id)
                 ->count();
             $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
+
+
+            $eat_styles = explode(',',$lunch_setup->eat_styles);
+            foreach($eat_styles as $eat_style){
+                if($eat_style==1) $style="葷食合菜";
+                if($eat_style==2) $style="素食合菜";
+                if($eat_style==3) $style="葷食便當";
+                if($eat_style==4) $style="素食便當";
+                $eat_array[$eat_style] =$style;
+            }
+
 
             $dt = Carbon::create(date('Y'), date('m'), date('d'), 0);
             $die_date = str_replace('-','',substr($dt->addDays($lunch_setup->die_line),0,10));
@@ -65,7 +76,7 @@ class LunchController extends Controller
             'lunch_order_array'=>$lunch_order_array,
             'lunch_factory_array'=>$lunch_factory_array,
             'lunch_place_array'=>$lunch_place_array,
-            'eat_styles'=>$eat_styles,
+            'eat_array'=>$eat_array,
             'has_order'=>$has_order,
             'die_date'=>$die_date,
             'month_die_date'=>$month_die_date,

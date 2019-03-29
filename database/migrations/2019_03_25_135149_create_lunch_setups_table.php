@@ -16,6 +16,7 @@ class CreateLunchSetupsTable extends Migration
         Schema::create('lunch_setups', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('semester')->unique();
+            $table->string('eat_styles');//1葷食合菜 2素食合菜 3葷食便當 4素食便當
             $table->tinyInteger('die_line');
             $table->tinyInteger('teacher_open')->nullable();//教師隨時可訂餐
             $table->tinyInteger('disable')->nullable();//停止退餐訂餐

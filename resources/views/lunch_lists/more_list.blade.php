@@ -21,7 +21,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('lunch_lists.index') }}">報表輸出</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">各項列表</li>
+                    <li class="breadcrumb-item active" aria-current="page">分項列表</li>
                 </ol>
             </nav>
             @if($admin)

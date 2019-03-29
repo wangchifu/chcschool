@@ -15,13 +15,13 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>午餐系統-報表輸出：教職逐日訂餐</h1>
+            <h1>午餐系統-報表輸出：教職訂餐一覽表</h1>
             @include('lunches.nav')
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('lunch_lists.index') }}">報表輸出</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">教職逐日訂餐</li>
+                    <li class="breadcrumb-item active" aria-current="page">教職訂餐一覽表</li>
                 </ol>
             </nav>
             @if($admin)
@@ -41,11 +41,18 @@
                             <th>
                                 姓名
                             </th>
+                            <th>
+                                廠商
+                            </th>
+                            <th>
+                                地點
+                            </th>
+                            <th>
+                                餐別
+                            </th>
                             <?php $i=1; ?>
                             @foreach($date_array as $k=>$v)
-                                @if($v==1)
                                 <th>
-                                    {{ substr($k,5,5) }}
                                     <?php
                                         if(get_chinese_weekday2($k)=="六"){
                                             $txt_bg="text-success";
@@ -54,11 +61,12 @@
                                         }else{
                                             $txt_bg="";
                                         }
+                                        $d = substr($k,5,5);
                                     ?>
+                                    {{ substr($d,0,2) }}<br>{{ substr($d,3,2) }}
                                     <br>
                                     <span class="{{ $txt_bg }}">{{ get_chinese_weekday2($k) }}</span>
                                 </th>
-                                @endif
                             @endforeach
                             <th>
                                 天數
@@ -70,26 +78,43 @@
                         <?php $total_money = 0;$total_days=0; ?>
                         @foreach($user_data as $k1=>$v1)
                             <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
-                                <td>
+                                <td nowrap>
                                     {{ $i }}{{ $k1 }}<br>
-                                    <small>({{ $factory_data[$k1] }})</small>
+                                </td>
+                                <td>
+                                    {{ $factory_data[$k1] }}
+                                </td>
+                                <td>
+                                    {{ $place_data[$k1] }}
+                                </td>
+                                <td>
+                                    @if($eat_data[$k1]==1)
+                                        葷食合菜
+                                    @elseif($eat_data[$k1]==2)
+                                        素食合菜
+                                    @elseif($eat_data[$k1]==3)
+                                        葷食便當
+                                    @elseif($eat_data[$k1]==4)
+                                        葷食便當
+                                    @endif
                                 </td>
                                 @foreach($date_array as $k2=>$v2)
-                                    @if($v2==1)
-                                    <td>
+                                    <?php
+                                    if(get_chinese_weekday2($k2)=="六"){
+                                        $bg="#CCFF99";
+                                    }elseif(get_chinese_weekday2($k2)=="日"){
+                                        $bg="#FFB7DD";
+                                    }else{
+                                        $bg="";
+                                    }
+                                    ?>
+                                    <td style="background-color:{{ $bg }}">
                                         @if(isset($v1[$k2]))
                                             @if($v1[$k2]['enable']=="eat")
-                                                @if($v1[$k2]['eat_style']==1)
-                                                    <img src="{{ asset('/images/meat.png') }}">
-                                                @elseif($v1[$k2]['eat_style']==2)
-                                                    <img src="{{ asset('/images/vegetarian.png') }}">
-                                                @endif
-                                                <br>
-                                                <small>{{ $v1[$k2]['place'] }}</small>
+                                                <img src="{{ asset('/images/system_red.png') }}">
                                             @endif
                                         @endif
                                     </td>
-                                    @endif
                                 @endforeach
                                 <td>
                                     {{ $days_data[$k1] }}
@@ -104,13 +129,14 @@
                         @endforeach
                         <tr>
                             <td>合計</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             @foreach($date_array as $k=>$v)
-                                @if($v==1)
                                 <td></td>
-                                @endif
                             @endforeach
                             <td>{{ $total_days }}</td>
-                            <td>{{ $total_money }} 元</td>
+                            <td>{{ $total_money }}</td>
                         </tr>
                     </table>
                 @endif

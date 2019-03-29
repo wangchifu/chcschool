@@ -8,7 +8,10 @@
         <thead class="thead-light">
         <tr>
             <th>
-                欄 id
+                排序
+            </th>
+            <th>
+                名稱 (id)
             </th>
             <th>
                 所佔比例 ( bootstrap 網頁一行佔 12 )
@@ -21,7 +24,10 @@
         <tbody>
         <tr>
             <td>
-                {{ $setup_col->id }}
+                {{ Form::text('order_by',$setup_col->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+            </td>
+            <td>
+                {{ Form::text('title',$setup_col->title,['class' => 'form-control','required'=>'required']) }}
             </td>
             <td>
                 {{ Form::text('num',$setup_col->num,['class' => 'form-control','required'=>'required','maxlength'=>'2']) }}

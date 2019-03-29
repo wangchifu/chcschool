@@ -156,6 +156,8 @@ class SetupController extends Controller
 
     public function update_col(Request $request,SetupCol $setup_col)
     {
+        $att['order_by'] = $request->input('order_by');
+        $att['title'] = $request->input('title');
         $att['num'] = $request->input('num');
         $setup_col->update($att);
         echo "<body onload='opener.location.reload();window.close();'>";

@@ -31,6 +31,8 @@ class LunchListController extends Controller
         $date_array = [];
         $user_data = [];
         $factory_data=[];
+        $place_data=[];
+        $eat_data=[];
         $days_data=[];
         $money_data=[];
         if($lunch_order_id){
@@ -41,9 +43,11 @@ class LunchListController extends Controller
                 ->get();
             foreach($tea_dates as $tea_date){
                 $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
-                $user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
-                $user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
+                //$user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
+                //$user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
                 $factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
+                $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
+                $eat_data[$tea_date->user->name] = $tea_date->eat_style;
                 if($tea_date->enable=="eat"){
                     if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
                     $days_data[$tea_date->user->name]++;
@@ -61,6 +65,8 @@ class LunchListController extends Controller
             'date_array'=>$date_array,
             'user_data'=>$user_data,
             'factory_data'=>$factory_data,
+            'place_data'=>$place_data,
+            'eat_data'=>$eat_data,
             'days_data'=>$days_data,
             'money_data'=>$money_data,
         ];

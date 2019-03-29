@@ -55,10 +55,10 @@
                         <thead class="thead-light">
                         <tr>
                             <th>
-                                名稱 (id)
+                                排序
                             </th>
                             <th>
-                                排序
+                                名稱 (id)
                             </th>
                             <th>
                                 所佔比例 ( bootstrap 網頁一行佔 12 )
@@ -72,10 +72,10 @@
                         @foreach($setup_cols as $setup_col)
                             <tr>
                                 <td>
-                                    {{ $setup_col->title }} ({{ $setup_col->id }})
+                                    {{ $setup_col->order_by }}
                                 </td>
                                 <td>
-                                    {{ $setup_col->order_by }}
+                                    {{ $setup_col->title }} ({{ $setup_col->id }})
                                 </td>
                                 <td>
                                     {{ $setup_col->num }}
