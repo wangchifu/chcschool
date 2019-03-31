@@ -80,6 +80,63 @@ class LunchSpecialController extends Controller
         return view('lunch_specials.late_teacher',$data);
     }
 
+    public function teacher_change_month()
+    {
+        $admin = check_power('午餐系統','A',auth()->user()->id);
+
+        $user_array = User::where('disable',null)
+            ->where('username','<>','admin')
+            ->orderBy('order_by')
+            ->pluck('name','id')
+            ->toArray();
+
+        $lunch_order_array = LunchOrder::orderBy('name','DESC')
+            ->pluck('name','id')
+            ->toArray();
+
+        $lunch_factory_array = LunchFactory::where('disable',null)
+            ->pluck('name','id')
+            ->toArray();
+        $lunch_place_array = LunchPlace::where('disable',null)
+            ->pluck('name','id')
+            ->toArray();
+
+        $eat_array = [
+            '1'=>'葷食合菜',
+            '2'=>'素食合菜',
+            '3'=>'葷食便當',
+            '4'=>'素食便當',
+        ];
+
+        $data = [
+            'admin'=>$admin,
+            'user_array'=>$user_array,
+            'lunch_order_array'=>$lunch_order_array,
+            'lunch_factory_array'=>$lunch_factory_array,
+            'lunch_place_array'=>$lunch_place_array,
+            'eat_array'=>$eat_array,
+        ];
+        return view('lunch_specials.teacher_change_month',$data);
+    }
+
+    public function teacher_update_month(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $lunch_order_id = $request->input('lunch_order_id');
+        $att['lunch_factory_id'] = $request->input('lunch_factory_id');
+        if($request->input('select_place')=="place_select"){
+            $lunch_place_id = $request->input('lunch_place_id');
+        }elseif($request->input('select_place')=="place_class"){
+            $lunch_place_id = "c".$request->input('class_no');
+        }
+        $att['lunch_place_id'] = $lunch_place_id;
+        $att['eat_style'] = $request->input('eat_style');
+        LunchTeaDate::where('user_id',$user_id)
+            ->where('lunch_order_id',$lunch_order_id)
+            ->update($att);
+        return redirect()->route('lunch_specials.index');
+    }
+
     public function late_teacher_show(Request $request)
     {
         $admin = check_power('午餐系統','A',auth()->user()->id);

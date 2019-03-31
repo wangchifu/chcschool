@@ -36,7 +36,7 @@
                         {{ Form::text('views',$setup->views,['class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
-                        <label for="footer">置底 <small>( 變數 %訪客人次% 可顯示訪客人次)</small></label>
+                        <label for="footer">置底</label>
                         {{ Form::textarea('footer',$setup->footer,['id'=>'footer','class'=>'form-control']) }}
                     </div>
                     <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>

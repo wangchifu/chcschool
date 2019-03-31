@@ -90,7 +90,13 @@ class LunchController extends Controller
     {
         $semester = $request->input('semester');
         $lunch_factory_id = $request->input('lunch_factory_id');
-        $lunch_place_id = $request->input('lunch_place_id');
+
+        if($request->input('select_place')=="place_select"){
+            $lunch_place_id = $request->input('lunch_place_id');
+        }elseif($request->input('select_place')=="place_class"){
+            $lunch_place_id = "c".$request->input('class_no');
+        }
+
         $eat_style = $request->input('eat_style');
         $lunch_order_id = $request->input('lunch_order_id');
         $lunch_order = LunchOrder::find($lunch_order_id);

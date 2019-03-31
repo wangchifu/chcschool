@@ -46,7 +46,11 @@ class LunchListController extends Controller
                 //$user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
                 //$user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
                 $factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
-                $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
+                if(substr($tea_date->lunch_place_id,0,1)=="c"){
+                    $place_data[$tea_date->user->name]=substr($tea_date->lunch_place_id,1,3)."教室";
+                }else{
+                    $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
+                }
                 $eat_data[$tea_date->user->name] = $tea_date->eat_style;
                 if($tea_date->enable=="eat"){
                     if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;

@@ -51,10 +51,28 @@
                             <hr>
                             <div class="card">
                                 <div class="card-header">
-                                    2.選擇取餐地點
+                                    2.選擇取餐地點 (<span class="text-danger">導師請選班級教室，填入班級代碼</span>)
                                 </div>
                                 <div class="card-body">
-                                    {{ Form::select('lunch_place_id', $lunch_place_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input type="radio" name="select_place" id="s1" checked value="place_select"> <label for="s1">指定地點　　　　　　</label>
+                                            </td>
+                                            <td>
+                                                <input type="radio" name="select_place" id="s2" value="place_class"> <label for="s2">班級教室</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {{ Form::select('lunch_place_id', $lunch_place_array,null, ['id'=>'place_select','class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
+                                            </td>
+                                            <td>
+                                                <input type="text" name="class_no" id="place_class" maxlength="3" class="form-control" style="display: none;" placeholder="三碼班級代號" required value="1">
+                                            </td>
+                                        </tr>
+                                    </table>
+
                                 </div>
                             </div>
                             <hr>
@@ -144,7 +162,6 @@
                                     ->where('enable','eat')
                                     ->count();
                                 $factory = $lunch_tea_dates[0]->lunch_factory;
-                                $place = $lunch_tea_dates[0]->lunch_place;
                                 $eat_style = $lunch_tea_dates[0]->eat_style;
                             ?>
                             <table class="table table-striped">
@@ -155,14 +172,23 @@
                                     </td>
                                     <td>
                                         <label>2.取餐地點</label>
-                                        <h4>{{ $place->name }}</h4>
+                                        @if(substr($lunch_tea_dates[0]->lunch_place_id,0,1)=="c")
+                                            <h4>{{ substr($lunch_tea_dates[0]->lunch_place_id,1,3) }}教室</h4>
+                                        @else
+                                            <h4>{{ $lunch_tea_dates[0]->lunch_place->name }}</h4>
+                                        @endif
+
                                     </td>
                                     <td>
                                         <label>3.葷素</label>
                                         @if($eat_style==1)
-                                            <h4 class="text-danger">葷食</h4>
-                                        @else
-                                            <h4 class="text-success">素食</h4>
+                                            <h4 class="text-danger">葷食合菜</h4>
+                                        @elseif($eat_style==2)
+                                            <h4 class="text-success">素食合菜</h4>
+                                        @elseif($eat_style==3)
+                                            <h4 class="text-danger">葷食便當</h4>
+                                        @elseif($eat_style==4)
+                                            <h4 class="text-success">素食便當</h4>
                                         @endif
                                     </td>
                                     <td>
@@ -270,5 +296,17 @@
                 location="/lunches/" + document.myform.lunch_order_id.options[document.myform.lunch_order_id.selectedIndex].value;
             }
         }
+
+        $('#s1').click(function(){
+            $('#place_class').hide();
+            $('#place_select').show();
+            $('#place_class').val('1');
+        });
+        $('#s2').click(function(){
+            $('#place_class').show();
+            $('#place_select').hide();
+            $('#place_class').val('');
+            $('#place_select').val('1');
+        });
     </script>
 @endsection

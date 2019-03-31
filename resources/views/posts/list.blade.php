@@ -17,7 +17,11 @@
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
-        <th nowrap>日期</th>
+        <th nowrap>日期
+            @can('create',\App\Post::class)
+                <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
+            @endauth
+        </th>
         <th nowrap>
             標題
         </th>

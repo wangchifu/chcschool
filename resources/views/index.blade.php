@@ -50,6 +50,10 @@
         @endforeach
 
     </div>
+
+@endsection
+
+@section('footer')
     @if(!empty($setup->footer))
         @include('layouts.footer')
     @endif
