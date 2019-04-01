@@ -71,7 +71,7 @@ Route::get('calendars/index/{semester?}' , 'CalendarController@index')->name('ca
 Route::get('calendars/print/{semester}' , 'CalendarController@print')->name('calendars.print');
 
 //廠商頁面
-Route::get('lunch_lists/factory', 'LunchListController@factory')->name('lunch_lists.factory');
+Route::match(['get','post'],'lunch_lists/factory/{lunch_order_id?}', 'LunchListController@factory')->name('lunch_lists.factory');
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
@@ -131,8 +131,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('lunch_specials/teacher_change_store', 'LunchSpecialController@teacher_change_store')->name('lunch_specials.teacher_change_store');
 
     Route::get('lunch_lists/index', 'LunchListController@index')->name('lunch_lists.index');
-    Route::get('lunch_lists/more_list/{lunch_setup_id?}', 'LunchListController@more_list')->name('lunch_lists.more_list');
-    Route::post('lunch_lists/show_more', 'LunchListController@show_more_list')->name('lunch_lists.show_more_list');
+    Route::get('lunch_lists/more_list_factory/{lunch_order_id}/{factory_id}', 'LunchListController@more_list_factory')->name('lunch_lists.more_list_factory');
     Route::get('lunch_lists/every_day/{lunch_order_id?}', 'LunchListController@every_day')->name('lunch_lists.every_day');
     Route::get('lunch_lists/teacher_money_print/{lunch_order_id}', 'LunchListController@teacher_money_print')->name('lunch_lists.teacher_money_print');
     Route::get('lunch_lists/get_money/{lunch_order_id}', 'LunchListController@get_money')->name('lunch_lists.get_money');

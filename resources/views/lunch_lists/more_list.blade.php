@@ -25,13 +25,11 @@
                 </ol>
             </nav>
             @if($admin)
-
+                <form name="myform" action="{{ route('lunch_lists.show_more_list') }}" method="post">
+                    @csrf
                 <table class="table table-striped">
                     <thead class="thead-light">
                     <tr>
-                        <th>
-                            1.請先選擇學期
-                        </th>
                         <th>
                             餐期
                         </th>
@@ -42,26 +40,17 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <a href="{{ route('lunch_lists.factory') }}" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-link"></i> 給廠商頁面連結</a>
-                        <form name="myform" action="{{ route('lunch_lists.show_more_list') }}" method="post">
-                            @csrf
-                            <td>
-                                {{ Form::select('lunch_setup_id', $lunch_setup_array,$lunch_setup_id, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required','onchange'=>'jump()']) }}
-                            </td>
-                        </form>
-                        <form>
                         <td>
                             {{ Form::select('lunch_order_id', $lunch_order_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
                         </td>
                         <td>
                             {{ Form::select('factory_id', $factory_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
                         </td>
-
                     </tr>
                     </tbody>
                 </table>
                 <div class="form-group">
-                    <button class="btn btn-info btn-sm">送出</button>
+                    <button class="btn btn-info btn-sm" onclick="return confirm('確定？')">送出</button>
                 </div>
                 </form>
             @else
@@ -69,12 +58,4 @@
             @endif
         </div>
     </div>
-    <script language='JavaScript'>
-
-        function jump(){
-            if(document.myform.lunch_setup_id.options[document.myform.lunch_setup_id.selectedIndex].value!=''){
-                location="/lunch_lists/more_list/" + document.myform.lunch_setup_id.options[document.myform.lunch_setup_id.selectedIndex].value;
-            }
-        }
-    </script>
 @endsection

@@ -43,9 +43,8 @@ class LunchListController extends Controller
                 ->get();
             foreach($tea_dates as $tea_date){
                 $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
-                //$user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
-                //$user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
-                $factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
+                $factory_data[$tea_date->user->name]['name'] = $tea_date->lunch_factory->name;
+                $factory_data[$tea_date->user->name]['id'] = $tea_date->lunch_factory->id;
                 if(substr($tea_date->lunch_place_id,0,1)=="c"){
                     $place_data[$tea_date->user->name]=substr($tea_date->lunch_place_id,1,3)."教室";
                 }else{
@@ -190,57 +189,145 @@ class LunchListController extends Controller
         return view('lunch_lists.get_money', $data);
     }
 
-
-    public function more_list($lunch_setup_id=null)
+    public function more_list_factory($lunch_order_id,$factory_id)
     {
         $admin = check_power('午餐系統','A',auth()->user()->id);
-        $lunch_setup_array = LunchSetup::orderBy('semester','DESC')
-            ->pluck('semester','id')
+
+
+        $lunch_order_array = LunchOrder::orderBy('name','DESC')
+            ->pluck('name','id')
             ->toArray();
 
-        $lunch_order_array = [];
-        $factory_array = [];
-        $type =[] ;
-        if(!empty($lunch_setup_id)){
-            $lunch_setup = LunchSetup::find($lunch_setup_id);
-            $lunch_order_array = LunchOrder::where('semester',$lunch_setup->semester)
-                ->orderBy('name','DESC')
-                ->pluck('name','id')
-                ->toArray();
+        $date_array = [];
+        $user_data = [];
+        $factory_data=[];
+        $place_data=[];
+        $eat_data=[];
+        $days_data=[];
+        $money_data=[];
 
-            $factory_array = LunchFactory::where('disable',null)
-                ->pluck('name','id')
-                ->toArray();
+        $date_array = $this->get_order_date($lunch_order_id);
+
+        $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+            ->where('lunch_factory_id',$factory_id)
+            ->orderBy('order_date')
+            ->get();
+        foreach($tea_dates as $tea_date){
+            $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
+            //$user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
+            //$user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
+            $factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
+            if(substr($tea_date->lunch_place_id,0,1)=="c"){
+                $place_data[$tea_date->user->name]=substr($tea_date->lunch_place_id,1,3)."教室";
+            }else{
+                $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
+            }
+            $eat_data[$tea_date->user->name] = $tea_date->eat_style;
+            if($tea_date->enable=="eat"){
+                if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
+                $days_data[$tea_date->user->name]++;
+                if(!isset($money_data[$tea_date->user->name])) $money_data[$tea_date->user->name]=0;
+                $money_data[$tea_date->user->name] += $tea_date->lunch_factory->teacher_money;
+            }
+        }
+
+
+        $data = [
+            'lunch_order_id'=>$lunch_order_id,
+            'admin'=>$admin,
+            'lunch_order_array'=>$lunch_order_array,
+            'date_array'=>$date_array,
+            'user_data'=>$user_data,
+            'factory_data'=>$factory_data,
+            'place_data'=>$place_data,
+            'eat_data'=>$eat_data,
+            'days_data'=>$days_data,
+            'money_data'=>$money_data,
+        ];
+        return view('lunch_lists.more_list_factory',$data);
+    }
+
+
+    public function factory(Request $request,$lunch_order_id=null)
+    {
+        $data = [
+        ];
+
+        if($request->input('username')){
+            $factory = LunchFactory::where('fid',$request->input('username'))
+                ->first();
+
+            if($request->input('chaptcha') != session('chaptcha')){
+                return back()->withErrors(['gsuite_error'=>['驗證碼錯誤！']]);
+            }
+            if(empty($factory)){
+                if(!$factory) return back()->withErrors(['error'=>['查無此帳號！']]);
+            }else{
+                if($request->input('password') != $factory->fpwd){
+                    return back()->withErrors(['gsuite_error'=>['密碼錯誤！']]);
+                }else{
+                    session(['factory'=>$factory->fid]);
+                };
+            }
 
         }
-        $data = [
-            'admin'=>$admin,
-            'lunch_setup_id'=>$lunch_setup_id,
-            'lunch_setup_array'=>$lunch_setup_array,
-            'lunch_order_array'=>$lunch_order_array,
-            'factory_array'=>$factory_array,
-        ];
-        return view('lunch_lists.more_list',$data);
-    }
 
-    public function show_more_list(Request $request)
-    {
-        $lunch_order = LunchOrder::find($request->input('lunch_order_id'));
-        $factory = LunchFactory::find($request->input('factory_id'));
+        if(session('factory')){
+            $factory = LunchFactory::where('fid',session('factory'))->first();
+            $lunch_order_array = LunchOrder::orderBy('name','DESC')
+                ->pluck('name','id')
+                ->toArray();
 
-        $data = [
-            'lunch_order'=>$lunch_order,
-            'factory'=>$factory,
-        ];
-        return view('lunch_lists.show_more_list',$data);
-    }
+            $data = [
+                'factory'=>$factory,
+                'lunch_order_id'=>$lunch_order_id,
+                'lunch_order_array'=>$lunch_order_array,
+            ];
 
-    public function factory()
-    {
+            if($lunch_order_id){
+                $date_array = [];
+                $user_data = [];
+                $factory_data=[];
+                $place_data=[];
+                $eat_data=[];
+                $days_data=[];
+                $money_data=[];
 
+                $date_array = $this->get_order_date($lunch_order_id);
 
-        $data = [
-        ];
+                $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+                    ->where('lunch_factory_id',$factory->id)
+                    ->orderBy('order_date')
+                    ->get();
+                foreach($tea_dates as $tea_date){
+                    $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
+                    if(substr($tea_date->lunch_place_id,0,1)=="c"){
+                        $place_data[$tea_date->user->name]=substr($tea_date->lunch_place_id,1,3)."教室";
+                    }else{
+                        $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
+                    }
+                    $eat_data[$tea_date->user->name] = $tea_date->eat_style;
+                    if($tea_date->enable=="eat"){
+                        if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
+                        $days_data[$tea_date->user->name]++;
+                        if(!isset($money_data[$tea_date->user->name])) $money_data[$tea_date->user->name]=0;
+                        $money_data[$tea_date->user->name] += $tea_date->lunch_factory->teacher_money;
+                    }
+                }
+
+                $data = [
+                    'factory'=>$factory,
+                    'lunch_order_id'=>$lunch_order_id,
+                    'lunch_order_array'=>$lunch_order_array,
+                    'date_array'=>$date_array,
+                    'user_data'=>$user_data,
+                    'place_data'=>$place_data,
+                    'eat_data'=>$eat_data,
+                    'days_data'=>$days_data,
+                    'money_data'=>$money_data,
+                ];
+            }
+        }
         return view('lunch_lists.factory',$data);
     }
 

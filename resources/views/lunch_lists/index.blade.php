@@ -19,9 +19,9 @@
             @include('lunches.nav')
             <br>
             @if($admin)
-                <a href="{{ route('lunch_lists.more_list') }}" class="btn btn-info">分項列表</a>
-                <a href="{{ route('lunch_lists.every_day') }}" class="btn btn-info">教職訂餐一覽表</a>
-                <a href="{{ route('lunch_lists.all_semester') }}" class="btn btn-info">匯出全學期收據</a>
+                <a href="{{ route('lunch_lists.every_day') }}" class="btn btn-info btn-sm">訂餐一覽暨分期收據</a>
+                <a href="{{ route('lunch_lists.all_semester') }}" class="btn btn-info btn-sm">匯出全學期收據</a>
+                <a href="{{ route('lunch_lists.factory') }}" class="btn btn-info btn-sm" target="_blank">廠商入口</a>
             @else
                 <h1 class="text-danger">你不是管理者</h1>
             @endif

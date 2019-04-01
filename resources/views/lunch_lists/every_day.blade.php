@@ -15,13 +15,13 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>午餐系統-報表輸出：教職訂餐一覽表</h1>
+            <h1>午餐系統-報表輸出：訂餐一覽表</h1>
             @include('lunches.nav')
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('lunch_lists.index') }}">報表輸出</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">教職訂餐一覽表</li>
+                    <li class="breadcrumb-item active" aria-current="page">訂餐一覽表</li>
                 </ol>
             </nav>
             @if($admin)
@@ -78,11 +78,11 @@
                         <?php $total_money = 0;$total_days=0; ?>
                         @foreach($user_data as $k1=>$v1)
                             <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
-                                <td nowrap>
+                                <td>
                                     {{ $i }}{{ $k1 }}<br>
                                 </td>
                                 <td>
-                                    {{ $factory_data[$k1] }}
+                                    <a href="{{ route('lunch_lists.more_list_factory',[$lunch_order_id,$factory_data[$k1]['id']]) }}" target="_blank">{{ $factory_data[$k1]['name'] }}</a>
                                 </td>
                                 <td>
                                     {{ $place_data[$k1] }}
