@@ -16,15 +16,21 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>午餐系統-餐期管理</h1>
+            <h1>午餐系統-修改餐期</h1>
             @include('lunches.nav')
-            <br>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('lunch_orders.index') }}">餐期管理</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">修改餐期</li>
+                </ol>
+            </nav>
             <div class="card">
                 <h3 class="card-header">
                     修改 {{ $lunch_order->name }} 餐期
                 </h3>
                 <div class="card-body">
-                    <form action="{{ route('lunch_orders.order_save',$lunch_order->id) }}" method="post">
+                    <form action="{{ route('lunch_orders.order_save',$lunch_order->id) }}" method="post" id="this_form">
                         @csrf
                         @method('patch')
                     <div class="form-group">
@@ -63,5 +69,7 @@
             </div>
         </div>
     </div>
-
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

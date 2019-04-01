@@ -101,14 +101,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <form action="{{ route('lunch_setups.place_add') }}" method="post">
+                            <form action="{{ route('lunch_setups.place_add') }}" method="post" id="this_form1">
                                 @csrf
                             <tr>
                                 <td>
                                     <input type="checkbox" name="disable" id="disable" value="1"> <label for="disable">停用</label>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="name" required>
+                                    <input type="text" class="form-control" name="name">
                                 </td>
                                 <td>
                                     <button class="btn btn-success btn-sm" onclick="return confirm('確定？')">新增地點</button>
@@ -169,7 +169,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <form action="{{ route('lunch_setups.factory_add') }}" method="post">
+                            <form action="{{ route('lunch_setups.factory_add') }}" method="post" id="this_form2">
                                 @csrf
                                 <tr>
                                     <td>
@@ -229,4 +229,8 @@
             @endif
         </div>
     </div>
+    <script>
+        var validator = $("#this_form1").validate();
+        var validator = $("#this_form2").validate();
+    </script>
 @endsection

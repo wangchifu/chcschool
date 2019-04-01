@@ -19,6 +19,14 @@
         <div class="col-md-11">
             <h1>午餐系統-特殊處理：逾期教師補訂餐</h1>
             @include('lunches.nav')
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('lunch_specials.index') }}">特殊處理</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('lunch_specials.late_teacher') }}">逾期教師補訂餐</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">處理中...</li>
+                </ol>
+            </nav>
             <br>
             @if($admin)
                 <div class="card">

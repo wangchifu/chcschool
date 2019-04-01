@@ -20,7 +20,7 @@
             <br>
             <form name=myform>
             <div class="form-group">
-                {{ Form::select('lunch_order_id', $lunch_order_array,$lunch_order_id, ['class' => 'form-control','placeholder'=>'--請選擇--','onchange'=>'jump()']) }}
+                {{ Form::select('lunch_order_id', $lunch_order_array,$lunch_order_id, ['id'=>'lunch_order_id','class' => 'form-control','placeholder'=>'--請選擇餐期--','onchange'=>'jump()']) }}
             </div>
             </form>
             @if($lunch_order_id)
@@ -38,20 +38,20 @@
                         </div>
                         @endif
                         <hr>
-                        <form action="{{ route('lunches.store') }}" method="post">
+                        <form action="{{ route('lunches.store') }}" method="post" id="store_form">
                             @csrf
                             <div class="card">
                                 <div class="card-header">
                                     1.選擇廠商
                                 </div>
                                 <div class="card-body">
-                                    {{ Form::select('lunch_factory_id', $lunch_factory_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
+                                    {{ Form::select('lunch_factory_id', $lunch_factory_array,null, ['id'=>'lunch_factory_id','class' => 'form-control','placeholder'=>'--請選擇廠商--','required'=>'required']) }}
                                 </div>
                             </div>
                             <hr>
                             <div class="card">
                                 <div class="card-header">
-                                    2.選擇取餐地點 (<span class="text-danger">導師請選班級教室，填入班級代碼</span>)
+                                    2.選擇取餐地點 (<small>導師請選班級教室，填入班級代碼</small>)
                                 </div>
                                 <div class="card-body">
                                     <table>
@@ -65,7 +65,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                {{ Form::select('lunch_place_id', $lunch_place_array,null, ['id'=>'place_select','class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
+                                                {{ Form::select('lunch_place_id', $lunch_place_array,null, ['id'=>'place_select','class' => 'form-control','placeholder'=>'--請選擇地點--','required'=>'required']) }}
                                             </td>
                                             <td>
                                                 <input type="text" name="class_no" id="place_class" maxlength="3" class="form-control" style="display: none;" placeholder="三碼班級代號" required value="1">
@@ -81,7 +81,7 @@
                                     3.選擇葷素
                                 </div>
                                 <div class="card-body">
-                                    {{ Form::select('eat_style', $eat_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--','required'=>'required']) }}
+                                    {{ Form::select('eat_style', $eat_array,null, ['id'=>'eat_style','class' => 'form-control','placeholder'=>'--請選擇葷素--','required'=>'required']) }}
                                 </div>
                             </div>
                             <hr>
@@ -130,7 +130,7 @@
                                                 <td>
                                                     {{ $lunch_order_date->order_date }}
                                                 </td>
-                                                <td class="text-danger">
+                                                <td class="text-primary">
                                                     {{ $lunch_order_date->date_ps }}
                                                 </td>
                                             </tr>
@@ -308,5 +308,9 @@
             $('#place_class').val('');
             $('#place_select').val('1');
         });
+
+
+        var validator = $("#store_form").validate();
+
     </script>
 @endsection

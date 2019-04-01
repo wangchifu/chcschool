@@ -19,7 +19,13 @@
         <div class="col-md-11">
             <h1>午餐系統-特殊處理：教師訂餐變更</h1>
             @include('lunches.nav')
-            <br>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('lunch_specials.index') }}">特殊處理</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">教師訂餐變更</li>
+                </ol>
+            </nav>
             @if($admin)
                 <div class="card">
                     <div class="card-header">
@@ -27,7 +33,7 @@
                     </div>
                     <div class="card-body">
                         @include('layouts.errors')
-                        <form action="{{ route('lunch_specials.teacher_update_month') }}" method="post">
+                        <form action="{{ route('lunch_specials.teacher_update_month') }}" method="post" id="this_form">
                             @csrf
                         <div class="form-group">
                             <label>
@@ -97,5 +103,8 @@
             $('#place_class').val('');
             $('#place_select').val('1');
         });
+
+        var validator = $("#this_form").validate();
+
     </script>
 @endsection

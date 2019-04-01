@@ -28,7 +28,10 @@
 
     <title>@yield('title') | {{ $setup->site_name }}</title>
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-    <!-- icons -->
+        <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
+        <script src="{{ asset('js/additional-methods.min.js') }}"></script>
+        <script src="{{ asset('js/messages_zh_TW.min.js') }}"></script>
+        <!-- icons -->
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('bootstrap-4.1.1/css/bootstrap.min.css') }}">
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">

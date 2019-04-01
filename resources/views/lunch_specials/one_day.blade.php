@@ -17,9 +17,16 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>午餐系統-特殊處理：單日供餐變更</h1>
+            <h1>午餐系統-特殊處理：單日供餐統一變更</h1>
             @include('lunches.nav')
-            <br>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('lunch_specials.index') }}">特殊處理</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">單日供餐統一變更</li>
+                </ol>
+            </nav>
+
             @if($admin)
                 <div class="card">
                     <div class="card-header">
@@ -34,7 +41,7 @@
                                 若該日變更為「不供餐」後，所有人立即退訂！
                             </li>
                         </ul>
-                        <form action="{{ route('lunch_specials.one_day_store') }}" method="post">
+                        <form action="{{ route('lunch_specials.one_day_store') }}" method="post" id="this_form">
                             @csrf
                         <label>1.欲變更的日期</label>
                         <div class="form-group">
@@ -68,4 +75,7 @@
             @endif
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection
