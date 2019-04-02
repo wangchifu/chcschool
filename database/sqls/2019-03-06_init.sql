@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.25, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.24, for Linux (x86_64)
 --
 -- Host: localhost    Database: chcschool
 -- ------------------------------------------------------
--- Server version	5.7.25-0ubuntu0.18.04.2
+-- Server version	5.7.24-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `blocks`;
 CREATE TABLE `blocks` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci,
   `order_by` int(10) unsigned DEFAULT NULL,
   `setup_col_id` int(10) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `blocks` (
 
 LOCK TABLES `blocks` WRITE;
 /*!40000 ALTER TABLE `blocks` DISABLE KEYS */;
-INSERT INTO `blocks` VALUES (1,'最新公告(系統區塊)',' ',1,2,'2019-03-28 22:52:23','2019-03-28 22:52:23'),(2,'連結區塊','<ul><li><a href=\"http://boe.chc.edu.tw\" target=\"_blank\">教育處雲端</a></li><li><a href=\"http://school.chc.edu.tw\" target=\"_blank\">學校資料平台</a></li></ul>',1,1,'2019-03-28 22:52:23','2019-03-28 22:52:23');
+INSERT INTO `blocks` VALUES (1,'最新公告(系統區塊)',' ',1,2,'2019-04-02 06:41:17','2019-04-02 06:41:17'),(2,'連結區塊','<ul><li><a href=\"http://boe.chc.edu.tw\" target=\"_blank\">教育處雲端</a></li><li><a href=\"http://school.chc.edu.tw\" target=\"_blank\">學校資料平台</a></li></ul>',1,1,'2019-04-02 06:41:17','2019-04-02 06:41:17');
 /*!40000 ALTER TABLE `blocks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,7 +312,7 @@ CREATE TABLE `lunch_orders` (
   `semester` int(10) unsigned NOT NULL,
   `rece_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `rece_date` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `rece_no` int(10) unsigned NOT NULL,
+  `rece_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `rece_num` int(10) unsigned NOT NULL,
   `order_ps` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -367,12 +367,13 @@ DROP TABLE IF EXISTS `lunch_setups`;
 CREATE TABLE `lunch_setups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `semester` int(10) unsigned NOT NULL,
+  `eat_styles` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `die_line` tinyint(4) NOT NULL,
   `teacher_open` tinyint(4) DEFAULT NULL,
   `disable` tinyint(4) DEFAULT NULL,
   `all_rece_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `all_rece_date` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `all_rece_no` int(10) unsigned NOT NULL,
+  `all_rece_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `all_rece_num` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -457,10 +458,10 @@ DROP TABLE IF EXISTS `migrations`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `migrations` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -469,7 +470,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (28,'2014_10_12_000000_create_users_table',1),(29,'2014_10_12_100000_create_password_resets_table',1),(30,'2019_02_24_200737_create_setups_table',1),(31,'2019_02_24_223237_create_setup_col_table',1),(32,'2019_02_25_141610_create_posts_table',1),(33,'2019_02_27_135346_create_table_contents',1),(34,'2019_02_27_155304_create_links_table',1),(35,'2019_02_27_220556_create_blocks_table',1),(36,'2019_02_27_221945_create_sqls_table',1),(37,'2019_03_04_144934_create_modules_table',1),(38,'2019_03_05_090835_create_uploads_table',1),(39,'2019_03_05_142735_create_fixes_table',1),(40,'2019_03_05_150943_create_table_meetings',1),(41,'2019_03_05_161053_create_table_reports',1),(42,'2019_03_21_200739_create_groups_table',1),(43,'2019_03_21_200848_create_users_groups_table',1),(44,'2019_03_22_221041_create_type_table',1),(45,'2019_03_23_221611_create_user_powers',1),(46,'2019_03_24_215036_create_departments_table',1),(47,'2019_03_25_095351_create_calendars_table',1),(48,'2019_03_25_095455_create_calendar_weeks_table',1),(49,'2019_03_25_135149_create_lunch_setups_table',1),(50,'2019_03_25_135209_create_lunch_orders_table',1),(51,'2019_03_25_141135_create_lunch_factories_table',1),(52,'2019_03_25_141149_create_lunch_places_table',1),(53,'2019_03_25_152624_create_lunch_order_dates_table',1),(54,'2019_03_25_160710_create_lunch_tea_dates',1);
+INSERT INTO `migrations` VALUES (121,'2014_10_12_000000_create_users_table',1),(122,'2014_10_12_100000_create_password_resets_table',1),(123,'2019_02_24_200737_create_setups_table',1),(124,'2019_02_24_223237_create_setup_col_table',1),(125,'2019_02_25_141610_create_posts_table',1),(126,'2019_02_27_135346_create_table_contents',1),(127,'2019_02_27_155304_create_links_table',1),(128,'2019_02_27_220556_create_blocks_table',1),(129,'2019_02_27_221945_create_sqls_table',1),(130,'2019_03_04_144934_create_modules_table',1),(131,'2019_03_05_090835_create_uploads_table',1),(132,'2019_03_05_142735_create_fixes_table',1),(133,'2019_03_05_150943_create_table_meetings',1),(134,'2019_03_05_161053_create_table_reports',1),(135,'2019_03_21_200739_create_groups_table',1),(136,'2019_03_21_200848_create_users_groups_table',1),(137,'2019_03_22_221041_create_type_table',1),(138,'2019_03_23_221611_create_user_powers',1),(139,'2019_03_24_215036_create_departments_table',1),(140,'2019_03_25_095351_create_calendars_table',1),(141,'2019_03_25_095455_create_calendar_weeks_table',1),(142,'2019_03_25_135149_create_lunch_setups_table',1),(143,'2019_03_25_135209_create_lunch_orders_table',1),(144,'2019_03_25_141135_create_lunch_factories_table',1),(145,'2019_03_25_141149_create_lunch_places_table',1),(146,'2019_03_25_152624_create_lunch_order_dates_table',1),(147,'2019_03_25_160710_create_lunch_tea_dates',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -496,7 +497,7 @@ CREATE TABLE `modules` (
 
 LOCK TABLES `modules` WRITE;
 /*!40000 ALTER TABLE `modules` DISABLE KEYS */;
-INSERT INTO `modules` VALUES (1,'公告系統','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(2,'檔案庫','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(3,'處室介紹','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(4,'好站連結','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(5,'校務行政','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(6,'會議文稿','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(7,'報修系統','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(8,'午餐系統','1','2019-03-28 22:52:23','2019-03-28 22:52:23'),(9,'校務行事曆','1','2019-03-28 22:52:23','2019-03-28 22:52:23');
+INSERT INTO `modules` VALUES (1,'公告系統','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(2,'檔案庫','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(3,'學校介紹','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(4,'選單連結','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(5,'校務行政','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(6,'會議文稿','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(7,'報修系統','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(8,'午餐系統','1','2019-04-02 06:41:17','2019-04-02 06:41:17'),(9,'校務行事曆','1','2019-04-02 06:41:17','2019-04-02 06:41:17');
 /*!40000 ALTER TABLE `modules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -609,7 +610,7 @@ CREATE TABLE `setup_cols` (
 
 LOCK TABLES `setup_cols` WRITE;
 /*!40000 ALTER TABLE `setup_cols` DISABLE KEYS */;
-INSERT INTO `setup_cols` VALUES (1,'左欄',2,1,'2019-03-28 22:52:23','2019-03-28 22:52:23'),(2,'主要',10,2,'2019-03-28 22:52:23','2019-03-28 22:52:23');
+INSERT INTO `setup_cols` VALUES (1,'左欄',2,1,'2019-04-02 06:41:17','2019-04-02 06:41:17'),(2,'主要',10,2,'2019-04-02 06:41:17','2019-04-02 06:41:17');
 /*!40000 ALTER TABLE `setup_cols` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -639,7 +640,7 @@ CREATE TABLE `setups` (
 
 LOCK TABLES `setups` WRITE;
 /*!40000 ALTER TABLE `setups` DISABLE KEYS */;
-INSERT INTO `setups` VALUES (1,'彰化縣xx國小全球資訊網',NULL,1,0,NULL,'2019-03-28 22:52:23','2019-03-28 22:52:23');
+INSERT INTO `setups` VALUES (1,'彰化縣xx國小全球資訊網',NULL,1,0,NULL,'2019-04-02 06:41:17','2019-04-02 06:41:17');
 /*!40000 ALTER TABLE `setups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -666,7 +667,7 @@ CREATE TABLE `sqls` (
 
 LOCK TABLES `sqls` WRITE;
 /*!40000 ALTER TABLE `sqls` DISABLE KEYS */;
-INSERT INTO `sqls` VALUES (1,'2019-03-06_init.sql',1,'2019-03-28 22:52:23','2019-03-28 22:52:23');
+INSERT INTO `sqls` VALUES (1,'2019-03-06_init.sql',1,'2019-04-02 06:41:17','2019-04-02 06:41:17');
 /*!40000 ALTER TABLE `sqls` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -786,7 +787,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','系統管理員',NULL,NULL,NULL,'$2y$10$EFvL7LsTurJuD78J/LQ8ju.laNM3W9kpQv6kwmZWhX6bdVlX2Hl5C',1,NULL,NULL,NULL,NULL,'local',NULL,NULL,'2019-03-28 22:52:23','2019-03-28 22:52:23');
+INSERT INTO `users` VALUES (1,'admin','系統管理員',NULL,NULL,NULL,'$2y$10$L6SDK9Aa3DZjZSxn0YCUVubtF4pMc.KX6fgQDT2Bln1A62BrbmqsG',1,NULL,NULL,NULL,NULL,'local',NULL,NULL,'2019-04-02 06:41:17','2019-04-02 06:41:17');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -825,4 +826,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-28 15:08:35
+-- Dump completed on 2019-04-02 14:42:12
