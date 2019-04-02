@@ -16,7 +16,7 @@
                         <label for="username" class="col-sm-4 col-form-label text-md-right">帳號</label>
 
                         <div class="col-md-6">
-                            <input id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
+                            <input tabindex="1" id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
 
                             @if ($errors->has('username'))
                                 <span class="invalid-feedback" role="alert">
@@ -30,7 +30,7 @@
                         <label for="password" class="col-md-4 col-form-label text-md-right">密碼</label>
 
                         <div class="col-md-6">
-                            <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                            <input id="password" type="password" tabindex="2" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
                             @if ($errors->has('password'))
                                 <span class="invalid-feedback" role="alert">
@@ -51,13 +51,13 @@
                         <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>
 
                         <div class="col-md-6">
-                            <input type="text" class="form-control" name="chaptcha" required placeholder="上圖數字" maxlength="5">
+                            <input type="text" tabindex="3" class="form-control" name="chaptcha" required placeholder="上圖數字" maxlength="5">
                         </div>
                     </div>
 
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
-                            <button type="submit" class="btn btn-primary btn-sm">
+                            <button type="submit" class="btn btn-primary btn-sm" tabindex="4">
                                 <i class="fas fa-sign-in-alt"></i> 登入
                             </button>
                         </div>

@@ -134,7 +134,7 @@ class HomeController extends Controller
 
         header("Content-type: image/gif");
         $im = imagecreatefromgif(asset('images/captcha_bk'.$back.'.gif')) or die("無法建立GD圖片");
-        $text_color = imagecolorallocate($im, 255, 166, 0);
+        $text_color = imagecolorallocate($im, 255, 255, 255);
 
         imagettftext($im, 50, 0 , 51, 50, $text_color,public_path('font/wt071.ttf'),$cht_key);
         imagegif($im);
