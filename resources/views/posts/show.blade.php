@@ -2,7 +2,7 @@
 
 @section('nav_post_active', 'active')
 
-@section('title', '顯示公告 | 公告系統')
+@section('title', '顯示公告 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -59,12 +59,12 @@
                         @if($post->top)
                             <a href="{{ route('posts.top_down',$post->id) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定要取消置頂？')"><i class="fas fa-sort-amount-down"></i> 取消置頂</a>
                         @else
-                            <a href="{{ route('posts.top_up',$post->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定要置頂？')"><i class="fas fa-sort-amount-up"></i> 置頂</a>
+                            <a href="{{ route('posts.top_up',$post->id) }}" class="btn btn-outline-success btn-sm" onclick="return confirm('確定要置頂？')"><i class="fas fa-sort-amount-up"></i> 置頂</a>
                         @endif
                     @endif
                 @endauth
                 @can('update',$post)
-                <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                 <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
                 {{ Form::open(['route' => ['posts.destroy',$post->id], 'method' => 'DELETE','id'=>'delete','onsubmit'=>'return false;']) }}
                 {{ Form::close() }}

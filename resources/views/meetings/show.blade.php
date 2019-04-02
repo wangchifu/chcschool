@@ -2,12 +2,12 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '會議文稿')
+@section('title', '顯示會議 | ')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1>{{ $meeting->open_date }} {{ get_chinese_weekday($meeting->open_date) }} {{ $meeting->name }}<a href="{{ route('meetings.txtDown',$meeting->id) }}" class="btn btn-primary"><i class="fas fa-download"></i> 報告內容下載</a></h1>
+            <h1>{{ $meeting->open_date }} {{ get_chinese_weekday($meeting->open_date) }} {{ $meeting->name }} <a href="{{ route('meetings.txtDown',$meeting->id) }}" class="btn btn-primary"><i class="fas fa-download"></i> 報告內容下載</a></h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
@@ -32,7 +32,7 @@
                     <h3 class="card-header">
                         {{ $i }}.{{ $report->job_title }}
                         @if($has_report == "1" and $report->user_id == auth()->user()->id and $die_line =="0")
-                            <a href="{{ route('meetings_reports.edit',$report->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                            <a href="{{ route('meetings_reports.edit',$report->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                             <a href="#" class="btn btn-danger btn-sm" onclick="confirm_form('delete{{ $report->id }}','確定刪除？')"><i class="fas fa-trash"></i> 刪除</a>
                             {{ Form::open(['route' => ['meetings_reports.destroy',$report->id], 'method' => 'DELETE','id'=>'delete'.$report->id]) }}
                             {{ Form::close() }}

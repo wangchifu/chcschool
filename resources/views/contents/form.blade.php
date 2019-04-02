@@ -1,6 +1,7 @@
 <div class="card my-4">
     <h3 class="card-header">內容資料</h3>
     <div class="card-body">
+        @include('layouts.errors')
         <div class="form-group">
             <label for="title">標題*</label>
             {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required', 'placeholder' => '標題']) }}

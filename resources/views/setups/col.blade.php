@@ -21,7 +21,7 @@
             <div class="card my-4">
                 <h3 class="card-header">首頁欄位</h3>
                 <div class="card-body">
-                    {{ Form::open(['route' => 'setups.add_col', 'method' => 'post']) }}
+                    {{ Form::open(['route' => 'setups.add_col', 'method' => 'post','id'=>'this_form']) }}
                     <table class="table">
                         <tr>
                             <td>
@@ -98,5 +98,7 @@
             window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=230');
         }
         // -->
+
+        var validator = $("#this_form").validate();
     </script>
 @endsection

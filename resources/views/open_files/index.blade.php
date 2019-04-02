@@ -2,7 +2,7 @@
 
 @section('nav_open_files_active', 'active')
 
-@section('title', '檔案庫')
+@section('title', '檔案庫 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -120,7 +120,7 @@
                 <div class="card my-4">
                     <h3 class="card-header">新增</h3>
                     <div class="card-body">
-                        {{ Form::open(['route' => 'open_files.create_folder', 'method' => 'POST','id'=>'create_folder']) }}
+                        {{ Form::open(['route' => 'open_files.create_folder', 'method' => 'POST','id'=>'this_form']) }}
                         <div class="form-group">
                             <label for="name"><strong>1.子目錄</strong></label>
                             {{ Form::text('name',null,['id'=>'name','class' => 'form-control','placeholder'=>'名稱','required'=>'required']) }}
@@ -133,7 +133,7 @@
                         {{ Form::close() }}
                         <hr>
                         @include('layouts.errors')
-                        {{ Form::open(['route' => 'open_files.upload_file', 'method' => 'POST','id'=>'upload_file','files' => true]) }}
+                        {{ Form::open(['route' => 'open_files.upload_file', 'method' => 'POST','id'=>'this_form2','files' => true]) }}
                         <div class="form-group">
                             <label for="file"><strong>2.檔案( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )</strong><small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small></label>
                             {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple','required'=>'required']) }}
@@ -149,4 +149,8 @@
             @endcan
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+        var validator2 = $("#this_form2").validate();
+    </script>
 @endsection

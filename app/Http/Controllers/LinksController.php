@@ -49,11 +49,18 @@ class LinksController extends Controller
      */
     public function store_type(Request $request)
     {
+        $request->validate([
+            'name'=>'required',
+        ]);
         Type::create($request->all());
         return redirect()->route('links.index');
     }
     public function store(Request $request)
     {
+        $request->validate([
+            'name'=>'required',
+            'url'=>'required',
+        ]);
         Link::create($request->all());
         return redirect()->route('links.index');
     }
@@ -94,12 +101,19 @@ class LinksController extends Controller
      */
     public function update(Request $request, Link $link)
     {
+        $request->validate([
+            'name'=>'required',
+            'url'=>'required',
+        ]);
         $link->update($request->all());
         return redirect()->route('links.index');
     }
 
     public function update_type(Request $request, Type $type)
     {
+        $request->validate([
+            'name'=>'required',
+        ]);
         $type->update($request->all());
         return redirect()->route('links.index');
     }

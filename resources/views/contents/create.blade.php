@@ -15,10 +15,12 @@
                     <li class="breadcrumb-item active" aria-current="page">新增內容</li>
                 </ol>
             </nav>
-            @include('layouts.errors')
-            {{ Form::open(['route' => 'contents.store', 'method' => 'POST']) }}
+            {{ Form::open(['route' => 'contents.store', 'method' => 'POST','id'=>'this_form']) }}
             @include('contents.form')
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

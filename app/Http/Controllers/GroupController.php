@@ -55,6 +55,9 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name'=>'required',
+        ]);
         Group::create($request->all());
         return redirect()->route('groups.index');
     }
@@ -90,6 +93,9 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
+        $request->validate([
+            'name'=>'required',
+        ]);
         $att['name'] = $request->input('name');
         $att['disable'] = $request->input('disable');
         $group->update($att);

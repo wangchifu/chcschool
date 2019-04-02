@@ -3,7 +3,7 @@
 @section('title', '編輯欄位 | ')
 
 @section('content')
-    {{ Form::open(['route' => ['setups.update_col',$setup_col->id], 'method' => 'patch']) }}
+    {{ Form::open(['route' => ['setups.update_col',$setup_col->id], 'method' => 'patch','id'=>'this_form']) }}
     <table class="table table-striped">
         <thead class="thead-light">
         <tr>
@@ -33,7 +33,7 @@
                 {{ Form::text('num',$setup_col->num,['class' => 'form-control','required'=>'required','maxlength'=>'2']) }}
             </td>
             <td>
-                <button class="btn btn-primary btn-sm">儲存變更</button>
+                <button class="btn btn-primary btn-sm"><i class="fas fa-save"></i> 儲存變更</button>
             </td>
         </tr>
         </tbody>
@@ -42,6 +42,9 @@
     <form action="{{ route('setups.delete_col',$setup_col->id) }}" method="post">
         @csrf
         @method('delete')
-        <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？若有區塊放置在此欄位，記得去變更！')">刪除</button>
+        <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？若有區塊放置在此欄位，記得去變更！')"><i class="fas fa-trash"></i>刪除</button>
     </form>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

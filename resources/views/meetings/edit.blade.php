@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '修改 | 會議文稿')
+@section('title', '修改會議 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -20,9 +20,12 @@
             $default_date = $meeting->open_date;
             $default_name=$meeting->name;
             ?>
-            {{ Form::model($meeting,['route' => ['meetings.update',$meeting->id], 'method' => 'PATCH','id'=>'setup']) }}
+            {{ Form::model($meeting,['route' => ['meetings.update',$meeting->id], 'method' => 'PATCH','id'=>'this_form']) }}
             @include('meetings.form')
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

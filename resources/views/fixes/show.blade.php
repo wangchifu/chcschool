@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '顯示報修 | 報修系統')
+@section('title', '顯示報修 | ')
 
 @section('content')
     <div class="row justify-content-center">

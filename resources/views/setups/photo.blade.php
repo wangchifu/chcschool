@@ -28,7 +28,7 @@
                                 <i class="fas fa-times-circle text-danger"></i></a>
                         </div>
                     @else
-                        {{ Form::open(['route' => 'setups.add_logo', 'method' => 'post','id'=>'logo', 'files' => true]) }}
+                        {{ Form::open(['route' => 'setups.add_logo', 'method' => 'post','id'=>'this_form1', 'files' => true]) }}
                         <div class="form-group">
                             <label for="file">圖檔( .ico .png )</label>
                             {{ Form::file('logo', ['class' => 'form-control','required'=>'required']) }}
@@ -70,10 +70,10 @@
                         </button>
                     </div>
                     {{ Form::close() }}
-                    {{ Form::open(['route' => 'setups.add_imgs', 'method' => 'post', 'files' => true]) }}
+                    {{ Form::open(['route' => 'setups.add_imgs', 'method' => 'post', 'files' => true,'id'=>'this_form2']) }}
                     <div class="form-group">
                         <label for="files[]">圖檔( 2000 x 400 )</label>
-                        {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
+                        {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple','required'=>'required']) }}
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
@@ -94,4 +94,9 @@
             </div>
         </div>
     </div>
+    <script>
+        var validator1 = $("#this_form1").validate();
+        var validator2 = $("#this_form2").validate();
+        var validator3 = $("#this_form3").validate();
+    </script>
 @endsection

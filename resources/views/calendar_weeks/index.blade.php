@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '校務行事曆-週次設定')
+@section('title', '校務行事曆-週次設定 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -19,7 +19,7 @@
                     <h4>新學期開學日設定</h4>
                 </div>
                 <div class="card-body">
-                    <form name="myform" action="{{ route('calendar_weeks.create') }}" method="post">
+                    <form name="myform" action="{{ route('calendar_weeks.create') }}" method="post" id="this_form">
                         @csrf
                         <div class="form-group">
                             <label for="open_date">
@@ -55,4 +55,7 @@
             </div>
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

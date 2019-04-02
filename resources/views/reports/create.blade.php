@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '新增報告 | 會議文稿')
+@section('title', '新增報告 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -16,7 +16,7 @@
                     <li class="breadcrumb-item active" aria-current="page">新增報告</li>
                 </ol>
             </nav>
-            {{ Form::open(['route' => 'meetings_reports.store', 'method' => 'POST','id'=>'setup', 'files' => true]) }}
+            {{ Form::open(['route' => 'meetings_reports.store', 'method' => 'POST','id'=>'this_form', 'files' => true]) }}
             <div class="card my-4">
                 <h3 class="card-header">{{ $meeting->open_date }} {{ $meeting->name }} 報告資料</h3>
                 <div class="card-body">
@@ -45,4 +45,7 @@
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

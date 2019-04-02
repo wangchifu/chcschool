@@ -36,6 +36,10 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required',
+        ]);
         Department::create($request->all());
         return redirect()->route('departments.index');
     }
@@ -71,6 +75,10 @@ class DepartmentController extends Controller
      */
     public function update(Request $request,Department $department)
     {
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required',
+        ]);
         $department->update($request->all());
         return redirect()->route('departments.index');
     }

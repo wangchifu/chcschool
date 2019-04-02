@@ -2,7 +2,7 @@
 
 @section('nav_post_active', 'active')
 
-@section('title', '修改公告 | 公告系統')
+@section('title', '修改公告 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item active" aria-current="page">修改公告</li>
                 </ol>
             </nav>
-            {{ Form::model($post,['route' => ['posts.update',$post->id], 'method' => 'PATCH','id'=>'setup', 'files' => true]) }}
+            {{ Form::model($post,['route' => ['posts.update',$post->id], 'method' => 'PATCH','id'=>'this_form', 'files' => true]) }}
             <div class="card my-4">
                 <h3 class="card-header">公告資料</h3>
                 <div class="card-body">
@@ -44,11 +44,11 @@
                     </div>
                     <div class="form-group">
                         <label for="title"><strong>4.標題*</strong></label>
-                        {{ Form::text('title',null,['id'=>'title','class' => 'form-control', 'placeholder' => '請輸入標題']) }}
+                        {{ Form::text('title',null,['id'=>'title','class' => 'form-control', 'placeholder' => '請輸入標題','required'=>'required']) }}
                     </div>
                     <div class="form-group">
                         <label for="content"><strong>5.內文*</strong></label>
-                        {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容']) }}
+                        {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容','required'=>'required']) }}
                     </div>
                     <div class="form-group">
                         <label for="files[]">6.附件( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ 詳細公文 ] [ 轉檔教學 ] )</label>
@@ -70,4 +70,7 @@
             </div>
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

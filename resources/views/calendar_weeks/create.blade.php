@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '校務行事曆-週次設定')
+@section('title', '校務行事曆-週次設定 | ')
 
 @section('content')
     <div class="row justify-content-center">

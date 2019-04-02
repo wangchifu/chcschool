@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '新增報告 | 會議文稿')
+@section('title', '修改報告 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -16,7 +16,7 @@
                     <li class="breadcrumb-item active" aria-current="page">修改報告</li>
                 </ol>
             </nav>
-            {{ Form::model($report,['route' => ['meetings_reports.update',$report->id], 'method' => 'PATCH','id'=>'setup', 'files' => true]) }}
+            {{ Form::model($report,['route' => ['meetings_reports.update',$report->id], 'method' => 'PATCH','id'=>'this_form', 'files' => true]) }}
             <div class="card my-4">
                 <h3 class="card-header">{{ $report->meeting->open_date }} {{ $report->meeting->name }} 報告資料</h3>
                 <div class="card-body">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="form-group">
                         <label for="content"><strong>內容*</strong></label>
-                        {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容']) }}
+                        {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容','required'=>'required']) }}
                     </div>
                     <div class="form-group">
                         <label for="files[]">( 不大於5MB )</label>
@@ -54,4 +54,7 @@
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

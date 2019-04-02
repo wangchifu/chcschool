@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '會議文稿')
+@section('title', '新增會議 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -20,9 +20,12 @@
             $default_date = date('Y-m-d');
             $default_name="教師晨會";
             ?>
-            {{ Form::open(['route' => 'meetings.store', 'method' => 'POST','id'=>'setup']) }}
+            {{ Form::open(['route' => 'meetings.store', 'method' => 'POST','id'=>'this_form']) }}
             @include('meetings.form')
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

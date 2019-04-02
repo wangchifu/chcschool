@@ -17,11 +17,14 @@
             </nav>
             <div class="row justify-content-center">
                 <div class="col-md-5">
-                    {{ Form::open(['route' => 'groups.store', 'method' => 'POST','id'=>'setup']) }}
+                    {{ Form::open(['route' => 'groups.store', 'method' => 'POST','id'=>'this_form']) }}
                     @include('groups.form')
                     {{ Form::close() }}
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

@@ -16,9 +16,12 @@
                 </ol>
             </nav>
             @include('layouts.errors')
-            {{ Form::open(['route' => 'links.store', 'method' => 'POST']) }}
+            {{ Form::open(['route' => 'links.store', 'method' => 'POST','id'=>'this_form']) }}
             @include('links.form')
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

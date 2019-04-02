@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="form-group">
             <label for="name">名稱</label>
-            {{ Form::text('name',null,['id'=>'name','class' => 'form-control', 'placeholder' => '名稱']) }}
+            {{ Form::text('name',null,['id'=>'name','class' => 'form-control', 'placeholder' => '名稱','required'=>'required']) }}
         </div>
         <div class="form-group">
             <div class="form-check">

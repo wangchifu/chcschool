@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '新增 | 報修系統')
+@section('title', '新增報修 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item active" aria-current="page">新增報修</li>
                 </ol>
             </nav>
-            {{ Form::open(['route' => 'fixes.store', 'method' => 'POST','id'=>'setup', 'files' => true]) }}
+            {{ Form::open(['route' => 'fixes.store', 'method' => 'POST','id'=>'this_form', 'files' => true]) }}
             <div class="card my-4">
                 <h3 class="card-header">報修資料</h3>
                 <div class="card-body">
@@ -44,4 +44,7 @@
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

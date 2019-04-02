@@ -15,10 +15,12 @@
                     <li class="breadcrumb-item active" aria-current="page">修改介紹</li>
                 </ol>
             </nav>
-            @include('layouts.errors')
-            {{ Form::model($department,['route' => ['departments.update',$department->id], 'method' => 'PATCH']) }}
+            {{ Form::model($department,['route' => ['departments.update',$department->id], 'method' => 'PATCH','id'=>'this_form']) }}
             @include('departments.form')
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '報修系統')
+@section('title', '報修系統 | ')
 
 @section('content')
     <?php $types=['1'=>'1.資訊設備','2'=>'2.總務設備']; ?>

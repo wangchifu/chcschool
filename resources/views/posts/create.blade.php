@@ -2,7 +2,7 @@
 
 @section('nav_post_active', 'active')
 
-@section('title', '新增公告 | 公告系統')
+@section('title', '新增公告 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -15,7 +15,7 @@
                 </ol>
             </nav>
             <h1>公告系統</h1>
-            {{ Form::open(['route' => 'posts.store', 'method' => 'POST','id'=>'setup', 'files' => true]) }}
+            {{ Form::open(['route' => 'posts.store', 'method' => 'POST','id'=>'setup', 'files' => true,'id'=>'this_form']) }}
             <div class="card my-4">
                 <h3 class="card-header">公告資料</h3>
                 <div class="card-body">
@@ -27,7 +27,7 @@
                         <label for="insite">2.內部公告?</label>
                         <div class="form-check">
                             {{ Form::checkbox('insite', '1',null,['id'=>'insite','class'=>'form-check-input']) }}
-                            <label class="form-check-label" for="insite"><span class="btn btn-info btn-sm">設定</span></label>
+                            <label class="form-check-label" for="insite">打勾為內部公告</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -62,4 +62,7 @@
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

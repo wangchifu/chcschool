@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '校務行事曆-新增行事曆')
+@section('title', '校務行事曆-新增行事曆 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -18,7 +18,7 @@
                 <div class="card-header">
                     行事曆資料
                 </div>
-                {{ Form::open(['route' => 'calendars.store', 'method' => 'POST','id'=>'store']) }}
+                {{ Form::open(['route' => 'calendars.store', 'method' => 'POST','id'=>'this_form']) }}
                 <div class="card-body">
                     <div class="form-group">
                         <label for="group_id"><strong class="text-danger">1.先選校務類別</strong></label>

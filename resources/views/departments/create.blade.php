@@ -2,7 +2,7 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '新增介紹 ')
+@section('title', '新增介紹 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -15,10 +15,12 @@
                     <li class="breadcrumb-item active" aria-current="page">新增介紹</li>
                 </ol>
             </nav>
-            @include('layouts.errors')
-            {{ Form::open(['route' => 'departments.store', 'method' => 'POST']) }}
+            {{ Form::open(['route' => 'departments.store', 'method' => 'POST','id'=>'this_form']) }}
             @include('departments.form')
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

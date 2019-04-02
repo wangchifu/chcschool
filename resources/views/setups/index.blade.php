@@ -26,7 +26,7 @@
             <div class="card my-4">
                 <h3 class="card-header">文字標題</h3>
                 <div class="card-body">
-                    {{ Form::open(['route' => ['setups.text',$setup->id], 'method' => 'patch']) }}
+                    {{ Form::open(['route' => ['setups.text',$setup->id], 'method' => 'patch','id'=>'this_form1']) }}
                     <div class="form-group">
                         <label for="site_name">網站名稱</label>
                         {{ Form::text('site_name',$setup->site_name,['class' => 'form-control','required'=>'required']) }}
@@ -64,7 +64,7 @@
                 $c3 = (empty($nav_color[2]))?"#F8EB48":$nav_color[2];
                 $c4 = (empty($nav_color[3]))?"#16813D":$nav_color[3];
             ?>
-            {{ Form::open(['route' => ['setups.nav_color',$setup->id], 'method' => 'patch','id'=>'color']) }}
+            {{ Form::open(['route' => ['setups.nav_color',$setup->id], 'method' => 'patch','id'=>'this_form2']) }}
             <div class="card my-4">
                 <h3 class="card-header">顏色設定</h3>
                 <div class="card-body">
@@ -128,5 +128,9 @@
         $(function () {
             $('#cp1,#cp2,#cp3,#cp4').colorpicker();
         });
+
+
+        var validator1 = $("#this_form1").validate();
+        var validator2 = $("#this_form2").validate();
     </script>
 @endsection

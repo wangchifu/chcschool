@@ -36,6 +36,10 @@ class ContentsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required',
+        ]);
         Content::create($request->all());
         return redirect()->route('contents.index');
     }
@@ -71,6 +75,10 @@ class ContentsController extends Controller
      */
     public function update(Request $request, Content $content)
     {
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required',
+        ]);
         $content->update($request->all());
         return redirect()->route('contents.index');
     }

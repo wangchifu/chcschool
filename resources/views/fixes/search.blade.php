@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '分類搜尋 | 報修系統')
+@section('title', '分類搜尋報修 | ')
 
 @section('content')
     <?php $situations=['1'=>'處理完畢','2'=>'處理中','3'=>'申報中'];$types=['1'=>'1.資訊設備','2'=>'2.總務設備']; ?>

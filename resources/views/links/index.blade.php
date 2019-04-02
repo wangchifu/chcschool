@@ -21,17 +21,10 @@
                     連結類別
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped" style="word-break:break-all;">
-                        <thead class="thead-light">
-                        <tr>
-                            <th>名稱</th>
-                            <th>排序</th>
-                            <th>動作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <form action="{{ route('links.store_type') }}" method="post">
+
+                        <form action="{{ route('links.store_type') }}" method="post" id="this_form1">
                             @csrf
+                        <table class="table table-striped" style="word-break:break-all;">
                         <tr>
                             <td>
                                 {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
@@ -43,7 +36,17 @@
                                 <button class="btn btn-success btn-sm" onclick="return confirm('確定？')"><i class="fas fa-plus"></i> 新增</button>
                             </td>
                         </tr>
+                        </table>
                         </form>
+                    <table class="table table-striped" style="word-break:break-all;">
+                        <thead class="thead-light">
+                        <tr>
+                            <th nowrap>名稱</th>
+                            <th nowrap>排序</th>
+                            <th nowrap>動作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         @foreach($types as $type)
                             {{ Form::open(['route' => ['links.update_type',$type->id], 'method' => 'patch','id'=>'update'.$type->id]) }}
                                 @csrf
@@ -55,7 +58,7 @@
                                 <td>
                                     {{ Form::text('order_by',$type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
                                 </td>
-                                <td>
+                                <td nowrap>
                                     <button onclick="return confirm('儲存修改？')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i></button>
                                     <a href="#" class="text-danger" onclick="if(confirm('確定刪除？會一併刪除所屬連結喔！')) document.getElementById('delete{{ $type->id }}').submit();else return false;"><i class="fas fa-times-circle"></i></a>
                                 </td>
@@ -110,4 +113,7 @@
             </table>
         </div>
     </div>
+    <script>
+        var validator = $("#this_form1").validate();
+    </script>
 @endsection

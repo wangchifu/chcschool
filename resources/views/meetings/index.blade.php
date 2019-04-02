@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '會議文稿')
+@section('title', '會議文稿 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -43,7 +43,7 @@
                         <td>{{ $meeting->reports->count() }}</td>
                         <td>
                             @can('update',$meeting)
-                                <a href="{{ route('meetings.edit',$meeting->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                                <a href="{{ route('meetings.edit',$meeting->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                             @endcan
                             @can('update',$meeting)
                                 <button class="btn btn-danger btn-sm" onclick="if(confirm('您確定要刪除嗎?')) document.getElementById('delete{{ $meeting->id }}').submit();else return false"><i class="fas fa-trash"></i> 刪除</button>

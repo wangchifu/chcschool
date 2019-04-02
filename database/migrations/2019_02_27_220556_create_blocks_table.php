@@ -16,7 +16,7 @@ class CreateBlocksTable extends Migration
         Schema::create('blocks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->unsignedInteger('order_by')->nullable();//排序
             $table->unsignedInteger('setup_col_id')->nullable();//所屬的col
             $table->timestamps();

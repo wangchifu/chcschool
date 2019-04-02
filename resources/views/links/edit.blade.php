@@ -16,9 +16,12 @@
                 </ol>
             </nav>
             @include('layouts.errors')
-            {{ Form::model($link,['route' => ['links.update',$link->id], 'method' => 'PATCH']) }}
+            {{ Form::model($link,['route' => ['links.update',$link->id], 'method' => 'PATCH','id'=>'this_form']) }}
             @include('links.form')
             {{ Form::close() }}
         </div>
     </div>
+    <script>
+        var validator = $("#this_form").validate();
+    </script>
 @endsection

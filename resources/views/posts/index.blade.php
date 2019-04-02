@@ -2,7 +2,7 @@
 
 @section('nav_post_active', 'active')
 
-@section('title', '公告系統')
+@section('title', '公告系統 | ')
 
 @section('content')
     <div class="row justify-content-center">
