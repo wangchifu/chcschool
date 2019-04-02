@@ -37,7 +37,7 @@
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
 </head>
 
-<body id="page-top" style="background-color:#f0f0f0;">
+<body id="page-top" style="background-color:#f0f0f0;background-image: url('{{ asset('images/bl.gif') }}')">
 <style>
     .navbar-custom {
         background-color: {{ $navbar_custom[0] }};

@@ -36,7 +36,7 @@
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
                     @foreach($blocks[$setup_col->id] as $block)
-                    <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;margin-bottom: 10px;padding: 10px">
+                    <div style="box-shadow:1px 1px 1px 1px #cccccc;border-width:1px;border-color:#939699;border-style: solid;background-color:#FFFFFF;margin-bottom: 10px;padding: 10px">
                         @if($block->id != 1)
                             {!! $block->content !!}
                         @else
@@ -52,7 +52,23 @@
 @endsection
 
 @section('footer')
-    @if(!empty($setup->footer))
-        @include('layouts.footer')
-    @endif
+    <br>
+    <br>
+    <footer class="font-small bg-light py-4">
+        <div class="container-fluid text-center text-md-left">
+            @if(!empty($setup->footer))
+            <div class="row">
+                <div class="col-md-11">
+                    {!! $setup->footer !!}
+                </div>
+            </div>
+            @endif
+            <div class="row justify-content-center" style="background-color: #cccccc;">
+
+            </div>
+        </div>
+    </footer>
+    <div class="footer-copyright text-center text-black-50 py-3" style="background-color: #CCCCCC">
+        2019 Copyright ©　<a href="{{ route('index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }}
+    </div>
 @endsection
