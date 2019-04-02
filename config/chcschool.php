@@ -4,8 +4,8 @@ return [
     'modules'=>[
         'posts'=>'公告系統',
         'open_files'=>'檔案庫',
-        'departments'=>'處室介紹',
-        'links'=>'好站連結',
+        'departments'=>'學校介紹',
+        'links'=>'選單連結',
         'schools'=>'校務行政',
         'calendars'=>'校務行事曆',
         'meetings'=>'會議文稿',

@@ -18,7 +18,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>@yield('title') | {{ $setup->site_name }}</title>
+    <title>@yield('title'){{ $setup->site_name }}</title>
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('js/additional-methods.min.js') }}"></script>

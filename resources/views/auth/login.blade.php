@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','管理登入頁面')
+@section('title','管理登入 | ')
 
 @section('content')
 <div class="row justify-content-center">
@@ -9,7 +9,7 @@
             <div class="card-header"><h4>管理員登入</h4></div>
 
             <div class="card-body">
-                <form method="POST" action="{{ route('auth') }}">
+                <form method="POST" action="{{ route('auth') }}" id="this_form">
                     @csrf
 
                     <div class="form-group row">
@@ -43,7 +43,7 @@
                         <div class="col-md-4 text-md-left">
                         </div>
                         <div class="col-md-6 text-md-left">
-                            <img src="{{ route('pic') }}" class="img-fluid">
+                            <a href="{{ route('login') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>
                         </div>
                     </div>
 
@@ -68,4 +68,7 @@
         </div>
     </div>
 </div>
+<script>
+    var validator = $("#this_form").validate();
+</script>
 @endsection

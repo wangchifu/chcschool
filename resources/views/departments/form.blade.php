@@ -1,8 +1,8 @@
 <div class="card my-4">
-    <h3 class="card-header">內容資料</h3>
+    <h3 class="card-header">介紹資料</h3>
     <div class="card-body">
         <div class="form-group">
-            <label for="title">處室*</label>
+            <label for="title">標題*</label>
             {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required', 'placeholder' => '標題']) }}
         </div>
         <div class="form-group">

@@ -1,6 +1,6 @@
 @extends('layouts.master_clean')
 
-@section('title', '編輯欄位')
+@section('title', '編輯欄位 | ')
 
 @section('content')
     {{ Form::open(['route' => ['setups.update_col',$setup_col->id], 'method' => 'patch']) }}

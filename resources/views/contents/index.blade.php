@@ -2,7 +2,7 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '內容管理')
+@section('title', '內容管理 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -31,7 +31,7 @@
                         <td>{{ $content->id }}</td>
                         <td><a href="{{ route('contents.show',$content->id) }}" target="_blank">{{ $content->title }}</a></td>
                         <td>
-                            <a href="{{ route('contents.edit',$content->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                            <a href="{{ route('contents.edit',$content->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                             <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $content->id }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
                         </td>
                     </tr>

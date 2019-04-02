@@ -2,7 +2,7 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '編輯群組')
+@section('title', '編輯群組 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -11,7 +11,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('groups.index') }}">群組列表</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('groups.index') }}">群組管理</a></li>
                     <li class="breadcrumb-item active" aria-current="page">編輯群組</li>
                 </ol>
             </nav>

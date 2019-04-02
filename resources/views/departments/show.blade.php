@@ -2,7 +2,7 @@
 
 @section('nav_departments_active', 'active')
 
-@section('title', '檢視 | 處室管理')
+@section('title', '檢視介紹 | ')
 
 @section('content')
     <div class="row justify-content-center">

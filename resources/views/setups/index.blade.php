@@ -2,7 +2,7 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '網站設定')
+@section('title', '網站設定 | ')
 
 @section('content')
     <link rel="stylesheet" type="text/css" href="{{ asset('colorpicker/css/htmleaf-demo.css') }}">

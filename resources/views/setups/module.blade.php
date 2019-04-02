@@ -2,7 +2,7 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '模組功能')
+@section('title', '模組功能 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -67,7 +67,7 @@
                                             @elseif($v=="處室介紹")
                                                 管理員編修
                                             @elseif($v=="報修系統")
-                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm">新指定</a>
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定</a>
                                                 <?php
                                                     $user_powers = \App\UserPower::where('name',$v)->where('type','A')->get();
                                                 ?>
@@ -79,7 +79,7 @@
                                             @elseif($v=="校務行事曆")
                                                 管理員設置年度後，行政人員可編行事
                                             @elseif($v=="午餐系統")
-                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm">新指定</a>
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定</a>
                                                 <?php
                                                 $user_powers = \App\UserPower::where('name',$v)->where('type','A')->get();
                                                 ?>
@@ -94,7 +94,7 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">儲存</button>
+                            <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')"><i class="fas fa-save"></i> 儲存</button>
                         </form>
                     </div>
                 </div>

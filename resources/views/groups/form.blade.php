@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" onclick="return confirm('確定儲存嗎？')">
+            <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
                 <i class="fas fa-save"></i> 儲存設定
             </button>
         </div>

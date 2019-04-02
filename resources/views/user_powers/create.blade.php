@@ -1,6 +1,6 @@
 @extends('layouts.master_clean')
 
-@section('title', '新增使用者權限')
+@section('title', '新增使用者權限 | ')
 
 @section('content')
     <br>

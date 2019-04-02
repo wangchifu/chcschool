@@ -2,8 +2,6 @@
 
 @section('nav_home_active', 'active')
 
-@section('title', '首頁')
-
 @section('top_image')
     @if($setup->title_image)
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">

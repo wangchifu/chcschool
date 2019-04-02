@@ -2,21 +2,21 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '處室管理')
+@section('title', '學校介紹管理 | ')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>
-                處室管理
+                學校介紹管理
             </h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">處室列表</li>
+                    <li class="breadcrumb-item active" aria-current="page">簡介列表</li>
                 </ol>
             </nav>
-            <a href="{{ route('departments.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增內容</a>
+            <a href="{{ route('departments.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增介紹</a>
             <table class="table table-striped" style="word-break:break-all;">
                 <thead class="thead-light">
                 <tr>
@@ -33,7 +33,7 @@
                         <td><a href="{{ route('departments.show',$department->id) }}" target="_blank">{{ $department->title }}</a></td>
                         <td>{{ $department->order_by }}</td>
                         <td>
-                            <a href="{{ route('departments.edit',$department->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                            <a href="{{ route('departments.edit',$department->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                             <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $department->id }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
                         </td>
                     </tr>

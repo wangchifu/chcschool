@@ -2,7 +2,7 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '新增 | 連結管理')
+@section('title', '新增連結 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -11,7 +11,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('links.index') }}">連結列表</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('links.index') }}">選單連結</a></li>
                     <li class="breadcrumb-item active" aria-current="page">新增連結</li>
                 </ol>
             </nav>

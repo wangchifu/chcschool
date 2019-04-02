@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','GSuite登入頁面')
+@section('title','教職員登入 | ')
 
 @section('content')
 <div class="row justify-content-center">
@@ -10,7 +10,7 @@
 
             <div class="card-body">
                 <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}"></a>
-                <form id="form" method="POST" action="{{ route('gauth') }}">
+                <form id="this_form" method="POST" action="{{ route('gauth') }}">
                     @csrf
                     <div class="form-group row">
                         <label for="username" class="col-md-4 col-form-label text-md-right">帳號</label>
@@ -34,7 +34,7 @@
                         <div class="col-md-4 text-md-left">
                         </div>
                         <div class="col-md-6 text-md-left">
-                            <img src="{{ route('pic') }}" class="img-fluid">
+                            <a href="{{ route('glogin') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>
                         </div>
                     </div>
 
@@ -62,4 +62,7 @@
         </div>
     </div>
 </div>
+<script>
+    var validator = $("#this_form").validate();
+</script>
 @endsection

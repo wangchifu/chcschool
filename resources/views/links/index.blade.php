@@ -2,16 +2,16 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '連結管理')
+@section('title', '選單連結 | ')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>連結管理</h1>
+            <h1>選單連結</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">連結列表</li>
+                    <li class="breadcrumb-item active" aria-current="page">選單連結</li>
                 </ol>
             </nav>
         </div>
@@ -56,7 +56,7 @@
                                     {{ Form::text('order_by',$type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
                                 </td>
                                 <td>
-                                    <button onclick="return confirm('儲存修改？')">存</button>
+                                    <button onclick="return confirm('儲存修改？')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i></button>
                                     <a href="#" class="text-danger" onclick="if(confirm('確定刪除？會一併刪除所屬連結喔！')) document.getElementById('delete{{ $type->id }}').submit();else return false;"><i class="fas fa-times-circle"></i></a>
                                 </td>
                             </tr>
@@ -99,7 +99,7 @@
                             {{ $link->order_by }}
                         </td>
                         <td>
-                            <a href="{{ route('links.edit',$link->id) }}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                            <a href="{{ route('links.edit',$link->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                             <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $link->id }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
                         </td>
                     </tr>

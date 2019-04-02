@@ -2,7 +2,7 @@
 
 @section('nav_setup_active', 'active')
 
-@section('title', '網站設定')
+@section('title', '網站設定 | ')
 
 @section('content')
     <div class="row justify-content-center">
@@ -81,7 +81,7 @@
                                     {{ $setup_col->num }}
                                 </td>
                                 <td>
-                                    <a href="javascript:open_window('{{ route('setups.edit_col',$setup_col->id) }}','新視窗')" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
+                                    <a href="javascript:open_window('{{ route('setups.edit_col',$setup_col->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
                                 </td>
                             </tr>
                         @endforeach

@@ -29,10 +29,10 @@
                         <a class="nav-link" href="{{ route('open_files.index') }}">檔案庫</a>
                     </li>
                 @endif
-                @if(isset($module_setup['處室介紹']))
+                @if(isset($module_setup['學校介紹']))
                     <li class="nav-item dropdown @yield('nav_departments_active')">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            處室介紹
+                            學校介紹
                         </a>
                         <?php $departments = \App\Department::orderBy('order_by')->get(); ?>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -44,7 +44,7 @@
                         </div>
                     </li>
                 @endif
-                @if(isset($module_setup['好站連結']))
+                @if(isset($module_setup['選單連結']))
                     <?php $types = \App\Type::orderBy('order_by')->get();
                     ?>
                     @foreach($types as $type)
@@ -105,9 +105,9 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-user"></i> 帳號管理</a>
                                 <a class="dropdown-item" href="{{ route('groups.index') }}"><i class="fas fa-users"></i> 群組管理</a>
-                                <a class="dropdown-item" href="{{ route('departments.index') }}"><i class="fas fa-puzzle-piece"></i> 處室管理</a>
+                                <a class="dropdown-item" href="{{ route('departments.index') }}"><i class="fas fa-puzzle-piece"></i> 學校介紹管理</a>
                                 <a class="dropdown-item" href="{{ route('contents.index') }}"><i class="fas fa-file-alt"></i> 內容管理</a>
-                                <a class="dropdown-item" href="{{ route('links.index') }}"><i class="fas fa-link"></i> 連結管理</a>
+                                <a class="dropdown-item" href="{{ route('links.index') }}"><i class="fas fa-link"></i> 選單連結</a>
                                 <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>
                             </div>
                         </li>
@@ -121,7 +121,7 @@
                                 <a class="dropdown-item" href="{{ route('edit_password') }}"><i class="fas fa-key"></i> 更改密碼</a>
                             @endif
                             @impersonating
-                            <a class="dropdown-item" href="{{ route('sims.impersonate_leave') }}" onclick="return confirm('確定返回原本帳琥？')"><i class="fab fa-snapchat-ghost"></i> 結束模擬</a>
+                            <a class="dropdown-item" href="{{ route('sims.impersonate_leave') }}" onclick="return confirm('確定返回原本帳琥？')"><i class="fas fa-user-ninja"></i> 結束模擬</a>
                             @endImpersonating
                             <a class="dropdown-item" href="#" onclick="
                             if(confirm('您確定登出嗎?')) document.getElementById('logout-form').submit();

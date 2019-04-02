@@ -123,6 +123,7 @@ class HomeController extends Controller
     public function pic()
     {
         $key = rand(10000,99999);
+        $back = rand(0,9);
 
         session(['chaptcha' => $key]);
 
@@ -132,8 +133,8 @@ class HomeController extends Controller
         for($i=0;$i<5;$i++) $cht_key.=$cht[substr($key,$i,1)];
 
         header("Content-type: image/gif");
-        $im = imagecreatefromgif(asset('images/captcha_bk.gif')) or die("無法建立GD圖片");
-        $text_color = imagecolorallocate($im, 160, 90, 44);
+        $im = imagecreatefromgif(asset('images/captcha_bk'.$back.'.gif')) or die("無法建立GD圖片");
+        $text_color = imagecolorallocate($im, 255, 166, 0);
 
         imagettftext($im, 50, 0 , 51, 50, $text_color,public_path('font/wt071.ttf'),$cht_key);
         imagegif($im);
