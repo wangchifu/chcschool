@@ -57,7 +57,7 @@
     <footer class="font-small bg-light py-4">
         <div class="container-fluid text-center text-md-left">
             @if(!empty($setup->footer))
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-md-11">
                     {!! $setup->footer !!}
                 </div>
