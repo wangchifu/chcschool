@@ -206,6 +206,7 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('setups/nav_default/', 'SetupController@nav_default')->name('setups.nav_default');
     Route::patch('setups/{setup}/text', 'SetupController@text')->name('setups.text');
     Route::get('setups/col','SetupController@col')->name('setups.col');
+    Route::get('setups/add_col_table','SetupController@add_col_table')->name('setups.add_col_table');
     Route::post('setups/add_col', 'SetupController@add_col')->name('setups.add_col');
     Route::get('setups/{setup_col}/edit_col','SetupController@edit_col')->name('setups.edit_col');
     Route::patch('setups/{setup_col}/update_col','SetupController@update_col')->name('setups.update_col');
@@ -213,6 +214,7 @@ Route::group(['middleware' => 'admin'],function(){
 
     //區塊管理
     Route::get('setups/block','SetupController@block')->name('setups.block');
+    Route::get('setups/add_block_table','SetupController@add_block_table')->name('setups.add_block_table');
     Route::post('setups/add_block', 'SetupController@add_block')->name('setups.add_block');
     Route::get('setups/{block}/edit_block','SetupController@edit_block')->name('setups.edit_block');
     Route::patch('setups/{block}/update_block','SetupController@update_block')->name('setups.update_block');

@@ -21,53 +21,9 @@
             <div class="card my-4">
                 <h3 class="card-header">區塊內容</h3>
                 <div class="card-body">
-                    {{ Form::open(['route' => 'setups.add_block', 'method' => 'post','id'=>'this_form']) }}
-                    <table class="table">
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <label for="site_name">1.放置欄位</label>
-                                    {{ Form::select('setup_col_id', $setup_array,null, ['class' => 'form-control','placeholder'=>'']) }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label for="order_by">2.排序</label>
-                                    {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label for="site_name">3.名稱</label>
-                                    {{ Form::text('title',null,['class' => 'form-control','required'=>'required']) }}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <div class="form-group">
-                                    <label for="content">4.內文*</label>
-                                    {{ Form::textarea('content',null,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
-                    <script>
-                        CKEDITOR.replace('my-editor'
-                            ,{
-                                filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-                                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
-                                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-                                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
-                            });
-                    </script>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('確定新增？')">
-                            <i class="fas fa-plus"></i> 新增區塊
-                        </button>
-                    </div>
-                    {{ Form::close() }}
+                    <a href="javascript:open_window('{{ route('setups.add_block_table') }}','新視窗')" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> 新增區塊
+                    </a>
                     <table class="table table-striped">
                         <thead class="thead-light">
                         <tr>
@@ -89,7 +45,11 @@
                         @foreach($blocks as $block)
                             <tr>
                                 <td>
+                                    @if($block->setup_col_id)
                                     {{ $block->setup_col->title }} ({{ $block->setup_col_id }})
+                                    @else
+                                        x
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $block->order_by }}
@@ -98,7 +58,7 @@
                                     {{ $block->title }}
                                 </td>
                                 <td>
-                                    <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
+                                    <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
                                 </td>
                             </tr>
                         @endforeach

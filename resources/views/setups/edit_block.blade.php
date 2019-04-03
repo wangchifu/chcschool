@@ -1,6 +1,6 @@
 @extends('layouts.master_clean')
 
-@section('title', '編輯欄位 | ')
+@section('title', '編輯區塊 | ')
 
 @section('content')
     {{ Form::open(['route' => ['setups.update_block',$block->id], 'method' => 'patch']) }}
@@ -9,7 +9,7 @@
             <td>
                 <div class="form-group">
                     <label for="site_name">1.放置欄位</label>
-                    {{ Form::select('setup_col_id', $setup_cols,$block->setup_col_id, ['class' => 'form-control','placeholder'=>'']) }}
+                    {{ Form::select('setup_col_id', $setup_array,$block->setup_col_id, ['class' => 'form-control','placeholder'=>'']) }}
                 </div>
             </td>
             <td>
@@ -52,15 +52,17 @@
     </script>
     <div class="form-group">
         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
-            <i class="fas fa-plus"></i> 儲存區塊
+            <i class="fas fa-save"></i> 儲存區塊
         </button>
     </div>
     {{ Form::close() }}
     @if($block->id != 1)
-    <form action="{{ route('setups.delete_block',$block->id) }}" method="post">
-        @csrf
-        @method('delete')
-        <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？若有區塊放置在此欄位，記得去變更！')">刪除</button>
-    </form>
+    <div class="text-right">
+        <form action="{{ route('setups.delete_block',$block->id) }}" method="post">
+            @csrf
+            @method('delete')
+            <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？若有區塊放置在此欄位，記得去變更！')">刪除</button>
+        </form>
+    </div>
     @endif
 @endsection

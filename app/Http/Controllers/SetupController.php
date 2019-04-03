@@ -137,13 +137,18 @@ class SetupController extends Controller
         return view('setups.col',$data);
     }
 
+    public function add_col_table()
+    {
+        return view('setups.add_col_table');
+    }
+
     public function add_col(Request $request)
     {
         $att['title'] = $request->input('title');
         $att['num'] = $request->input('num');
         $att['order_by'] = $request->input('order_by');
         SetupCol::create($att);
-        return redirect()->route('setups.col');
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     public function edit_col(SetupCol $setup_col)
@@ -165,6 +170,8 @@ class SetupController extends Controller
 
     public function delete_col(SetupCol $setup_col)
     {
+        $att['setup_col_id'] = null;
+        Block::where('setup_col_id',$setup_col->id)->update($att);
         $setup_col->delete();
         echo "<body onload='opener.location.reload();window.close();'>";
     }
@@ -186,18 +193,33 @@ class SetupController extends Controller
         return view('setups.block',$data);
     }
 
+    public function add_block_table()
+    {
+        $setup_cols = SetupCol::orderBy('order_by')->get();
+        foreach($setup_cols as $setup_col){
+            $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
+        }
+        $data = [
+            'setup_array'=>$setup_array,
+        ];
+        return view('setups.add_block_table',$data);
+    }
+
     public function add_block(Request $request)
     {
         $att = $request->all();
         Block::create($att);
-        return redirect()->route('setups.block');
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     public function edit_block(Block $block)
     {
-        $setup_cols = SetupCol::pluck('id', 'id')->toArray();
+        $setup_cols = SetupCol::orderBy('order_by')->get();
+        foreach($setup_cols as $setup_col){
+            $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
+        }
         $data = [
-            'setup_cols'=>$setup_cols,
+            'setup_array'=>$setup_array,
             'block'=>$block,
         ];
         return view('setups.edit_block',$data);
