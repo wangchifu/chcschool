@@ -15,7 +15,7 @@
                 </ol>
             </nav>
             <h1>公告系統</h1>
-            {{ Form::open(['route' => 'posts.store', 'method' => 'POST','id'=>'setup', 'files' => true,'id'=>'this_form']) }}
+            {{ Form::open(['route' => 'posts.store', 'method' => 'POST', 'files' => true,'id'=>'this_form']) }}
             <div class="card my-4">
                 <h3 class="card-header">公告資料</h3>
                 <div class="card-body">
