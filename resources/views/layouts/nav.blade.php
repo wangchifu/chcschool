@@ -102,6 +102,11 @@
                                         <i class="fas fa-utensils"></i> 午餐系統
                                     </a>
                                 @endif
+                                @if(isset($module_setup['教師差假']))
+                                    <a class="dropdown-item" href="{{ route('teacher_absents.index') }}">
+                                        <i class="fas fa-user-times"></i> 教師差假
+                                    </a>
+                                @endif
                             </div>
                         </li>
                     @endif

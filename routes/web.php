@@ -140,6 +140,11 @@ Route::group(['middleware' => 'auth'],function(){
     //顯示上傳的圖片
     Route::get('img/{path}', 'HomeController@getImg')->name('getImg');
 
+    Route::get('teacher_absents/index', 'TeacherAbsentController@index')->name('teacher_absents.index');
+    Route::get('teacher_absents/create', 'TeacherAbsentController@create')->name('teacher_absents.create');
+    Route::post('teacher_absents/store', 'TeacherAbsentController@store')->name('teacher_absents.store');
+    Route::get('teacher_absents/{teacher_absent}/edit', 'TeacherAbsentController@edit')->name('teacher_absents.edit');
+
 });
 
 //行政人員可用

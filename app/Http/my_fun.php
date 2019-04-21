@@ -210,3 +210,14 @@ if(! function_exists('get_date_w')){
         return $week;
     }
 }
+
+
+if(! function_exists('get_user_name')){
+    function get_user_name(){
+        $user_name = \App\User::where('disable',null)
+            ->where('username','<>','admin')
+            ->pluck('name','id')
+            ->toArray();
+        return $user_name;
+    }
+}
