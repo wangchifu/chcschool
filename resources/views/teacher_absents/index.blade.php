@@ -9,6 +9,8 @@
 
     $active['index'] ="active";
     $active['deputy'] ="";
+    $active['travel'] ="";
+    $active['travel_print'] ="";
     $active['list'] ="";
     $active['total'] ="";
     $active['admin'] ="";
@@ -66,7 +68,10 @@
                     <tr>
                         <td>
                             @if($teacher_absent->status==1)
-                                <small>送核</small>
+                                <small>
+                                    {{ $teacher_absent->id }}<br>
+                                    送核
+                                </small>
                             @endif
                         </td>
                         <td>
@@ -77,11 +82,15 @@
                             {{ $abs_kinds[$teacher_absent->abs_kind] }}
                         </td>
                         <td>
-                            {{ $teacher_absent->reason }}
+                            <small>
+                                {{ $teacher_absent->reason }}
+                            </small>
                         </td>
                         <td>
-                            {{ $teacher_absent->start_date }}<br>
-                            {{ $teacher_absent->end_date }}
+                            <small>
+                                {{ $teacher_absent->start_date }}<br>
+                                {{ $teacher_absent->end_date }}
+                            </small>
                         </td>
                         <td>
                             @if($teacher_absent->day)

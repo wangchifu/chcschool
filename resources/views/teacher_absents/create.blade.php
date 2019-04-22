@@ -9,6 +9,8 @@
 
     $active['index'] ="active";
     $active['deputy'] ="";
+    $active['travel'] ="";
+    $active['travel_print'] ="";
     $active['list'] ="";
     $active['total'] ="";
     $active['admin'] ="";
@@ -51,11 +53,15 @@
                 <input type="text" name="day" maxlength="3">日 <input type="text" name="hour" maxlength="2">時
             </div>
             <div class="form-group">
-                <label for="class_dis"><strong>課程安排*</strong></label>
-                {{ Form::select('class_dis',$class_dises,null,['class'=>'form-control','required'=>'required','placeholder'=>'']) }}
+                <label for="class_dis"><strong>課務安排*</strong></label>
+                {{ Form::select('class_dis',$class_dises,null,['class'=>'form-control','required'=>'required','placeholder'=>'','id'=>'class_dis']) }}
+            </div>
+            <div class="form-group" style="display: none;" id="class_file_zone">
+                <label for="reason">上傳課務銜接單</label><br>
+                <input type="file" name="class_file" id="class_file" required>
             </div>
             <div class="form-group">
-                <label for="class_dis"><strong>職務代理人*</strong></label>
+                <label><strong>職務代理人*</strong></label>
                 {{ Form::select('deputy_user_id',$user_select,null,['class'=>'form-control','required'=>'required','placeholder'=>'']) }}
             </div>
             <div class="form-group">
@@ -67,7 +73,7 @@
                 <input type="file" name="note_file">
             </div>
             <div class="form-group">
-                <button class="btn btn-primary btn-sm">送出</button>
+                <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">送出</button>
             </div>
             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
             <input type="hidden" name="status" value="1">
@@ -77,5 +83,17 @@
     </div>
     <script>
         var validator = $("#this_form").validate();
+
+
+        $('#class_dis').change(function(){
+            if($('#class_dis').val() != 0){
+                $('#class_file_zone').show();
+                $('#class_file').attr('required');
+            }else{
+                $('#class_file_zone').hide();
+                $('#class_file').removeAttr('required');
+
+            }
+        });
     </script>
 @endsection

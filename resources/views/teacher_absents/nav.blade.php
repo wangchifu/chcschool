@@ -6,6 +6,12 @@
         <a class="nav-link {{ $active['deputy'] }}" href="">職務代理</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{ $active['travel'] }}" href="">差旅費列表</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ $active['travel_print'] }}" href="">差旅費列印</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{ $active['list'] }}" href="">差假列表</a>
     </li>
     <li class="nav-item">
