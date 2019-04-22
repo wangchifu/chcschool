@@ -13,7 +13,9 @@
             <h1>
                 {{ $setup->site_name }}：午餐系統
             </h1>
+            @if(!empty(session('factory')))
             <h3>廠商：{{ $factory->name }}</h3>
+            @endif
         </div>
         @if(empty(session('factory')))
         <div class="col-md-6">
