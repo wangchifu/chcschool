@@ -21,10 +21,12 @@ class CreateTeacherAbsents extends Migration
             $table->unsignedInteger('user_id');//請假人
             $table->string('reason');//事由
             $table->unsignedInteger('abs_kind');//請假類別
+            $table->string('place')->nullable();//出差地點
             $table->unsignedInteger('class_dis');//課務安排
             $table->string('class_file')->nullable();//課務銜接單
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->tinyInteger('month')->nullable();
+            $table->string('start_date');
+            $table->string('end_date');
             $table->unsignedInteger('status');//1送審中 2已完成  3退回！
             $table->unsignedInteger('deputy_user_id');
             $table->dateTime('deputy_date')->nullable();

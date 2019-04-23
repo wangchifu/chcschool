@@ -10,7 +10,6 @@
     $active['index'] ="active";
     $active['deputy'] ="";
     $active['sir'] ="";
-    $active['teach'] ="";
     $active['travel'] ="";
     $active['travel_print'] ="";
     $active['list'] ="";
@@ -24,11 +23,12 @@
             <br>
             <a href="{{ route('teacher_absents.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增假單</a>
             {{ Form::select('select_semester',$semesters,$semester,['id'=>'select_semester']) }}
+            小計：事假({{ $abs_kind_total[11] }}) 家庭照顧假({{ $abs_kind_total[12] }}) 病假({{ $abs_kind_total[21] }}) 生理假({{ $abs_kind_total[22] }}) 休假({{ $abs_kind_total[81] }})
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
                     <th>
-                        狀態
+                        #
                     </th>
                     <th>
                         姓名
@@ -70,12 +70,19 @@
                 @foreach($teacher_absents as $teacher_absent)
                     <tr>
                         <td>
+                            {{ $teacher_absent->id }}<br>
                             @if($teacher_absent->status==1)
                                 <small>
-                                    <a href="{{ route('teacher_absents.edit',$teacher_absent->id) }}"><i class="fas fa-edit text-primary"></i></a>
-                                    <a href="{{ route('teacher_absents.destroy',$teacher_absent->id) }}" onclick="return confirm('確定刪除？')"><i class="fas fa-times-circle text-danger"></i></a>
-                                    <br>
+                                    @if(empty($teacher_absent->check1_date))
+                                        <a href="{{ route('teacher_absents.edit',$teacher_absent->id) }}"><i class="fas fa-edit text-primary"></i></a>
+                                        <a href="{{ route('teacher_absents.destroy',$teacher_absent->id) }}" onclick="return confirm('確定刪除？')"><i class="fas fa-times-circle text-danger"></i></a>
+                                    @endif
                                     送核
+                                </small>
+                            @endif
+                            @if($teacher_absent->status==2)
+                                <small class="text-success">
+                                    核准
                                 </small>
                             @endif
                         </td>
@@ -85,6 +92,9 @@
                         </td>
                         <td>
                             <small>{{ $abs_kinds[$teacher_absent->abs_kind] }}</small>
+                            @if($teacher_absent->abs_kind == 52)
+                                <br><small class="text-primary">{{ $teacher_absent->place }}</small>
+                            @endif
                         </td>
                         <td>
                             <small>
@@ -132,21 +142,38 @@
                             @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check1_date))
+                                {{ $user_name[$teacher_absent->check1_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check1_date,0,10) }}</small>
+                            @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check4_date))
+                                {{ $user_name[$teacher_absent->check4_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check4_date,0,10) }}</small>
+                            @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check2_date))
+                                {{ $user_name[$teacher_absent->check2_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check2_date,0,10) }}</small>
+                            @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check3_date))
+                                {{ $user_name[$teacher_absent->check3_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check3_date,0,10) }}</small>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
+            {{ $teacher_absents->links() }}
         </div>
 
     </div>

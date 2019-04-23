@@ -10,7 +10,6 @@
     $active['index'] ="";
     $active['deputy'] ="active";
     $active['sir'] ="";
-    $active['teach'] ="";
     $active['travel'] ="";
     $active['travel_print'] ="";
     $active['list'] ="";
@@ -27,7 +26,7 @@
                 <thead class="thead-light">
                 <tr>
                     <th>
-                        狀態
+                        #
                     </th>
                     <th>
                         姓名
@@ -55,13 +54,13 @@
                         單位主管
                     </th>
                     <th>
+                        教學組長
+                    </th>
+                    <th>
                         校長
                     </th>
                     <th>
                         人事主任
-                    </th>
-                    <th>
-                        教學組長
                     </th>
                 </tr>
                 </thead>
@@ -69,9 +68,15 @@
                 @foreach($teacher_absents as $teacher_absent)
                     <tr>
                         <td>
+                            {{ $teacher_absent->id }}<br>
                             @if($teacher_absent->status==1)
                                 <small>
                                     送核
+                                </small>
+                            @endif
+                            @if($teacher_absent->status==2)
+                                <small class="text-success">
+                                    核准
                                 </small>
                             @endif
                         </td>
@@ -81,6 +86,9 @@
                         </td>
                         <td>
                             <small>{{ $abs_kinds[$teacher_absent->abs_kind] }}</small>
+                            @if($teacher_absent->abs_kind == 52)
+                                <br><small class="text-primary">{{ $teacher_absent->place }}</small>
+                            @endif
                         </td>
                         <td>
                             <small>
@@ -131,21 +139,38 @@
                             @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check1_date))
+                                {{ $user_name[$teacher_absent->check1_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check1_date,0,10) }}</small>
+                            @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check4_date))
+                                {{ $user_name[$teacher_absent->check4_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check4_date,0,10) }}</small>
+                            @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check2_date))
+                                {{ $user_name[$teacher_absent->check2_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check2_date,0,10) }}</small>
+                            @endif
                         </td>
                         <td>
-
+                            @if(!empty($teacher_absent->check3_date))
+                                {{ $user_name[$teacher_absent->check3_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check3_date,0,10) }}</small>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
+            {{ $teacher_absents->links() }}
         </div>
 
     </div>

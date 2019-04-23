@@ -2,29 +2,31 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '批示簽核  | 教師差假')
+@section('title', '教師差假')
 
 @section('content')
     <?php
-
     $active['index'] ="";
     $active['deputy'] ="";
-    $active['sir'] ="active";
+    $active['sir'] ="";
     $active['travel'] ="";
     $active['travel_print'] ="";
-    $active['list'] ="";
+    $active['list'] ="active";
     $active['total'] ="";
     $active['admin'] ="";
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>教師差假：簽核記錄排代</h1>
+            <h1>教師差假：差假列表</h1>
             @include('teacher_absents.nav')
             <br>
-            @if($not_admin)
+            @if(empty($not_admin))
                 <span class="text-danger">你沒有管理權</span>
             @else
                 {{ Form::select('select_semester',$semesters,$semester,['id'=>'select_semester']) }}
+                {{ Form::select('select_teacher',$teachers,$teacher,['id'=>'select_teacher','placeholder'=>'選擇教師']) }}
+                {{ Form::select('select_abs',$abses,$abs,['id'=>'select_abs','placeholder'=>'選擇假別']) }}
+                {{ Form::select('select_month',$monthes,$month,['id'=>'select_month']) }}
                 <table class="table table-striped">
                     <thead class="thead-light">
                     <tr>
@@ -57,13 +59,13 @@
                             單位主管
                         </th>
                         <th>
-                            教學組長
-                        </th>
-                        <th>
                             校長
                         </th>
                         <th>
                             人事主任
+                        </th>
+                        <th>
+                            教學組長
                         </th>
                     </tr>
                     </thead>
@@ -71,17 +73,7 @@
                     @foreach($teacher_absents as $teacher_absent)
                         <tr>
                             <td>
-                                {{ $teacher_absent->id }}<br>
-                                @if($teacher_absent->status==1)
-                                    <small>
-                                        送核
-                                    </small>
-                                @endif
-                                @if($teacher_absent->status==2)
-                                    <small class="text-success">
-                                        核准
-                                    </small>
-                                @endif
+                                {{ $teacher_absent->id }}
                             </td>
                             <td>
                                 {{ $user_name[$teacher_absent->user_id] }}<br>
@@ -131,58 +123,97 @@
                                 @endif
                             </td>
                             <td>
-                                {{ $user_name[$teacher_absent->deputy_user_id] }}
-                                <br>
+                                {{ $user_name[$teacher_absent->deputy_user_id] }}<br>
                                 <small>{{ substr($teacher_absent->deputy_date,0,10) }}</small>
                             </td>
                             <td>
-                                @if($check_power['d'] and empty($teacher_absent->check1_date))
-                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check1/{{ $teacher_absent->id }}';else return false">簽核</button>
-                                @endif
-                                @if(!empty($teacher_absent->check1_date))
-                                    {{ $user_name[$teacher_absent->check1_user_id] }}<br>
-                                    <small>{{ substr($teacher_absent->check1_date,0,10) }}</small>
-                                @endif
+                                {{ $user_name[$teacher_absent->check1_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check1_date,0,10) }}</small>
                             </td>
                             <td>
-                                @if($check_power['e'] and empty($teacher_absent->check4_date))
-                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check4/{{ $teacher_absent->id }}';else return false">排代</button>
-                                @endif
                                 @if(!empty($teacher_absent->check4_date))
-                                    {{ $user_name[$teacher_absent->check4_user_id] }}<br>
+                                    {{ $user_name[$teacher_absent->check4_user_id] }}
+                                    <br>
                                     <small>{{ substr($teacher_absent->check4_date,0,10) }}</small>
                                 @endif
                             </td>
                             <td>
-                                @if($check_power['a'] and !empty($teacher_absent->check1_date) and empty($teacher_absent->check2_date))
-                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check2/{{ $teacher_absent->id }}';else return false">核准</button>
-                                @endif
-                                @if(!empty($teacher_absent->check2_date))
-                                    {{ $user_name[$teacher_absent->check2_user_id] }}<br>
-                                    <small>{{ substr($teacher_absent->check2_date,0,10) }}</small>
-                                @endif
+                                {{ $user_name[$teacher_absent->check2_user_id] }}
+                                <br>
+                                <small>{{ substr($teacher_absent->check2_date,0,10) }}</small>
                             </td>
                             <td>
-                                @if($check_power['b'] and !empty($teacher_absent->check1_date) and empty($teacher_absent->check3_date))
-                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check3/{{ $teacher_absent->id }}';else return false">記錄</button>
-                                @endif
                                 @if(!empty($teacher_absent->check3_date))
-                                    {{ $user_name[$teacher_absent->check3_user_id] }}<br>
+                                    {{ $user_name[$teacher_absent->check3_user_id] }}
+                                    <br>
                                     <small>{{ substr($teacher_absent->check3_date,0,10) }}</small>
                                 @endif
                             </td>
                         </tr>
                     @endforeach
+
                     </tbody>
                 </table>
-                {{ $teacher_absents->links() }}
             @endif
         </div>
 
     </div>
     <script>
         $('#select_semester').change(function(){
-            location= '/teacher_absents/sir/'+ $('#select_semester').val();
+            if(!$('#select_teacher').val()){
+                t=0;
+            }else{
+                t=$('#select_teacher').val();
+            }
+            if(!$('#select_abs').val()){
+                a=0;
+            }else{
+                a=$('#select_abs').val();
+            }
+            location= '/teacher_absents/list/'+ $('#select_semester').val()+'/'+ t +'/'+ a +'/'+$('#select_month').val();
+        });
+
+        $('#select_teacher').change(function(){
+            if(!$('#select_teacher').val()){
+                t=0;
+            }else{
+                t=$('#select_teacher').val();
+            }
+            if(!$('#select_abs').val()){
+                a=0;
+            }else{
+                a=$('#select_abs').val();
+            }
+            location= '/teacher_absents/list/'+ $('#select_semester').val()+'/'+ t +'/'+ a +'/'+$('#select_month').val();
+        });
+
+        $('#select_abs').change(function(){
+            if(!$('#select_teacher').val()){
+                t=0;
+            }else{
+                t=$('#select_teacher').val();
+            }
+            if(!$('#select_abs').val()){
+                a=0;
+            }else{
+                a=$('#select_abs').val();
+            }
+            location= '/teacher_absents/list/'+ $('#select_semester').val()+'/'+ t +'/'+ a +'/'+$('#select_month').val();
+        });
+
+        $('#select_month').change(function(){
+            if(!$('#select_teacher').val()){
+                t=0;
+            }else{
+                t=$('#select_teacher').val();
+            }
+            if(!$('#select_abs').val()){
+                a=0;
+            }else{
+                a=$('#select_abs').val();
+            }
+            location= '/teacher_absents/list/'+ $('#select_semester').val()+'/'+ t +'/'+ a +'/'+$('#select_month').val();
         });
     </script>
 @endsection

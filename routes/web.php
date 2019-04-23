@@ -154,6 +154,8 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('teacher_absents/deputy/{select_semester?}', 'TeacherAbsentController@deputy')->name('teacher_absents.deputy');
     Route::get('teacher_absents/check/{type}/{teacher_absent}/', 'TeacherAbsentController@check')->name('teacher_absents.check');
     Route::get('teacher_absents/sir/{select_semester?}', 'TeacherAbsentController@sir')->name('teacher_absents.sir');
+    Route::get('teacher_absents/total/{select_semester?}/{select_month?}', 'TeacherAbsentController@total')->name('teacher_absents.total');
+    Route::get('teacher_absents/list/{select_semester?}/{select_teacher?}/{select_abs?}/{select_month?}', 'TeacherAbsentController@list')->name('teacher_absents.list');
 
 });
 

@@ -10,7 +10,6 @@
     $active['index'] ="active";
     $active['deputy'] ="";
     $active['sir'] ="";
-    $active['teach'] ="";
     $active['travel'] ="";
     $active['travel_print'] ="";
     $active['list'] ="";
@@ -37,6 +36,10 @@
             <div class="form-group">
                 <label for="abs_kind"><strong>假別*</strong></label>
                 {{ Form::select('abs_kind',$abs_kinds,$teacher_absent->abs_kind,['class'=>'form-control','required'=>'required','placeholder'=>'']) }}
+            </div>
+            <div class="form-group">
+                <label for="place">出差地點<small class="text-secondary">(公差假時填寫)</small></label>
+                <input type="text" name="place" class="form-control" value="{{ $teacher_absent->place }}">
             </div>
             <div class="form-group">
                 <label for="reason"><strong>事由*</strong></label>
