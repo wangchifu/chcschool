@@ -9,6 +9,8 @@
 
     $active['index'] ="active";
     $active['deputy'] ="";
+    $active['sir'] ="";
+    $active['teach'] ="";
     $active['travel'] ="";
     $active['travel_print'] ="";
     $active['list'] ="";
@@ -56,9 +58,9 @@
                 <label for="class_dis"><strong>課務安排*</strong></label>
                 {{ Form::select('class_dis',$class_dises,null,['class'=>'form-control','required'=>'required','placeholder'=>'','id'=>'class_dis']) }}
             </div>
-            <div class="form-group" style="display: none;" id="class_file_zone">
+            <div class="form-group" id="class_file_zone">
                 <label for="reason">上傳課務銜接單</label><br>
-                <input type="file" name="class_file" id="class_file" required>
+                <input type="file" name="class_file" id="class_file">
             </div>
             <div class="form-group">
                 <label><strong>職務代理人*</strong></label>
@@ -83,17 +85,5 @@
     </div>
     <script>
         var validator = $("#this_form").validate();
-
-
-        $('#class_dis').change(function(){
-            if($('#class_dis').val() != 0){
-                $('#class_file_zone').show();
-                $('#class_file').attr('required');
-            }else{
-                $('#class_file_zone').hide();
-                $('#class_file').removeAttr('required');
-
-            }
-        });
     </script>
 @endsection

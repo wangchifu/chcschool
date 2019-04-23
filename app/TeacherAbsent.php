@@ -14,6 +14,7 @@ class TeacherAbsent extends Model
         'reason',
         'abs_kind',
         'class_dis',
+        'class_file',
         'start_date',
         'end_date',
         'status',

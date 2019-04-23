@@ -89,10 +89,51 @@
                                                     {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
                                                 @endforeach
                                             @elseif($v=="教師差假")
-                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm" style="margin: 5px;"><i class="fas fa-mouse-pointer"></i> 新指定「校長」權限</a><br>
-                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'B']) }}','新視窗')" class="btn btn-info btn-sm" style="margin: 5px;"><i class="fas fa-mouse-pointer"></i> 新指定「人事主任」權限</a><br>
-                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'C']) }}','新視窗')" class="btn btn-info btn-sm" style="margin: 5px;"><i class="fas fa-mouse-pointer"></i> 新指定「單位主管」權限</a><br>
-                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'D']) }}','新視窗')" class="btn btn-info btn-sm" style="margin: 5px;"><i class="fas fa-mouse-pointer"></i> 新指定「教學組長」權限</a><br>
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定「校長」權限</a><br>
+                                                <?php
+                                                $user_powers = \App\UserPower::where('name',$v)->where('type','A')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    已指定「校長權限」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach
+                                                <br>
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'B']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定「人事主任」權限</a><br>
+                                                <?php
+                                                $user_powers = \App\UserPower::where('name',$v)->where('type','B')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    已指定「人事主任權限」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach
+                                                <br>
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'C']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定「會計主任」權限</a><br>
+                                                <?php
+                                                $user_powers = \App\UserPower::where('name',$v)->where('type','C')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    已指定「會計主任權限」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach
+                                                <br>
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'D']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定「單位主管」權限</a><br>
+                                                <?php
+                                                $user_powers = \App\UserPower::where('name',$v)->where('type','D')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    已指定「單位主管權限」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach
+                                                <br>
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'E']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定「教學組長」權限</a><br>
+                                                <?php
+                                                $user_powers = \App\UserPower::where('name',$v)->where('type','E')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    已指定「教學組長權限」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach
+                                                <br>
                                             @endif
                                         </td>
                                     </tr>

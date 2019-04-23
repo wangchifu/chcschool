@@ -79,7 +79,10 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
 
     //下載上傳的檔案
-    Route::get('file/{file}', 'HomeController@getFile');
+    Route::get('file/{file}', 'HomeController@getFile')->name('getFile');
+
+    //打開上傳的檔案
+    Route::get('file_open/{file}', 'HomeController@openFile')->name('openFile');
 
     //會議文稿
     Route::get('meetings' , 'MeetingController@index')->name('meetings.index');
@@ -140,10 +143,17 @@ Route::group(['middleware' => 'auth'],function(){
     //顯示上傳的圖片
     Route::get('img/{path}', 'HomeController@getImg')->name('getImg');
 
-    Route::get('teacher_absents/index', 'TeacherAbsentController@index')->name('teacher_absents.index');
+    Route::get('teacher_absents/index/{select_semester?}', 'TeacherAbsentController@index')->name('teacher_absents.index');
     Route::get('teacher_absents/create', 'TeacherAbsentController@create')->name('teacher_absents.create');
     Route::post('teacher_absents/store', 'TeacherAbsentController@store')->name('teacher_absents.store');
     Route::get('teacher_absents/{teacher_absent}/edit', 'TeacherAbsentController@edit')->name('teacher_absents.edit');
+    Route::get('teacher_absents/{filename}/{teacher_absent}/{type}/delete_file', 'TeacherAbsentController@delete_file')->name('teacher_absents.delete_file');
+    Route::get('teacher_absents/{teacher_absent}/destroy', 'TeacherAbsentController@destroy')->name('teacher_absents.destroy');
+    Route::patch('teacher_absents/{teacher_absent}/update', 'TeacherAbsentController@update')->name('teacher_absents.update');
+
+    Route::get('teacher_absents/deputy/{select_semester?}', 'TeacherAbsentController@deputy')->name('teacher_absents.deputy');
+    Route::get('teacher_absents/check/{type}/{teacher_absent}/', 'TeacherAbsentController@check')->name('teacher_absents.check');
+    Route::get('teacher_absents/sir/{select_semester?}', 'TeacherAbsentController@sir')->name('teacher_absents.sir');
 
 });
 

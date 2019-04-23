@@ -2,13 +2,13 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '教師差假')
+@section('title', '職務代理  | 教師差假')
 
 @section('content')
     <?php
 
-    $active['index'] ="active";
-    $active['deputy'] ="";
+    $active['index'] ="";
+    $active['deputy'] ="active";
     $active['sir'] ="";
     $active['teach'] ="";
     $active['travel'] ="";
@@ -19,10 +19,9 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>教師差假</h1>
+            <h1>教師差假：職務代理</h1>
             @include('teacher_absents.nav')
             <br>
-            <a href="{{ route('teacher_absents.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增假單</a>
             {{ Form::select('select_semester',$semesters,$semester,['id'=>'select_semester']) }}
             <table class="table table-striped">
                 <thead class="thead-light">
@@ -72,9 +71,6 @@
                         <td>
                             @if($teacher_absent->status==1)
                                 <small>
-                                    <a href="{{ route('teacher_absents.edit',$teacher_absent->id) }}"><i class="fas fa-edit text-primary"></i></a>
-                                    <a href="{{ route('teacher_absents.destroy',$teacher_absent->id) }}" onclick="return confirm('確定刪除？')"><i class="fas fa-times-circle text-danger"></i></a>
-                                    <br>
                                     送核
                                 </small>
                             @endif
@@ -124,10 +120,13 @@
                             @endif
                         </td>
                         <td>
-                            {{ $user_name[$teacher_absent->deputy_user_id] }}<br>
+                            {{ $user_name[$teacher_absent->deputy_user_id] }}
                             @if(empty($teacher_absent->deputy_date))
+                                <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/deputy/{{ $teacher_absent->id }}';else return false">同意</button>
+                                <br>
                                 <small class="text-danger">尚未同意</small>
                             @else
+                                <br>
                                 <small>{{ substr($teacher_absent->deputy_date,0,10) }}</small>
                             @endif
                         </td>
@@ -152,7 +151,7 @@
     </div>
     <script>
         $('#select_semester').change(function(){
-            location= '/teacher_absents/index/'+ $('#select_semester').val();
+            location= '/teacher_absents/deputy/'+ $('#select_semester').val();
         });
     </script>
 @endsection

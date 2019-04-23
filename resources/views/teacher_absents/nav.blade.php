@@ -3,7 +3,13 @@
         <a class="nav-link {{ $active['index'] }}" href="{{ route('teacher_absents.index') }}">假單處理</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ $active['deputy'] }}" href="">職務代理</a>
+        <a class="nav-link {{ $active['deputy'] }}" href="{{ route('teacher_absents.deputy') }}">職務代理</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ $active['sir'] }}" href="{{ route('teacher_absents.sir') }}">批示簽核</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ $active['teach'] }}" href="">教學排代</a>
     </li>
     <li class="nav-item">
         <a class="nav-link {{ $active['travel'] }}" href="">差旅費列表</a>

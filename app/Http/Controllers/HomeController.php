@@ -107,6 +107,13 @@ class HomeController extends Controller
         return response()->download($file);
     }
 
+    public function openFile($file)
+    {
+        $file = str_replace('&','/',$file);
+        $file = storage_path('app/privacy/'.$file);
+        return response()->file($file);
+    }
+
     public function getImg($path)
     {
         $school_code = school_code();
