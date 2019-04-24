@@ -73,7 +73,9 @@
                     @foreach($teacher_absents as $teacher_absent)
                         <tr>
                             <td>
-                                {{ $teacher_absent->id }}
+                                <small>
+                                    {{ $teacher_absent->id }}
+                                </small>
                             </td>
                             <td>
                                 {{ $user_name[$teacher_absent->user_id] }}<br>

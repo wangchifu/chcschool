@@ -157,6 +157,8 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('teacher_absents/total/{select_semester?}/{select_month?}', 'TeacherAbsentController@total')->name('teacher_absents.total');
     Route::get('teacher_absents/list/{select_semester?}/{select_teacher?}/{select_abs?}/{select_month?}', 'TeacherAbsentController@list')->name('teacher_absents.list');
 
+    Route::get('teacher_absents/{teacher_absent}/back', 'TeacherAbsentController@back')->name('teacher_absents.back');
+    Route::post('teacher_absents/{teacher_absent}/store_back', 'TeacherAbsentController@store_back')->name('teacher_absents.store_back');
 });
 
 //行政人員可用

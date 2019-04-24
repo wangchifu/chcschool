@@ -148,6 +148,7 @@ class TeacherAbsentController extends Controller
         $teacher_absent->update($request->all());
         $start_date = explode('-',$teacher_absent->start_date);
         $att['month'] = $start_date[1];
+        $att['status'] =1;
         $teacher_absent->update($att);
         return redirect()->route('teacher_absents.index');
     }
@@ -605,5 +606,30 @@ class TeacherAbsentController extends Controller
 
             return view('teacher_absents.list',$data);
         }
+    }
+
+    public function back(TeacherAbsent $teacher_absent)
+    {
+       $data = [
+           'teacher_absent'=>$teacher_absent,
+       ];
+        return view('teacher_absents.back',$data);
+    }
+
+    public function store_back(Request $request,TeacherAbsent $teacher_absent)
+    {
+        $att['deputy_date'] = null;
+        $att['check1_user_id'] = null;
+        $att['check1_date'] = null;
+        $att['check2_user_id'] = null;
+        $att['check2_date'] = null;
+        $att['check3_user_id'] = null;
+        $att['check3_date'] = null;
+        $att['check4_user_id'] = null;
+        $att['check4_date'] = null;
+        $att['status'] = 3;
+        $att['reason'] = "退回：".$request->input('back').'(請修改)--'.$teacher_absent->reason;
+        $teacher_absent->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 }

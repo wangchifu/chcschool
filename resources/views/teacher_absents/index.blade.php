@@ -27,8 +27,8 @@
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th>
-                        #
+                    <th width="70">
+                        #狀況
                     </th>
                     <th>
                         姓名
@@ -70,14 +70,23 @@
                 @foreach($teacher_absents as $teacher_absent)
                     <tr>
                         <td>
-                            {{ $teacher_absent->id }}<br>
-                            @if($teacher_absent->status==1)
+                            <small>
+                            {{ $teacher_absent->id }}
+                            </small>
+                            <br>
+                            @if($teacher_absent->status==1 or $teacher_absent->status==3)
                                 <small>
                                     @if(empty($teacher_absent->check1_date))
                                         <a href="{{ route('teacher_absents.edit',$teacher_absent->id) }}"><i class="fas fa-edit text-primary"></i></a>
                                         <a href="{{ route('teacher_absents.destroy',$teacher_absent->id) }}" onclick="return confirm('確定刪除？')"><i class="fas fa-times-circle text-danger"></i></a>
+                                        <br>
                                     @endif
-                                    送核
+                                    @if($teacher_absent->status==1)
+                                        送核
+                                    @endif
+                                    @if($teacher_absent->status==3)
+                                        <span class="text-danger">退回</span>
+                                    @endif
                                 </small>
                             @endif
                             @if($teacher_absent->status==2)

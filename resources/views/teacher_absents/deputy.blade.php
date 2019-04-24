@@ -68,7 +68,10 @@
                 @foreach($teacher_absents as $teacher_absent)
                     <tr>
                         <td>
-                            {{ $teacher_absent->id }}<br>
+                            <small>
+                                {{ $teacher_absent->id }}
+                            </small>
+                            <br>
                             @if($teacher_absent->status==1)
                                 <small>
                                     送核

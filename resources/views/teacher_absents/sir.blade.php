@@ -71,7 +71,11 @@
                     @foreach($teacher_absents as $teacher_absent)
                         <tr>
                             <td>
-                                {{ $teacher_absent->id }}<br>
+                                <small>
+                                {{ $teacher_absent->id }}
+                                <i class="fas fa-edit"></i>
+                                </small>
+                                <br>
                                 @if($teacher_absent->status==1)
                                     <small>
                                         送核
@@ -88,7 +92,9 @@
                                 <small>{{ substr($teacher_absent->created_at,0,10) }}</small>
                             </td>
                             <td>
-                                <small>{{ $abs_kinds[$teacher_absent->abs_kind] }}</small>
+                                <a href="{{ url('teacher_absents/list/'.$semester.'/'.$teacher_absent->user_id.'/'.$teacher_absent->abs_kind.'/0') }}" target="_blank">
+                                    <small>{{ $abs_kinds[$teacher_absent->abs_kind] }}</small>
+                                </a>
                                 @if($teacher_absent->abs_kind == 52)
                                     <br><small class="text-primary">{{ $teacher_absent->place }}</small>
                                 @endif
@@ -137,7 +143,7 @@
                             </td>
                             <td>
                                 @if($check_power['d'] and empty($teacher_absent->check1_date))
-                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check1/{{ $teacher_absent->id }}';else return false">簽核</button>
+                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check1/{{ $teacher_absent->id }}';else return false">簽核</button> <button onclick="open_url('{{ route('teacher_absents.back',$teacher_absent->id) }}','新視窗')">退</button>
                                 @endif
                                 @if(!empty($teacher_absent->check1_date))
                                     {{ $user_name[$teacher_absent->check1_user_id] }}<br>
@@ -155,7 +161,7 @@
                             </td>
                             <td>
                                 @if($check_power['a'] and !empty($teacher_absent->check1_date) and empty($teacher_absent->check2_date))
-                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check2/{{ $teacher_absent->id }}';else return false">核准</button>
+                                    <button onclick="if(confirm('您確定送出嗎?')) location.href='/teacher_absents/check/check2/{{ $teacher_absent->id }}';else return false">核准</button> <button onclick="open_url('{{ route('teacher_absents.back',$teacher_absent->id) }}','新視窗')">退</button>
                                 @endif
                                 @if(!empty($teacher_absent->check2_date))
                                     {{ $user_name[$teacher_absent->check2_user_id] }}<br>
@@ -184,5 +190,10 @@
         $('#select_semester').change(function(){
             location= '/teacher_absents/sir/'+ $('#select_semester').val();
         });
+
+        function open_url(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=850,height=200');
+        }
     </script>
 @endsection
