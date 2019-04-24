@@ -163,6 +163,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('teacher_absents/{teacher_absent}/admin_edit', 'TeacherAbsentController@admin_edit')->name('teacher_absents.admin_edit');
     Route::patch('teacher_absents/{teacher_absent}/admin_update', 'TeacherAbsentController@admin_update')->name('teacher_absents.admin_update');
 
+    Route::get('teacher_absents/travel/{select_semester?}', 'TeacherAbsentController@travel')->name('teacher_absents.travel');
 });
 
 //行政人員可用

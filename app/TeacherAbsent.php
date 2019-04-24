@@ -38,4 +38,9 @@ class TeacherAbsent extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function teacher_absent_outlays()
+    {
+        return $this->hasMany(TeacherAbsentOutlay::class);
+    }
 }

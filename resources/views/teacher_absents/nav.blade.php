@@ -9,7 +9,7 @@
         <a class="nav-link {{ $active['sir'] }}" href="{{ route('teacher_absents.sir') }}"><i class="fas fa-crown"></i> 簽核記錄排代</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ $active['travel'] }}" href="">差旅費列表</a>
+        <a class="nav-link {{ $active['travel'] }}" href="{{ route('teacher_absents.travel') }}">差旅費列表</a>
     </li>
     <li class="nav-item">
         <a class="nav-link {{ $active['travel_print'] }}" href="">差旅費列印</a>

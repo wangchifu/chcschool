@@ -665,4 +665,38 @@ class TeacherAbsentController extends Controller
         $teacher_absent->update($att);
         echo "<body onload='opener.location.reload();window.close();'>";
     }
+
+    public function travel($select_semester=null)
+    {
+        $semesters = DB::table('teacher_absents')
+            ->select(DB::raw('semester'))
+            ->groupBy('semester')
+            ->orderBy('semester')
+            ->pluck('semester','semester')
+            ->toArray();
+
+        $semester = ($select_semester)?$select_semester:get_date_semester(date('Y-m-d'));
+
+        $teacher_absents = TeacherAbsent::where('semester',$semester)
+            ->where('status','2')
+            ->where('abs_kind','52')
+            ->orderBy('id','DESC')
+            ->get();
+
+        $abs_kinds = config('chcschool.abs_kinds');
+        $class_dises = config('chcschool.class_dises');
+        $user_name = get_user_name();
+        $school_code = school_code();
+
+        $data = [
+            'semester'=>$semester,
+            'semesters'=>$semesters,
+            'abs_kinds'=>$abs_kinds,
+            'class_dises'=>$class_dises,
+            'teacher_absents'=>$teacher_absents,
+            'user_name'=>$user_name,
+            'school_code'=>$school_code,
+        ];
+        return view('teacher_absents.travel',$data);
+    }
 }
