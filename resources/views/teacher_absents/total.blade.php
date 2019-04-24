@@ -14,7 +14,6 @@
     $active['travel_print'] ="";
     $active['list'] ="";
     $active['total'] ="active";
-    $active['admin'] ="";
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">

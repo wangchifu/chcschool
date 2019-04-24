@@ -20,7 +20,4 @@
     <li class="nav-item">
         <a class="nav-link {{ $active['total'] }}" href="{{ route('teacher_absents.total') }}">差假統計</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link {{ $active['admin'] }}" href="">管理功能</a>
-    </li>
 </ul>
