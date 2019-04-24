@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\TeacherAbsent;
+use App\TeacherAbsentOutlay;
 use App\User;
 use App\UserPower;
 use Illuminate\Http\Request;
@@ -698,5 +699,46 @@ class TeacherAbsentController extends Controller
             'school_code'=>$school_code,
         ];
         return view('teacher_absents.travel',$data);
+    }
+
+    public function outlay(TeacherAbsent $teacher_absent)
+    {
+
+        $data = [
+            'teacher_absent'=>$teacher_absent,
+        ];
+        return view('teacher_absents.outlay',$data);
+    }
+
+    public function store_outlay(Request $request)
+    {
+        TeacherAbsentOutlay::create($request->all());
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function delete_outlay(TeacherAbsentOutlay $teacher_absent_outlay)
+    {
+        if($teacher_absent_outlay->teacher_absent->user_id == auth()->user()->id){
+            $teacher_absent_outlay->delete();
+        }
+
+        return redirect()->route('teacher_absents.travel');
+    }
+
+    public function edit_outlay(TeacherAbsentOutlay $teacher_absent_outlay)
+    {
+        $data = [
+            'teacher_absent_outlay'=>$teacher_absent_outlay,
+        ];
+
+        return view('teacher_absents.outlay_edit',$data);
+    }
+
+    public function update_outlay(Request $request,TeacherAbsentOutlay $teacher_absent_outlay)
+    {
+        if($teacher_absent_outlay->teacher_absent->user_id == auth()->user()->id) {
+            $teacher_absent_outlay->update($request->all());
+        }
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 }

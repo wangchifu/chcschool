@@ -11,7 +11,6 @@
     $active['deputy'] ="";
     $active['sir'] ="";
     $active['travel'] ="active";
-    $active['travel_print'] ="";
     $active['list'] ="";
     $active['total'] ="";
     ?>
@@ -24,14 +23,11 @@
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th width="70">
-                        #狀況
+                    <th>
+                        #公差假單 <img src="{{ asset('images/printer.gif') }}">
                     </th>
                     <th>
                         姓名
-                    </th>
-                    <th>
-                        假別
                     </th>
                     <th>
                         事由
@@ -44,22 +40,7 @@
                         日數時數
                     </th>
                     <th>
-                        課務
-                    </th>
-                    <th>
-                        職務代理人
-                    </th>
-                    <th>
-                        單位主管
-                    </th>
-                    <th>
-                        教學組長
-                    </th>
-                    <th>
-                        校長
-                    </th>
-                    <th>
-                        人事主任
+                        差旅費資訊
                     </th>
                 </tr>
                 </thead>
@@ -67,22 +48,16 @@
                 @foreach($teacher_absents as $teacher_absent)
                     <tr>
                         <td>
+                            <input type="checkbox" name="print[]">
                             <small>
-                            {{ $teacher_absent->id }}
+                            {{ $teacher_absent->id }} 核准 <a href="javascript:open_url('{{ route('teacher_absents.outlay',$teacher_absent->id) }}','新視窗')"><i class="fas fa-plus-circle text-success"></i></a>
                             </small>
                             <br>
-                            <small class="text-success">
-                                核准
-                            </small>
+                            <small class="text-primary">{{ $teacher_absent->place }}</small>
                         </td>
                         <td>
                             {{ $user_name[$teacher_absent->user_id] }}<br>
                             <small>{{ substr($teacher_absent->created_at,0,10) }}</small>
-                        </td>
-                        <td>
-                            <small>{{ $abs_kinds[$teacher_absent->abs_kind] }}</small>
-                            <br>
-                            <small class="text-primary">{{ $teacher_absent->place }}</small>
                         </td>
                         <td>
                             <small>
@@ -111,43 +86,16 @@
                             @endif
                         </td>
                         <td>
-                            <small>
-                                {{ $class_dises[$teacher_absent->class_dis] }}
-                            </small>
-                            @if($teacher_absent->class_file)
-                                <?php $file = $school_code.'&teacher_absent&'.$teacher_absent->id.'&'.$teacher_absent->class_file; ?>
-                                <a href="{{ route('openFile',$file) }}" target="_blank">
-                                    <img src="{{ asset('images/file.png') }}">
-                                </a>
-                            @endif
-                        </td>
-                        <td>
-                            {{ $user_name[$teacher_absent->deputy_user_id] }}<br>
-                            <small>{{ substr($teacher_absent->deputy_date,0,10) }}</small>
-                        </td>
-                        <td>
-                            {{ $user_name[$teacher_absent->check1_user_id] }}
-                            <br>
-                            <small>{{ substr($teacher_absent->check1_date,0,10) }}</small>
-                        </td>
-                        <td>
-                            @if(!empty($teacher_absent->check4_date))
-                                {{ $user_name[$teacher_absent->check4_user_id] }}
-                                <br>
-                                <small>{{ substr($teacher_absent->check4_date,0,10) }}</small>
-                            @endif
-                        </td>
-                        <td>
-                            {{ $user_name[$teacher_absent->check2_user_id] }}
-                            <br>
-                            <small>{{ substr($teacher_absent->check2_date,0,10) }}</small>
-                        </td>
-                        <td>
-                            @if(!empty($teacher_absent->check3_date))
-                                {{ $user_name[$teacher_absent->check3_user_id] }}
-                                <br>
-                                <small>{{ substr($teacher_absent->check3_date,0,10) }}</small>
-                            @endif
+                            <ul>
+                            @foreach($teacher_absent->teacher_absent_outlays as $teacher_absent_outlay)
+                                <li>
+                                    {{ $teacher_absent_outlay->outlay_date }}
+                                    {{ $teacher_absent_outlay->places }}({{ $teacher_absent_outlay->outlay1+$teacher_absent_outlay->outlay2+$teacher_absent_outlay->outlay3+$teacher_absent_outlay->outlay4+$teacher_absent_outlay->outlay5+$teacher_absent_outlay->outlay6+$teacher_absent_outlay->outlay7+$teacher_absent_outlay->outlay8 }} 元)
+                                    <a href="javascript:open_url('{{ route('teacher_absents.edit_outlay',$teacher_absent_outlay->id) }}','新視窗')"><i class="fas fa-edit"></i></a>
+                                    <a href="{{ route('teacher_absents.delete_outlay',$teacher_absent_outlay->id) }}" onclick="return confirm('刪除？')"><i class="fas fa-times-circle text-danger"></i></a>
+                                </li>
+                            @endforeach
+                            </ul>
                         </td>
                     </tr>
                 @endforeach
@@ -159,5 +107,12 @@
         $('#select_semester').change(function(){
             location= '/teacher_absents/travel/'+ $('#select_semester').val();
         });
+
+        function open_url(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1300,height=300');
+        }
     </script>
+
+
 @endsection

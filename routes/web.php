@@ -164,6 +164,11 @@ Route::group(['middleware' => 'auth'],function(){
     Route::patch('teacher_absents/{teacher_absent}/admin_update', 'TeacherAbsentController@admin_update')->name('teacher_absents.admin_update');
 
     Route::get('teacher_absents/travel/{select_semester?}', 'TeacherAbsentController@travel')->name('teacher_absents.travel');
+    Route::get('teacher_absents/travel/{teacher_absent}/outlay', 'TeacherAbsentController@outlay')->name('teacher_absents.outlay');
+    Route::post('teacher_absents/travel/store_outlay', 'TeacherAbsentController@store_outlay')->name('teacher_absents.store_outlay');
+    Route::get('teacher_absents/travel/{teacher_absent_outlay}/delete_outlay', 'TeacherAbsentController@delete_outlay')->name('teacher_absents.delete_outlay');
+    Route::get('teacher_absents/travel/{teacher_absent_outlay}/edit_outlay', 'TeacherAbsentController@edit_outlay')->name('teacher_absents.edit_outlay');
+    Route::post('teacher_absents/travel/{teacher_absent_outlay}/update_outlay', 'TeacherAbsentController@update_outlay')->name('teacher_absents.update_outlay');
 });
 
 //行政人員可用

@@ -11,7 +11,6 @@
     $active['deputy'] ="";
     $active['sir'] ="active";
     $active['travel'] ="";
-    $active['travel_print'] ="";
     $active['list'] ="";
     $active['total'] ="";
     ?>

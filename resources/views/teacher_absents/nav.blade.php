@@ -12,9 +12,6 @@
         <a class="nav-link {{ $active['travel'] }}" href="{{ route('teacher_absents.travel') }}">差旅費列表</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ $active['travel_print'] }}" href="">差旅費列印</a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link {{ $active['list'] }}" href="{{ route('teacher_absents.list') }}"><i class="fas fa-crown"></i> 差假列表</a>
     </li>
     <li class="nav-item">
