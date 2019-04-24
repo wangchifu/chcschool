@@ -159,6 +159,10 @@ Route::group(['middleware' => 'auth'],function(){
 
     Route::get('teacher_absents/{teacher_absent}/back', 'TeacherAbsentController@back')->name('teacher_absents.back');
     Route::post('teacher_absents/{teacher_absent}/store_back', 'TeacherAbsentController@store_back')->name('teacher_absents.store_back');
+
+    Route::get('teacher_absents/{teacher_absent}/admin_edit', 'TeacherAbsentController@admin_edit')->name('teacher_absents.admin_edit');
+    Route::patch('teacher_absents/{teacher_absent}/admin_update', 'TeacherAbsentController@admin_update')->name('teacher_absents.admin_update');
+
 });
 
 //行政人員可用

@@ -17,6 +17,7 @@
                 <div class="form-group">
                     <button class="btn btn-primary btn-sm" onclick="return confirm('確定退回？')">確定退回</button>
                 </div>
+                <input type="hidden" name="title" value="{{ auth()->user()->title }}">
             </form>
         </div>
     </div>

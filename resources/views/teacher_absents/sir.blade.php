@@ -73,7 +73,7 @@
                             <td>
                                 <small>
                                 {{ $teacher_absent->id }}
-                                <i class="fas fa-edit"></i>
+                                <a href="javascript:open_url2('{{ route('teacher_absents.admin_edit',$teacher_absent->id) }}','新視窗')"><i class="fas fa-edit"></i></a>
                                 </small>
                                 <br>
                                 @if($teacher_absent->status==1)
@@ -194,6 +194,10 @@
         function open_url(url,name)
         {
             window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=850,height=200');
+        }
+        function open_url2(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=850,height=800');
         }
     </script>
 @endsection

@@ -1,34 +1,15 @@
-@extends('layouts.master')
+@extends('layouts.master_clean')
 
 @section('nav_school_active', 'active')
 
 @section('title', '教師差假-編輯')
 
 @section('content')
-    <?php
-
-    $active['index'] ="active";
-    $active['deputy'] ="";
-    $active['sir'] ="";
-    $active['travel'] ="";
-    $active['travel_print'] ="";
-    $active['list'] ="";
-    $active['total'] ="";
-    $active['admin'] ="";
-    ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>教師差假</h1>
-            @include('teacher_absents.nav')
-            <br>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('teacher_absents.index') }}">假單處理</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">編輯假單</li>
-                </ol>
-            </nav>
+            <h3>{{ $teacher_absent->user->name }} 請假資料</h3>
             @include('layouts.errors')
-            {{ Form::open(['route' => ['teacher_absents.update',$teacher_absent], 'method' => 'PATCH', 'files' => true,'id'=>'this_form']) }}
+            {{ Form::open(['route' => ['teacher_absents.admin_update',$teacher_absent], 'method' => 'PATCH', 'files' => true,'id'=>'this_form']) }}
             <div class="form-group">
                 <label for="semester"><strong>請假學期*</strong></label>
                 <input type="text" name="semester" class="form-control" value="{{ $teacher_absent->semester }}" required maxlength="4">
@@ -69,8 +50,6 @@
                         <i class="fas fa-times-circle text-danger"></i>
                     </a>
                     刪除已上傳
-                @else
-                    <input type="file" name="class_file" id="class_file">
                 @endif
             </div>
             <div class="form-group">
@@ -89,8 +68,6 @@
                         <i class="fas fa-times-circle text-danger"></i>
                     </a>
                     刪除已上傳
-                @else
-                    <input type="file" name="note_file">
                 @endif
             </div>
             <div class="form-group">

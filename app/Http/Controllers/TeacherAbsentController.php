@@ -99,6 +99,30 @@ class TeacherAbsentController extends Controller
         return view('teacher_absents.edit',$data);
     }
 
+    public function admin_edit(TeacherAbsent $teacher_absent)
+    {
+        $abs_kinds = config('chcschool.abs_kinds');
+        $class_dises = config('chcschool.class_dises');
+        $user_select = User::where('disable',null)
+            ->where('username','<>','admin')
+            ->where('username','<>',auth()->user()->username)
+            ->orderBy('order_by')
+            ->pluck('name','id')
+            ->toArray();
+
+        $school_code = school_code();
+
+        $data = [
+            'teacher_absent'=>$teacher_absent,
+            'abs_kinds'=>$abs_kinds,
+            'class_dises'=>$class_dises,
+            'user_select'=>$user_select,
+            'school_code'=>$school_code,
+        ];
+
+        return view('teacher_absents.admin_edit',$data);
+    }
+
     public function store(Request $request)
     {
         if($request->input('day')==null and $request->input('hour')==null){
@@ -151,6 +175,15 @@ class TeacherAbsentController extends Controller
         $att['status'] =1;
         $teacher_absent->update($att);
         return redirect()->route('teacher_absents.index');
+    }
+
+    public function admin_update(Request $request,TeacherAbsent $teacher_absent)
+    {
+        $teacher_absent->update($request->all());
+        $start_date = explode('-',$teacher_absent->start_date);
+        $att['month'] = $start_date[1];
+        $teacher_absent->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     public function destroy(TeacherAbsent $teacher_absent)
@@ -628,7 +661,7 @@ class TeacherAbsentController extends Controller
         $att['check4_user_id'] = null;
         $att['check4_date'] = null;
         $att['status'] = 3;
-        $att['reason'] = "退回：".$request->input('back').'(請修改)--'.$teacher_absent->reason;
+        $att['reason'] = $request->input('title')."退回：".$request->input('back').'(請修改)--'.$teacher_absent->reason;
         $teacher_absent->update($att);
         echo "<body onload='opener.location.reload();window.close();'>";
     }
