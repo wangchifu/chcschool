@@ -169,6 +169,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('teacher_absents/travel/{teacher_absent_outlay}/delete_outlay', 'TeacherAbsentController@delete_outlay')->name('teacher_absents.delete_outlay');
     Route::get('teacher_absents/travel/{teacher_absent_outlay}/edit_outlay', 'TeacherAbsentController@edit_outlay')->name('teacher_absents.edit_outlay');
     Route::post('teacher_absents/travel/{teacher_absent_outlay}/update_outlay', 'TeacherAbsentController@update_outlay')->name('teacher_absents.update_outlay');
+    Route::post('teacher_absents/travel/travel_print', 'TeacherAbsentController@travel_print')->name('teacher_absents.travel_print');
 });
 
 //行政人員可用

@@ -679,6 +679,7 @@ class TeacherAbsentController extends Controller
         $semester = ($select_semester)?$select_semester:get_date_semester(date('Y-m-d'));
 
         $teacher_absents = TeacherAbsent::where('semester',$semester)
+            ->where('user_id',auth()->user()->id)
             ->where('status','2')
             ->where('abs_kind','52')
             ->orderBy('id','DESC')
@@ -740,5 +741,26 @@ class TeacherAbsentController extends Controller
             $teacher_absent_outlay->update($request->all());
         }
         echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function travel_print(Request $request)
+    {
+        $travels = $request->input('travels');
+
+        if(!empty($travels)){
+            foreach($travels as $k=>$v){
+                $select_travel[] = $k;
+            }
+        }
+
+        $teacher_absents = TeacherAbsent::whereIn('id',$select_travel)
+            ->get();
+
+        $user_name = get_user_name();
+        $data = [
+            'teacher_absents'=>$teacher_absents,
+            'user_name'=>$user_name,
+        ];
+        return view('teacher_absents.travel_print',$data);
     }
 }
