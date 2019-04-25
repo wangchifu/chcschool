@@ -226,7 +226,6 @@ return [
         //網址轉換資料庫代碼
         'localhost'=>'s074600',
         'chcschool.localhost'=>'s074999',
-        'www3.hdes.chc.edu.tw'=>'s999999',
         'www.smes.chc.edu.tw'=>'s074608',
         'www.dches.chc.edu.tw'=>'s074775',
         'www.tces.chc.edu.tw'=>'s074610',
@@ -280,7 +279,7 @@ return [
         'www.dces.chc.edu.tw'=>'s074629',
         'www.dres.chc.edu.tw'=>'s074630',
         'www.hres.chc.edu.tw'=>'s074769',
-        'wwwtest.hdes.chc.edu.tw'=>'s074628',
+        'www.hdes.chc.edu.tw'=>'s074628',
         'www.hmps.chc.edu.tw'=>'s074627',
         'www.pyps.chc.edu.tw'=>'s074632',
         'www.ssjes.chc.edu.tw'=>'s074631',
