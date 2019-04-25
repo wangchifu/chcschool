@@ -39,6 +39,7 @@
                             @endif
                         </div>
                     </div>
+                    <!--
                     <div class="form-group row">
                         <div class="col-md-4 text-md-left">
                         </div>
@@ -46,7 +47,6 @@
                             <a href="{{ route('login') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>
                         </div>
                     </div>
-                    <!--
                     <div class="form-group row">
                         <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>
 
