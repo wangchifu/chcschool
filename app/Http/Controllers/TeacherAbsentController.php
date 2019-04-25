@@ -746,15 +746,14 @@ class TeacherAbsentController extends Controller
     public function travel_print(Request $request)
     {
         $travels = $request->input('travels');
-
+        $teacher_absents=[];
         if(!empty($travels)){
             foreach($travels as $k=>$v){
                 $select_travel[] = $k;
             }
+            $teacher_absents = TeacherAbsent::whereIn('id',$select_travel)
+                ->get();
         }
-
-        $teacher_absents = TeacherAbsent::whereIn('id',$select_travel)
-            ->get();
 
         $user_name = get_user_name();
         $data = [
