@@ -37,7 +37,7 @@
                             <a href="{{ route('glogin') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>
                         </div>
                     </div>
-
+                    <!--
                     <div class="form-group row">
                         <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>
 
@@ -45,7 +45,7 @@
                             <input tabindex="3" id="password" type="text" class="form-control" name="chaptcha" required placeholder="上圖數字" maxlength="5">
                         </div>
                     </div>
-
+                    -->
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
                             <button tabindex="4" type="submit" class="btn btn-primary btn-sm">

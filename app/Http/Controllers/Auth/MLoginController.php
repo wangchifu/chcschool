@@ -12,9 +12,11 @@ class MLoginController extends Controller
     //停用者不得登入
     public function auth(Request $request)
     {
+        /**
         if($request->input('chaptcha') != session('chaptcha')){
             return back()->withErrors(['gsuite_error'=>['驗證碼錯誤！']]);
         }
+         * **/
         if (Auth::attempt([
             'username' => $request->input('username'),
             'password'=>$request->input('password'),
