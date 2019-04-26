@@ -18,7 +18,7 @@
         <a class="nav-link {{ $active2 }}" href="{{ route('insite','insite') }}">內部公告</a>
     </li>
 </ul>
-<table class="table table-striped">
+<table class="table table-striped" style="word-break: break-all;">
     <tbody>
     @foreach($posts as $post)
         <?php
