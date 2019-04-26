@@ -83,8 +83,8 @@
     @endforeach
     </tbody>
 </table>
-@if($active2 = "active")
+@if($active2 == "active")
     <a href="{{ route('posts.insite') }}"><i class="far fa-hand-point-up"></i> 更多內部公告...</a>
-@elseif($active1 = "active")
+@elseif($active1 == "active")
     <a href="{{ route('posts.index') }}"><i class="far fa-hand-point-up"></i> 更多一般公告...</a>
 @endif
