@@ -73,6 +73,9 @@ class OpenFileController extends Controller
         $school_code = school_code();
 
         $root = storage_path('app/public/'.$school_code.'/open_files');
+        if(!is_dir(storage_path('app/public/'.$school_code))){
+            mkdir(storage_path('app/public/'.$school_code));
+        }
         if(!is_dir($root)){
             mkdir($root);
         }
