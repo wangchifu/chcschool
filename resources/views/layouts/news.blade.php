@@ -9,7 +9,13 @@
         $active2 = null;
     }
 ?>
-<h1>最新公告</h1>
+<h1>最新公告
+@auth
+    @can('create',\App\Post::class)
+        <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
+    @endauth
+@endauth
+</h1>
 <ul class="nav nav-tabs">
     <li class="nav-item">
         <a class="nav-link {{ $active1 }}" href="{{ route('index') }}">一般公告</a>
@@ -43,7 +49,7 @@
             </td>
             @if($can_see)
                 @if($post->title_image)
-                    <td width="200">
+                    <td width="20%">
                         <a href="{{ route('posts.show',$post->id) }}">
                             <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded">
                         </a>
