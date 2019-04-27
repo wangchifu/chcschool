@@ -303,7 +303,7 @@ return [
         'www.dres.chc.edu.tw'=>'s074630',
         'www.hres.chc.edu.tw'=>'s074769',
         'www.hdes.chc.edu.tw'=>'s074628',
-        '彰化縣和東國小.tw'=>'s074628',
+        'xn--cjrw7a18c01hqxel3o7v2b.tw'=>'s074628',
         'www.hmps.chc.edu.tw'=>'s074627',
         'www.pyps.chc.edu.tw'=>'s074632',
         'www.ssjes.chc.edu.tw'=>'s074631',
