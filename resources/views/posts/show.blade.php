@@ -75,7 +75,7 @@
 
             <!-- Date/Time -->
             <p>
-                張貼日期： {{ $post->created_at }}　　　
+                張貼日期： {{ $post->created_at }}　
                 點閱：{{ $post->views }}
             </p>
 
