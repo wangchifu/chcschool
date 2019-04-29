@@ -167,7 +167,13 @@ class LunchListController extends Controller
             ->get();
         foreach($tea_dates as $tea_date){
             $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
-            $user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
+
+            if(substr($tea_date->lunch_place_id,0,1)=="c"){
+                $user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place_id." 教室";
+            }else{
+                $user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
+            }
+
             $user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
             $factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
             if($tea_date->enable=="eat"){
