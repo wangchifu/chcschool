@@ -30,15 +30,15 @@
             @if($admin)
                 <div class="card">
                     <div class="card-header">
-                        變更資料
+                        某一天突然不供餐，或是又要供餐了！
                     </div>
                     <div class="card-body">
                         <ul class="text-danger">
                             <li>
-                                注意！若該日變更為「供餐「後，所有人均仍未訂餐。
+                                注意！若該日變更為「供餐」後，所有人均仍未訂餐，需要的記得補訂！(某日突然要供餐了)
                             </li>
                             <li>
-                                若該日變更為「不供餐」後，所有人立即退訂！
+                                若該日變更為「不供餐」後，所有人立即退訂！(颱風假或其他原因統一退餐)
                             </li>
                         </ul>
                         <form action="{{ route('lunch_specials.one_day_store') }}" method="post" id="this_form">

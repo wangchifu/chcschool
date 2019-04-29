@@ -29,7 +29,7 @@
             @if($admin)
                 <div class="card">
                     <div class="card-header">
-                        選擇教師
+                        教師忘了訂餐，可是逾期了。想要幫他訂！
                     </div>
                     <div class="card-body">
                         @include('layouts.errors')

@@ -90,53 +90,61 @@
                                     4.訂餐日期
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-striped">
+                                    <h3>{{ $lunch_order->name }}</h3>
+                                    <table class="table table-bordered">
+                                        <thead>
                                         <tr>
-                                            <th>
-                                                訂餐
-                                            </th>
-                                            <th>
-                                                星期
-                                            </th>
-                                            <th>
-                                                供餐日
-                                            </th>
-                                            <th>
-                                                備註
-                                            </th>
+                                            <th class="text-danger">日</th>
+                                            <th>一</th>
+                                            <th>二</th>
+                                            <th>三</th>
+                                            <th>四</th>
+                                            <th>五</th>
+                                            <th class="text-success">六</th>
                                         </tr>
-                                        @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                            <?php
-                                            if(get_chinese_weekday($lunch_order_date->order_date)=="星期六"){
-                                                $color = "#CCFF99";
-                                            }elseif(get_chinese_weekday($lunch_order_date->order_date)=="星期日"){
-                                                $color = "#FFB7DD";
-                                            }else{
-                                                $color = "";
-                                            }
-                                            ?>
-                                            <tr style="background-color: {{ $color }}">
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        $first_w = get_date_w($lunch_order->name."-01");
+                                        ?>
+                                        <tr>
+                                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                                <?php
+                                                $this_date_w = get_date_w($lunch_order_date->order_date);
+                                                if($this_date_w==0){
+                                                    $text_color = "btn btn-danger btn-sm";
+                                                }elseif($this_date_w==6){
+                                                    $text_color = "btn btn-success btn-sm";
+
+                                                }else{
+                                                    $text_color = "btn btn-outline-dark btn-sm";
+
+                                                }
+                                                $d = explode('-',$lunch_order_date->order_date);
+                                                ?>
+                                                @if($d[2]== "01")
+                                                    @for($i=1;$i<=$first_w;$i++)
+                                                        <td></td>
+                                                    @endfor
+                                                @endif
                                                 <td>
                                                     @if($lunch_order_date->enable)
                                                         <input type="checkbox" name="order_date[{{ $lunch_order_date->order_date }}]" value="1" id="enable{{ $lunch_order_date->order_date }}" checked>
-                                                        <label for="enable{{ $lunch_order_date->order_date }}">訂餐</label>
+                                                        訂餐
                                                     @else
                                                         --
                                                     @endif
+                                                    <label for="enable{{ $lunch_order_date->order_date }}" class="{{ $text_color }}">{{ substr($lunch_order_date->order_date,5,5) }}</label>
+                                                    <br>
+                                                    <small>{{ $lunch_order_date->date_ps }}</small>
                                                 </td>
-                                                <td>
-                                                    {{ get_chinese_weekday($lunch_order_date->order_date) }}
-                                                </td>
-                                                <td>
-                                                    {{ $lunch_order_date->order_date }}
-                                                </td>
-                                                <td class="text-primary">
-                                                    {{ $lunch_order_date->date_ps }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                                @if($this_date_w == 6)
+                                                </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
                                     </table>
-                                    <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？確定後將只能退餐，不能再更改廠商、取餐地點及葷素喔！！')">我要訂餐</button>
+                                    <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？確定後將只能退餐，不能再更改廠商、取餐地點及葷素喔！！')"><i class="fas fa-plus"></i>  我要訂餐</button>
                                 </div>
                             </div>
                             <input type="hidden" name="semester" value="{{ $lunch_order->semester }}">
@@ -199,7 +207,7 @@
                             </table>
                             <div class="card">
                                 <div class="card-header">
-                                    4.訂餐日期
+                                    4.訂餐日期( 已訂餐 {{ $days }} 天 )
                                 </div>
                                 <div class="card-body">
                                     @if($disable==1)
@@ -210,74 +218,81 @@
                                     @endif
                                         @csrf
                                         @method('patch')
-                                    <table class="table table-striped">
-                                        <tr>
-                                            <th>
-                                                已訂餐 {{ $days }} 天
-                                            </th>
-                                            <th>
-                                                星期
-                                            </th>
-                                            <th>
-                                                供餐日
-                                            </th>
-                                            <th>
-                                                備註
-                                            </th>
-                                        </tr>
-                                        @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                            <?php
-                                            if(get_chinese_weekday($lunch_order_date->order_date)=="星期六"){
-                                                $color = "#CCFF99";
-                                            }elseif(get_chinese_weekday($lunch_order_date->order_date)=="星期日"){
-                                                $color = "#FFB7DD";
-                                            }else{
-                                                $color = "";
-                                            }
-                                            $checked = ($tea_data[$lunch_order_date->order_date]=="eat")?"checked":"";
-                                            $false = (str_replace('-','',$lunch_order_date->order_date) < $die_date)?"return false;":"";
 
-                                            if($disable) $false="return false;";
-                                            ?>
-                                            <tr style="background-color: {{ $color }}">
-                                                <td>
-                                                    @if($lunch_order_date->enable)
-                                                        <input type="checkbox" name="order_date[{{ $lunch_order_date->order_date }}]" value="1" id="enable{{ $lunch_order_date->order_date }}" {{ $checked }} onclick="{{ $false }}">
-                                                        @if(str_replace('-','',$lunch_order_date->order_date) < $die_date)
-                                                            <label for="enable{{ $lunch_order_date->order_date }}">
-                                                                <del>訂餐</del>
-                                                            </label>
-                                                        @else
-                                                            <label for="enable{{ $lunch_order_date->order_date }}">
-                                                                訂餐
-                                                            </label>
-                                                        @endif
 
-                                                    @else
-                                                        --
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    {{ get_chinese_weekday($lunch_order_date->order_date) }}
-                                                </td>
-                                                <td>
-                                                    @if(str_replace('-','',$lunch_order_date->order_date) < $die_date)
-                                                        <del>{{ $lunch_order_date->order_date }}</del>
-                                                    @else
-                                                        {{ $lunch_order_date->order_date }}
-                                                    @endif
-                                                </td>
-                                                <td class="text-danger">
-                                                    {{ $lunch_order_date->date_ps }}
-                                                </td>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-danger">日</th>
+                                                <th>一</th>
+                                                <th>二</th>
+                                                <th>三</th>
+                                                <th>四</th>
+                                                <th>五</th>
+                                                <th class="text-success">六</th>
                                             </tr>
-                                        @endforeach
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            $first_w = get_date_w($lunch_order->name."-01");
+                                            ?>
+                                            <tr>
+                                                @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                                    <?php
+                                                    $this_date_w = get_date_w($lunch_order_date->order_date);
+                                                    if($this_date_w==0){
+                                                        $text_color = "btn btn-danger btn-sm";
+                                                    }elseif($this_date_w==6){
+                                                        $text_color = "btn btn-success btn-sm";
+
+                                                    }else{
+                                                        $text_color = "btn btn-outline-dark btn-sm";
+
+                                                    }
+                                                    $d = explode('-',$lunch_order_date->order_date);
+
+                                                    $checked = ($tea_data[$lunch_order_date->order_date]=="eat")?"checked":"";
+                                                    $false = (str_replace('-','',$lunch_order_date->order_date) < $die_date)?"return false;":"";
+
+                                                    if($disable) $false="return false;";
+
+                                                    ?>
+                                                    @if($d[2]== "01")
+                                                        @for($i=1;$i<=$first_w;$i++)
+                                                            <td></td>
+                                                        @endfor
+                                                    @endif
+                                                    <td>
+                                                        @if($lunch_order_date->enable)
+                                                            <input type="checkbox" name="order_date[{{ $lunch_order_date->order_date }}]" value="1" id="enable{{ $lunch_order_date->order_date }}" {{ $checked }} onclick="{{ $false }}">
+                                                            @if(str_replace('-','',$lunch_order_date->order_date) < $die_date)
+                                                                <label for="enable{{ $lunch_order_date->order_date }}">
+                                                                    <del>訂餐</del>
+                                                                </label>
+                                                            @else
+                                                                <label for="enable{{ $lunch_order_date->order_date }}">
+                                                                    訂餐
+                                                                </label>
+                                                            @endif
+
+                                                        @else
+                                                            --
+                                                        @endif
+                                                        <label for="enable{{ $lunch_order_date->order_date }}" class="{{ $text_color }}">{{ substr($lunch_order_date->order_date,5,5) }}</label>
+                                                        <br>
+                                                        <small>{{ $lunch_order_date->date_ps }}</small>
+                                                    </td>
+                                                    @if($this_date_w == 6)
+                                            </tr>
+                                            @endif
+                                            @endforeach
+                                            </tbody>
+                                        </table>
                                     <input type="hidden" name="lunch_order_id" value="{{ $lunch_order->id }}">
                                     @if($disable==1)
                                         <h4 class="text-danger">系統已設定停止退餐</h4>
                                     @else
-                                        <button class="btn btn-success btn-sm" onclick="return confirm('確定修改嗎？')">我要修改</button>
+                                        <button class="btn btn-success btn-sm" onclick="return confirm('確定修改嗎？')"><i class="fas fa-edit"></i> 我要修改</button>
                                     </form>
                                     @endif
                                 </div>
@@ -289,6 +304,8 @@
         </div>
 
     </div>
+    <br>
+    <br>
     <script language='JavaScript'>
 
         function jump(){

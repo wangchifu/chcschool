@@ -6,6 +6,7 @@ use App\LunchFactory;
 use App\LunchOrder;
 use App\LunchOrderDate;
 use App\LunchPlace;
+use App\LunchSetup;
 use App\LunchTeaDate;
 use App\User;
 use Illuminate\Http\Request;
@@ -80,6 +81,221 @@ class LunchSpecialController extends Controller
         return view('lunch_specials.late_teacher',$data);
     }
 
+    public function late_teacher_show(Request $request)
+    {
+        $admin = check_power('午餐系統','A',auth()->user()->id);
+
+        //是否已經訂過
+        $count = LunchTeaDate::where('user_id',$request->input('user_id'))
+            ->where('lunch_order_id',$request->input('lunch_order_id'))
+            ->count();
+        $lunch_order = LunchOrder::find($request->input('lunch_order_id'));
+        if($count){
+            return back()->withErrors(['error'=>['該員 '.$lunch_order->name.' 已訂過餐！']]);
+        }
+
+
+
+        $lunch_factory_array = [];
+        $lunch_place_array = [];
+
+        $lunch_order = LunchOrder::find($request->input('lunch_order_id'));
+        $user = User::find($request->input('user_id'));
+
+        $factories = LunchFactory::where('disable',null)
+            ->get();
+        foreach($factories as $factory){
+            $lunch_factory_array[$factory->id] = $factory->name.' ($'.$factory->teacher_money.') ';
+        }
+        $lunch_place_array = LunchPlace::where('disable',null)
+            ->pluck('name','id')
+            ->toArray();
+        $eat_styles = ['1'=>'葷食','2'=>'素食'];
+
+        $data = [
+            'admin'=>$admin,
+            'user'=>$user,
+            'lunch_order'=>$lunch_order,
+            'lunch_factory_array'=>$lunch_factory_array,
+            'lunch_place_array'=>$lunch_place_array,
+            'eat_styles'=>$eat_styles,
+        ];
+
+        return view('lunch_specials.late_teacher_show',$data);
+
+    }
+
+    public function late_teacher_store(Request $request)
+    {
+        $semester = $request->input('semester');
+        $lunch_factory_id = $request->input('lunch_factory_id');
+        if($request->input('select_place')=="place_select"){
+            $lunch_place_id = $request->input('lunch_place_id');
+        }elseif($request->input('select_place')=="place_class"){
+            $lunch_place_id = "c".$request->input('class_no');
+        }
+        $eat_style = $request->input('eat_style');
+        $lunch_order_id = $request->input('lunch_order_id');
+        $user_id = $request->input('user_id');
+        $lunch_order = LunchOrder::find($lunch_order_id);
+
+        $order_date = $request->input('order_date');
+
+        $all = [];
+        foreach ($lunch_order->lunch_order_dates as $lunch_order_date) {
+            if (isset($order_date[$lunch_order_date->order_date])) {
+                $enable = "eat";
+            } else {
+                $enable = "not_eat";
+            }
+            $one = [
+                'order_date'=>$lunch_order_date->order_date,
+                'enable'=>$enable,
+                'semester'=>$semester,
+                'lunch_order_id'=>$lunch_order_id,
+                'user_id'=>$user_id,
+                'lunch_place_id'=>$lunch_place_id,
+                'lunch_factory_id'=>$lunch_factory_id,
+                'eat_style'=>$eat_style,
+                'created_at'=>now(),
+                'updated_at'=>now(),
+            ];
+            array_push($all,$one);
+        }
+
+        LunchTeaDate::insert($all);
+
+        return redirect()->route('lunch_specials.index');
+    }
+
+    public function teacher_change_month()
+    {
+        $admin = check_power('午餐系統','A',auth()->user()->id);
+
+        $user_array = User::where('disable',null)
+            ->where('username','<>','admin')
+            ->orderBy('order_by')
+            ->pluck('name','id')
+            ->toArray();
+
+        $lunch_order_array = LunchOrder::orderBy('name','DESC')
+            ->pluck('name','id')
+            ->toArray();
+        $data = [
+            'admin'=>$admin,
+            'user_array'=>$user_array,
+            'lunch_order_array'=>$lunch_order_array,
+        ];
+        return view('lunch_specials.teacher_change_month',$data);
+    }
+
+    public function teacher_change_month_show(Request $request)
+    {
+        $admin = check_power('午餐系統','A',auth()->user()->id);
+
+        //是否已經訂過
+        $count = LunchTeaDate::where('user_id',$request->input('user_id'))
+            ->where('lunch_order_id',$request->input('lunch_order_id'))
+            ->count();
+        $lunch_order = LunchOrder::find($request->input('lunch_order_id'));
+        if(!$count){
+            return back()->withErrors(['error'=>['該員 '.$lunch_order->name.' 尚末訂過餐！']]);
+        }
+
+
+
+        $lunch_factory_array = [];
+        $lunch_place_array = [];
+
+        $lunch_order = LunchOrder::find($request->input('lunch_order_id'));
+        $user = User::find($request->input('user_id'));
+
+        $factories = LunchFactory::where('disable',null)
+            ->get();
+        foreach($factories as $factory){
+            $lunch_factory_array[$factory->id] = $factory->name.' ($'.$factory->teacher_money.') ';
+        }
+        $lunch_place_array = LunchPlace::where('disable',null)
+            ->pluck('name','id')
+            ->toArray();
+
+
+        $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
+
+        $eat_styless = explode(',',$lunch_setup->eat_styles);
+        foreach($eat_styless as $eat_style){
+            if($eat_style==1) $style="葷食合菜";
+            if($eat_style==2) $style="素食合菜";
+            if($eat_style==3) $style="葷食便當";
+            if($eat_style==4) $style="素食便當";
+            $eat_styles[$eat_style] =$style;
+        }
+
+
+        $lunch_tea_dates =LunchTeaDate::where('lunch_order_id',$lunch_order->id)
+            ->where('user_id',$request->input('user_id'))
+            ->get();
+        foreach($lunch_tea_dates as $lunch_tea_date){
+            $tea_data[$lunch_tea_date->order_date] = $lunch_tea_date->enable;
+        }
+        $days = \App\LunchTeaDate::where('lunch_order_id',$lunch_order->id)
+            ->where('user_id',$user->id)
+            ->where('enable','eat')
+            ->count();
+
+        $data = [
+            'admin'=>$admin,
+            'user'=>$user,
+            'lunch_order'=>$lunch_order,
+            'lunch_factory_array'=>$lunch_factory_array,
+            'lunch_place_array'=>$lunch_place_array,
+            'eat_styles'=>$eat_styles,
+            'tea_data'=>$tea_data,
+            'days'=>$days,
+        ];
+
+        return view('lunch_specials.teacher_change_month_show',$data);
+
+    }
+    public function teacher_update_month(Request $request)
+    {
+        $semester = $request->input('semester');
+        $lunch_factory_id = $request->input('lunch_factory_id');
+
+        if($request->input('select_place')=="place_select"){
+            $lunch_place_id = $request->input('lunch_place_id');
+        }elseif($request->input('select_place')=="place_class"){
+            $lunch_place_id = "c".$request->input('class_no');
+        }
+        $eat_style = $request->input('eat_style');
+
+
+        $lunch_order_id = $request->input('lunch_order_id');
+        $user_id = $request->input('user_id');
+
+        $order_date = $request->input('order_date');
+
+        $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+            ->where('user_id',$user_id)
+            ->get();
+        foreach($tea_dates as $tea_date){
+            if (isset($order_date[$tea_date->order_date])) {
+                $enable = "eat";
+            } else {
+                $enable = "not_eat";
+            }
+            $att['enable'] = $enable;
+            $att['lunch_place_id'] = $lunch_place_id;
+            $att['lunch_factory_id'] = $lunch_factory_id;
+            $att['eat_style'] = $eat_style;
+            $tea_date->update($att);
+        }
+
+        return redirect()->route('lunch_specials.index');
+    }
+
+    
+    /**
     public function teacher_change_month()
     {
         $admin = check_power('午餐系統','A',auth()->user()->id);
@@ -136,88 +352,10 @@ class LunchSpecialController extends Controller
             ->update($att);
         return redirect()->route('lunch_specials.index');
     }
-
-    public function late_teacher_show(Request $request)
-    {
-        $admin = check_power('午餐系統','A',auth()->user()->id);
-
-        //是否已經訂過
-        $count = LunchTeaDate::where('user_id',$request->input('user_id'))
-            ->where('lunch_order_id',$request->input('lunch_order_id'))
-            ->count();
-        if($count){
-            return back()->withErrors(['error'=>['該員該期已訂過餐！']]);
-        }
+     **/
 
 
 
-        $lunch_factory_array = [];
-        $lunch_place_array = [];
-
-        $lunch_order = LunchOrder::find($request->input('lunch_order_id'));
-        $user = User::find($request->input('user_id'));
-
-        $factories = LunchFactory::where('disable',null)
-            ->get();
-        foreach($factories as $factory){
-            $lunch_factory_array[$factory->id] = $factory->name.' ($'.$factory->teacher_money.') ';
-        }
-        $lunch_place_array = LunchPlace::where('disable',null)
-            ->pluck('name','id')
-            ->toArray();
-        $eat_styles = ['1'=>'葷食','2'=>'素食'];
-
-        $data = [
-            'admin'=>$admin,
-            'user'=>$user,
-            'lunch_order'=>$lunch_order,
-            'lunch_factory_array'=>$lunch_factory_array,
-            'lunch_place_array'=>$lunch_place_array,
-            'eat_styles'=>$eat_styles,
-        ];
-
-        return view('lunch_specials.late_teacher_show',$data);
-
-    }
-
-    public function late_teacher_store(Request $request)
-    {
-        $semester = $request->input('semester');
-        $lunch_factory_id = $request->input('lunch_factory_id');
-        $lunch_place_id = $request->input('lunch_place_id');
-        $eat_style = $request->input('eat_style');
-        $lunch_order_id = $request->input('lunch_order_id');
-        $user_id = $request->input('user_id');
-        $lunch_order = LunchOrder::find($lunch_order_id);
-
-        $order_date = $request->input('order_date');
-
-        $all = [];
-        foreach ($lunch_order->lunch_order_dates as $lunch_order_date) {
-            if (isset($order_date[$lunch_order_date->order_date])) {
-                $enable = "eat";
-            } else {
-                $enable = "not_eat";
-            }
-            $one = [
-                'order_date'=>$lunch_order_date->order_date,
-                'enable'=>$enable,
-                'semester'=>$semester,
-                'lunch_order_id'=>$lunch_order_id,
-                'user_id'=>$user_id,
-                'lunch_place_id'=>$lunch_place_id,
-                'lunch_factory_id'=>$lunch_factory_id,
-                'eat_style'=>$eat_style,
-                'created_at'=>now(),
-                'updated_at'=>now(),
-            ];
-            array_push($all,$one);
-        }
-
-        LunchTeaDate::insert($all);
-
-        return redirect()->route('lunch_specials.index');
-    }
 
     public function teacher_change()
     {

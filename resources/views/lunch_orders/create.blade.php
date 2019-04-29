@@ -73,10 +73,9 @@
                                                     <input type="text" class="form-control" placeholder="備註" name="ps[{{ $v2 }}]">
                                                 </td>
                                                 @if($this_date_w == 6)
-                                        </tr>
-                                        @endif
-                                        <?php  ?>
-                                        @endforeach
+                                                    </tr>
+                                                @endif
+                                            @endforeach
                                         </tbody>
                                     </table>
                                     <hr>
