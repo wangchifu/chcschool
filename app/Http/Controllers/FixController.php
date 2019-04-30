@@ -16,15 +16,13 @@ class FixController extends Controller
      */
     public function index()
     {
-        $fixes = Fix::where('type','1')
-            ->orderBy('id','DESC')
+        $fixes = Fix::orderBy('id','DESC')
             ->paginate(20);
         return view('fixes.index',compact('fixes'));
     }
     public function search($situation)
     {
-        $fixes = Fix::where('type','1')
-            ->where('situation',$situation)
+        $fixes = Fix::where('situation',$situation)
             ->orderBy('id','DESC')
             ->paginate(20);
         $data = [

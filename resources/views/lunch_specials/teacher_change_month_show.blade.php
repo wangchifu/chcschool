@@ -79,7 +79,7 @@
                                 $check1 = null;
                                 $check2 = "checked";
                             }else{
-                                $class_name=null;
+                                $class_name='1';
                                 $place = $lunch_place_id;
                                 $none1 = null;
                                 $none2="none";
