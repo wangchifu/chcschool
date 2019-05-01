@@ -24,11 +24,8 @@
                         {{ Form::text('job_title',auth()->user()->title,['id'=>'job_title','class' => 'form-control', 'readonly' => 'readonly']) }}
                     </div>
                     <div class="form-group">
-                        <label for="insite">2.內部公告?</label>
-                        <div class="form-check">
-                            {{ Form::checkbox('insite', '1',null,['id'=>'insite','class'=>'form-check-input']) }}
-                            <label class="form-check-label" for="insite">打勾為內部公告</label>
-                        </div>
+                        <label for="insite">2.公告類別</label>
+                        {{ Form::select('insite', $types,null, ['id' => 'insite', 'class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
                         <label for="content">3.標題圖片( 不大於5MB )
@@ -50,6 +47,7 @@
                         </label>
                         {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
                     </div>
+                    <small>(所有公告兩年後將自動刪除)</small>
                     <div class="form-group">
                         <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">

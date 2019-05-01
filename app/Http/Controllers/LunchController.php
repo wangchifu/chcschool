@@ -12,6 +12,15 @@ use Illuminate\Http\Request;
 
 class LunchController extends Controller
 {
+    public function __construct()
+    {
+        $module_setup = get_module_setup();
+        if (!isset($module_setup['午餐系統'])) {
+            echo "<h1>已停用</h1>";
+            die();
+        }
+    }
+
     public function index($lunch_order_id=null)
     {
         $lunch_order_array = [];

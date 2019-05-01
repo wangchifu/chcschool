@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class CalendarController extends Controller
 {
+    public function __construct()
+    {
+        $module_setup = get_module_setup();
+        if (!isset($module_setup['校務行事曆'])) {
+            echo "<h1>已停用</h1>";
+            die();
+        }
+    }
     /**
      * Display a listing of the resource.
      *

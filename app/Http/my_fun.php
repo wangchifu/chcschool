@@ -93,6 +93,14 @@ if(! function_exists('filesizekb')) {
     }
 }
 
+function get_dir_size($f){
+    $io = popen ( '/usr/bin/du -sk ' . $f, 'r' );
+    $size = fgets ( $io, 4096);
+    $size = substr ( $size, 0, strpos ( $size, "\t" ) );
+    pclose ( $io );
+    return $size;
+}
+
 //查某日為中文星期幾
 if(! function_exists('get_chinese_weekday')){
     function get_chinese_weekday($datetime)

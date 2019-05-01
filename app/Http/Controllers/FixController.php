@@ -9,6 +9,14 @@ use Illuminate\Http\Request;
 
 class FixController extends Controller
 {
+    public function __construct()
+    {
+        $module_setup = get_module_setup();
+        if (!isset($module_setup['報修系統'])) {
+            echo "<h1>已停用</h1>";
+            die();
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +26,12 @@ class FixController extends Controller
     {
         $fixes = Fix::orderBy('id','DESC')
             ->paginate(20);
-        return view('fixes.index',compact('fixes'));
+        $fix_admin = check_power('報修系統','A',auth()->user()->id);
+        $data= [
+            'fixes'=>$fixes,
+            'fix_admin'=>$fix_admin,
+        ];
+        return view('fixes.index',$data);
     }
     public function search($situation)
     {

@@ -15,11 +15,12 @@
                     <li class="breadcrumb-item active" aria-current="page">報修列表</li>
                 </ol>
             </nav>
-            @include('fixes.nav')
+            <a href="{{ route('fixes.index') }}" class="btn btn-dark btn-sm"><i class="fas fa-check-square"></i> 全部列表</a>
+            @include('fixes.nav',['situation'=>null])
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th>類別</th>
+                    <th>類別 <a href="{{ route('fixes.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增</a></th>
                     <th>處理狀況</th>
                     <th>申報日期</th>
                     <th>申報人</th>
@@ -31,6 +32,9 @@
                 @foreach($fixes as $fix)
                     <tr>
                         <td>
+                            @if($fix_admin)
+                                <a href="{{ route('fixes.destroy',$fix->id) }}" onclick="return confirm('確定刪除？')"><i class="fas fa-times-circle text-danger"></i></a>
+                            @endif
                             {{ $types[$fix->type] }}
                         </td>
                         <td>

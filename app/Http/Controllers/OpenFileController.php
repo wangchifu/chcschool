@@ -8,6 +8,17 @@ use Illuminate\Http\Request;
 
 class OpenFileController extends Controller
 {
+
+    public function __construct()
+    {
+        $module_setup = get_module_setup();
+        if (!isset($module_setup['檔案庫'])) {
+            echo "<h1>已停用</h1>";
+            die();
+        }
+    }
+
+
     public function index($path=null)
     {
         $school_code = school_code();
@@ -38,6 +49,9 @@ class OpenFileController extends Controller
             ->orderBy('name')
             ->get();
 
+        //學校目錄
+        $f = storage_path('app/public/'.$school_code.'/open_files');
+        $dir_size = get_dir_size($f);
 
 
 
@@ -48,18 +62,18 @@ class OpenFileController extends Controller
             'folders'=>$folders,
             'folder_path'=>$folder_path,
             'files'=>$files,
+            'dir_size'=>$dir_size,
         ];
         return view('open_files.index',$data);
     }
 
     public function create()
     {
-        //新增使用者的上傳目錄
+        //新增上傳目錄
+        $school_code = school_code();
         $folder = 'open_files/'.auth()->user()->job_title;
-        if(!is_dir(storage_path('app/public/open_files'))) mkdir(storage_path('app/public/open_files'));
-
-        if(!is_dir(storage_path('app/public/'.$folder))) mkdir(storage_path('app/public/'.$folder));
-
+        if(!is_dir(storage_path('app/public/'.$school_code))) mkdir(storage_path('app/public/'.$school_code));
+        if(!is_dir(storage_path('app/public/'.$school_code.'/open_files'))) mkdir(storage_path('app/public)'.$school_code.'/open_files'));
 
         $att['name'] = auth()->user()->job_title;
         $att['type'] = 1;//目錄

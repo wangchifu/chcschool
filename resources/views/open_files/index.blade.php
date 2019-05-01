@@ -103,7 +103,7 @@
                             @endauth
                         </td>
                         <td>
-                            {{ filesizekb(storage_path($f.'/'.$file->name)) }} kB
+                            {{ filesizekb(storage_path($f.'/'.$file->name)) }} KB
                         </td>
                         <td>
                             {{ $file->user->name }}
@@ -120,6 +120,15 @@
                 <div class="card my-4">
                     <h3 class="card-header">新增</h3>
                     <div class="card-body">
+                        <?php
+                            $size = round($dir_size/1024,2);
+                            $p = round($size*100/2048,2);
+                        ?>
+                        容量使用率：
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ $p }}%">已使用容量( {{ $size }}MB / 2GB )</div>
+                        </div>
+                        <hr>
                         {{ Form::open(['route' => 'open_files.create_folder', 'method' => 'POST','id'=>'this_form']) }}
                         <div class="form-group">
                             <label for="name"><strong>1.子目錄</strong></label>
@@ -133,17 +142,19 @@
                         {{ Form::close() }}
                         <hr>
                         @include('layouts.errors')
-                        {{ Form::open(['route' => 'open_files.upload_file', 'method' => 'POST','id'=>'this_form2','files' => true]) }}
-                        <div class="form-group">
-                            <label for="file"><strong>2.檔案( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )</strong><small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small></label>
-                            {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple','required'=>'required']) }}
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" name="folder_id" value="{{ $folder_id }}">
-                            <input type="hidden" name="path" value="{{ $path }}">
-                            <button class="btn btn-success btn-sm" onclick="return confirm('確定新增檔案')"><i class="fas fa-plus"></i> 新增檔案</button>
-                        </div>
-                        {{ Form::close() }}
+                        @if($p < 100)
+                            {{ Form::open(['route' => 'open_files.upload_file', 'method' => 'POST','id'=>'this_form2','files' => true]) }}
+                            <div class="form-group">
+                                <label for="file"><strong>2.檔案( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )</strong><small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small></label>
+                                {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple','required'=>'required']) }}
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" name="folder_id" value="{{ $folder_id }}">
+                                <input type="hidden" name="path" value="{{ $path }}">
+                                <button class="btn btn-success btn-sm" onclick="return confirm('確定新增檔案')"><i class="fas fa-plus"></i> 新增檔案</button>
+                            </div>
+                            {{ Form::close() }}
+                        @endif
                     </div>
                 </div>
             @endcan

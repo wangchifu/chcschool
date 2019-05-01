@@ -62,6 +62,8 @@
 <br>
 <div class="container-fluid">
     @yield('content')
+    <br>
+    <br>
 </div>
     @yield('footer')
 <script src="{{ asset('bootstrap-4.1.1/js/bootstrap.min.js') }}"></script>

@@ -13,6 +13,9 @@
                     <a class="nav-link" href="{{ route('posts.index') }}">一般公告</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('posts.honor') }}"><img src="{{ asset('images/gold-medal.svg') }}" width="16">榮譽榜</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link active" href="{{ route('posts.insite') }}">內部公告</a>
                 </li>
             </ul>

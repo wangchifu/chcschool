@@ -1,12 +1,19 @@
 <?php
     $i=1;
+    if($insite=="honor"){
+        $active1 = null;
+        $active2 = null;
+        $active3 = "active";
+    }
     if($insite=="insite"){
         $active1 = null;
         $active2 = "active";
+        $active3 = null;
     }
     if($insite==null){
         $active1 = "active";
         $active2 = null;
+        $active3 = null;
     }
 ?>
 <h1>最新公告
@@ -21,6 +28,9 @@
         <a class="nav-link {{ $active1 }}" href="{{ route('index') }}">一般公告</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{ $active3 }}" href="{{ route('insite','honor') }}"><img src="{{ asset('images/gold-medal.svg') }}" width="16">榮譽榜</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{ $active2 }}" href="{{ route('insite','insite') }}">內部公告</a>
     </li>
 </ul>
@@ -28,7 +38,7 @@
     <tbody>
     @foreach($posts as $post)
         <?php
-        if($post->insite){
+        if($post->insite==1){
             if(auth()->check()){
                 $can_see = 1;
             }else{
@@ -63,7 +73,7 @@
                         @if($post->top)
                             <p class="badge badge-danger">置頂</p>
                         @endif
-                        @if($post->insite)
+                        @if($post->insite==1)
                             <p class="badge badge-danger">內部公告</p>
                         @endif
                     <a href="{{ route('posts.show',$post->id) }}">{{ $post->title }}</a>
@@ -93,4 +103,6 @@
     <a href="{{ route('posts.insite') }}"><i class="far fa-hand-point-up"></i> 更多內部公告...</a>
 @elseif($active1 == "active")
     <a href="{{ route('posts.index') }}"><i class="far fa-hand-point-up"></i> 更多一般公告...</a>
+@elseif($active3 == "active")
+    <a href="{{ route('posts.honor') }}"><i class="far fa-hand-point-up"></i> 更多榮譽榜...</a>
 @endif

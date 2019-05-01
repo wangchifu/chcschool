@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\DB;
 
 class TeacherAbsentController extends Controller
 {
+    public function __construct()
+    {
+        $module_setup = get_module_setup();
+        if (!isset($module_setup['教師差假'])) {
+            echo "<h1>已停用</h1>";
+            die();
+        }
+    }
+
     public function index($select_semester=null)
     {
         $semesters = DB::table('teacher_absents')

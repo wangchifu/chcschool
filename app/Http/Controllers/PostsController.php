@@ -9,6 +9,29 @@ use Illuminate\Http\Request;
 
 class PostsController extends Controller
 {
+
+    public function __construct()
+    {
+        $module_setup = get_module_setup();
+        if(!isset($module_setup['公告系統'])){
+            echo "<h1>已停用</h1>";
+            die();
+        }
+
+        //兩年後自刪公告
+        $dt = Carbon::now()->subYears(2);
+        $posts = Post::whereDate('created_at','<',substr($dt,0,20))
+            ->get();
+        foreach($posts as $post){
+            $school_code = school_code();
+            $folder = storage_path('app/public/'.$school_code.'/posts/'.$post->id);
+            if (is_dir($folder)) {
+                delete_dir($folder);
+            }
+
+            $post->delete();
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -38,6 +61,18 @@ class PostsController extends Controller
         return view('posts.insite',$data);
     }
 
+    public function honor()
+    {
+        $posts = Post::where('insite','2')
+            ->orderBy('top','DESC')
+            ->orderBy('created_at','DESC')
+            ->paginate(20);
+        $data = [
+            'posts'=>$posts,
+        ];
+        return view('posts.honor',$data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -45,7 +80,15 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $types = [
+            '0'=>'一般公告',
+            '1'=>'內部公告',
+            '2'=>'榮譽榜',
+        ];
+        $data = [
+            'types'=>$types,
+        ];
+        return view('posts.create',$data);
     }
 
     /**
@@ -67,7 +110,7 @@ class PostsController extends Controller
         $att['job_title'] = auth()->user()->title;
         $att['user_id'] = auth()->user()->id;
         $att['views'] = 0;
-        $att['insite'] = $request->input('insite');
+        $att['insite'] = ($request->input('insite'))?$request->input('insite'):null;
 
         $post = Post::create($att);
 
@@ -166,12 +209,18 @@ class PostsController extends Controller
         //有無附件
         $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
 
+        $types = [
+            '0'=>'一般公告',
+            '1'=>'內部公告',
+            '2'=>'榮譽榜',
+        ];
 
         $data = [
             'post'=>$post,
             'files'=>$files,
             'title_image'=>$title_image,
             'school_code'=>$school_code,
+            'types'=>$types,
         ];
 
         return view('posts.edit',$data);
@@ -194,7 +243,7 @@ class PostsController extends Controller
 
         $att['title'] = $request->input('title');
         $att['content'] = $request->input('content');
-        $att['insite'] = $request->input('insite');
+        $att['insite'] = ($request->input('insite'))?$request->input('insite'):null;
 
         $post->update($att);
 
@@ -296,7 +345,7 @@ class PostsController extends Controller
             return back()->withErrors(['error'=>['必須二個字元以上']]);
         }
         $posts = Post::where('content','like','%'.$search.'%')
-            ->where('title','like','%'.$search.'%')
+            ->orWhere('title','like','%'.$search.'%')
             ->orderBy('id','DESC')
             ->paginate(20);
         $data = [

@@ -24,6 +24,7 @@ if(isset($_SERVER['HTTP_HOST'])){
 */
 Route::get('/','HomeController@index')->name('index');
 Route::get('insite/{insite}','HomeController@index')->name('insite');
+Route::get('insite/{honor}','HomeController@index')->name('honor');
 //Auth::routes();
 #登入
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -53,6 +54,7 @@ Route::get('pic', 'HomeController@pic')->name('pic');
 //公告系統
 Route::get('posts' , 'PostsController@index')->name('posts.index');
 Route::get('posts/insite' , 'PostsController@insite')->name('posts.insite');
+Route::get('posts/honor' , 'PostsController@honor')->name('posts.honor');
 Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
 Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
@@ -95,7 +97,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('fixes/{fix}' , 'FixController@show')->where('fix', '[0-9]+')->name('fixes.show');
     Route::get('fixes/create', 'FixController@create')->name('fixes.create');
     Route::post('fixes', 'FixController@store')->name('fixes.store');
-    Route::delete('fixes/{fix}', 'FixController@destroy')->name('fixes.destroy');
+    Route::match(['delete','get'],'fixes/{fix}/delete', 'FixController@destroy')->name('fixes.destroy');
 
     //午餐系統
     Route::get('lunches/{lunch_order_id?}', 'LunchController@index')->name('lunches.index');
