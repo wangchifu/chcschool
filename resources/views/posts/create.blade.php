@@ -53,7 +53,6 @@
                             <span class="text-danger">容量已滿！無法加附件！</span>
                         @endif
                     </div>
-                    <small>(所有公告兩年後將自動刪除)</small>
                     <div class="form-group">
                         <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
