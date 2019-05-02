@@ -137,7 +137,7 @@ class GroupController extends Controller
         }
 
         $users = User::where('disable',null)
-            ->where('username','admin')
+            ->where('username','<>','admin')
             ->orderBy('order_by')
             ->get();
 
