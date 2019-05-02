@@ -18,6 +18,7 @@ class PostsController extends Controller
             die();
         }
 
+        /**
         //兩年後自刪公告
         $dt = Carbon::now()->subYears(2);
         $posts = Post::whereDate('created_at','<',substr($dt,0,20))
@@ -31,6 +32,8 @@ class PostsController extends Controller
 
             $post->delete();
         }
+         *
+         * */
     }
     /**
      * Display a listing of the resource.
@@ -80,6 +83,16 @@ class PostsController extends Controller
      */
     public function create()
     {
+        $school_code = school_code();
+        //學校目錄
+        $f1 = storage_path('app/public/'.$school_code);
+        $dir_size1 = get_dir_size($f1);
+
+        $f2 = storage_path('app/privacy/'.$school_code);
+        $dir_size2 = get_dir_size($f2);
+
+        $dir_size = $dir_size1+$dir_size2;
+
         $types = [
             '0'=>'一般公告',
             '1'=>'內部公告',
@@ -87,6 +100,7 @@ class PostsController extends Controller
         ];
         $data = [
             'types'=>$types,
+            'dir_size'=>$dir_size,
         ];
         return view('posts.create',$data);
     }
@@ -209,6 +223,16 @@ class PostsController extends Controller
         //有無附件
         $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
 
+        $school_code = school_code();
+        //學校目錄
+        $f1 = storage_path('app/public/'.$school_code);
+        $dir_size1 = get_dir_size($f1);
+
+        $f2 = storage_path('app/privacy/'.$school_code);
+        $dir_size2 = get_dir_size($f2);
+
+        $dir_size = $dir_size1+$dir_size2;
+
         $types = [
             '0'=>'一般公告',
             '1'=>'內部公告',
@@ -221,6 +245,7 @@ class PostsController extends Controller
             'title_image'=>$title_image,
             'school_code'=>$school_code,
             'types'=>$types,
+            'dir_size'=>$dir_size,
         ];
 
         return view('posts.edit',$data);

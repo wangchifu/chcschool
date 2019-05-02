@@ -26,7 +26,21 @@ class ReportController extends Controller
      */
     public function create(Meeting $meeting)
     {
-        return view('reports.create',compact('meeting'));
+        //學校目錄
+        $school_code = school_code();
+        $f1 = storage_path('app/public/'.$school_code);
+        $dir_size1 = get_dir_size($f1);
+
+        $f2 = storage_path('app/privacy/'.$school_code);
+        $dir_size2 = get_dir_size($f2);
+
+        $dir_size = $dir_size1+$dir_size2;
+
+        $data = [
+            'meeting'=>$meeting,
+            'dir_size'=>$dir_size,
+        ];
+        return view('reports.create',$data);
     }
 
     /**
@@ -88,9 +102,18 @@ class ReportController extends Controller
         //有無附件
         $files = get_files(storage_path('app/privacy/'.$school_code.'/reports/'.$report->id));
 
+        //學校目錄
+        $f1 = storage_path('app/public/'.$school_code);
+        $dir_size1 = get_dir_size($f1);
+
+        $f2 = storage_path('app/privacy/'.$school_code);
+        $dir_size2 = get_dir_size($f2);
+
+        $dir_size = $dir_size1+$dir_size2;
         $data = [
             'report'=>$report,
             'files'=>$files,
+            'dir_size'=>$dir_size,
         ];
         return view('reports.edit',$data);
     }

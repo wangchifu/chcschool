@@ -50,8 +50,13 @@ class OpenFileController extends Controller
             ->get();
 
         //學校目錄
-        $f = storage_path('app/public/'.$school_code.'/open_files');
-        $dir_size = get_dir_size($f);
+        $f1 = storage_path('app/public/'.$school_code);
+        $dir_size1 = get_dir_size($f1);
+
+        $f2 = storage_path('app/privacy/'.$school_code);
+        $dir_size2 = get_dir_size($f2);
+
+        $dir_size = $dir_size1+$dir_size2;
 
 
 

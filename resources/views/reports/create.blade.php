@@ -8,6 +8,10 @@
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>新增報告</h1>
+            <?php
+            $size = round($dir_size/1024,2);
+            $p = round($size*100/2048,2);
+            ?>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
@@ -29,9 +33,19 @@
                         <label for="content"><strong>內容*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容','required'=>'required']) }}
                     </div>
+                    容量使用率：
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ $p }}%">已使用容量( {{ $size }}MB / 2GB )</div>
+                    </div>
+                    <hr>
                     <div class="form-group">
                         <label for="files[]">( 不大於5MB )</label>
-                        {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
+                        @if($p < 100)
+                            {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
+                        @else
+                            <br>
+                            <span class="text-danger">容量已滿！無法加附件！</span>
+                        @endif
                     </div>
                     <div class="form-group">
                         <a href="{{ route('meetings.show',$meeting->id) }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>

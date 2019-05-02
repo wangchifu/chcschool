@@ -98,6 +98,7 @@ function get_dir_size($f){
     $size = fgets ( $io, 4096);
     $size = substr ( $size, 0, strpos ( $size, "\t" ) );
     pclose ( $io );
+    if(!$size) $size=0;
     return $size;
 }
 

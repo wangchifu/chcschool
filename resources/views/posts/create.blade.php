@@ -15,6 +15,10 @@
                 </ol>
             </nav>
             <h1>公告系統</h1>
+            <?php
+            $size = round($dir_size/1024,2);
+            $p = round($size*100/2048,2);
+            ?>
             {{ Form::open(['route' => 'posts.store', 'method' => 'POST', 'files' => true,'id'=>'this_form']) }}
             <div class="card my-4">
                 <h3 class="card-header">公告資料</h3>
@@ -41,11 +45,21 @@
                         <label for="content"><strong>5.內文*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10,'required'=>'required', 'placeholder' => '請輸入內容']) }}
                     </div>
+                    容量使用率：
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ $p }}%">已使用容量( {{ $size }}MB / 2GB )</div>
+                    </div>
+                    <hr>
                     <div class="form-group">
                         <label for="files[]">6.附件( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )
                         <small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small>
                         </label>
-                        {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
+                        @if($p < 100)
+                            {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
+                        @else
+                            <br>
+                            <span class="text-danger">容量已滿！無法加附件！</span>
+                        @endif
                     </div>
                     <small>(所有公告兩年後將自動刪除)</small>
                     <div class="form-group">
