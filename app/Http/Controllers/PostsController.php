@@ -93,6 +93,9 @@ class PostsController extends Controller
 
         $dir_size = $dir_size1+$dir_size2;
 
+        $size = round($dir_size/1024,2);
+        $per = round($size*100/5120,2);
+
         $types = [
             '0'=>'一般公告',
             '1'=>'內部公告',
@@ -100,7 +103,8 @@ class PostsController extends Controller
         ];
         $data = [
             'types'=>$types,
-            'dir_size'=>$dir_size,
+            'size'=>$size,
+            'per'=>$per,
         ];
         return view('posts.create',$data);
     }
@@ -232,6 +236,8 @@ class PostsController extends Controller
         $dir_size2 = get_dir_size($f2);
 
         $dir_size = $dir_size1+$dir_size2;
+        $size = round($dir_size/1024,2);
+        $per = round($size*100/5120,2);
 
         $types = [
             '0'=>'一般公告',
@@ -245,7 +251,8 @@ class PostsController extends Controller
             'title_image'=>$title_image,
             'school_code'=>$school_code,
             'types'=>$types,
-            'dir_size'=>$dir_size,
+            'per'=>$per,
+            'size'=>$size,
         ];
 
         return view('posts.edit',$data);

@@ -8,10 +8,6 @@
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>修改報告</h1>
-            <?php
-            $size = round($dir_size/1024,2);
-            $p = round($size*100/2048,2);
-            ?>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
@@ -33,11 +29,7 @@
                         <label for="content"><strong>內容*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容','required'=>'required']) }}
                     </div>
-                    容量使用率：
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ $p }}%">已使用容量( {{ $size }}MB / 2GB )</div>
-                    </div>
-                    <hr>
+                    @include('layouts.hd')
                     <div class="form-group">
                         <label for="files[]">( 不大於5MB )</label>
                         <br>
@@ -50,7 +42,7 @@
                                 <a href="{{ url('meetings_reports/'.$file.'/fileDel') }}" class="btn btn-danger btn-sm" id="fileDel{{ $k }}" onclick="bbconfirm_Link('fileDel{{ $k }}','確定刪附件？')"><i class="fas fa-times-circle"></i> {{ $v }}</a>
                             @endforeach
                         @endif
-                        @if($p < 100)
+                        @if($per < 100)
                             {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple']) }}
                         @else
                             <span class="text-danger">容量已滿！無法加附件！</span>

@@ -35,10 +35,13 @@ class ReportController extends Controller
         $dir_size2 = get_dir_size($f2);
 
         $dir_size = $dir_size1+$dir_size2;
+        $size = round($dir_size/1024,2);
+        $per = round($size*100/5120,2);
 
         $data = [
             'meeting'=>$meeting,
-            'dir_size'=>$dir_size,
+            'per'=>$per,
+            'size'=>$size,
         ];
         return view('reports.create',$data);
     }
@@ -110,10 +113,14 @@ class ReportController extends Controller
         $dir_size2 = get_dir_size($f2);
 
         $dir_size = $dir_size1+$dir_size2;
+        $size = round($dir_size/1024,2);
+        $per = round($size*100/5120,2);
+
         $data = [
             'report'=>$report,
             'files'=>$files,
-            'dir_size'=>$dir_size,
+            'per'=>$per,
+            'size'=>$size,
         ];
         return view('reports.edit',$data);
     }

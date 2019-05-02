@@ -58,7 +58,8 @@ class OpenFileController extends Controller
 
         $dir_size = $dir_size1+$dir_size2;
 
-
+        $size = round($dir_size/1024,2);
+        $per = round($size*100/5120,2);
 
         $data = [
             'school_code'=>$school_code,
@@ -67,7 +68,8 @@ class OpenFileController extends Controller
             'folders'=>$folders,
             'folder_path'=>$folder_path,
             'files'=>$files,
-            'dir_size'=>$dir_size,
+            'per'=>$per,
+            'size'=>$size,
         ];
         return view('open_files.index',$data);
     }
