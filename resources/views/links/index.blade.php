@@ -21,7 +21,7 @@
                     連結類別
                 </div>
                 <div class="card-body">
-
+                        @include('layouts.errors')
                         <form action="{{ route('links.store_type') }}" method="post" id="this_form1">
                             @csrf
                         <table class="table table-striped" style="word-break:break-all;">

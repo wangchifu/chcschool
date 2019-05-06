@@ -121,6 +121,10 @@ class SetupController extends Controller
 
     public function text(Request $request,Setup $setup)
     {
+        $request->validate([
+            'site_name'=>'required',
+            'views'=>['required','numeric'],
+        ]);
         $att['site_name'] = $request->input('site_name');
         $att['views'] = $request->input('views');
         $att['footer'] = $request->input('footer');
@@ -144,6 +148,11 @@ class SetupController extends Controller
 
     public function add_col(Request $request)
     {
+        $request->validate([
+            'title'=>'required',
+            'order_by'=>['nullable','numeric'],
+            'num'=>['required','numeric'],
+        ]);
         $att['title'] = $request->input('title');
         $att['num'] = $request->input('num');
         $att['order_by'] = $request->input('order_by');
@@ -161,6 +170,11 @@ class SetupController extends Controller
 
     public function update_col(Request $request,SetupCol $setup_col)
     {
+        $request->validate([
+            'title'=>'required',
+            'order_by'=>['nullable','numeric'],
+            'num'=>['required','numeric'],
+        ]);
         $att['order_by'] = $request->input('order_by');
         $att['title'] = $request->input('title');
         $att['num'] = $request->input('num');
@@ -207,6 +221,10 @@ class SetupController extends Controller
 
     public function add_block(Request $request)
     {
+        $request->validate([
+            'title'=>'required',
+            'order_by'=>['nullable','numeric'],
+        ]);
         $att = $request->all();
         Block::create($att);
         echo "<body onload='opener.location.reload();window.close();'>";
@@ -227,6 +245,10 @@ class SetupController extends Controller
 
     function update_block(Request $request,Block $block)
     {
+        $request->validate([
+            'title'=>'required',
+            'order_by'=>['nullable','numeric'],
+        ]);
         $att = $request->all();
         $block->update($att);
         echo "<body onload='opener.location.reload();window.close();'>";

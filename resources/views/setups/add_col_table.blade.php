@@ -3,6 +3,7 @@
 @section('title', '新增欄位 | ')
 
 @section('content')
+    @include('layouts.errors')
     {{ Form::open(['route' => 'setups.add_col', 'method' => 'post','id'=>'this_form']) }}
     <table class="table">
         <tr>

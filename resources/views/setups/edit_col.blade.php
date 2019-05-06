@@ -3,6 +3,7 @@
 @section('title', '編輯欄位 | ')
 
 @section('content')
+    @include('layouts.errors')
     {{ Form::open(['route' => ['setups.update_col',$setup_col->id], 'method' => 'patch','id'=>'this_form']) }}
     <table class="table table-striped">
         <thead class="thead-light">

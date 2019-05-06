@@ -41,4 +41,5 @@
     </table>
     <button class="btn btn-primary btn-sm" onclick="return confirm('確定嗎？')"><i class="fas fa-save"></i> 儲存變更</button>
     {{ Form::close() }}
+    @include('layouts.errors')
 @endsection

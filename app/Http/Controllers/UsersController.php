@@ -99,6 +99,9 @@ class UsersController extends Controller
      */
     public function update(Request $request,User $user)
     {
+        $request->validate([
+            'order_by' => ['nullable','numeric']
+        ]);
         $att['order_by'] = $request->input('order_by');
         $att['group_id'] = $request->input('group_id');
         $att['disable'] = $request->input('disable');

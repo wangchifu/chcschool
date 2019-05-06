@@ -26,6 +26,7 @@
             <div class="card my-4">
                 <h3 class="card-header">文字標題</h3>
                 <div class="card-body">
+                    @include('layouts.errors')
                     {{ Form::open(['route' => ['setups.text',$setup->id], 'method' => 'patch','id'=>'this_form1']) }}
                     <div class="form-group">
                         <label for="site_name">網站名稱</label>

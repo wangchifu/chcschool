@@ -3,6 +3,7 @@
 @section('title', '編輯區塊 | ')
 
 @section('content')
+    @include('layouts.errors')
     {{ Form::open(['route' => ['setups.update_block',$block->id], 'method' => 'patch']) }}
     <table class="table">
         <tr>

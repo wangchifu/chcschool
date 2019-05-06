@@ -51,6 +51,7 @@ class LinksController extends Controller
     {
         $request->validate([
             'name'=>'required',
+            'order_by'=>['nullable','numeric'],
         ]);
         Type::create($request->all());
         return redirect()->route('links.index');
@@ -60,6 +61,7 @@ class LinksController extends Controller
         $request->validate([
             'name'=>'required',
             'url'=>'required',
+            'order_by'=>['nullable','numeric'],
         ]);
         Link::create($request->all());
         return redirect()->route('links.index');
@@ -104,6 +106,7 @@ class LinksController extends Controller
         $request->validate([
             'name'=>'required',
             'url'=>'required',
+            'order_by'=>['nullable','numeric'],
         ]);
         $link->update($request->all());
         return redirect()->route('links.index');
