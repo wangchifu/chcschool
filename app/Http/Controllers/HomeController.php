@@ -156,7 +156,7 @@ class HomeController extends Controller
         ]);
 
         $fileContent = file_get_contents(asset('images/back.gif'), false, $context);
-        $im = imagecreatefromgif($fileContent);
+        $im = imagecreatefromstring($fileContent);
         $text_color = imagecolorallocate($im, 255, 255, 255);
 
         imagettftext($im, 28, 0 , 4, 34, $text_color,public_path('font/parkway_lush.ttf'),$cht_key);
