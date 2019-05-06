@@ -149,7 +149,14 @@ class HomeController extends Controller
 
         header("Content-type: image/gif");
         //$im = imagecreatefromgif(asset('images/captcha_bk'.$back.'.gif')) or die("無法建立GD圖片");
-        $im = imagecreatefromgif(asset('images/back.gif')) or die("無法建立GD圖片");;
+
+        $context = stream_context_create(["ssl" => [
+            "verify_peer"      => false,
+            "verify_peer_name" => false]
+        ]);
+
+        $fileContent = file_get_contents(asset('images/back.gif'), false, $context);
+        $im = imagecreatefromgif($fileContent);
         $text_color = imagecolorallocate($im, 255, 255, 255);
 
         imagettftext($im, 28, 0 , 4, 34, $text_color,public_path('font/parkway_lush.ttf'),$cht_key);
