@@ -29,7 +29,7 @@
                             <input tabindex="2" id="password" type="password" class="form-control" name="password" required placeholder="OpenID 密碼">
                         </div>
                     </div>
-                    <!--
+
                     <div class="form-group row">
                         <div class="col-md-4 text-md-left">
                         </div>
@@ -44,7 +44,7 @@
                             <input tabindex="3" id="password" type="text" class="form-control" name="chaptcha" required placeholder="上圖數字" maxlength="5">
                         </div>
                     </div>
-                    -->
+
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
                             <button tabindex="4" type="submit" class="btn btn-primary btn-sm">

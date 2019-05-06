@@ -39,7 +39,7 @@
                             @endif
                         </div>
                     </div>
-                    <!--
+
                     <div class="form-group row">
                         <div class="col-md-4 text-md-left">
                         </div>
@@ -54,7 +54,7 @@
                             <input type="text" tabindex="3" class="form-control" name="chaptcha" required placeholder="上圖數字" maxlength="5">
                         </div>
                     </div>
-                    -->
+
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
                             <button type="submit" class="btn btn-primary btn-sm" tabindex="4">

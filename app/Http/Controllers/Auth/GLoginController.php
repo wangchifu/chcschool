@@ -16,11 +16,11 @@ class GLoginController extends Controller
 
     public function auth(Request $request)
     {
-        /**
+
         if($request->input('chaptcha') != session('chaptcha')){
             return back()->withErrors(['gsuite_error'=>['驗證碼錯誤！']]);
         }
-         */
+
         $data = array("email"=>$request->input('username'),"password"=>$request->input('password'));
         $data_string = json_encode($data);
         $ch = curl_init('https://school.chc.edu.tw/api/auth');
