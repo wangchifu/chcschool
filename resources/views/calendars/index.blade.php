@@ -13,6 +13,7 @@
                     <table><tr>
                             <td>
                                 <form name="myform">
+                                    @csrf
                                     學期選單：
                                     <select name="semester" onchange="jump();">
                                         <option>--請選擇--</option>

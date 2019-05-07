@@ -164,5 +164,18 @@ class HomeController extends Controller
         imagedestroy($im);
     }
 
+    public function not_bot(Request $request)
+    {
+        $request->validate([
+            'check_bot'=>'required',
+        ]);
+        if($request->input('check_bot') == session('check_bot')){
+            session(['login_error'=>null]);
+            return back();
+        }else{
+            return back()->withErrors(['error'=>['你是機器人？']]);
+        }
 
+
+    }
 }

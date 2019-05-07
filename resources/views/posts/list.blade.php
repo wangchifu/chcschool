@@ -1,10 +1,17 @@
+<?php
+    $key = rand(100,999);
+    session(['search' => $key]);
+?>
 <div align="right">
-    <form action="{{ route('posts.search') }}" method="post" class="search-form" id="search_form">
+    <form action="{{ route('posts.search') }}" method="post" class="search-form" id="this_form">
         {{ csrf_field() }}
         <table>
             <tr>
                 <td>
-                    <input type="text" name="search" id="search" placeholder="搜尋公告標題或內文">
+                    <input type="text" name="search" id="search" placeholder="搜尋公告標題或內文" required>
+                </td>
+                <td>
+                    <input type="text" name="check" placeholder="請輸入驗證碼：{{ session('search') }}" required maxlength="3">
                 </td>
                 <td>
                     <button><i class="fas fa-search"></i></button>
@@ -76,3 +83,6 @@
     @endforeach
     </tbody>
 </table>
+<script>
+    var validator = $("#this_form").validate();
+</script>

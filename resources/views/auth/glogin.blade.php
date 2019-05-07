@@ -10,6 +10,7 @@
 
             <div class="card-body">
                 <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}"></a>
+                @if(session('login_error') < 3)
                 <form id="this_form" method="POST" action="{{ route('gauth') }}">
                     @csrf
                     <div class="form-group row">
@@ -55,8 +56,20 @@
                             </div>
                         </div>
                     </div>
-                    @include('layouts.errors')
                 </form>
+                @else
+                    <?php
+                    $k = rand(100,999);
+                    session(['check_bot'=>$k]);
+                    ?>
+                    <span class="text-danger">登入錯誤超過三次，請輸入三碼數字後送出： </span>
+                    <form action="{{ route('not_bot') }}" method="post">
+                        @csrf
+                        <input type="text" name="check_bot" placeholder="請輸入：{{ session('check_bot') }}">
+                        <button class="btn btn-primary btn-sm">我不是機器人</button>
+                    </form>
+                @endif
+                @include('layouts.errors')
             </div>
         </div>
     </div>

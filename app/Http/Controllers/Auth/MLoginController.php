@@ -14,6 +14,13 @@ class MLoginController extends Controller
     {
 
         if($request->input('chaptcha') != session('chaptcha')){
+            if(!session('login_error')){
+                session(['login_error' => '1']);
+            }else{
+                $a = session('login_error');
+                $a++;
+                session(['login_error' => $a]);
+            }
             return back()->withErrors(['gsuite_error'=>['驗證碼錯誤！']]);
         }
 
@@ -26,6 +33,15 @@ class MLoginController extends Controller
             // 如果認證通過...
             return redirect()->route('index');
         }else{
+
+            if(!session('login_error')){
+                session(['login_error' => 1]);
+            }else{
+                $a = session('login_error');
+                $a++;
+                session(['login_error' => $a]);
+            }
+
             $user = User::where('username',$request->input('username'))
                 ->first();
 

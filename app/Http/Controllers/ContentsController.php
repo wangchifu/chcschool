@@ -66,6 +66,11 @@ class ContentsController extends Controller
         return view('contents.edit',compact('content'));
     }
 
+    public function exec_edit(Content $content)
+    {
+        return view('contents.exec_edit',compact('content'));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -81,6 +86,16 @@ class ContentsController extends Controller
         ]);
         $content->update($request->all());
         return redirect()->route('contents.index');
+    }
+
+    public function exec_update(Request $request, Content $content)
+    {
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required',
+        ]);
+        $content->update($request->all());
+        return redirect()->route('contents.show',$content->id);
     }
 
     /**

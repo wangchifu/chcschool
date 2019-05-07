@@ -18,6 +18,14 @@ class GLoginController extends Controller
     {
 
         if($request->input('chaptcha') != session('chaptcha')){
+            if(!session('login_error')){
+                session(['login_error' => 1]);
+            }else{
+                $a = session('login_error');
+                $a++;
+                session(['login_error' => $a]);
+            }
+
             return back()->withErrors(['gsuite_error'=>['驗證碼錯誤！']]);
         }
 
@@ -90,8 +98,17 @@ class GLoginController extends Controller
             }else{
                 return back()->withErrors(['gsuite_error'=>['被停權了？']]);
             }
-        };
+        }else{
+            if(!session('login_error')){
+                session(['login_error' => 1]);
+            }else{
+                $a = session('login_error');
+                $a++;
+                session(['login_error' => $a]);
+            }
 
-        return back()->withErrors(['gsuite_error'=>['GSuite認證錯誤']]);
+            return back()->withErrors(['gsuite_error'=>['GSuite認證錯誤']]);
+        }
+
     }
 }

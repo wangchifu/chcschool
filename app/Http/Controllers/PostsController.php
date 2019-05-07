@@ -371,6 +371,9 @@ class PostsController extends Controller
 
     public function search(Request $request,$search=null)
     {
+        if($request->input('check') != session('search')){
+            return back()->withErrors(['error'=>['驗證碼不對！']]);
+        }
         $search = ($search)?$search:$request->input('search');
 
         if(mb_strlen($search) < 2){

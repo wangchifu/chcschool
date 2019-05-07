@@ -75,6 +75,11 @@ class DepartmentController extends Controller
         return view('departments.edit',compact('department'));
     }
 
+    public function exec_edit(Department $department)
+    {
+        return view('departments.exec_edit',compact('department'));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -90,6 +95,16 @@ class DepartmentController extends Controller
         ]);
         $department->update($request->all());
         return redirect()->route('departments.index');
+    }
+
+    public function exec_update(Request $request,Department $department)
+    {
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required',
+        ]);
+        $department->update($request->all());
+        return redirect()->route('departments.show',$department->id);
     }
 
     /**

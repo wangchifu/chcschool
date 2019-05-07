@@ -9,6 +9,7 @@
             <div class="card-header"><h4>管理員登入</h4></div>
 
             <div class="card-body">
+                @if(session('login_error') < 3)
                 <form method="POST" action="{{ route('auth') }}" id="this_form">
                     @csrf
 
@@ -62,8 +63,20 @@
                             </button>
                         </div>
                     </div>
-                    @include('layouts.errors')
                 </form>
+                @else
+                    <?php
+                        $k = rand(100,999);
+                        session(['check_bot'=>$k]);
+                    ?>
+                    <span class="text-danger">登入錯誤超過三次，請輸入三碼數字後送出： </span>
+                        <form action="{{ route('not_bot') }}" method="post">
+                        @csrf
+                        <input type="text" name="check_bot" placeholder="請輸入：{{ session('check_bot') }}">
+                            <button class="btn btn-primary btn-sm">我不是機器人</button>
+                        </form>
+                @endif
+                @include('layouts.errors')
             </div>
         </div>
     </div>

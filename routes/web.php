@@ -25,6 +25,7 @@ if(isset($_SERVER['HTTP_HOST'])){
 Route::get('/','HomeController@index')->name('index');
 Route::get('insite/{insite}','HomeController@index')->name('insite');
 Route::get('insite/{honor}','HomeController@index')->name('honor');
+Route::post('not_bot','HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -217,6 +218,13 @@ Route::group(['middleware' => 'exec'],function(){
     Route::delete('calendars/{calendar}', 'CalendarController@destroy')->name('calendars.destroy');
     Route::get('calendars/{calendar}/delete' , 'CalendarController@delete')->name('calendars.delete');
 
+    //行政人員編輯
+    Route::get('contents_exec/{content}/edit', 'ContentsController@exec_edit')->name('contents.exec_edit');
+    Route::patch('contents_exec/{content}', 'ContentsController@exec_update')->name('contents.exec_update');
+
+    //行政人員編輯學校介紹
+    Route::get('departments_exec/{department}/edit', 'DepartmentController@exec_edit')->name('departments.exec_edit');
+    Route::patch('departments_exec/{department}', 'DepartmentController@exec_update')->name('departments.exec_update');
 });
 
 //管理者可用
