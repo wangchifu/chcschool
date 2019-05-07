@@ -245,7 +245,7 @@ Route::group(['middleware' => 'admin'],function(){
     //Route::patch('setups/{setup}', 'SetupController@update')->where('setup', '[0-9]+')->name('setups.update');
     Route::patch('setups/{setup}/nav_color', 'SetupController@nav_color')->where('setup', '[0-9]+')->name('setups.nav_color');
     Route::get('setups/nav_default/', 'SetupController@nav_default')->name('setups.nav_default');
-    Route::patch('setups/{setup}/text', 'SetupController@text')->name('setups.text');
+    Route::patch('setups/{setup}', 'SetupController@text')->name('setups.text');
     Route::get('setups/col','SetupController@col')->name('setups.col');
     Route::get('setups/add_col_table','SetupController@add_col_table')->name('setups.add_col_table');
     Route::post('setups/add_col', 'SetupController@add_col')->name('setups.add_col');
