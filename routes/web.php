@@ -178,6 +178,10 @@ Route::group(['middleware' => 'auth'],function(){
 
 //行政人員可用
 Route::group(['middleware' => 'exec'],function(){
+
+    Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
+    Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
+
     Route::get('posts/create' , 'PostsController@create')->name('posts.create');
     Route::post('posts' , 'PostsController@store')->name('posts.store');
     Route::get('posts/{post}/edit' , 'PostsController@edit')->name('posts.edit');
@@ -302,9 +306,6 @@ Route::group(['middleware' => 'admin'],function(){
     Route::delete('contents/{content}', 'ContentsController@destroy')->name('contents.destroy');
     Route::get('contents/{content}/edit', 'ContentsController@edit')->name('contents.edit');
     Route::patch('contents/{content}', 'ContentsController@update')->name('contents.update');
-
-    Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
-    Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
 
     //類別管理
     Route::post('types', 'LinksController@store_type')->name('links.store_type');
