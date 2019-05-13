@@ -16,6 +16,9 @@ class GLoginController extends Controller
 
     public function auth(Request $request)
     {
+        if(session('login_error') >= 3){
+            return view('errors.500');
+        }
 
         if($request->input('chaptcha') != session('chaptcha')){
             if(!session('login_error')){

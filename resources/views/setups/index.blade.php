@@ -40,7 +40,7 @@
                         <label for="footer">置底</label>
                         {{ Form::textarea('footer',$setup->footer,['id'=>'footer','class'=>'form-control']) }}
                     </div>
-                    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+                    <script src="{{ asset('mycke/ckeditor.js') }}"></script>
                     <script>
                         CKEDITOR.replace('footer'
                             ,{

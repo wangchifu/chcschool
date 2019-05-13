@@ -10,7 +10,7 @@
             <label for="content">內文*</label>
             {{ Form::textarea('content',null,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
         </div>
-        <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+        <script src="{{ asset('mycke/ckeditor.js') }}"></script>
         <script>
             CKEDITOR.replace('my-editor'
                 ,{
