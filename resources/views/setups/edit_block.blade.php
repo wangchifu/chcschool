@@ -57,7 +57,7 @@
         </button>
     </div>
     {{ Form::close() }}
-    @if($block->id != 1)
+    @if(!strpos($block->title,'系統區塊'))
     <div class="text-right">
         <form action="{{ route('setups.delete_block',$block->id) }}" method="post">
             @csrf
