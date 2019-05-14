@@ -1,5 +1,5 @@
 <?php
-if(isset($_SERVER['HTTP_HOST'])) {
+if(isset($_SERVER['REQUEST_URI'])) {
     if (strpos($_SERVER['REQUEST_URI'], '//')) {
         die('what do you want!!??');
     }
