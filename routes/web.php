@@ -1,4 +1,7 @@
 <?php
+if(strpos($_SERVER['REQUEST_URI'],'./')){
+    die('what do you want!!??');
+};
 //檢查有無新版本的sql檔
 $sqls= get_files(database_path('sqls'));
 

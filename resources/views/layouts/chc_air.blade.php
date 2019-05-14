@@ -22,14 +22,19 @@ foreach($data as $k=>$v){
     $air_data[$v->SiteName]['PublishTime'] = $v->PublishTime;
 
 }
+$SiteName = $request->input('SiteName');
 
 $options = "";
-
-if(empty($_COOKIE['chc_air'])){
-    $select_site = ($request->input('SiteName'))?$request->input('SiteName'):"彰化";
-}else{
-    $select_site = ($request->input('SiteName'))?$request->input('SiteName'):$_COOKIE['chc_air'];
+if(!isset($air_data[$SiteName]) and $SiteName != null){
+    $SiteName = "彰化";
 }
+if(empty($_COOKIE['chc_air'])){
+    $select_site = "彰化";
+}else{
+    $select_site = $_COOKIE['chc_air'];
+    if($SiteName) $select_site = $SiteName;
+}
+
 
 setcookie("chc_air", $select_site, time()+3600);
 
