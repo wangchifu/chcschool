@@ -1,14 +1,17 @@
 <?php
 //檢查有無新版本的sql檔
 $sqls= get_files(database_path('sqls'));
+
 if(isset($_SERVER['HTTP_HOST'])){
+    $install_sqls = \App\Sql::where('install',1)->pluck('name')->toArray();
+
     foreach($sqls as $k=>$v){
-        $sql = \App\Sql::where('name',$v)
-            ->where('install','1')
-            ->first();
-        if(!$sql){
+        if(!in_array($v,$install_sqls)){
             $file = database_path('sqls') .'/'.$v;
             \Illuminate\Support\Facades\DB::unprepared(file_get_contents($file));
+            $att['name'] = $v;
+            $att['install'] =1;
+            \App\Sql::create($att);
         }
     }
 }

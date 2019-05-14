@@ -27,7 +27,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($insite=null)
+    public function index(Request $request,$insite=null)
     {
         $school_code = school_code();
         $files = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
@@ -79,6 +79,7 @@ class HomeController extends Controller
             'blocks'=>$blocks,
             'posts'=>$posts,
             'insite'=>$insite,
+            'request'=>$request,
         ];
         return view('index',$data);
     }
