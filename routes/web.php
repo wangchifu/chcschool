@@ -235,16 +235,19 @@ Route::group(['middleware' => 'exec'],function(){
     Route::get('departments_exec/{department}/edit', 'DepartmentController@exec_edit')->name('departments.exec_edit');
     Route::patch('departments_exec/{department}', 'DepartmentController@exec_update')->name('departments.exec_update');
 
+});
+
+//行政人員及管理者
+Route::group(['middleware' => 'admin_exec'],function(){
+
     Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
     Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
 
 });
 
+
 //管理者可用
 Route::group(['middleware' => 'admin'],function(){
-    Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
-    Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
-
     //更改密碼
     Route::get('edit_password','HomeController@edit_password')->name('edit_password');
     Route::patch('update_password','HomeController@update_password')->name('update_password');
