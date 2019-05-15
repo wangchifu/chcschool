@@ -138,7 +138,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('lunch_specials/one_day_store', 'LunchSpecialController@one_day_store')->name('lunch_specials.one_day_store');
     Route::get('lunch_specials/late_teacher', 'LunchSpecialController@late_teacher')->name('lunch_specials.late_teacher');
     Route::post('lunch_specials/late_teacher_show', 'LunchSpecialController@late_teacher_show')->name('lunch_specials.late_teacher_show');
-    Route::post('lunch_specials/late_teacher_store', 'LunchSpecialController@late_teacher_store')->name('lunch_specials.late_teacher_store');
+    Route::post('lunch_specials/late_teacher選單連結_store', 'LunchSpecialController@late_teacher_store')->name('lunch_specials.late_teacher_store');
     Route::get('lunch_specials/teacher_change_month', 'LunchSpecialController@teacher_change_month')->name('lunch_specials.teacher_change_month');
     Route::post('lunch_specials/teacher_change_month_show', 'LunchSpecialController@teacher_change_month_show')->name('lunch_specials.teacher_change_month_show');
     Route::post('lunch_specials/teacher_update_month', 'LunchSpecialController@teacher_update_month')->name('lunch_specials.teacher_update_month');
@@ -327,6 +327,11 @@ Route::group(['middleware' => 'admin'],function(){
     Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');
     Route::get('links/{link}/edit', 'LinksController@edit')->name('links.edit');
     Route::patch('links/{link}', 'LinksController@update')->name('links.update');
+
+    //樹狀目錄
+    Route::get('trees', 'TreesController@index')->name('trees.index');
+    Route::post('trees', 'TreesController@store')->name('trees.store');
+    Route::get('trees/{tree}/delete', 'TreesController@delete')->name('trees.delete');
 
     //置頂公告
     Route::get('posts/{post}/top_up', 'PostsController@top_up')->name('posts.top_up');

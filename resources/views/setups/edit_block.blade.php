@@ -32,7 +32,7 @@
         </tr>
         <tr>
             <td colspan="3">
-                @if($block->id != 1)
+                @if(!strpos($block->title,'系統區塊'))
                 <div class="form-group">
                     <label for="content">4.內文*</label>
                     {{ Form::textarea('content',$block->content,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}

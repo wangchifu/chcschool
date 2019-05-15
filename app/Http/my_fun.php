@@ -268,3 +268,25 @@ function num2str($num){
     $string = preg_replace('/0+/', '零', $string);
     return $string;
 }
+
+//輸出樹狀目錄
+function get_tree($trees,$i){
+    foreach($trees as $tree){
+        if($tree->type==1){
+            for($k=0;$k<$i;$k++){
+                echo "　";
+            }
+            echo "<i class=\"fas fa-folder-open text-warning\"></i>".$tree->name." <a href=\"".route('trees.delete',$tree->id)."\" onclick=\"return confirm('連同底下連結一起刪喔！？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
+            $links = \App\Tree::where('folder_id',$tree->id)->get();
+            if($links->count() > 0){
+                get_tree($links,$i+1);
+            }
+        }elseif($tree->type==2){
+            for($k=0;$k<$i;$k++){
+                echo "　";
+            }
+            echo "<i class=\"fas fa-file\"></i> <a href=\"".$tree->url."\" target=\"_blank\">".$tree->name."</a> <a href=\"".route('trees.delete',$tree->id)."\" onclick=\"return confirm('確定刪除嗎？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
+        }
+
+    }
+}

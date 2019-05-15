@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Block;
 use App\Post;
 use App\SetupCol;
+use App\Tree;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;

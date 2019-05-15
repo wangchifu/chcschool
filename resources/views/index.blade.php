@@ -42,6 +42,8 @@
                             @include('layouts.news')
                         @elseif($block->title == "彰化空汙旗(系統區塊)")
                             @include('layouts.chc_air')
+                        @elseif($block->title == "樹狀目錄(系統區塊)")
+                            @include('layouts.dtree')
                         @else
                             {!! $block->content !!}
                         @endif
