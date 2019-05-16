@@ -36,7 +36,7 @@ if(empty($_COOKIE['chc_air'])){
 }
 
 
-setcookie("chc_air", $select_site, time()+3600);
+setcookie("chc_air", $select_site, time()+31556926);
 
 
 foreach($select_data as $k=>$v){
