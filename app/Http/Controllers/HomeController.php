@@ -144,24 +144,24 @@ class HomeController extends Controller
 
         session(['chaptcha' => $key]);
 
-        //$cht = array(0=>"零",1=>"壹",2=>"貳",3=>"參",4=>"肆",5=>"伍",6=>"陸",7=>"柒",8=>"捌",9=>"玖");
-        $cht = array(0=>"0",1=>"1",2=>"2",3=>"3",4=>"4",5=>"5",6=>"6",7=>"7",8=>"8",9=>"9");
+        $cht = array(0=>"零",1=>"壹",2=>"貳",3=>"參",4=>"肆",5=>"伍",6=>"陸",7=>"柒",8=>"捌",9=>"玖");
+        //$cht = array(0=>"0",1=>"1",2=>"2",3=>"3",4=>"4",5=>"5",6=>"6",7=>"7",8=>"8",9=>"9");
         $cht_key = "";
         for($i=0;$i<5;$i++) $cht_key.=$cht[substr($key,$i,1)];
 
         header("Content-type: image/gif");
-        //$im = imagecreatefromgif(asset('images/captcha_bk'.$back.'.gif')) or die("無法建立GD圖片");
+        $images = asset('images/captcha_bk'.$back.'.gif');
 
         $context = stream_context_create(["ssl" => [
             "verify_peer"      => false,
             "verify_peer_name" => false]
         ]);
 
-        $fileContent = file_get_contents(asset('images/back.gif'), false, $context);
+        $fileContent = file_get_contents($images, false, $context);
         $im = imagecreatefromstring($fileContent);
-        $text_color = imagecolorallocate($im, "255", "0", "0");
+        $text_color = imagecolorallocate($im, $r, $g, $b);
 
-        imagettftext($im, 28, 0 , 4, 34, $text_color,public_path('font/parkway_lush.ttf'),$cht_key);
+        imagettftext($im, 50, 0 , 50, 50, $text_color,public_path('font/wt071.ttf'),$cht_key);
         imagegif($im);
         imagedestroy($im);
     }
