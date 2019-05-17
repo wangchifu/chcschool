@@ -36,8 +36,7 @@
                     <i class="fa fa-folder text-warning"></i> <a href="{{ route('inside_files.index',$p) }}">{{$v}}</a>/
                 @endif
             @endforeach
-
-
+            <hr>
             <div class="container-fluid">
                 <div class="row">
                     @foreach($folders as $folder)
