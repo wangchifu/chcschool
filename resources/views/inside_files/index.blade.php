@@ -44,7 +44,7 @@
                         $folder_p = $path.'&'.$folder->id;
                         ?>
                         <?php $n = \App\InsideFile::where('folder_id',$folder->id)->count();?>
-                        <div class="col-1">
+                        <div class="col-lg-1 col-md2 col-sm-3 col-4">
                             <a href="{{ route('inside_files.index',$folder_p) }}">
                                 <img src="{{ asset('images/folder.svg') }}">
                                 <small>{{ $folder->name }}({{ $n }})</small>
@@ -60,7 +60,7 @@
                         <?php
                         $file_p = $path.'&'.$file->id;
                         ?>
-                        <div class="col-1">
+                        <div class="col-lg-1 col-md2 col-sm-3 col-4">
                             <a href="{{ route('inside_files.download',$file_p) }}">
                                 <img src="{{ asset('images/file.svg') }}">
                                 <small>{{ $file->name }}</small>
