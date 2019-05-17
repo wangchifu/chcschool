@@ -8,6 +8,7 @@ return [
         'links'=>'選單連結',
         'schools'=>'校務行政',
         'calendars'=>'校務行事曆',
+        'inside_files'=>'內部文件',
         'meetings'=>'會議文稿',
         'fixes'=>'報修系統',
         'lunches'=>'午餐系統',

@@ -87,6 +87,11 @@
                                         <i class="fas fa-calendar"></i> 校務行事曆
                                     </a>
                                 @endif
+                                @if(isset($module_setup['內部文件']))
+                                    <a class="dropdown-item" href="{{ route('inside_files.index') }}">
+                                        <i class="fab fa-linkedin-in"></i> 內部文件
+                                    </a>
+                                @endif
                                 @if(isset($module_setup['會議文稿']))
                                     <a class="dropdown-item" href="{{ route('meetings.index') }}">
                                         <i class="fas fa-comments"></i> 會議文稿

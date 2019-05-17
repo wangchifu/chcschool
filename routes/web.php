@@ -182,6 +182,12 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('teacher_absents/travel/{teacher_absent_outlay}/edit_outlay', 'TeacherAbsentController@edit_outlay')->name('teacher_absents.edit_outlay');
     Route::post('teacher_absents/travel/{teacher_absent_outlay}/update_outlay', 'TeacherAbsentController@update_outlay')->name('teacher_absents.update_outlay');
     Route::post('teacher_absents/travel/travel_print', 'TeacherAbsentController@travel_print')->name('teacher_absents.travel_print');
+
+//內部文件
+    Route::get('inside_files/{path?}' , 'InsideFilesController@index')->name('inside_files.index');
+    Route::get('inside_files_download/{path}' , 'InsideFilesController@download')->name('inside_files.download');
+
+
 });
 
 //行政人員可用
@@ -202,6 +208,13 @@ Route::group(['middleware' => 'exec'],function(){
     Route::get('open_files_delete/{path}' , 'OpenFileController@delete')->name('open_files.delete');
     Route::post('open_files_create_folder' , 'OpenFileController@create_folder')->name('open_files.create_folder');
     Route::post('open_files_upload_file' , 'OpenFileController@upload_file')->name('open_files.upload_file');
+
+    //內部文件
+    Route::get('inside_files_create' , 'InsideFilesController@create')->name('inside_files.create');
+    Route::get('inside_files_delete/{path}' , 'InsideFilesController@delete')->name('inside_files.delete');
+    Route::post('inside_files_create_folder' , 'InsideFilesController@create_folder')->name('inside_files.create_folder');
+    Route::post('inside_files_upload_file' , 'InsideFilesController@upload_file')->name('inside_files.upload_file');
+
 
     //報修回復
     Route::patch('fixes/{fix}', 'FixController@update')->name('fixes.update');
