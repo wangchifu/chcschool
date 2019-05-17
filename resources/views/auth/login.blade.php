@@ -52,7 +52,7 @@
                         <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>
 
                         <div class="col-md-6">
-                            <input type="text" tabindex="3" class="form-control" name="chaptcha" required placeholder="上圖數字" maxlength="5">
+                            <input type="text" tabindex="3" class="form-control" name="chaptcha" required placeholder="上圖國字轉阿拉伯數字" maxlength="5">
                         </div>
                     </div>
 
