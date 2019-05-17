@@ -36,7 +36,7 @@ Route::get('insite/{honor}','HomeController@index')->name('honor');
 Route::post('not_bot','HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('admin_login');
 //Route::post('login', 'Auth\LoginController@login');
 Route::post('login', 'Auth\MLoginController@auth')->name('auth');
 
@@ -54,7 +54,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 //Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 //gsuite登入
-Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('glogin');
+Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('login');
 Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
 
 Route::get('pic', 'HomeController@pic')->name('pic');

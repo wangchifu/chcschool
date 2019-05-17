@@ -45,7 +45,7 @@
                         <div class="col-md-4 text-md-left">
                         </div>
                         <div class="col-md-6 text-md-left">
-                            <a href="{{ route('login') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>
+                            <a href="{{ route('admin_login') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>
                         </div>
                     </div>
                     <div class="form-group row">
