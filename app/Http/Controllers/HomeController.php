@@ -45,7 +45,6 @@ class HomeController extends Controller
         }
 
         $setup = \App\Setup::find(1);
-
         $setup_cols = SetupCol::orderBy('order_by')->get();
         foreach($setup_cols as $setup_col){
             $bs = Block::where('setup_col_id',$setup_col->id)
@@ -54,6 +53,14 @@ class HomeController extends Controller
 
             $blocks[$setup_col->id] = $bs;
 
+            //跑馬燈css設定
+            if($setup_col->title == "榮譽榜") {
+                $marquee_css = $bs[0]->content;
+            }
+        }
+        //跑馬燈css預設設定
+        if(empty($marquee_css)) {
+            $marquee_css = "direction='left' height='30' scrollamount='5' align='midden'";
         }
         if($insite=="insite"){
             $posts = Post::where('insite','1')
@@ -71,6 +78,19 @@ class HomeController extends Controller
                 ->orderBy('created_at','DESC')
                 ->paginate(10);
         }
+        //榮譽榜資料庫資料
+        $honors = Post::where('insite','2')
+            ->orderBy('top','DESC')
+            ->orderBy('created_at','DESC')
+            ->paginate(10);
+        //跑馬燈取得榮譽榜資料庫資料
+        $marquee = "";
+        foreach($honors as $honor) {
+            $href = "../posts/".$honor->id;
+            $marquee .= "<a href=".$href.">"
+                .$honor->title."   ".
+                "</a>";
+        }
 
         $data = [
             'school_code'=>$school_code,
@@ -81,6 +101,8 @@ class HomeController extends Controller
             'posts'=>$posts,
             'insite'=>$insite,
             'request'=>$request,
+            'marquee' =>$marquee,
+            'marquee_css'=>$marquee_css,
         ];
         return view('index',$data);
     }

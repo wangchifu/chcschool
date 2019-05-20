@@ -1,0 +1,1 @@
+INSERT INTO `blocks` (`title`, `content`, `order_by`, `setup_col_id`, `created_at`, `updated_at`) VALUES ('榮譽榜','direction="left" height="30" scrollamount="5" align="midden" ',1,3,'2019-05-20 11:00:00','2019-05-20 11:00:00');

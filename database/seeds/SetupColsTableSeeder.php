@@ -23,5 +23,10 @@ class SetupColsTableSeeder extends Seeder
             'num'=>'10',
             'order_by'=>'2',
         ]);
+        \App\SetupCol::create([
+            'title'=>'榮譽榜',
+            'num'=>'12',
+            'order_by'=>'1',
+        ]);
     }
 }
