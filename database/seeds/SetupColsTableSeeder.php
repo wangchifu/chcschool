@@ -14,11 +14,6 @@ class SetupColsTableSeeder extends Seeder
         \App\SetupCol::truncate();  //清空資料庫
 
         \App\SetupCol::create([
-            'title'=>'榮譽榜',
-            'num'=>'12',
-            'order_by'=>'1',
-        ]);
-        \App\SetupCol::create([
             'title'=>'左欄',
             'num'=>'2',
             'order_by'=>'2',
@@ -27,6 +22,11 @@ class SetupColsTableSeeder extends Seeder
             'title'=>'主要',
             'num'=>'10',
             'order_by'=>'3',
+        ]);
+        \App\SetupCol::create([
+            'title'=>'榮譽榜',
+            'num'=>'12',
+            'order_by'=>'1',
         ]);
 
     }
