@@ -276,8 +276,11 @@ function get_tree($trees,$i){
             for($k=0;$k<$i;$k++){
                 echo "　";
             }
-            echo "<i class=\"fas fa-folder-open text-warning\"></i>".$tree->name." <a href=\"".route('trees.delete',$tree->id)."\" onclick=\"return confirm('連同底下連結一起刪喔！？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
-            $links = \App\Tree::where('folder_id',$tree->id)->get();
+            echo "<i class=\"fas fa-folder-open text-warning\"></i>".$tree->name." <a href=\"javascript:open_window('".route('trees.edit',$tree->id)."','新視窗')\"><i class='fas fa-edit'></i></a> <a href=\"".route('trees.delete',$tree->id)."\" onclick=\"return confirm('連同底下連結一起刪喔！？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
+            $links = \App\Tree::where('folder_id',$tree->id)
+                ->orderBy('type')
+                ->orderBy('name')
+                ->get();
             if($links->count() > 0){
                 get_tree($links,$i+1);
             }
@@ -285,7 +288,7 @@ function get_tree($trees,$i){
             for($k=0;$k<$i;$k++){
                 echo "　";
             }
-            echo "<i class=\"fas fa-file\"></i> <a href=\"".$tree->url."\" target=\"_blank\">".$tree->name."</a> <a href=\"".route('trees.delete',$tree->id)."\" onclick=\"return confirm('確定刪除嗎？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
+            echo "<i class=\"fas fa-file\"></i> <a href=\"".$tree->url."\" target=\"_blank\">".$tree->name."</a> <a href=\"javascript:open_window('".route('trees.edit',$tree->id)."','新視窗')\"><i class='fas fa-edit'></i></a> <a href=\"".route('trees.delete',$tree->id)."\" onclick=\"return confirm('確定刪除嗎？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
         }
 
     }

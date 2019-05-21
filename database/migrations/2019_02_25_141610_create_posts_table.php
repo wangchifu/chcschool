@@ -21,7 +21,7 @@ class CreatePostsTable extends Migration
             $table->string('job_title');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('views');
-            $table->tinyInteger('insite')->nullable();//校內？
+            $table->tinyInteger('insite')->nullable();//校內？1內部文件 2榮榜
             $table->tinyInteger('top')->nullable();//置頂
             $table->timestamps();
         });

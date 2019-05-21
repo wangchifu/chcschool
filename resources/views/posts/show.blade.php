@@ -12,7 +12,7 @@
 
             <!-- Title -->
             <?php
-            if($post->insite){
+            if($post->insite==1){
                 if(auth()->check()){
                     $can_see = 1;
                 }else{
@@ -49,7 +49,7 @@
 
             <br><br>
             <p class="lead">
-            @if($post->insite)
+            @if($post->insite==1)
                 <p class="badge badge-danger">內部公告</p>
             @endif
                 張貼者

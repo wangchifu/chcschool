@@ -1,7 +1,7 @@
 <link rel="StyleSheet" href="{{ asset('dtree/dtree.css') }}" type="text/css" />
 <script type="text/javascript" src="{{ asset('dtree/dtree.js') }}"></script>
 <?php
-$trees = \App\Tree::all();
+$trees = \App\Tree::orderBy('type')->orderBy('name')->get();
 ?>
 <div class="dtree">
 

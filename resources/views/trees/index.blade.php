@@ -60,6 +60,11 @@
         </div>
     </div>
     <script>
+        function open_window(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=300');
+        }
+
         var validator = $("#this_form1").validate();
     </script>
 @endsection
