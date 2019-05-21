@@ -30,6 +30,8 @@ class HomeController extends Controller
      */
     public function index(Request $request,$insite=null)
     {
+        if(is_null($insite)) $insite="index";
+
         $school_code = school_code();
         $files = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
         if($files) {
