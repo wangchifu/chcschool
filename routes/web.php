@@ -33,7 +33,7 @@ if(isset($_SERVER['HTTP_HOST'])){
 Route::get('/',function(){
     return redirect()->route('index','index');
 });
-Route::get('page/{insite}','HomeController@index')->name('index');
+Route::get('page/{insite?}','HomeController@index')->name('index');
 Route::post('not_bot','HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
