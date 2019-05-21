@@ -54,7 +54,7 @@ class HomeController extends Controller
             $blocks[$setup_col->id] = $bs;
 
             //跑馬燈css設定
-            if($setup_col->title == "榮譽榜") {
+            if($setup_col->title == "榮譽榜跑馬燈") {
                 $marquee_css = $bs[0]->content;
             }
         }
@@ -91,7 +91,6 @@ class HomeController extends Controller
                 .$honor->title."   ".
                 "</a>";
         }
-
         $data = [
             'school_code'=>$school_code,
             'photos'=>$photos,

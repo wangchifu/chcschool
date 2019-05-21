@@ -44,8 +44,8 @@
                             @include('layouts.chc_air')
                         @elseif($block->title == "樹狀目錄(系統區塊)")
                             @include('layouts.dtree')
-                        @elseif($block->title == "榮譽榜")
-                            @include('layouts.honor')
+                        @elseif($block->title == "榮譽榜跑馬燈")
+                            @include('layouts.marquee')
                         @else
                             {!! $block->content !!}
                         @endif

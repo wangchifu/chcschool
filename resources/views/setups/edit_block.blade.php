@@ -32,7 +32,22 @@
         </tr>
         <tr>
             <td colspan="3">
-                @if(!strpos($block->title,'系統區塊'))
+                @if(strpos($block->title,"跑馬燈"))
+                    <div class="form-group">
+                        <label for="content">4.跑馬燈設定*</label>
+                        {{ Form::textarea('content',$block->content,['id'=>'marquee-editor','class'=>'form-control','required'=>'required']) }}
+                    </div>
+                    <div class="form-group">
+                        <div class="alert alert-light" role="alert">
+                            方向設定：direction="參數值"；可設定 up（向上）、dun（向下）、left（向左）、right（向右）<br>
+                            速度設定：scrollamount="參數值" ；可設定為數字，通常設定 1~10 的範圍，數字越大跑得越快<br>
+                            長度設定：height="參數值"；數字，自行設定<br>
+                            寬度設定：width="參數值"；數字，自行設定<br>
+                            行為設定：behavior="參數值"；可設定 alternate（來回跑）、slide（跑入後停止）<br>
+                            背景顏色：bgcolor="參數值"；可設定為顏色的色碼，不設定則沒有顏色<br>
+                        </div>
+                    </div>
+                @elseif(!strpos($block->title,'系統區塊'))
                 <div class="form-group">
                     <label for="content">4.內文*</label>
                     {{ Form::textarea('content',$block->content,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
@@ -57,7 +72,9 @@
         </button>
     </div>
     {{ Form::close() }}
-    @if(!strpos($block->title,'系統區塊'))
+    @if(strpos($block->title,"跑馬燈"))
+        
+    @elseif(!strpos($block->title,'系統區塊'))
     <div class="text-right">
         <form action="{{ route('setups.delete_block',$block->id) }}" method="post">
             @csrf
