@@ -72,7 +72,7 @@ class HomeController extends Controller
                 ->orderBy('top','DESC')
                 ->orderBy('created_at','DESC')
                 ->paginate(10);
-        }elseif($insite==null){
+        }elseif($insite=="index"){
             $posts = Post::where('insite',null)
                 ->orderBy('top','DESC')
                 ->orderBy('created_at','DESC')

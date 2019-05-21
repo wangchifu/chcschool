@@ -76,6 +76,6 @@
         </div>
     </footer>
     <div class="footer-copyright text-center text-black-50 py-3" style="background-color: #CCCCCC">
-        2019 Copyright ©　<a href="{{ route('index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }}
+        2019 Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }}
     </div>
 @endsection

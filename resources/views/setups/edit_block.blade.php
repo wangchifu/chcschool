@@ -22,7 +22,7 @@
             <td>
                 <div class="form-group">
                     <label for="site_name">3.名稱</label>
-                    @if($block->id == 1)
+                    @if(strpos($block->title,'系統區塊') or strpos($block->title,'跑馬燈'))
                         {{ Form::text('title',$block->title,['class' => 'form-control','readonly'=>'readonly']) }}
                     @else
                         {{ Form::text('title',$block->title,['class' => 'form-control','required'=>'required']) }}

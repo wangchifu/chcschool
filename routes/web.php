@@ -30,9 +30,10 @@ if(isset($_SERVER['HTTP_HOST'])){
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/','HomeController@index')->name('index');
-Route::get('insite/{insite}','HomeController@index')->name('insite');
-Route::get('insite/{honor}','HomeController@index')->name('honor');
+Route::get('/',function(){
+    return redirect()->route('index','index');
+});
+Route::get('page/{insite}','HomeController@index')->name('index');
 Route::post('not_bot','HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
