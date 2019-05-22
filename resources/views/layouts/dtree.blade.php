@@ -12,7 +12,7 @@ $trees = \App\Tree::orderBy('type')->orderBy('name')->get();
 
         d = new dTree('d');
         d.config.useSelection = false;
-        d.add(0,-1,'樹狀目錄');
+        d.add(0,-1,'連結收集');
         <?php $i=1; ?>
         @foreach($trees as $tree)
             d.add({{ $tree->id }},{{ $tree->folder_id }},'{{ $tree->name }}','{{ $tree->url }}');
