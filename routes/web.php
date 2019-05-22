@@ -331,10 +331,10 @@ Route::group(['middleware' => 'admin'],function(){
     //內容管理
     Route::get('contents', 'ContentsController@index')->name('contents.index');
     Route::get('contents/create', 'ContentsController@create')->name('contents.create');
-    Route::post('contents', 'ContentsController@store')->name('contents.store');
+    Route::post('contents/store', 'ContentsController@store')->name('contents.store');
     Route::delete('contents/{content}', 'ContentsController@destroy')->name('contents.destroy');
     Route::get('contents/{content}/edit', 'ContentsController@edit')->name('contents.edit');
-    Route::patch('contents/{content}', 'ContentsController@update')->name('contents.update');
+    Route::patch('contents/{content}/update', 'ContentsController@update')->name('contents.update');
 
     //類別管理
     Route::post('types', 'LinksController@store_type')->name('links.store_type');
@@ -352,7 +352,7 @@ Route::group(['middleware' => 'admin'],function(){
     //樹狀目錄
     Route::get('trees', 'TreesController@index')->name('trees.index');
     Route::post('trees/store', 'TreesController@store')->name('trees.store');
-    Route::get('trees/{tree}/', 'TreesController@edit')->name('trees.edit');
+    Route::get('trees/{tree}/edit', 'TreesController@edit')->name('trees.edit');
     Route::patch('trees/{tree}/update', 'TreesController@update')->name('trees.update');
     Route::get('trees/{tree}/delete', 'TreesController@delete')->name('trees.delete');
 
