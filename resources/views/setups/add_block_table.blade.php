@@ -35,7 +35,7 @@
             </td>
         </tr>
     </table>
-    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('mycke/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.replace('my-editor'
             ,{
