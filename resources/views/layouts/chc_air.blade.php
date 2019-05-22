@@ -74,7 +74,7 @@ if($air_data[$select_site]['AQI'] >= 201){
 <script>
     $('#SiteName').change(
         function(){
-            location="index.php?SiteName=" +$('#SiteName').val() ;
+            location="?SiteName=" +$('#SiteName').val() ;
         }
     );
 </script>

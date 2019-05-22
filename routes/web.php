@@ -351,7 +351,7 @@ Route::group(['middleware' => 'admin'],function(){
 
     //樹狀目錄
     Route::get('trees', 'TreesController@index')->name('trees.index');
-    Route::post('trees', 'TreesController@store')->name('trees.store');
+    Route::post('trees/store', 'TreesController@store')->name('trees.store');
     Route::get('trees/{tree}/', 'TreesController@edit')->name('trees.edit');
     Route::patch('trees/{tree}/update', 'TreesController@update')->name('trees.update');
     Route::get('trees/{tree}/delete', 'TreesController@delete')->name('trees.delete');
