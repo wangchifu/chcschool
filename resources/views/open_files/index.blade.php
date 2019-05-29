@@ -92,7 +92,11 @@
                     ?>
                     <tr>
                         <td>
-                            <i class="fas fa-file text-info"></i> <a href="{{ route('open_files.download',$file_p) }}">{{ $file->name }}</a></td>
+                            @if(file_exists(storage_path($f.'/'.$file->name)))
+                                <i class="fas fa-file text-info"></i> <a href="{{ route('open_files.download',$file_p) }}">{{ $file->name }}</a>
+                            @else
+                                <span class="text-danger"><i class="fas fa-file"></i> {{ $file->name }}</span>
+                            @endif
                         </td>
                         <td>
                             檔案
@@ -103,13 +107,21 @@
                             @endauth
                         </td>
                         <td>
-                            {{ filesizekb(storage_path($f.'/'.$file->name)) }} KB
+                            @if(file_exists(storage_path($f.'/'.$file->name)))
+                                {{ filesizekb(storage_path($f.'/'.$file->name)) }} KB
+                            @else
+                                <small class="text-danger">已遺失</small>
+                            @endif
                         </td>
                         <td>
                             {{ $file->user->name }}
                         </td>
                         <td>
-                            {{ date ("Y-m-d H:i:s",filemtime(storage_path($f.'/'.$file->name))) }}
+                            @if(file_exists(storage_path($f.'/'.$file->name)))
+                                {{ date ("Y-m-d H:i:s",filemtime(storage_path($f.'/'.$file->name))) }}
+                            @else
+                                <small class="text-danger">已遺失</small>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

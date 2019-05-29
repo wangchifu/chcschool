@@ -61,10 +61,15 @@
                         $file_p = $path.'&'.$file->id;
                         ?>
                         <div class="col-lg-1 col-md2 col-sm-3 col-4">
-                            <a href="{{ route('inside_files.download',$file_p) }}">
+                            @if(file_exists(storage_path($f.'/'.$file->name)))
+                                <a href="{{ route('inside_files.download',$file_p) }}">
+                                    <img src="{{ asset('images/file.svg') }}">
+                                    <small>{{ $file->name }}</small>
+                                </a>
+                            @else
                                 <img src="{{ asset('images/file.svg') }}">
-                                <small>{{ $file->name }}</small>
-                            </a>
+                                <small class="text-danger">{{ $file->name }} (已遺失)</small>
+                            @endif
                             @if($file->user_id == auth()->user()->id or auth()->user()->admin==1)
                                 <a href="{{ route('inside_files.delete',$file_p) }}" id="delete_file{{ $file->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
                             @endif
