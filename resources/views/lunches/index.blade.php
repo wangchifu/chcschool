@@ -38,7 +38,7 @@
                         </div>
                         @endif
                         <hr>
-                        <form action="{{ route('lunches.store') }}" method="post" id="store_form">
+                        <form action="{{ route('lunches.store') }}" method="post" id="store_form" onsubmit="return submitOnce(this);">
                             @csrf
                             <div class="card">
                                 <div class="card-header">
@@ -144,7 +144,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？確定後將只能退餐，不能再更改廠商、取餐地點及葷素喔！！')"><i class="fas fa-plus"></i>  我要訂餐</button>
+                                    <button class="btn btn-success btn-sm" onclick="if(confirm('確定嗎？確定後將只能退餐，不能再更改廠商、取餐地點及葷素喔！！')){change_button();return true;}else return false;" id="submit_button"><i class="fas fa-plus"></i>  我要訂餐</button>
                                 </div>
                             </div>
                             <input type="hidden" name="semester" value="{{ $lunch_order->semester }}">
@@ -328,6 +328,23 @@
 
 
         var validator = $("#store_form").validate();
+
+        var submitcount=0;
+        function submitOnce (form){
+            if (submitcount == 0){
+                submitcount++;
+                return true;
+            } else{
+                alert('正在操作,請不要重複提交,謝謝!');
+                return false;
+            }
+        }
+        function change_button(){
+            $("#submit_button").removeAttr('onclick');
+            $("#submit_button").attr('disabled','disabled');
+            $("#submit_button").addClass('disabled');
+            $("#store_form").submit();
+        }
 
     </script>
 @endsection

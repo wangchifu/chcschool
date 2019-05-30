@@ -15,7 +15,7 @@
                 </ol>
             </nav>
             <h1>公告系統</h1>
-            {{ Form::open(['route' => 'posts.store', 'method' => 'POST', 'files' => true,'id'=>'this_form']) }}
+            {{ Form::open(['route' => 'posts.store', 'method' => 'POST', 'files' => true,'id'=>'this_form','onsubmit'=>"return submitOnce(this)"]) }}
             <div class="card my-4">
                 <h3 class="card-header">公告資料</h3>
                 <div class="card-body">
@@ -55,7 +55,7 @@
                     </div>
                     <div class="form-group">
                         <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
-                        <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
+                        <button type="submit" id="submit_button" class="btn btn-primary btn-sm" onclick="if(confirm('您確定送出嗎?')){change_button();return true;}else return false">
                             <i class="fas fa-save"></i> 儲存設定
                         </button>
                     </div>
@@ -67,5 +67,22 @@
     </div>
     <script>
         var validator = $("#this_form").validate();
+
+        var submitcount=0;
+        function submitOnce (form){
+            if (submitcount == 0){
+                submitcount++;
+                return true;
+            } else{
+                alert('正在操作,請不要重複提交,謝謝!');
+                return false;
+            }
+        }
+        function change_button(){
+            $("#submit_button").removeAttr('onclick');
+            $("#submit_button").attr('disabled','disabled');
+            $("#submit_button").addClass('disabled');
+            $("#this_form").submit();
+        }
     </script>
 @endsection
