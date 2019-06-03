@@ -133,7 +133,7 @@
                     <h3 class="card-header">新增</h3>
                     <div class="card-body">
                         @include('layouts.hd')
-                        {{ Form::open(['route' => 'open_files.create_folder', 'method' => 'POST','id'=>'this_form']) }}
+                        {{ Form::open(['route' => 'open_files.create_folder', 'method' => 'POST','id'=>'this_form','onsubmit'=>"return submitOnce(this)"]) }}
                         <div class="form-group">
                             <label for="name"><strong>1.子目錄</strong></label>
                             {{ Form::text('name',null,['id'=>'name','class' => 'form-control','placeholder'=>'名稱','required'=>'required']) }}
@@ -141,13 +141,13 @@
                         <div class="form-group">
                             <input type="hidden" name="folder_id" value="{{ $folder_id }}">
                             <input type="hidden" name="path" value="{{ $path }}">
-                            <button class="btn btn-success btn-sm" onclick="return confirm('確定新增子目錄')"><i class="fas fa-plus"></i> 新增子目錄</button>
+                            <button class="btn btn-success btn-sm" id="submit_button" onclick="if(confirm('您確定新增子目錄嗎?')){change_button1();return true;}else return false"><i class="fas fa-plus"></i> 新增子目錄</button>
                         </div>
                         {{ Form::close() }}
                         <hr>
                         @include('layouts.errors')
                         @if($per < 100)
-                            {{ Form::open(['route' => 'open_files.upload_file', 'method' => 'POST','id'=>'this_form2','files' => true]) }}
+                            {{ Form::open(['route' => 'open_files.upload_file', 'method' => 'POST','id'=>'this_form2','files' => true,'onsubmit'=>"return submitOnce(this)"]) }}
                             <div class="form-group">
                                 <label for="file"><strong>2.檔案( 不大於5MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )</strong><small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small></label>
                                 {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple','required'=>'required']) }}
@@ -155,7 +155,7 @@
                             <div class="form-group">
                                 <input type="hidden" name="folder_id" value="{{ $folder_id }}">
                                 <input type="hidden" name="path" value="{{ $path }}">
-                                <button class="btn btn-success btn-sm" onclick="return confirm('確定新增檔案')"><i class="fas fa-plus"></i> 新增檔案</button>
+                                <button class="btn btn-success btn-sm" id="submit_button2" onclick="if(confirm('您確定新增檔案嗎?')){change_button2();return true;}else return false"><i class="fas fa-plus"></i> 新增檔案</button>
                             </div>
                             {{ Form::close() }}
                         @endif
@@ -167,5 +167,28 @@
     <script>
         var validator = $("#this_form").validate();
         var validator2 = $("#this_form2").validate();
+
+        var submitcount=0;
+        function submitOnce (form){
+            if (submitcount == 0){
+                submitcount++;
+                return true;
+            } else{
+                alert('正在操作,請不要重複提交,謝謝!');
+                return false;
+            }
+        }
+        function change_button1(){
+            $("#submit_button").removeAttr('onclick');
+            $("#submit_button").attr('disabled','disabled');
+            $("#submit_button").addClass('disabled');
+            $("#this_form").submit();
+        }
+        function change_button2(){
+            $("#submit_button2").removeAttr('onclick');
+            $("#submit_button2").attr('disabled','disabled');
+            $("#submit_button2").addClass('disabled');
+            $("#this_form2").submit();
+        }
     </script>
 @endsection
