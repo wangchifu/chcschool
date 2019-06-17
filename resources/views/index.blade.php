@@ -37,7 +37,7 @@
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
                     @foreach($blocks[$setup_col->id] as $block)
-                    <div class="shadow p-3 mb-5 bg-white rounded">
+                    <div class="shadow bg-white rounded" style="margin-bottom: 10px;padding: 10px">
                         @if($block->title == "最新公告(系統區塊)")
                             @include('layouts.news')
                         @elseif($block->title == "彰化空汙旗(系統區塊)")
