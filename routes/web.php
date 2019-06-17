@@ -196,9 +196,7 @@ Route::group(['middleware' => 'exec'],function(){
 
     Route::get('posts/create' , 'PostsController@create')->name('posts.create');
     Route::post('posts' , 'PostsController@store')->name('posts.store');
-    Route::get('posts/{post}/edit' , 'PostsController@edit')->name('posts.edit');
-    Route::patch('posts/{post}' , 'PostsController@update')->name('posts.update');
-    Route::delete('posts/{post}', 'PostsController@destroy')->name('posts.destroy');
+
     //刪標題圖片
     Route::get('posts/{post}/delete_title_image' , 'PostsController@delete_title_image')->name('posts.delete_title_image');
     //刪檔案
@@ -206,13 +204,13 @@ Route::group(['middleware' => 'exec'],function(){
 
     //公開文件
     Route::get('open_files_create' , 'OpenFileController@create')->name('open_files.create');
-    Route::get('open_files_delete/{path}' , 'OpenFileController@delete')->name('open_files.delete');
+
     Route::post('open_files_create_folder' , 'OpenFileController@create_folder')->name('open_files.create_folder');
     Route::post('open_files_upload_file' , 'OpenFileController@upload_file')->name('open_files.upload_file');
 
     //內部文件
     Route::get('inside_files_create' , 'InsideFilesController@create')->name('inside_files.create');
-    Route::get('inside_files_delete/{path}' , 'InsideFilesController@delete')->name('inside_files.delete');
+
     Route::post('inside_files_create_folder' , 'InsideFilesController@create_folder')->name('inside_files.create_folder');
     Route::post('inside_files_upload_file' , 'InsideFilesController@upload_file')->name('inside_files.upload_file');
 
@@ -253,9 +251,19 @@ Route::group(['middleware' => 'exec'],function(){
 
 //行政人員及管理者
 Route::group(['middleware' => 'admin_exec'],function(){
+    Route::get('posts/{post}/edit' , 'PostsController@edit')->name('posts.edit');
+    Route::patch('posts/{post}' , 'PostsController@update')->name('posts.update');
+    Route::delete('posts/{post}', 'PostsController@destroy')->name('posts.destroy');
+
+    Route::get('open_files_delete/{path}' , 'OpenFileController@delete')->name('open_files.delete');
+
+    Route::get('inside_files_delete/{path}' , 'InsideFilesController@delete')->name('inside_files.delete');
+
 
     Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
     Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
+
+
 
 });
 

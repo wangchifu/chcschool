@@ -25,11 +25,8 @@
                         {{ Form::text('job_title',auth()->user()->title,['id'=>'title','class' => 'form-control', 'readonly' => 'readonly']) }}
                     </div>
                     <div class="form-group">
-                        <label for="insite">2.內部公告?</label>
-                        <div class="form-check">
-                            {{ Form::checkbox('insite', '1',null,['id'=>'insite','class'=>'form-check-input']) }}
-                            <label class="form-check-label" for="insite"><span class="btn btn-info btn-sm">設定</span></label>
-                        </div>
+                        <label for="insite">2.公告類別</label>
+                        {{ Form::select('insite', $types,$post->insite, ['id' => 'insite', 'class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
                         <label for="content">3.標題圖片</label>

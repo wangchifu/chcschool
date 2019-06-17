@@ -154,9 +154,17 @@ class PostsController extends Controller
             }
         }
 
+        if($att['insite']==null){
+            return redirect()->route('posts.index');
+        }
+        if($att['insite']==1){
+            return redirect()->route('posts.insite');
+        }
+        if($att['insite']==2){
+            return redirect()->route('posts.honor');
+        }
 
 
-        return redirect()->route('posts.index');
     }
 
     /**
@@ -215,7 +223,7 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        if(auth()->user()->id != $post->user_id){
+        if(auth()->user()->id != $post->user_id and auth()->user()->admin !=1){
             return back();
         }
 
@@ -302,8 +310,15 @@ class PostsController extends Controller
         }
 
 
-
-        return redirect()->route('posts.show',$post->id);
+        if($att['insite']==null){
+            return redirect()->route('posts.index');
+        }
+        if($att['insite']==1){
+            return redirect()->route('posts.insite');
+        }
+        if($att['insite']==2){
+            return redirect()->route('posts.honor');
+        }
     }
 
     /**
@@ -314,7 +329,7 @@ class PostsController extends Controller
      */
     public function destroy(Post $post)
     {
-        if(auth()->user()->id != $post->user_id){
+        if(auth()->user()->id != $post->user_id and auth()->user()->admin !=1){
             return back();
         }
         $school_code = school_code();

@@ -271,17 +271,18 @@ class SetupController extends Controller
 
     public function update_module(Request $request)
     {
+        $modules = Module::orderBy('id')->get();
+        foreach($modules as $m){
+            $m->delete();
+        }
+
+
         $module = $request->input('module');
+
         foreach($module as $k=>$v){
-            $m = Module::where('name',$k)->first();
-            if($m){
-                $att['active'] = $v;
-                $m->update($att);
-            }else{
-                $att['name'] = $k;
-                $att['active'] = $v;
-                Module::create($att);
-            }
+            $att['name'] = $k;
+            $att['active'] = $v;
+            Module::create($att);
         }
         return redirect()->route('setups.module');
     }

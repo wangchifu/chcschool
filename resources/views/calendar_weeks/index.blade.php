@@ -39,6 +39,9 @@
                             <th>
                                 已設定之學期
                             </th>
+                            <th>
+                                動作
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -46,6 +49,13 @@
                             <tr>
                                 <td>
                                     {{ $v }}
+                                </td>
+                                <td>
+                                    @auth
+                                        @if(auth()->user()->admin==1)
+                                            <a href="{{ route('calendar_weeks.destroy',$v) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定嗎？')">刪除</a>
+                                        @endif
+                                    @endauth
                                 </td>
                             </tr>
                         @endforeach
