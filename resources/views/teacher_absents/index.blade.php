@@ -19,7 +19,9 @@
             <h1>教師差假</h1>
             @include('teacher_absents.nav')
             <br>
-            <a href="{{ route('teacher_absents.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增假單</a>
+            @if(auth()->user()->username != "admin")
+                <a href="{{ route('teacher_absents.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增假單</a>
+            @endif
             {{ Form::select('select_semester',$semesters,$semester,['id'=>'select_semester']) }}
             小計：事假({{ $abs_kind_total[11] }}) 家庭照顧假({{ $abs_kind_total[12] }}) 病假({{ $abs_kind_total[21] }}) 生理假({{ $abs_kind_total[22] }}) 休假({{ $abs_kind_total[81] }})
             <table class="table table-striped">
