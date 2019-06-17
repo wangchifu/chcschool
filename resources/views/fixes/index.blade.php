@@ -5,7 +5,7 @@
 @section('title', '報修系統 | ')
 
 @section('content')
-    <?php $types=['1'=>'1.資訊設備','2'=>'2.總務設備']; ?>
+    <?php $types=['1'=>'1.設備或資訊','2'=>'2.總務']; ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>報修系統</h1>

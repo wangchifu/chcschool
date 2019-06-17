@@ -70,7 +70,11 @@ if($air_data[$select_site]['AQI'] >= 201){
 }
 ?>
 <img src="{{ asset('images/chc_air/'.$img) }}" width="100%">
-<?php echo $air_data[$select_site]['PublishTime']; ?>
+<?php
+    if(isset($air_data[$select_site]['PublishTime'])){
+        echo $air_data[$select_site]['PublishTime'];
+    }
+?>
 <script>
     $('#SiteName').change(
         function(){

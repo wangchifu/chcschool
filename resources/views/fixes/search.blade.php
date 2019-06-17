@@ -5,7 +5,7 @@
 @section('title', '分類搜尋報修 | ')
 
 @section('content')
-    <?php $situations=['1'=>'處理完畢','2'=>'處理中','3'=>'申報中'];$types=['1'=>'1.資訊設備','2'=>'2.總務設備']; ?>
+    <?php $situations=['1'=>'處理完畢','2'=>'處理中','3'=>'申報中'];$types=['1'=>'1.設備或資訊','2'=>'2.總務']; ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>{{ $situations[$situation] }}</h1>

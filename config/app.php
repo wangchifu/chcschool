@@ -226,6 +226,7 @@ return [
         //網址轉換資料庫代碼
         'localhost'=>'s074600',
         'chcschool.localhost'=>'s074999',
+        'web.chc.edu.tw'=>'s079998',
         'wwwtest.hdes.chc.edu.tw'=>'s074000',
         'www1.hdes.chc.edu.tw'=>'s074001',
         'www2.hdes.chc.edu.tw'=>'s074002',
