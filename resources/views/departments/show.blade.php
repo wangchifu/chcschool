@@ -9,12 +9,12 @@
         <div class="col-md-11">
             <h1>{{ $department->title }}</h1>
             <div class="card my-4">
-                <h3 class="card-header" style="background-image:url('{{ asset('images/0084.gif') }}');">
+                <h3 class="card-header">
                     @can('create',\App\Post::class)
                         <a href="{{ route('departments.exec_edit',$department->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 行政人員編輯</a>
                     @endcan
                 </h3>
-                <div class="card-body" style="background-image:url('{{ asset('images/0067.gif') }}');">
+                <div class="card-body">
                     {!! $department->content !!}
                 </div>
             </div>

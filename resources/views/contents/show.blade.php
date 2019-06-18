@@ -11,12 +11,12 @@
                 {{ $content->title }}
             </h1>
             <div class="card my-4">
-                <h3 class="card-header" style="background-image:url('{{ asset('images/0006.gif') }}');">
+                <h3 class="card-header">
                     @can('create',\App\Post::class)
                         <a href="{{ route('contents.exec_edit',$content->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 行政人員編輯</a>
                     @endcan
                 </h3>
-                <div class="card-body" style="background-image:url('{{ asset('images/0073.gif') }}');">
+                <div class="card-body">
                     {!! $content->content !!}
                 </div>
             </div>
