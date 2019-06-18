@@ -36,21 +36,27 @@
     <div class="row justify-content-center">
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
-                    @foreach($blocks[$setup_col->id] as $block)
-                    <div class="shadow bg-white rounded" style="margin-bottom: 10px;padding: 10px">
-                        @if($block->title == "最新公告(系統區塊)")
-                            @include('layouts.news')
-                        @elseif($block->title == "彰化空汙旗(系統區塊)")
-                            @include('layouts.chc_air')
-                        @elseif($block->title == "樹狀目錄(系統區塊)")
-                            @include('layouts.dtree')
-                        @elseif($block->title == "榮譽榜跑馬燈")
-                            @include('layouts.marquee')
-                        @else
-                            {!! $block->content !!}
-                        @endif
+                @foreach($blocks[$setup_col->id] as $block)
+                    <div class="shadow rounded" style="margin-bottom: 10px">
+                        <div class="bg-secondary text-white p-1 rounded-top h6" style="margin: 0px;">
+                            {{ str_replace_last('(系統區塊)','',$block->title) }}
+                        </div>
+                        <div class="bg-white" style="padding: 10px">
+
+                            @if($block->title == "最新公告(系統區塊)")
+                                @include('layouts.news')
+                            @elseif($block->title == "彰化空汙旗(系統區塊)")
+                                @include('layouts.chc_air')
+                            @elseif($block->title == "樹狀目錄(系統區塊)")
+                                @include('layouts.dtree')
+                            @elseif($block->title == "榮譽榜跑馬燈")
+                                @include('layouts.marquee')
+                            @else
+                                {!! $block->content !!}
+                            @endif
+                        </div>
                     </div>
-                    @endforeach
+                @endforeach
             </div>
         @endforeach
 

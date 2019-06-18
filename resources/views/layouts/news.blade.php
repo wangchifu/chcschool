@@ -16,7 +16,7 @@
         $active3 = null;
     }
 ?>
-<h1>最新公告
+
 @auth
     @can('create',\App\Post::class)
         <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
