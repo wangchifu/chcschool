@@ -50,7 +50,14 @@ foreach($select_data as $k=>$v){
 <select name="SiteName" id="SiteName">
     <?php echo $options; ?>
 </select>
-<small>AQI：<?php echo $air_data[$select_site]['AQI']; ?></small>
+<small>AQI：
+    <?php
+        if(isset($air_data[$select_site]['AQI'])){
+            echo $air_data[$select_site]['AQI'];
+        }
+
+    ?>
+</small>
 <br>
 <?php
 if($air_data[$select_site]['AQI'] <= 50){
