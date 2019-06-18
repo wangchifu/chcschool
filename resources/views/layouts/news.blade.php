@@ -23,15 +23,15 @@
     @endauth
 @endauth
 </h1>
-<ul class="nav nav-tabs">
+<ul class="nav nav-pills">
     <li class="nav-item">
-        <a class="nav-link {{ $active1 }}" href="{{ route('index','index') }}">一般公告</a>
+        <a class="nav-link {{ $active1 }}" href="{{ route('index','index') }}"><img src="{{ asset('images/open-box.svg') }}" width="16">一般公告</a>
     </li>
     <li class="nav-item">
         <a class="nav-link {{ $active3 }}" href="{{ route('index','honor') }}"><img src="{{ asset('images/gold-medal.svg') }}" width="16">榮譽榜</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ $active2 }}" href="{{ route('index','insite') }}">內部公告</a>
+        <a class="nav-link {{ $active2 }}" href="{{ route('index','insite') }}"><img src="{{ asset('images/lock.svg') }}" width="16">內部公告</a>
     </li>
 </ul>
 <table class="table table-striped" style="word-break: break-all;">

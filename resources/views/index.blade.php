@@ -37,24 +37,20 @@
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
                 @foreach($blocks[$setup_col->id] as $block)
-                    <div class="shadow rounded" style="margin-bottom: 10px">
-                        <div class="bg-secondary text-white p-1 rounded-top h6" style="margin: 0px;">
-                            {{ str_replace_last('(系統區塊)','',$block->title) }}
-                        </div>
-                        <div class="bg-white" style="padding: 10px">
-
-                            @if($block->title == "最新公告(系統區塊)")
-                                @include('layouts.news')
-                            @elseif($block->title == "彰化空汙旗(系統區塊)")
-                                @include('layouts.chc_air')
-                            @elseif($block->title == "樹狀目錄(系統區塊)")
-                                @include('layouts.dtree')
-                            @elseif($block->title == "榮譽榜跑馬燈")
-                                @include('layouts.marquee')
-                            @else
-                                {!! $block->content !!}
-                            @endif
-                        </div>
+                    <div class="shadow rounded bg-white" style="padding: 10px;margin-bottom: 10px">
+                        <h6 class="font-weight-bold">{{ str_replace_last("(系統區塊)","",$block->title) }}</h6>
+                        <hr style="margin-top:5px;margin-bottom: 5px;">
+                        @if($block->title == "最新公告(系統區塊)")
+                            @include('layouts.news')
+                        @elseif($block->title == "彰化空汙旗(系統區塊)")
+                            @include('layouts.chc_air')
+                        @elseif($block->title == "樹狀目錄(系統區塊)")
+                            @include('layouts.dtree')
+                        @elseif($block->title == "榮譽榜跑馬燈")
+                            @include('layouts.marquee')
+                        @else
+                            {!! $block->content !!}
+                        @endif
                     </div>
                 @endforeach
             </div>
@@ -67,20 +63,17 @@
 @section('footer')
     <br>
     <br>
-    <footer class="font-small bg-light py-4">
-        <div class="container-fluid text-center text-md-left">
-            @if(!empty($setup->footer))
-            <div class="row justify-content-center">
-                <div class="col-md-11">
-                    {!! $setup->footer !!}
+    @if(!empty($setup->footer))
+        <footer class="font-small bg-light py-4">
+            <div class="container-fluid text-center text-md-left">
+                <div class="row justify-content-center">
+                    <div class="col-md-11">
+                        {!! $setup->footer !!}
+                    </div>
                 </div>
             </div>
-            @endif
-            <div class="row justify-content-center" style="background-color: #cccccc;">
-
-            </div>
-        </div>
-    </footer>
+        </footer>
+    @endif
     <div class="footer-copyright text-center text-black-50 py-3" style="background-color: #CCCCCC">
         2019 Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }}
     </div>
