@@ -69,6 +69,7 @@
                             <strong>目錄</strong>
                             @auth
                             @if($folder->user_id == auth()->user()->id or auth()->user()->admin==1)
+                                    <a href="javascript:open_window('{{ route('open_files.edit',[$folder->id,$folder_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
                                 @if($n == 0)
                                     <a href="{{ route('open_files.delete',$folder_p) }}" id="delete_folder{{ $folder->id }}" onclick="return confirm('確定刪除目錄嗎？')"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
@@ -102,7 +103,8 @@
                             檔案
                             @auth
                                 @if($file->user_id == auth()->user()->id or auth()->user()->admin==1)
-                                <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $file->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
+                                    <a href="javascript:open_window('{{ route('open_files.edit',[$file->id,$file_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
+                                    <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $file->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
                             @endauth
                         </td>
@@ -189,6 +191,10 @@
             $("#submit_button2").attr('disabled','disabled');
             $("#submit_button2").addClass('disabled');
             $("#this_form2").submit();
+        }
+        function open_window(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=300');
         }
     </script>
 @endsection

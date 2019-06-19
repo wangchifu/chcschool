@@ -256,8 +256,12 @@ Route::group(['middleware' => 'admin_exec'],function(){
     Route::delete('posts/{post}', 'PostsController@destroy')->name('posts.destroy');
 
     Route::get('open_files_delete/{path}' , 'OpenFileController@delete')->name('open_files.delete');
+    Route::get('open_files_edit/{upload}/{path}' , 'OpenFileController@edit')->name('open_files.edit');
+    Route::patch('open_files_update/{upload}' , 'OpenFileController@update')->name('open_files.update');
 
     Route::get('inside_files_delete/{path}' , 'InsideFilesController@delete')->name('inside_files.delete');
+    Route::get('inside_files_edit/{inside_file}/{path}' , 'InsideFilesController@edit')->name('inside_files.edit');
+    Route::patch('inside_files_update/{inside_file}' , 'InsideFilesController@update')->name('inside_files.update');
 
 
     Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');

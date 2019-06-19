@@ -107,6 +107,52 @@ class InsideFilesController extends Controller
         return redirect()->route('inside_files.index',$request->input('path'));
     }
 
+    public function edit(InsideFile $inside_file,$path)
+    {
+        $data = [
+            'inside_file'=>$inside_file,
+            'path'=>$path,
+        ];
+        return view('inside_files.edit',$data);
+    }
+
+    public function update(Request $request,InsideFile $inside_file)
+    {
+        $school_code = school_code();
+
+        $path_array = explode('&',$request->input('path'));
+
+        $remove = "inside_files";
+
+        foreach($path_array as $v){
+            if(!empty($v) and $v != $inside_file->id){
+                $f = InsideFile::where('id',$v)->first();
+                $remove .= "/".$f->name;
+            }
+        }
+
+        $old_name = storage_path('app/privacy/'.$school_code.'/'.$remove).'/'.$inside_file->name;
+        $new_name = storage_path('app/privacy/'.$school_code.'/'.$remove).'/'.$request->input('name');
+
+
+        if($inside_file->type == "1"){
+            if(is_dir($old_name)){
+                rename($old_name,$new_name);
+            }
+        }elseif($inside_file->type == "2"){
+            if(file_exists($old_name)){
+                rename($old_name,$new_name);
+            }
+        }
+
+
+        $att['name'] = $request->input('name');
+        $inside_file->update($att);
+
+        echo "<body onload='opener.location.reload();window.close();'>";
+
+    }
+
     public function delete($path)
     {
         $school_code = school_code();

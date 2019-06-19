@@ -50,6 +50,7 @@
                                 <small>{{ $folder->name }}({{ $n }})</small>
                             </a>
                             @if($folder->user_id == auth()->user()->id or auth()->user()->admin==1)
+                                    <a href="javascript:open_window('{{ route('inside_files.edit',[$folder->id,$folder_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
                                 @if($n == 0)
                                     <a href="{{ route('inside_files.delete',$folder_p) }}" id="delete_folder{{ $folder->id }}" onclick="return confirm('確定刪除目錄嗎？')"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
@@ -71,6 +72,7 @@
                                 <small class="text-danger">{{ $file->name }} (已遺失)</small>
                             @endif
                             @if($file->user_id == auth()->user()->id or auth()->user()->admin==1)
+                                    <a href="javascript:open_window('{{ route('inside_files.edit',[$file->id,$file_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
                                 <a href="{{ route('inside_files.delete',$file_p) }}" id="delete_file{{ $file->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
                             @endif
                         </div>
@@ -140,6 +142,10 @@
             $("#submit_button2").attr('disabled','disabled');
             $("#submit_button2").addClass('disabled');
             $("#this_form2").submit();
+        }
+        function open_window(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=300');
         }
     </script>
 @endsection

@@ -123,6 +123,52 @@ class OpenFileController extends Controller
         return redirect()->route('open_files.index',$request->input('path'));
     }
 
+    public function edit(Upload $upload,$path)
+    {
+        $data = [
+            'upload'=>$upload,
+            'path'=>$path,
+        ];
+        return view('open_files.edit',$data);
+    }
+
+    public function update(Request $request,Upload $upload)
+    {
+        $school_code = school_code();
+
+        $path_array = explode('&',$request->input('path'));
+
+        $remove = "open_files";
+
+        foreach($path_array as $v){
+            if(!empty($v) and $v != $upload->id){
+                $f = Upload::where('id',$v)->first();
+                $remove .= "/".$f->name;
+            }
+        }
+
+        $old_name = storage_path('app/public/'.$school_code.'/'.$remove).'/'.$upload->name;
+        $new_name = storage_path('app/public/'.$school_code.'/'.$remove).'/'.$request->input('name');
+
+
+        if($upload->type == "1"){
+            if(is_dir($old_name)){
+                rename($old_name,$new_name);
+            }
+        }elseif($upload->type == "2"){
+            if(file_exists($old_name)){
+                rename($old_name,$new_name);
+            }
+        }
+
+
+        $att['name'] = $request->input('name');
+        $upload->update($att);
+
+        echo "<body onload='opener.location.reload();window.close();'>";
+
+    }
+
     public function delete($path)
     {
         $school_code = school_code();
