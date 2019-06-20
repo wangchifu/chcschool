@@ -48,6 +48,8 @@
                             @include('layouts.dtree')
                         @elseif($block->title == "榮譽榜跑馬燈")
                             @include('layouts.marquee')
+                        @elseif($block->title == "圖片連結(系統區塊)")
+                            @include('layouts.photo_link')
                         @else
                             {!! $block->content !!}
                         @endif

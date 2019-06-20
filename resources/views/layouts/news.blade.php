@@ -22,7 +22,6 @@
         <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
     @endauth
 @endauth
-</h1>
 <ul class="nav nav-pills">
     <li class="nav-item">
         <a class="nav-link {{ $active1 }}" href="{{ route('index','index') }}"><img src="{{ asset('images/open-box.svg') }}" width="16"> 一般公告</a>

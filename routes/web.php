@@ -73,6 +73,9 @@ Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('p
 Route::get('open_files/{path?}' , 'OpenFileController@index')->name('open_files.index');
 Route::get('open_files_download/{path}' , 'OpenFileController@download')->name('open_files.download');
 
+//圖片連結
+Route::get('photo_links/show', 'PhotoLinksController@show')->name('photo_links.show');
+
 //內容頁面
 Route::get('contents/{content}/show' , 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
 //處室
@@ -360,6 +363,13 @@ Route::group(['middleware' => 'admin'],function(){
     Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');
     Route::get('links/{link}/edit', 'LinksController@edit')->name('links.edit');
     Route::patch('links/{link}', 'LinksController@update')->name('links.update');
+
+    //圖片連結管理
+    Route::get('photo_links', 'PhotoLinksController@index')->name('photo_links.index');
+    Route::post('photo_links', 'PhotoLinksController@store')->name('photo_links.store');
+    Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');
+    Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');
+    Route::patch('photo_links/{photo_link}', 'PhotoLinksController@update')->name('photo_links.update');
 
     //樹狀目錄
     Route::get('trees', 'TreesController@index')->name('trees.index');

@@ -126,6 +126,7 @@
                                 <a class="dropdown-item" href="{{ route('departments.index') }}"><i class="fas fa-puzzle-piece"></i> 學校介紹管理</a>
                                 <a class="dropdown-item" href="{{ route('contents.index') }}"><i class="fas fa-file-alt"></i> 內容管理</a>
                                 <a class="dropdown-item" href="{{ route('links.index') }}"><i class="fas fa-link"></i> 選單連結</a>
+                                <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                                 <a class="dropdown-item" href="{{ route('trees.index') }}"><i class="fas fa-tree"></i> 樹狀目錄</a>
                                 <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>
                             </div>

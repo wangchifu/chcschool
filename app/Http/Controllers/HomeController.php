@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Block;
+use App\PhotoLink;
 use App\Post;
 use App\SetupCol;
 use App\Tree;
@@ -93,6 +94,9 @@ class HomeController extends Controller
                 .$honor->title."   ".
                 "</a>";
         }
+
+        $photo_links = PhotoLink::orderBy('order_by')->paginate(24);
+
         $data = [
             'school_code'=>$school_code,
             'photos'=>$photos,
@@ -104,6 +108,7 @@ class HomeController extends Controller
             'request'=>$request,
             'marquee' =>$marquee,
             'marquee_css'=>$marquee_css,
+            'photo_links'=>$photo_links,
         ];
         return view('index',$data);
     }
