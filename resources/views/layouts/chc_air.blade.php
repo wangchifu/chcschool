@@ -22,6 +22,9 @@ foreach($data as $k=>$v){
     $air_data[$v->SiteName]['PublishTime'] = $v->PublishTime;
 
 }
+
+
+
 $SiteName = $request->input('SiteName');
 
 $options = "";
@@ -60,21 +63,25 @@ foreach($select_data as $k=>$v){
 </small>
 <br>
 <?php
-if($air_data[$select_site]['AQI'] <= 50){
-    $img = "50.jpg";
-}
-if($air_data[$select_site]['AQI'] >= 51 and $air_data[$select_site]['AQI'] <= 100){
-    $img = "100.jpg";
-}
-if($air_data[$select_site]['AQI'] >= 101 and $air_data[$select_site]['AQI'] <= 150){
-    $img = "150.jpg";
-}
-if($air_data[$select_site]['AQI'] >= 151 and $air_data[$select_site]['AQI'] <= 200){
-    $img = "200.jpg";
-}
-if($air_data[$select_site]['AQI'] >= 201){
-    $img = "300.jpg";
-}
+    if(isset($air_data[$select_site]['AQI'])){
+        if($air_data[$select_site]['AQI'] <= 50){
+            $img = "50.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 51 and $air_data[$select_site]['AQI'] <= 100){
+            $img = "100.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 101 and $air_data[$select_site]['AQI'] <= 150){
+            $img = "150.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 151 and $air_data[$select_site]['AQI'] <= 200){
+            $img = "200.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 201){
+            $img = "300.jpg";
+        }
+    }else{
+        $img = "000.jpg";
+    }
 ?>
 <img src="{{ asset('images/chc_air/'.$img) }}" width="100%">
 <?php
