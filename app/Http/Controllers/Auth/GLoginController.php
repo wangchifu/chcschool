@@ -58,9 +58,23 @@ class GLoginController extends Controller
                 $d = env('DB_DATABASE');
             }
 
+            $code = $obj['code'];
+            $school = $obj['school'];
+
 
             if($obj['code'] != substr($d,1,6)){
-                return back()->withErrors(['gsuite_error'=>['非本校教職員 GSuite 帳號']]);
+                $check_code = 0;
+                foreach($obj['schools'] as $v){
+                    if($v['code'] == substr($d,1,6)){
+                        $check_code =1;
+                        $code = $v['code'];
+                        $school = $v['school'];
+                    }
+                }
+                if($check_code == 0){
+                    return back()->withErrors(['gsuite_error'=>['非本校教職員 GSuite 帳號']]);
+                }
+
             }
 
 
@@ -75,8 +89,8 @@ class GLoginController extends Controller
                 $att['username'] = $request->input('username');
                 $att['name'] = $obj['name'];
                 $att['password'] = bcrypt($request->input('password'));
-                $att['code'] = $obj['code'];
-                $att['school'] = $obj['school'];
+                $att['code'] = $code;
+                $att['school'] = $school;
                 $att['kind'] = $obj['kind'];
                 $att['title'] = $obj['title'];
                 $att['login_type'] = "gsuite";
@@ -87,8 +101,8 @@ class GLoginController extends Controller
                 //有此使用者，即更新使用者資料
                 $att['name'] = $obj['name'];
                 $att['password'] = bcrypt($request->input('password'));
-                $att['code'] = $obj['code'];
-                $att['school'] = $obj['school'];
+                $att['code'] = $code;
+                $att['school'] = $school;
                 $att['kind'] = $obj['kind'];
                 $att['title'] = $obj['title'];
 
