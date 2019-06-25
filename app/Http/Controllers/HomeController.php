@@ -177,7 +177,8 @@ class HomeController extends Controller
         $cht_key = "";
         for($i=0;$i<5;$i++) $cht_key.=$cht[substr($key,$i,1)];
 
-        header("Content-type: image/gif");
+        /**
+        header("Content-type: image/jpeg");
         $images = asset('images/captcha_bk'.$back.'.gif');
 
         $context = stream_context_create(["ssl" => [
@@ -186,6 +187,21 @@ class HomeController extends Controller
         ]);
 
         $fileContent = file_get_contents($images, false, $context);
+*/
+
+        header("Content-Type: image/gif");
+
+        $images = asset('images/captcha_bk'.$back.'.gif');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $images);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.1 Safari/537.11');
+        $fileContent = curl_exec($ch);
+        $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch) ;
+
         $im = imagecreatefromstring($fileContent);
         $text_color = imagecolorallocate($im, $r, $g, $b);
 
