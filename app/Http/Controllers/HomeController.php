@@ -178,7 +178,7 @@ class HomeController extends Controller
         for($i=0;$i<5;$i++) $cht_key.=$cht[substr($key,$i,1)];
 
         /**
-        header("Content-type: image/jpeg");
+        header("Content-type: image/gif");
         $images = asset('images/captcha_bk'.$back.'.gif');
 
         $context = stream_context_create(["ssl" => [
@@ -188,8 +188,10 @@ class HomeController extends Controller
 
         $fileContent = file_get_contents($images, false, $context);
 */
+        //header("Content-type: image/gif");
+        //$images = asset('images/captcha_bk'.$back.'.gif');
+        $images = "http://".$_SERVER['HTTP_HOST']."/images/captcha_bk".$back.".gif";
 
-        $images = asset('images/captcha_bk'.$back.'.gif');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $images);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
