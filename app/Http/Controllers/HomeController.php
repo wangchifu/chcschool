@@ -189,20 +189,17 @@ class HomeController extends Controller
         $fileContent = file_get_contents($images, false, $context);
 */
 
-        header("Content-Type: image/gif");
-
         $images = asset('images/captcha_bk'.$back.'.gif');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $images);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.1 Safari/537.11');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
         $fileContent = curl_exec($ch);
-        $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch) ;
+        curl_close($ch);
 
         $im = imagecreatefromstring($fileContent);
+
+
         $text_color = imagecolorallocate($im, $r, $g, $b);
 
         imagettftext($im, 50, 0 , 50, 50, $text_color,public_path('font/wt071.ttf'),$cht_key);
