@@ -177,7 +177,6 @@ class HomeController extends Controller
         $cht_key = "";
         for($i=0;$i<5;$i++) $cht_key.=$cht[substr($key,$i,1)];
 
-        /**
         header("Content-type: image/gif");
         $images = asset('images/captcha_bk'.$back.'.gif');
 
@@ -187,21 +186,7 @@ class HomeController extends Controller
         ]);
 
         $fileContent = file_get_contents($images, false, $context);
-*/
-        //header("Content-type: image/gif");
-        //$images = asset('images/captcha_bk'.$back.'.gif');
-        $images = "http://".$_SERVER['HTTP_HOST']."/images/captcha_bk".$back.".gif";
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $images);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-        $fileContent = curl_exec($ch);
-        curl_close($ch);
-
         $im = imagecreatefromstring($fileContent);
-
-
         $text_color = imagecolorallocate($im, $r, $g, $b);
 
         imagettftext($im, 50, 0 , 50, 50, $text_color,public_path('font/wt071.ttf'),$cht_key);
