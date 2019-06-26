@@ -61,14 +61,13 @@ class GLoginController extends Controller
             $code = $obj['code'];
             $school = $obj['school'];
 
-
             if($obj['code'] != substr($d,1,6)){
                 $check_code = 0;
                 foreach($obj['schools'] as $v){
                     if($v['code'] == substr($d,1,6)){
                         $check_code =1;
                         $code = $v['code'];
-                        $school = $v['school'];
+                        $school = $v['name'];
                     }
                 }
                 if($check_code == 0){
