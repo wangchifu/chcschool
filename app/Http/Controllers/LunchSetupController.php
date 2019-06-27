@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\LunchFactory;
+use App\LunchOrder;
 use App\LunchPlace;
 use App\LunchSetup;
 use Illuminate\Http\Request;
@@ -177,6 +178,8 @@ class LunchSetupController extends Controller
     {
         $school_code = school_code();
         delete_dir(storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id));
+
+        LunchOrder::where('semester',$lunch_setup->semester)->delete();
         $lunch_setup->delete();
         return redirect()->route('lunch_setups.index');
     }
