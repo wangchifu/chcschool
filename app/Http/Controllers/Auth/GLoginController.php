@@ -45,6 +45,8 @@ class GLoginController extends Controller
         $result = curl_exec($ch);
         $obj = json_decode($result,true);
 
+        dd($obj);
+
         if($obj['success']) {
             //非教職員，即跳開
             if($obj['kind'] != "教職員"){
@@ -79,13 +81,14 @@ class GLoginController extends Controller
 
 
             //是否已有此帳號
-            $user = User::where('username',$request->input('username'))
+            $username = str_replace('@chc.edu.tw','',$request->input('username'));
+            $user = User::where('username',$username)
                 ->where('login_type','gsuite')
                 ->first();
 
             if(empty($user)){
                 //無使用者，即建立使用者資料
-                $att['username'] = $request->input('username');
+                $att['username'] = $username;
                 $att['name'] = $obj['name'];
                 $att['password'] = bcrypt($request->input('password'));
                 $att['code'] = $code;
@@ -108,7 +111,7 @@ class GLoginController extends Controller
                 $user->update($att);
             }
 
-            if(Auth::attempt(['username' => $request->input('username'),
+            if(Auth::attempt(['username' => $username,
                 'password' => $request->input('password'),'disable' => null])){
                 return redirect()->route('index');
             }else{
