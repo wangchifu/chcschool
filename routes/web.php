@@ -277,9 +277,6 @@ Route::group(['middleware' => 'admin_exec'],function(){
 
 //管理者可用
 Route::group(['middleware' => 'admin'],function(){
-    //更改密碼
-    Route::get('edit_password','HomeController@edit_password')->name('edit_password');
-    Route::patch('update_password','HomeController@update_password')->name('update_password');
     //模擬登入
     Route::get('sims/{user}/impersonate', 'SimulationController@impersonate')->name('sims.impersonate');
     //網站管理
@@ -320,6 +317,8 @@ Route::group(['middleware' => 'admin'],function(){
 
     //使用者管理
     Route::get('users', 'UsersController@index')->name('users.index');
+    Route::get('users/create', 'UsersController@create')->name('users.create');
+    Route::post('users/store', 'UsersController@store')->name('users.store');
     Route::get('users/leave', 'UsersController@leave')->name('users.leave');
     Route::get('users/{user}', 'UsersController@edit')->name('users.edit');
     Route::patch('users/{user}/update', 'UsersController@update')->name('users.update');
@@ -392,4 +391,10 @@ Route::group(['middleware' => 'admin'],function(){
     Route::post('calendar_weeks/create','CalendarWeekController@create')->name('calendar_weeks.create');
     Route::post('calendar_weeks/store','CalendarWeekController@store')->name('calendar_weeks.store');
     Route::get('calendar_weeks/{semester}/destroy','CalendarWeekController@destroy')->name('calendar_weeks.destroy');
+});
+
+Route::group(['middleware' => 'local'],function(){
+    //更改密碼
+    Route::get('edit_password','HomeController@edit_password')->name('edit_password');
+    Route::patch('update_password','HomeController@update_password')->name('update_password');
 });

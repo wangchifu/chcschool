@@ -46,7 +46,11 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        $groups = Group::where('disable','=',null)->pluck('name', 'id')->toArray();
+        $data = [
+            'groups'=>$groups,
+        ];
+        return view('users.create',$data);
     }
 
     /**
@@ -57,7 +61,47 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $school_code = school_code();
+
+        $att['username'] = $request->input('username');
+        $att['name'] = $request->input('name');
+        $att['title'] = $request->input('title');
+        $att['order_by'] = $request->input('order_by');
+        $att['password'] = bcrypt('demo1234');
+        $att['code'] = $school_code;
+        $att['school'] = "本機帳號";
+        $att['kind'] = "教職員";
+        $att['login_type'] = "local";
+
+        $check_user = User::where('username',$att['username'])->first();
+
+        if($check_user){
+            return back()->withErrors(['errors'=>['此帳號已被使用！']]);
+        }
+
+        $user = User::create($att);
+
+
+        $group_id = $request->input('group_id');
+
+        //再批次insert的array
+        $all_insert = [];
+        if(!empty($group_id)) {
+            foreach ($group_id as $k => $v) {
+                if($v != null){
+                    $one = [
+                        'user_id' => $user->id,
+                        'group_id' => $v
+                    ];
+                    array_push($all_insert, $one);
+                }
+            }
+            if(!empty($all_insert)){
+                UserGroup::insert($all_insert);
+            }
+        }
+
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     /**

@@ -1,6 +1,7 @@
 <div class="card my-4">
     <h3 class="card-header">列表</h3>
     <div class="card-body">
+        <a href="javascript:open_window('{{ route('users.create') }}','新視窗')" class="btn btn-success btn-sm">新增本機帳號</a>
         <table class="table table-striped" style="word-break:break-all;">
             <thead class="thead-light">
             <tr>
@@ -8,6 +9,7 @@
                 <th>姓名(帳號)</th>
                 <th>職稱</th>
                 <th>群組</th>
+                <th>類別</th>
                 <th>動作</th>
             </tr>
             </thead>
@@ -35,6 +37,13 @@
                         @foreach($user->groups as $group)
                             {{ $group->group->name }}
                         @endforeach
+                    </td>
+                    <td>
+                        @if($user->login_type=="local")
+                            本機帳號
+                        @elseif($user->login_type=="gsuite")
+                            gsuite帳號
+                        @endif
                     </td>
                     <td>
                         <a href="javascript:open_window('{{ route('users.edit',$user->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>

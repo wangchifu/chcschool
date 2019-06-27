@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'admin_exec' => \App\Http\Middleware\AdminExecMiddleware::class,
         'exec' => \App\Http\Middleware\ExecMiddleware::class,
+        'local' => \App\Http\Middleware\LocalMiddleware::class,
     ];
 
     /**

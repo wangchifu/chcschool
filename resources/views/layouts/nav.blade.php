@@ -137,7 +137,7 @@
                             <i class="fas fa-user"></i> {{ auth()->user()->title }} {{ auth()->user()->name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            @if(auth()->user()->username=="admin")
+                            @if(auth()->user()->login_type=="local")
                                 <a class="dropdown-item" href="{{ route('edit_password') }}"><i class="fas fa-key"></i> 更改密碼</a>
                             @endif
                             @impersonating
