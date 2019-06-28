@@ -53,11 +53,17 @@
                 @if($post_type->id !=1 and $post_type->id !=2 )
                 {{ Form::text('name',$post_type->name,['class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                 @else
+                    @if($post_type->id==1)
+                        <input type="hidden" name="name" value="內部公告">
+                    @endif
+                    @if($post_type->id==2)
+                        <input type="hidden" name="name" value="榮譽榜">
+                    @endif
                     {{ $post_type->name }}
                 @endif
             </td>
             <td>
-                <button class="btn btn-primary btn-sm">儲存修改</button>
+                <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">儲存修改</button>
                 @if($post_type->id !=1 and $post_type->id !=2 )
                      <a href="{{ route('posts.delete_type',$post_type->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('這類別下的所有公告將移至「一般公告」')">刪除</a>
                 @else
