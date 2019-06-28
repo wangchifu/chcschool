@@ -71,12 +71,12 @@ $posts = \App\Post::where('insite',null)
                 {{ $post->views }}
             </td>
         </tr>
-        <tr>
-            <td colspan="4">
-                <a href="{{ route('posts.type',0) }}"><small><i class="far fa-hand-point-up"></i> 更多 一般公告...</small></a>
-            </td>
-        </tr>
     @endforeach
+    <tr>
+        <td colspan="4">
+            <a href="{{ route('posts.type',0) }}"><small><i class="far fa-hand-point-up"></i> 更多 一般公告...</small></a>
+        </td>
+    </tr>
 @foreach($post_types as $post_type)
     <?php
     $posts = \App\Post::where('insite',$post_type->id)
@@ -132,12 +132,12 @@ $posts = \App\Post::where('insite',null)
                     {{ $post->views }}
                 </td>
             </tr>
-            <tr>
-                <td colspan="4">
-                    <a href="{{ route('posts.type',$post_type->id) }}"><small><i class="far fa-hand-point-up"></i> 更多 {{ $post_type->name }}...</small></a>
-                </td>
-            </tr>
         @endforeach
+    <tr>
+        <td colspan="4">
+            <a href="{{ route('posts.type',$post_type->id) }}"><small><i class="far fa-hand-point-up"></i> 更多 {{ $post_type->name }}...</small></a>
+        </td>
+    </tr>
 @endforeach
     </tbody>
 </table>
