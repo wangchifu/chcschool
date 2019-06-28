@@ -29,6 +29,9 @@
                 <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
             @endauth
         </th>
+        <th>
+            類別
+        </th>
         <th nowrap>
             標題
         </th>
@@ -44,6 +47,13 @@
                     <p class="badge badge-danger">置頂</p>
                 @endif
                 {{ substr($post->created_at,0,10) }}
+            </td>
+            <td>
+                @if($post->insite == null)
+                    <a href="{{ route('posts.type',0) }}">一般公告</a>
+                @else
+                    <a href="{{ route('posts.type',$post->insite) }}">{{ $post_types[$post->insite] }}</a>
+                @endif
             </td>
             <td data-th="標題">
                 <?php

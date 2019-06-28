@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Post;
+use App\PostType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -42,15 +43,19 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::where('insite',null)
-            ->orderBy('top','DESC')
+        $posts = Post::orderBy('top','DESC')
             ->orderBy('created_at','DESC')
             ->paginate(20);
+        $post_types = PostType::orderBy('order_by')->pluck('name','id')->toArray();
+
         $data = [
-            'posts'=>$posts
+            'posts'=>$posts,
+            'post_types'=>$post_types,
         ];
         return view('posts.index',$data);
     }
+
+    /**
 
     public function insite()
     {
@@ -75,6 +80,7 @@ class PostsController extends Controller
         ];
         return view('posts.honor',$data);
     }
+     * */
 
     /**
      * Show the form for creating a new resource.
@@ -155,16 +161,10 @@ class PostsController extends Controller
         }
 
         if($att['insite']==null){
-            return redirect()->route('posts.index');
+            return redirect()->route('posts.type',0);
+        }else{
+            return redirect()->route('posts.type',$post->insite);
         }
-        if($att['insite']==1){
-            return redirect()->route('posts.insite');
-        }
-        if($att['insite']==2){
-            return redirect()->route('posts.honor');
-        }
-
-
     }
 
     /**
@@ -311,13 +311,9 @@ class PostsController extends Controller
 
 
         if($att['insite']==null){
-            return redirect()->route('posts.index');
-        }
-        if($att['insite']==1){
-            return redirect()->route('posts.insite');
-        }
-        if($att['insite']==2){
-            return redirect()->route('posts.honor');
+            return redirect()->route('posts.type',0);
+        }else{
+            return redirect()->route('posts.type',$post->insite);
         }
     }
 
@@ -398,9 +394,12 @@ class PostsController extends Controller
             ->orWhere('title','like','%'.$search.'%')
             ->orderBy('id','DESC')
             ->paginate(20);
+        $post_types = PostType::orderBy('order_by')->pluck('name','id')->toArray();
+
         $data = [
             'posts'=>$posts,
             'search'=>$search,
+            'post_types'=>$post_types,
         ];
         return view('posts.search',$data);
     }
@@ -408,11 +407,36 @@ class PostsController extends Controller
     public function job_title($job_title)
     {
         $posts = Post::where('job_title',$job_title)->orderBy('id','DESC')->paginate(20);
+        $post_types = PostType::orderBy('order_by')->pluck('name','id')->toArray();
+
         $data = [
             'posts'=>$posts,
             'job_title'=>$job_title,
+            'post_types'=>$post_types,
         ];
         return view('posts.job_title',$data);
+    }
+
+    public function type($type)
+    {
+        if($type=="0") $type = null;
+
+        $posts = Post::where('insite',$type)->orderBy('id','DESC')->paginate(20);
+
+        if($type==null){
+            $type_name = "一般公告";
+        }else{
+            $post_type = PostType::where('id',$type)->first();
+            $type_name = $post_type->name;
+        }
+        $post_types = PostType::orderBy('order_by')->pluck('name','id')->toArray();
+
+        $data = [
+            'posts'=>$posts,
+            'type_name'=>$type_name,
+            'post_types'=>$post_types,
+        ];
+        return view('posts.type',$data);
     }
 
     public function top_up(Post $post)

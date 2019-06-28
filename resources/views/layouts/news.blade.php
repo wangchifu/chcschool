@@ -1,40 +1,11 @@
-<?php
-    $i=1;
-    if($insite=="honor"){
-        $active1 = null;
-        $active2 = null;
-        $active3 = "active";
-    }
-    if($insite=="insite"){
-        $active1 = null;
-        $active2 = "active";
-        $active3 = null;
-    }
-    if($insite=="index"){
-        $active1 = "active";
-        $active2 = null;
-        $active3 = null;
-    }
-?>
-
 @auth
     @can('create',\App\Post::class)
         <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
     @endauth
 @endauth
-<ul class="nav nav-pills">
-    <li class="nav-item">
-        <a class="nav-link {{ $active1 }}" href="{{ route('index','index') }}"><img src="{{ asset('images/open-box.svg') }}" width="16"> 一般公告</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{ $active3 }}" href="{{ route('index','honor') }}"><img src="{{ asset('images/gold-medal.svg') }}" width="16"> 榮譽榜</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{ $active2 }}" href="{{ route('index','insite') }}"><img src="{{ asset('images/lock.svg') }}" width="16"> 內部公告</a>
-    </li>
-</ul>
 <table class="table table-striped" style="word-break: break-all;">
     <tbody>
+    <?php $i=1; ?>
     @foreach($posts as $post)
         <?php
         if($post->insite==1){
@@ -84,12 +55,20 @@
                         <span class="text-info"><i class="fas fa-file"></i> [附件]</span>
                     @endif
                     <div class="text-secondary">
-                    {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
+                        @if($post->insite==null)
+                            一般公告 / {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
+                        @else
+                            {{ $post_type_array[$post->insite] }} / {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
+                        @endif
                     </div>
                 @else
                     <span class='text-danger'>[ 內部公告，請登入後瀏覽。 ]</span>
                     <div class="text-secondary">
-                        {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
+                        @if($post->insite==null)
+                            一般公告 / {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
+                        @else
+                            {{ $post_type_array[$post->insite] }} / {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
+                        @endif
                     </div>
                 @endif
             </td>
@@ -98,10 +77,4 @@
     @endforeach
     </tbody>
 </table>
-@if($active2 == "active")
-    <a href="{{ route('posts.insite') }}"><i class="far fa-hand-point-up"></i> 更多內部公告...</a>
-@elseif($active1 == "active")
-    <a href="{{ route('posts.index') }}"><i class="far fa-hand-point-up"></i> 更多一般公告...</a>
-@elseif($active3 == "active")
-    <a href="{{ route('posts.honor') }}"><i class="far fa-hand-point-up"></i> 更多榮譽榜...</a>
-@endif
+<small><a href="{{ route('posts.index') }}"><i class="far fa-hand-point-up"></i> 更多 公告...</a></small>

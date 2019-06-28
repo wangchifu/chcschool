@@ -28,7 +28,7 @@
                 <form action="{{ route('lunch_lists.semester_print') }}" method="post"  target="_blank">
                     @csrf
                     <div class="form-group">
-                        {{ Form::select('lunch_setup_id', $lunch_setup_array,null, ['class' => 'form-control','placeholder'=>'--請選擇--']) }}
+                        {{ Form::select('lunch_setup_id', $lunch_setup_array,null, ['class' => 'form-control','required'=>'required','placeholder'=>'--請選擇--']) }}
                     </div>
                     <div class="form-group">
                         <button class="btn btn-info btn-sm"><i class="fas fa-print"></i> 印出</button>

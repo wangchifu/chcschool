@@ -110,7 +110,20 @@ class LunchSpecialController extends Controller
         $lunch_place_array = LunchPlace::where('disable',null)
             ->pluck('name','id')
             ->toArray();
-        $eat_styles = ['1'=>'葷食','2'=>'素食'];
+
+        $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
+
+
+        $eat_styles = explode(',',$lunch_setup->eat_styles);
+        foreach($eat_styles as $eat_style){
+            if($eat_style==1) $style="葷食合菜";
+            if($eat_style==2) $style="素食合菜";
+            if($eat_style==3) $style="葷食便當";
+            if($eat_style==4) $style="素食便當";
+            $eat_array[$eat_style] =$style;
+        }
+
+        $eat_styles = $eat_array;
 
         $data = [
             'admin'=>$admin,

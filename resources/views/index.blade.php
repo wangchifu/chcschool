@@ -38,7 +38,7 @@
             <div class="col-lg-{{ $setup_col->num }}">
                 @foreach($blocks[$setup_col->id] as $block)
                     <div class="shadow rounded bg-white" style="padding: 10px;margin-bottom: 10px">
-                        <h6 class="font-weight-bold">{{ str_replace_last("(系統區塊)","",$block->title) }}</h6>
+                        <h5 class="font-weight-bold">{{ str_replace_last("(系統區塊)","",$block->title) }}</h5>
                         <hr style="margin-top:5px;margin-bottom: 5px;">
                         @if($block->title == "最新公告(系統區塊)")
                             @include('layouts.news')
@@ -50,6 +50,8 @@
                             @include('layouts.marquee')
                         @elseif($block->title == "圖片連結(系統區塊)")
                             @include('layouts.photo_link')
+                        @elseif($block->title == "分類公告(系統區塊)")
+                            @include('layouts.post_type')
                         @else
                             {!! $block->content !!}
                         @endif

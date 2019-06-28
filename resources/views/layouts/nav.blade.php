@@ -16,7 +16,7 @@
                 <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="d-inline-block align-top" alt="">
             @endif
         </a>
-        <a class="navbar-brand js-scroll-trigger" href="{{  route('index','index') }}">
+        <a class="navbar-brand js-scroll-trigger" href="{{  route('index') }}">
             {{ $setup->site_name }}
         </a>
         <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item @yield('nav_home_active')">
-                    <a class="nav-link" href="{{ route('index','index') }}">首頁 <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{ route('index') }}">首頁 <span class="sr-only">(current)</span></a>
                 </li>
                 @if(isset($module_setup['公告系統']))
                     <li class="nav-item @yield('nav_post_active')">

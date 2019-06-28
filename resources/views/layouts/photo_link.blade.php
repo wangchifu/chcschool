@@ -21,7 +21,7 @@
     </div>
     <div class="row">
         <div class="col1">
-            <a href="{{ route('photo_links.show') }}">更多...</a>
+            <small><a href="{{ route('photo_links.show') }}"><i class="far fa-hand-point-up"></i> 更多 圖片連結...</a></small>
         </div>
     </div>
 </div>

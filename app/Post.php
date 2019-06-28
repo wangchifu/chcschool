@@ -21,4 +21,9 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function post_type()
+    {
+        return $this->belongsTo(PostType::class);
+    }
 }

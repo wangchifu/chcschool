@@ -30,10 +30,8 @@ if(isset($_SERVER['HTTP_HOST'])){
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/',function(){
-    return redirect()->route('index','index');
-});
-Route::get('page/{insite?}','HomeController@index')->name('index');
+
+Route::get('/','HomeController@index')->name('index');
 Route::post('not_bot','HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
@@ -63,11 +61,12 @@ Route::get('pic', 'HomeController@pic')->name('pic');
 
 //公告系統
 Route::get('posts' , 'PostsController@index')->name('posts.index');
-Route::get('posts/insite' , 'PostsController@insite')->name('posts.insite');
-Route::get('posts/honor' , 'PostsController@honor')->name('posts.honor');
+//Route::get('posts/insite' , 'PostsController@insite')->name('posts.insite');
+//Route::get('posts/honor' , 'PostsController@honor')->name('posts.honor');
 Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
 Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
+Route::get('posts/{type}/type' , 'PostsController@type')->name('posts.type');
 
 //公開文件
 Route::get('open_files/{path?}' , 'OpenFileController@index')->name('open_files.index');
