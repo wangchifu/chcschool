@@ -146,6 +146,8 @@ class UsersController extends Controller
         $request->validate([
             'order_by' => ['nullable','numeric']
         ]);
+        $att['title'] = $request->input('title');
+        $att['name'] = $request->input('name');
         $att['order_by'] = $request->input('order_by');
         $att['group_id'] = $request->input('group_id');
         $att['disable'] = $request->input('disable');

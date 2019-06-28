@@ -8,7 +8,7 @@
     <table class="table table-striped">
         <thead class="thead-light">
         <tr>
-            <th colspan="4">
+            <th colspan="5">
                 帳號：{{ $user->username }}
             </th>
         </tr>
@@ -16,7 +16,10 @@
         <tbody>
         <tr>
             <td>
-                <h4>{{ $user->title }} {{ $user->name }}</h4>
+                {{ Form::text('title',$user->title,['class' => 'form-control','required'=>'required','placeholder'=>'職稱']) }}
+            </td>
+            <td>
+                {{ Form::text('name',$user->name,['class' => 'form-control','required'=>'required','placeholder'=>'姓名']) }}
             </td>
             <td width="100">
                 排序：
