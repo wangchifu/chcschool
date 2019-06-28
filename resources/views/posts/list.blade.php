@@ -7,6 +7,13 @@
         {{ csrf_field() }}
         <table>
             <tr>
+                @auth
+                    @if(auth()->user()->admin==1)
+                        <td>
+                            <a href="javascript:open_window('{{ route('posts.show_type') }}','新視窗')" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增類別</a>
+                        </td>
+                    @endif
+                @endauth
                 <td>
                     <input type="text" name="search" id="search" placeholder="搜尋公告標題或內文" required>
                 </td>
@@ -95,4 +102,10 @@
 </table>
 <script>
     var validator = $("#this_form").validate();
+
+
+    function open_window(url,name)
+    {
+        window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=800');
+    }
 </script>

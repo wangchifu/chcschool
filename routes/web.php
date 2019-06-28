@@ -379,6 +379,10 @@ Route::group(['middleware' => 'admin'],function(){
     //置頂公告
     Route::get('posts/{post}/top_up', 'PostsController@top_up')->name('posts.top_up');
     Route::get('posts/{post}/top_down', 'PostsController@top_down')->name('posts.top_down');
+    Route::get('posts/show_type', 'PostsController@show_type')->name('posts.show_type');
+    Route::post('posts/store_type', 'PostsController@store_type')->name('posts.store_type');
+    Route::patch('posts/{post_type}/update_type', 'PostsController@update_type')->name('posts.update_type');
+    Route::get('posts/{post_type}/delete_type', 'PostsController@delete_type')->name('posts.delete_type');
 
     //會議文稿
     Route::get('meetings/{meeting}/edit' , 'MeetingController@edit')->name('meetings.edit');

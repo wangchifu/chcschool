@@ -102,11 +102,12 @@ class PostsController extends Controller
         $size = round($dir_size/1024,2);
         $per = round($size*100/5120,2);
 
-        $types = [
-            '0'=>'一般公告',
-            '1'=>'內部公告',
-            '2'=>'榮譽榜',
-        ];
+        $all_types = PostType::orderBy('order_by')->pluck('name','id')->toArray();
+        $types[0] = "一般公告";
+        foreach($all_types as $k=>$v){
+            $types[$k]=$v;
+        }
+
         $data = [
             'types'=>$types,
             'size'=>$size,
@@ -247,11 +248,11 @@ class PostsController extends Controller
         $size = round($dir_size/1024,2);
         $per = round($size*100/5120,2);
 
-        $types = [
-            '0'=>'一般公告',
-            '1'=>'內部公告',
-            '2'=>'榮譽榜',
-        ];
+        $all_types = PostType::orderBy('order_by')->pluck('name','id')->toArray();
+        $types[0] = "一般公告";
+        foreach($all_types as $k=>$v){
+            $types[$k]=$v;
+        }
 
         $data = [
             'post'=>$post,
@@ -437,6 +438,52 @@ class PostsController extends Controller
             'post_types'=>$post_types,
         ];
         return view('posts.type',$data);
+    }
+
+    public function show_type()
+    {
+        $post_types = PostType::orderBy('order_by')->get();
+        $data = [
+            'post_types'=>$post_types,
+        ];
+        return view('posts.show_type',$data);
+    }
+
+    public function store_type(Request $request)
+    {
+        $request->validate([
+            'order_by'=>'nullable|numeric',
+            'name'=>'required',
+        ]);
+        $att['order_by'] = $request->input('order_by');
+        $att['name'] = $request->input('name');
+
+        PostType::create($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function update_type(Request $request,PostType $post_type)
+    {
+        $request->validate([
+            'order_by'=>'nullable|numeric',
+            'name'=>'required',
+        ]);
+        $att['order_by'] = $request->input('order_by');
+        $att['name'] = $request->input('name');
+
+        $post_type->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function delete_type(PostType $post_type)
+    {
+        $att['insite'] = null;
+        $posts = Post::where('insite',$post_type->id)->get();
+        foreach($posts as $post){
+            $post->update($att);
+        }
+        $post_type->delete();
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     public function top_up(Post $post)
