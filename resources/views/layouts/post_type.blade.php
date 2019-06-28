@@ -12,7 +12,7 @@ $posts = \App\Post::where('insite',null)
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
-        <th nowrap width="150">
+        <th nowrap width="160">
             日期
         </th>
         <th nowrap>
