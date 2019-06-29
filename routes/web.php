@@ -67,6 +67,7 @@ Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->na
 Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
 Route::get('posts/{type}/type' , 'PostsController@type')->name('posts.type');
+Route::post('posts/select_type' , 'PostsController@select_type')->name('posts.select_type');
 
 //公開文件
 Route::get('open_files/{path?}' , 'OpenFileController@index')->name('open_files.index');

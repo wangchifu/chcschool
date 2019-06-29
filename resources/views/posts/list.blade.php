@@ -35,9 +35,25 @@
             @can('create',\App\Post::class)
                 <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
             @endauth
-        </th>
-        <th>
-            類別
+	</th>
+        <?php
+        $post_type_array['a'] = "類別";
+   	$post_type_array[0] = "一般公告";  
+	$post_types = \App\PostType::orderBy('order_by')->pluck('name','id')->toArray();	
+
+	foreach($post_types as $k=>$v){
+	  $post_type_array[$k]=$v;
+	}
+        ?>
+	<th>
+	    <form id="select_type_form" action='{{ route('posts.select_type') }}' method='post'>
+            @csrf
+            <select id="select_type" name="select_type">
+	    @foreach($post_type_array as $k=>$v)
+            <option value='{{$k}}'>{{$v}}</option>
+	    @endforeach
+	    </select>
+            </form>
         </th>
         <th nowrap>
             標題
@@ -108,4 +124,9 @@
     {
         window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=800');
     }
+    $('#select_type').change(function(){
+      if($('#select_typye').val() != 'a'){
+        $('#select_type_form').submit();
+      }
+    });
 </script>

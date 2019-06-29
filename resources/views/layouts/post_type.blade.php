@@ -7,7 +7,7 @@
 $posts = \App\Post::where('insite',null)
     ->orderBy('top','DESC')
     ->orderBy('created_at','DESC')
-    ->paginate(5);
+    ->paginate(10);
 ?>
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
@@ -82,7 +82,7 @@ $posts = \App\Post::where('insite',null)
     $posts = \App\Post::where('insite',$post_type->id)
         ->orderBy('top','DESC')
         ->orderBy('created_at','DESC')
-        ->paginate(5);
+        ->paginate(10);
     ?>
     <tr>
         <td colspan="4">

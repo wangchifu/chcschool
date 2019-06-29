@@ -407,7 +407,9 @@ class PostsController extends Controller
 
     public function job_title($job_title)
     {
-        $posts = Post::where('job_title',$job_title)->orderBy('id','DESC')->paginate(20);
+	    $posts = Post::where('job_title',$job_title)
+		    ->orderBy('top','DESC')
+		    ->orderBy('id','DESC')->paginate(20);
         $post_types = PostType::orderBy('order_by')->pluck('name','id')->toArray();
 
         $data = [
@@ -418,11 +420,18 @@ class PostsController extends Controller
         return view('posts.job_title',$data);
     }
 
+    public function select_type(Request $request)
+    {
+        return redirect()->route('posts.type',$request->input('select_type'));
+    }
+
     public function type($type)
     {
         if($type=="0") $type = null;
 
-        $posts = Post::where('insite',$type)->orderBy('id','DESC')->paginate(20);
+	$posts = Post::where('insite',$type)
+		->orderBy('top','DESC')
+		->orderBy('id','DESC')->paginate(20);
 
         if($type==null){
             $type_name = "一般公告";
