@@ -30,7 +30,7 @@
                             地點
                         </th>
                         <th>
-                            餐別
+                            供餐方式
                         </th>
                         <?php $i=1; ?>
                         @foreach($date_array as $k=>$v)
@@ -77,7 +77,7 @@
                                 @elseif($eat_data[$k1]==3)
                                     葷食便當
                                 @elseif($eat_data[$k1]==4)
-                                    葷食便當
+                                    素食便當
                                 @endif
                             </td>
                             @foreach($date_array as $k2=>$v2)

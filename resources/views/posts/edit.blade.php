@@ -47,6 +47,19 @@
                         <label for="content"><strong>5.內文*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容','required'=>'required']) }}
                     </div>
+                    <script src="{{ asset('mycke/ckeditor.js') }}"></script>
+                    <script>
+                        CKEDITOR.replace('content'
+                            ,{
+                                toolbar: [
+                                    { name: 'document', items: [ 'Bold', 'Italic','TextColor','-','Link','Unlink','-','Outdent', 'Indent', '-', 'Undo', 'Redo' ] },
+                                ],
+                                filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+                                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
+                                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
+                            });
+                    </script>
                     @include('layouts.hd')
                     <div class="form-group">
                         <label for="files[]">6.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ 詳細公文 ] [ 轉檔教學 ] )</label>

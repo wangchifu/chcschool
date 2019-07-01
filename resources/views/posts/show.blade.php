@@ -93,8 +93,8 @@
             <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
                 <p style="font-size: 1.2rem;">
                     @if($can_see)
-                        <?php $content = str_replace(chr(13) . chr(10), '<br>', $post->content);?>
-                        {!! $content !!}
+                        <?php //$content = str_replace(chr(13) . chr(10), '<br>', $post->content);?>
+                        {!! $post->content !!}
                     @else
                     <p class="text-danger">[ 內部公告 ] 請登入後瀏覽！</p>
                     @endif

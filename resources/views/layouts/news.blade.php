@@ -48,7 +48,7 @@
                         @endif
                     <a href="{{ route('posts.show',$post->id) }}">{{ $post->title }}</a>
                     </h5>
-                    <?php $content = str_limit($post->content,'320'); ?>
+                    <?php $content = str_limit(strip_tags($post->content),'320'); ?>
                     {{ $content }}
                     @if(!empty($files))
                         <br>
