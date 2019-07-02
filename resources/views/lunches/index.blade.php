@@ -300,6 +300,64 @@
                         </div>
                     </div>
                 @endif
+            @else
+                <h2>各學期訂餐統計</h2>
+                @foreach($all_lunch_tea as $k=>$v)
+                <table class="table table-striped">
+                    <tr>
+                        <th>
+                            學期
+                        </th>
+                        <th>
+                            餐期
+                        </th>
+                        <th>
+                            單價
+                        </th>
+                        <th>
+                            訂餐數
+                        </th>
+                        <th>
+                            小計
+                        </th>
+                    </tr>
+                    <?php $total=0; ?>
+                    @foreach($v as $k1=>$v1)
+                    <tr>
+                        <td>
+                            {{ $k }}
+                        </td>
+                        <td>
+                            {{ $k1 }}
+                        </td>
+                        <td>
+                            {{ $v1['f_money'] }}
+                        </td>
+                        <td>
+                            {{ $v1['num'] }}
+                        </td>
+                        <td>
+                            {{ $v1['f_money']*$v1['num'] }}
+                            <?php $total += $v1['f_money']*$v1['num']; ?>
+                        </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <th>
+                            本學期合計
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                            {{ $total }}
+                        </th>
+                    </tr>
+                </table>
+                @endforeach
             @endif
         </div>
 

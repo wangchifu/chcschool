@@ -79,6 +79,32 @@ class LunchController extends Controller
             $disable = $lunch_setup->disable;
         }
 
+        //各學期訂餐統計
+        $all_lunch_setups = LunchSetup::orderBy('id','DESC')->get();
+
+        foreach($all_lunch_setups as $all_lunch_setup){
+            $all_lunch_orders = LunchOrder::where('semester',$all_lunch_setup->semester)
+            ->orderBy('id','DESC')
+            ->get();
+            foreach($all_lunch_orders as $all_lunch_order){
+                $ds = LunchTeaDate::where('lunch_order_id',$all_lunch_order->id)
+                    ->where('user_id',auth()->user()->id)
+                    ->where('enable','eat')
+                    ->get();
+                if(!empty($ds->first())){
+                    foreach($ds as $d){
+                        $f_money = $d->lunch_factory->teacher_money;
+                    }
+                }else{
+                    $f_money = 0 ;
+                }
+
+                $all_lunch_tea[$all_lunch_setup->semester][$all_lunch_order->name]['num'] = $ds->count();
+                $all_lunch_tea[$all_lunch_setup->semester][$all_lunch_order->name]['f_money'] = $f_money;
+
+            }
+        }
+
         $data = [
             'lunch_order_id'=>$lunch_order_id,
             'lunch_order'=>$lunch_order,
@@ -91,6 +117,7 @@ class LunchController extends Controller
             'month_die_date'=>$month_die_date,
             'teacher_open'=>$teacher_open,
             'disable'=>$disable,
+            'all_lunch_tea'=>$all_lunch_tea,
         ];
         return view('lunches.index',$data);
     }
