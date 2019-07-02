@@ -15,13 +15,13 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>午餐系統-報表輸出：訂餐一覽表</h1>
+            <h1>午餐系統-報表輸出：分期記錄</h1>
             @include('lunches.nav')
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('lunches.index') }}">午餐系統</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('lunch_lists.index') }}">報表輸出</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">訂餐一覽表</li>
+                    <li class="breadcrumb-item active" aria-current="page">分期記錄</li>
                 </ol>
             </nav>
             @if($admin)

@@ -9,7 +9,7 @@ $school_code = school_code();
 $seal1 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal1.png');
 $path = 'lunches&'.$lunch_setup->id.'&seal1.png';
 if(file_exists($seal1)){
-    $img1 = "<img src=". route('getImg',$path) ." width=\"150\">";
+    $img1 = "<img src=". route('getImg',$path) ." width=\"140\">";
 }else{
     $img1 = "";
 }
@@ -18,7 +18,7 @@ if(file_exists($seal1)){
 $seal2 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal2.png');
 $path = 'lunches&'.$lunch_setup->id.'&seal2.png';
 if(file_exists($seal2)){
-    $img2 = "<img src=". route('getImg',$path) ." width=\"150\">";
+    $img2 = "<img src=". route('getImg',$path) ." width=\"140\">";
 }else{
     $img2 = "";
 }
@@ -27,7 +27,7 @@ if(file_exists($seal2)){
 $seal3 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal3.png');
 $path = 'lunches&'.$lunch_setup->id.'&seal3.png';
 if(file_exists($seal3)){
-    $img3 = "<img src=". route('getImg',$path) ." height=\"50\">";
+    $img3 = "<img src=". route('getImg',$path) ." width=\"140\">";
 }else{
     $img3 = "";
 }
@@ -35,7 +35,7 @@ if(file_exists($seal3)){
 $seal4 = storage_path('app/privacy/'.$school_code.'/lunches/'.$lunch_setup->id.'/seal4.png');
 $path = 'lunches&'.$lunch_setup->id.'&seal4.png';
 if(file_exists($seal4)){
-    $img4 = "<img src=". route('getImg',$path) ." width=\"150\">";
+    $img4 = "<img src=". route('getImg',$path) ." width=\"140\">";
 }else{
     $img4 = "";
 }
@@ -57,7 +57,7 @@ foreach($user_datas as $k1 => $v1){
                <tr>
                 <td align='center'>明細</td>
                 <td colspan='2'>
-                <table width='100%' cellSpacing='0' cellPadding='0' style='font-size:5px;'>";
+                <table width='100%' cellSpacing='0' cellPadding='0' style='font-size:15px;'>";
                 $total_money = 0;
                 foreach($v1 as $k2 => $v2){
                 $money = $factory_money[$k1][$k2]*$v2;
@@ -84,13 +84,15 @@ foreach($user_datas as $k1 => $v1){
                <td colspan='2'>{$lunch_setup->semester}學期 教職員午餐繳費</td>
                </tr>
                </table>
-               <p stype='font-size:20px'>承辦人　　　　　　　　　主辨出納　　　　　　　　　主辨會計　　　　　　　　　機關長官</p>
-               <span>{$img1}　　　{$img2}　　　{$img3}　　　{$img4}</span>
+                <center>
+               <span stype='font-size:20px'>承辦人　　　　　　　　　主辨出納　　　　　　　　　主辨會計　　　　　　　　　機關長官</span><br>
+               <span>{$img1}　　　　{$img2}　　　　{$img3}　　　　{$img4}</span>
+                </center>
                ";
 
-    $total_table .= "<h3 align='center'>$lunch_setup->all_rece_name 收款收據 (收執聯)</h3>".$table."<hr>";
-    $total_table .= "<h3 align='center'>$lunch_setup->all_rece_name 收款收據 (報核聯)</h3>".$table."<hr>";
-    $total_table .= "<h3 align='center'>$lunch_setup->all_rece_name 收款收據 (存根聯)</h3>".$table."<p style='page-break-after:always'></p>";
+    $total_table .= "<span style='font-weight:bold;font-size:20px;'>　　　　　　　　　　　　$lunch_setup->all_rece_name 收款收據 (收執聯)</span><br>".$table."<hr>";
+    $total_table .= "<span style='font-weight:bold;font-size:20px;'>　　　　　　　　　　　　$lunch_setup->all_rece_name 收款收據 (報核聯)</span><br>".$table."<hr>";
+    $total_table .= "<span style='font-weight:bold;font-size:20px;'>　　　　　　　　　　　　$lunch_setup->all_rece_name 收款收據 (存根聯)</span><br>".$table."<p style='page-break-after:always'></p>";
 
 
 

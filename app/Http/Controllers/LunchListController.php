@@ -125,30 +125,53 @@ class LunchListController extends Controller
 
     public function semester_print(Request $request)
     {
-        $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
+        if($request->input('submit')=="印出教師全學期收據"){
+            $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
 
-        $order_datas = LunchTeaDate::where('semester',$lunch_setup->semester)
-            ->orderBy('lunch_order_id')
-            ->orderBy('user_id')
-            ->get();
+            $order_datas = LunchTeaDate::where('semester',$lunch_setup->semester)
+                ->orderBy('lunch_order_id')
+                ->orderBy('user_id')
+                ->get();
 
-        $user_datas = [];
-        $factory_money=[];
-        foreach ($order_datas as $order_data) {
-            if ($order_data->enable == "eat") {
-                if(!isset($user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)])) $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]=null;
-                $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]++;
-                $factory_money[$order_data->user->name][substr($order_data->order_date, 0, 7)] = $order_data->lunch_factory->teacher_money;
+            $user_datas = [];
+            $factory_money=[];
+            foreach ($order_datas as $order_data) {
+                if ($order_data->enable == "eat") {
+                    if(!isset($user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)])) $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]=null;
+                    $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]++;
+                    $factory_money[$order_data->user->name][substr($order_data->order_date, 0, 7)] = $order_data->lunch_factory->teacher_money;
+                }
             }
+
+
+            $data = [
+                'lunch_setup'=>$lunch_setup,
+                'user_datas'=>$user_datas,
+                'factory_money'=>$factory_money,
+            ];
+            return view('lunch_lists.semester_print',$data);
         }
 
+        if($request->input('submit')=="印出廠商全學期收入") {
+            $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
 
-        $data = [
-            'lunch_setup'=>$lunch_setup,
-            'user_datas'=>$user_datas,
-            'factory_money'=>$factory_money,
-        ];
-        return view('lunch_lists.semester_print',$data);
+            $factories = LunchFactory::where('disable',null)->get();
+            foreach($factories as $factory){
+                $num = LunchTeaDate::where('semester',$lunch_setup->semester)
+                    ->where('lunch_factory_id',$factory->id)
+                    ->where('enable','eat')
+                    ->count();
+                $f[$factory->name]['num'] = $num;
+                $f[$factory->name]['money'] = $factory->teacher_money;
+
+            }
+            $data = [
+                'semester'=>$lunch_setup->semester,
+                'f'=>$f,
+            ];
+            return view('lunch_lists.semester_factory',$data);
+        }
+
     }
 
 

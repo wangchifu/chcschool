@@ -192,6 +192,11 @@
                             <td>{{ $total_money }}</td>
                         </tr>
                     </table>
+                    <?php
+                        $l_o = \App\LunchOrder::where('id',$lunch_order_id)->first();
+                        $num = \App\LunchTeaDate::where('lunch_factory_id',$factory->id)->where('semester',$l_o->semester)->where('enable','eat')->count();
+                    ?>
+                    <span class="text-danger">本學期各餐期目前共收入金額為：{{ $num*$factory->teacher_money }}</span>
                 </div>
                 <hr class="col-md-12">
                 <div class="col-md-12">

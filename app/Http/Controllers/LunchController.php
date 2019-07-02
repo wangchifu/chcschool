@@ -80,6 +80,7 @@ class LunchController extends Controller
         }
 
         //各學期訂餐統計
+        $all_lunch_tea = [];
         $all_lunch_setups = LunchSetup::orderBy('id','DESC')->get();
 
         foreach($all_lunch_setups as $all_lunch_setup){
