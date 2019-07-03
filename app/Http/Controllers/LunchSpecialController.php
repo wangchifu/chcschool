@@ -399,4 +399,69 @@ class LunchSpecialController extends Controller
 
         return redirect()->route('lunch_specials.index');
     }
+
+    public function bad_factory()
+    {
+        $admin = check_power('午餐系統','A',auth()->user()->id);
+        $factories = LunchFactory::where('disable',null)->pluck('name','id')->toArray();
+        $data = [
+            'admin'=>$admin,
+            'factories'=>$factories,
+        ];
+        return view('lunch_specials.bad_factory',$data);
+    }
+
+    public function bad_factory2(Request $request)
+    {
+        $admin = check_power('午餐系統','A',auth()->user()->id);
+        $factories = LunchFactory::where('disable',null)->pluck('name','id')->toArray();
+        foreach($factories as $k=>$v){
+            if($k != $request->input('bad_factory_id')){
+                $factories2[$k]=$v;
+            }else{
+                $bad_factory = $v;
+            }
+        }
+        $bad_factory_id = $request->input('bad_factory_id');
+        $order_date = $request->input('order_date');
+
+        $tea_orders = LunchTeaDate::where('lunch_factory_id',$bad_factory_id)
+            ->where('order_date','>=',$order_date)
+            ->get();
+        foreach($tea_orders as $tea_order){
+            $teachers[$tea_order->user_id]=1;
+        }
+        foreach($teachers as $k=>$v){
+            $user = User::find($k);
+            $teas[$k]=$user->name;
+        }
+
+        $data = [
+            'admin'=>$admin,
+            'factories'=>$factories2,
+            'bad_factory_id'=>$bad_factory_id,
+            'bad_factory'=>$bad_factory,
+            'order_date'=>$order_date,
+            'teas'=>$teas
+        ];
+        return view('lunch_specials.bad_factory2',$data);
+    }
+
+    public function bad_factory3(Request $request){
+        $bad_factory_id = $request->input('bad_factory_id');
+        $order_date = $request->input('order_date');
+        $good_factory_id = $request->input('good_factory_id');
+        $teas = $request->input('teas');
+
+        $att['lunch_factory_id'] = $good_factory_id;
+        foreach($teas as $k=>$v){
+            $tea_orders = LunchTeaDate::where('lunch_factory_id',$bad_factory_id)
+                ->where('order_date','>=',$order_date)
+                ->where('user_id',$v)
+                ->update($att);
+        }
+
+        return redirect()->route('lunch_specials.index');
+    }
+
 }

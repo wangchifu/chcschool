@@ -148,6 +148,9 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('lunch_specials/teacher_update_month', 'LunchSpecialController@teacher_update_month')->name('lunch_specials.teacher_update_month');
     Route::get('lunch_specials/teacher_change', 'LunchSpecialController@teacher_change')->name('lunch_specials.teacher_change');
     Route::post('lunch_specials/teacher_change_store', 'LunchSpecialController@teacher_change_store')->name('lunch_specials.teacher_change_store');
+    Route::get('lunch_specials/bad_factory', 'LunchSpecialController@bad_factory')->name('lunch_specials.bad_factory');
+    Route::post('lunch_specials/bad_factory2', 'LunchSpecialController@bad_factory2')->name('lunch_specials.bad_factory2');
+    Route::post('lunch_specials/bad_factory3', 'LunchSpecialController@bad_factory3')->name('lunch_specials.bad_factory3');
 
     Route::get('lunch_lists/index', 'LunchListController@index')->name('lunch_lists.index');
     Route::get('lunch_lists/more_list_factory/{lunch_order_id}/{factory_id}', 'LunchListController@more_list_factory')->name('lunch_lists.more_list_factory');
