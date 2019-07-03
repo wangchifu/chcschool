@@ -119,6 +119,8 @@ class OpenFileController extends Controller
         if(!is_dir($new_path)){
             mkdir($new_path);
             Upload::create($att);
+        }else{
+            return back()->withErrors(['error'=>['已有此目錄！']]);
         }
         return redirect()->route('open_files.index',$request->input('path'));
     }
@@ -237,13 +239,17 @@ class OpenFileController extends Controller
                     'extension' => $file->getClientOriginalExtension(),
                 ];
 
-                $file->storeAs($p, $info['original_filename']);
+                if(file_exists(storage_path('app/'.$p.'/'.$info['original_filename']))){
+                    return back()->withErrors(['error'=>['已有相同檔名！']]);
+                }else{
+                    $file->storeAs($p, $info['original_filename']);
 
-                $att['name'] = $info['original_filename'];
-                $att['type'] = 2;//檔案
-                $att['user_id'] = auth()->user()->id;
-                $att['folder_id'] = $request->input('folder_id');
-                Upload::create($att);
+                    $att['name'] = $info['original_filename'];
+                    $att['type'] = 2;//檔案
+                    $att['user_id'] = auth()->user()->id;
+                    $att['folder_id'] = $request->input('folder_id');
+                    Upload::create($att);
+                }
 
             }
         }

@@ -51,6 +51,12 @@ class LunchSetupController extends Controller
         ]);
         $att['semester']=$request->input('semester');
 
+        //不得重復同學期
+        $check_semester = LunchSetup::where('semester',$att['semester'])->first();
+        if($check_semester->id){
+            return back()->withErrors(['errors'=>['此學期已建置！']]);
+        }
+
         $eat_styles = $request->input('eat_styles');
 
         $eat_str = "";
