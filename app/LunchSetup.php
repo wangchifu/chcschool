@@ -16,5 +16,6 @@ class LunchSetup extends Model
         'all_rece_date',
         'all_rece_no',
         'all_rece_num',
+        'teacher_money',
     ];
 }

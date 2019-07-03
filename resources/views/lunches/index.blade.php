@@ -201,7 +201,7 @@
                                     </td>
                                     <td>
                                         <label>本期訂餐費用</label>
-                                        <h4>{{ $factory->teacher_money*$days }} 元</h4>
+                                        <h4>{{ $lunch_setup->teacher_money*$days }} 元</h4>
                                     </td>
                                 </tr>
                             </table>
@@ -331,14 +331,14 @@
                             {{ $k1 }}
                         </td>
                         <td>
-                            {{ $v1['f_money'] }}
+                            {{ $v1['t_money'] }}
                         </td>
                         <td>
                             {{ $v1['num'] }}
                         </td>
                         <td>
-                            {{ $v1['f_money']*$v1['num'] }}
-                            <?php $total += $v1['f_money']*$v1['num']; ?>
+                            {{ $v1['t_money']*$v1['num'] }}
+                            <?php $total += $v1['t_money']*$v1['num']; ?>
                         </td>
                     </tr>
                     @endforeach

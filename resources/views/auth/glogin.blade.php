@@ -52,7 +52,7 @@
                                 <i class="fas fa-sign-in-alt"></i> 登入
                             </button>
                             <div class="text-right">
-                                <a href="{{ route('admin_login') }}"><i class="fas fa-cog"></i>本機帳號</a>
+                                <a href="{{ route('admin_login') }}"><i class="fas fa-cog"></i> 使用本機帳號</a>
                             </div>
                         </div>
                     </div>

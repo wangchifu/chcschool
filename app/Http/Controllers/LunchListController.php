@@ -36,6 +36,8 @@ class LunchListController extends Controller
         $days_data=[];
         $money_data=[];
         if($lunch_order_id){
+            $lunch_order = LunchOrder::find($lunch_order_id);
+            $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
             $date_array = $this->get_order_date($lunch_order_id);
 
             $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
@@ -55,7 +57,7 @@ class LunchListController extends Controller
                     if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
                     $days_data[$tea_date->user->name]++;
                     if(!isset($money_data[$tea_date->user->name])) $money_data[$tea_date->user->name]=0;
-                    $money_data[$tea_date->user->name] += $tea_date->lunch_factory->teacher_money;
+                    $money_data[$tea_date->user->name] += $lunch_setup->teacher_money;
                 }
             }
 
@@ -92,7 +94,7 @@ class LunchListController extends Controller
             if ($order_data->enable == "eat") {
                 if(!isset($user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)])) $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]=null;
                 $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]++;
-                $factory_money[$order_data->user->name] = $order_data->lunch_factory->teacher_money;
+                $factory_money[$order_data->user->name] = $lunch_setup->teacher_money;
             }
         }
 
@@ -139,7 +141,7 @@ class LunchListController extends Controller
                 if ($order_data->enable == "eat") {
                     if(!isset($user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)])) $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]=null;
                     $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]++;
-                    $factory_money[$order_data->user->name][substr($order_data->order_date, 0, 7)] = $order_data->lunch_factory->teacher_money;
+                    $factory_money[$order_data->user->name][substr($order_data->order_date, 0, 7)] = $lunch_setup->teacher_money;
                 }
             }
 
@@ -162,7 +164,7 @@ class LunchListController extends Controller
                     ->where('enable','eat')
                     ->count();
                 $f[$factory->name]['num'] = $num;
-                $f[$factory->name]['money'] = $factory->teacher_money;
+                $f[$factory->name]['money'] = $lunch_setup->teacher_money;
 
             }
             $data = [
@@ -183,6 +185,7 @@ class LunchListController extends Controller
         $money_data=[];
 
         $lunch_order= LunchOrder::find($lunch_order_id);
+        $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
         $date_array = $this->get_order_date($lunch_order_id);
 
         $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
@@ -203,7 +206,7 @@ class LunchListController extends Controller
                 if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
                 $days_data[$tea_date->user->name]++;
                 if(!isset($money_data[$tea_date->user->name])) $money_data[$tea_date->user->name]=0;
-                $money_data[$tea_date->user->name] += $tea_date->lunch_factory->teacher_money;
+                $money_data[$tea_date->user->name] += $lunch_setup->teacher_money;
             }
         }
         $data = [
@@ -222,6 +225,8 @@ class LunchListController extends Controller
     {
         $admin = check_power('午餐系統','A',auth()->user()->id);
 
+        $lunch_order = LunchOrder::find($lunch_order_id);
+        $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
 
         $lunch_order_array = LunchOrder::orderBy('name','DESC')
             ->pluck('name','id')
@@ -256,7 +261,7 @@ class LunchListController extends Controller
                 if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
                 $days_data[$tea_date->user->name]++;
                 if(!isset($money_data[$tea_date->user->name])) $money_data[$tea_date->user->name]=0;
-                $money_data[$tea_date->user->name] += $tea_date->lunch_factory->teacher_money;
+                $money_data[$tea_date->user->name] += $lunch_setup->teacher_money;
             }
         }
 
@@ -322,6 +327,10 @@ class LunchListController extends Controller
                 $days_data=[];
                 $money_data=[];
 
+                $lunch_order = LunchOrder::find($lunch_order_id);
+                $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
+
+
                 $date_array = $this->get_order_date($lunch_order_id);
 
                 $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
@@ -340,7 +349,7 @@ class LunchListController extends Controller
                         if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
                         $days_data[$tea_date->user->name]++;
                         if(!isset($money_data[$tea_date->user->name])) $money_data[$tea_date->user->name]=0;
-                        $money_data[$tea_date->user->name] += $tea_date->lunch_factory->teacher_money;
+                        $money_data[$tea_date->user->name] += $lunch_setup->teacher_money;
                     }
                 }
 

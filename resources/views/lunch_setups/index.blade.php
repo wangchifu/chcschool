@@ -154,9 +154,6 @@
                                 <th>
                                     名稱
                                 </th>
-                                <th width="100">
-                                    餐價
-                                </th>
                                 <th width="200">
                                     帳號
                                 </th>
@@ -179,9 +176,6 @@
                                         <input type="text" class="form-control" name="name" required>
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" name="teacher_money" required>
-                                    </td>
-                                    <td>
                                         <input type="text" class="form-control" name="fid" required>
                                     </td>
                                     <td>
@@ -202,9 +196,6 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" name="name" value="{{ $factory->name }}" required>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" name="teacher_money" value="{{ $factory->teacher_money }}" required>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" name="fid" value="{{ $factory->fid }}" required>

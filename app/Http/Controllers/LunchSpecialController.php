@@ -105,7 +105,7 @@ class LunchSpecialController extends Controller
         $factories = LunchFactory::where('disable',null)
             ->get();
         foreach($factories as $factory){
-            $lunch_factory_array[$factory->id] = $factory->name.' ($'.$factory->teacher_money.') ';
+            $lunch_factory_array[$factory->id] = $factory->name;
         }
         $lunch_place_array = LunchPlace::where('disable',null)
             ->pluck('name','id')
@@ -226,7 +226,7 @@ class LunchSpecialController extends Controller
         $factories = LunchFactory::where('disable',null)
             ->get();
         foreach($factories as $factory){
-            $lunch_factory_array[$factory->id] = $factory->name.' ($'.$factory->teacher_money.') ';
+            $lunch_factory_array[$factory->id] = $factory->name;
         }
         $lunch_place_array = LunchPlace::where('disable',null)
             ->pluck('name','id')

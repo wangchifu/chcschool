@@ -44,6 +44,7 @@ class LunchSetupController extends Controller
             'all_rece_date'=>'required|date',
             'all_rece_no'=>'required',
             'all_rece_num'=>'required|numeric',
+            'teacher_money'=>'required|numeric',
             'file1'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'file2'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'file3'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -53,7 +54,7 @@ class LunchSetupController extends Controller
 
         //不得重復同學期
         $check_semester = LunchSetup::where('semester',$att['semester'])->first();
-        if($check_semester->id){
+        if($check_semester){
             return back()->withErrors(['errors'=>['此學期已建置！']]);
         }
 
@@ -77,6 +78,7 @@ class LunchSetupController extends Controller
         $att['all_rece_date']=$request->input('all_rece_date');
         $att['all_rece_no']=$request->input('all_rece_no');
         $att['all_rece_num']=$request->input('all_rece_num');
+        $att['teacher_money']=$request->input('teacher_money');
 
         $lunch_setup = LunchSetup::create($att);
 
@@ -124,6 +126,7 @@ class LunchSetupController extends Controller
             'all_rece_date'=>'required|date',
             'all_rece_no'=>'required',
             'all_rece_num'=>'required|numeric',
+            'teacher_money'=>'required|numeric',
             'file1'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'file2'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'file3'=>'nullable|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -153,6 +156,7 @@ class LunchSetupController extends Controller
         $att['all_rece_date']=$request->input('all_rece_date');
         $att['all_rece_no']=$request->input('all_rece_no');
         $att['all_rece_num']=$request->input('all_rece_num');
+        $att['teacher_money']=$request->input('teacher_money');
 
         $lunch_setup->update($att);
 
@@ -225,7 +229,6 @@ class LunchSetupController extends Controller
     public function factory_add(Request $request)
     {
         $att['name'] = $request->input('name');
-        $att['teacher_money'] = $request->input('teacher_money');
         $att['fid'] = $request->input('fid');
         $att['fpwd'] = $request->input('fpwd');
         $att['disable'] = ($request->input('disable'))?1:null;
@@ -236,7 +239,6 @@ class LunchSetupController extends Controller
     public function factory_update(Request $request , LunchFactory $lunch_factory)
     {
         $att['name'] = $request->input('name');
-        $att['teacher_money'] = $request->input('teacher_money');
         $att['fid'] = $request->input('fid');
         $att['fpwd'] = $request->input('fpwd');
         $att['disable'] = ($request->input('disable'))?1:null;

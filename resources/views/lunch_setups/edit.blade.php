@@ -101,6 +101,10 @@
                         {{ Form::text('all_rece_num',null,['id'=>'all_rece_num','class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
+                        <label for="teacher_money"><strong>每餐價格*</strong></label>
+                        {{ Form::text('teacher_money',null,['id'=>'teacher_money','class'=>'form-control','required'=>'required']) }}
+                    </div>
+                    <div class="form-group">
                         <label for="all_rece_num">經手人印章圖檔
                             <?php
                             $school_code = school_code();

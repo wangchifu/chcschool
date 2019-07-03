@@ -26,6 +26,7 @@ class LunchController extends Controller
         $lunch_order_array = [];
         $lunch_factory_array = [];
         $lunch_place_array = [];
+        $lunch_setup = [];
         $has_order = "";
         $die_date = "";
         $month_die_date = "";
@@ -45,7 +46,7 @@ class LunchController extends Controller
         $factories = LunchFactory::where('disable',null)
             ->get();
         foreach($factories as $factory){
-            $lunch_factory_array[$factory->id] = $factory->name.' ($'.$factory->teacher_money.') ';
+            $lunch_factory_array[$factory->id] = $factory->name;
         }
         $lunch_place_array = LunchPlace::where('disable',null)
             ->pluck('name','id')
@@ -92,21 +93,15 @@ class LunchController extends Controller
                     ->where('user_id',auth()->user()->id)
                     ->where('enable','eat')
                     ->get();
-                if(!empty($ds->first())){
-                    foreach($ds as $d){
-                        $f_money = $d->lunch_factory->teacher_money;
-                    }
-                }else{
-                    $f_money = 0 ;
-                }
 
                 $all_lunch_tea[$all_lunch_setup->semester][$all_lunch_order->name]['num'] = $ds->count();
-                $all_lunch_tea[$all_lunch_setup->semester][$all_lunch_order->name]['f_money'] = $f_money;
+                $all_lunch_tea[$all_lunch_setup->semester][$all_lunch_order->name]['t_money'] = $all_lunch_setup->teacher_money;
 
             }
         }
 
         $data = [
+            'lunch_setup'=>$lunch_setup,
             'lunch_order_id'=>$lunch_order_id,
             'lunch_order'=>$lunch_order,
             'lunch_order_array'=>$lunch_order_array,
