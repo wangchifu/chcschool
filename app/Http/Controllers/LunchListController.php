@@ -185,6 +185,7 @@ class LunchListController extends Controller
         if($request->input('submit')=="印出廠商全學期收入") {
             $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
 
+            /**
             $factories = LunchFactory::where('disable',null)->get();
             foreach($factories as $factory){
                 $num = LunchTeaDate::where('semester',$lunch_setup->semester)
@@ -198,7 +199,20 @@ class LunchListController extends Controller
             $data = [
                 'semester'=>$lunch_setup->semester,
                 'f'=>$f,
+            ];*/
+            $tea_dates = LunchTeaDate::where('semester',$lunch_setup->semester)
+                ->where('enable','eat')
+                ->get();
+            foreach($tea_dates as $tea_date){
+                if(!isset($order_data[$tea_date->lunch_factory->name][$tea_date->user->name])) $order_data[$tea_date->lunch_factory->name][$tea_date->user->name]=0;
+                $order_data[$tea_date->lunch_factory->name][$tea_date->user->name]++;
+            }
+
+            $data = [
+                'order_data'=>$order_data,
+                'lunch_setup'=>$lunch_setup,
             ];
+
             return view('lunch_lists.semester_factory',$data);
         }
 

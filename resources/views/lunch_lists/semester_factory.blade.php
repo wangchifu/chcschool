@@ -5,14 +5,14 @@
 @section('title', '午餐系統-報表輸出')
 
 @section('content')
-    <h2>{{ $semester }} 學期教職員午餐廠商收入表</h2>
-    <table class="table table-striped">
+    <h2>{{ $lunch_setup->semester }} 學期教職員午餐廠商收入表</h2>
+    <table border="1" width="100%">
         <tr>
             <th>
                 廠商
             </th>
             <th>
-                單價
+                訂餐者
             </th>
             <th>
                 總訂餐數
@@ -21,21 +21,42 @@
                 總計
             </th>
         </tr>
-        <?php $total=0; ?>
-    @foreach($f as $k=>$v)
+        <?php $all_days=0; ?>
+    @foreach($order_data as $k=>$v)
         <tr>
             <td>
                 {{ $k }}
             </td>
             <td>
-                {{ $v['money'] }}
+                <table border="1" width="100%">
+                    <tr>
+                        <th>
+                            姓名
+                        </th>
+                        <th>
+                            訂餐數
+                        </th>
+                    </tr>
+                <?php $total_days=0; ?>
+                @foreach($v as $k2=>$v2)
+                    <tr>
+                        <td>
+                            {{ $k2 }}
+                        </td>
+                        <td>
+                            {{ $v2 }}
+                            <?php $total_days += $v2; ?>
+                        </td>
+                    </tr>
+                @endforeach
+                </table>
             </td>
             <td>
-                {{ $v['num'] }}
+                {{ $total_days }}
+                <?php $all_days += $total_days; ?>
             </td>
             <td>
-                {{ $v['money']*$v['num'] }}
-                <?php $total += $v['money']*$v['num'] ?>
+                {{ $lunch_setup->teacher_money*$total_days }}
             </td>
         </tr>
     @endforeach
@@ -47,10 +68,10 @@
 
             </th>
             <th>
-
+                {{ $all_days }}
             </th>
             <th>
-                {{ $total }}
+                {{ $lunch_setup->teacher_money*$all_days }}
             </th>
         </tr>
     </table>
