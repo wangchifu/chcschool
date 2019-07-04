@@ -40,12 +40,24 @@
                             <label>1.選擇違約廠商</label>
                             {{ Form::select('bad_factory_id',$factories,null,['class'=>'form-control','required'=>'required']) }}
                         </div>
-                        <label>2.哪日起開始分配給其他廠商</label>
+                        <label>2.從哪日起？</label>
                         <div class="form-group">
-                            {{ Form::text('order_date',null,['id'=>'order_date','class' => 'form-control','required'=>'required','maxlength'=>'10','width'=>'276']) }}
+                            {{ Form::text('order_date1',null,['id'=>'order_date1','class' => 'form-control','required'=>'required','maxlength'=>'10','width'=>'276']) }}
                             <script src="{{ asset('gijgo/js/messages/messages.zh-TW.js') }}"></script>
                             <script>
-                                $('#order_date').datepicker({
+                                $('#order_date1').datepicker({
+                                    uiLibrary: 'bootstrap4',
+                                    format: 'yyyy-mm-dd',
+                                    locale: 'zh-TW',
+                                });
+                            </script>
+                        </div>
+                        <label>3.到哪日止？</label>
+                        <div class="form-group">
+                            {{ Form::text('order_date2',null,['id'=>'order_date2','class' => 'form-control','required'=>'required','maxlength'=>'10','width'=>'276']) }}
+                            <script src="{{ asset('gijgo/js/messages/messages.zh-TW.js') }}"></script>
+                            <script>
+                                $('#order_date2').datepicker({
                                     uiLibrary: 'bootstrap4',
                                     format: 'yyyy-mm-dd',
                                     locale: 'zh-TW',

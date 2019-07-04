@@ -423,10 +423,12 @@ class LunchSpecialController extends Controller
             }
         }
         $bad_factory_id = $request->input('bad_factory_id');
-        $order_date = $request->input('order_date');
+        $order_date1 = $request->input('order_date1');
+        $order_date2 = $request->input('order_date2');
 
         $tea_orders = LunchTeaDate::where('lunch_factory_id',$bad_factory_id)
-            ->where('order_date','>=',$order_date)
+            ->where('order_date','>=',$order_date1)
+            ->where('order_date','<=',$order_date2)
             ->get();
         foreach($tea_orders as $tea_order){
             $teachers[$tea_order->user_id]=1;
@@ -441,7 +443,8 @@ class LunchSpecialController extends Controller
             'factories'=>$factories2,
             'bad_factory_id'=>$bad_factory_id,
             'bad_factory'=>$bad_factory,
-            'order_date'=>$order_date,
+            'order_date1'=>$order_date1,
+            'order_date2'=>$order_date2,
             'teas'=>$teas
         ];
         return view('lunch_specials.bad_factory2',$data);
@@ -449,14 +452,16 @@ class LunchSpecialController extends Controller
 
     public function bad_factory3(Request $request){
         $bad_factory_id = $request->input('bad_factory_id');
-        $order_date = $request->input('order_date');
+        $order_date1 = $request->input('order_date1');
+        $order_date2 = $request->input('order_date2');
         $good_factory_id = $request->input('good_factory_id');
         $teas = $request->input('teas');
 
         $att['lunch_factory_id'] = $good_factory_id;
         foreach($teas as $k=>$v){
             $tea_orders = LunchTeaDate::where('lunch_factory_id',$bad_factory_id)
-                ->where('order_date','>=',$order_date)
+                ->where('order_date','>=',$order_date1)
+                ->where('order_date','<=',$order_date2)
                 ->where('user_id',$v)
                 ->update($att);
         }

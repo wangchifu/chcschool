@@ -15,16 +15,13 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>午餐系統-報表輸出：查詢結果</h1>
+            <h1>午餐系統-報表輸出：訂購 {{ $factory->name }} 資訊</h1>
             @if($admin)
                 <h3>一、教師訂餐明細</h3>
                 <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
                     <tr bgcolor='#005DBE' style='color:white;'>
                         <th>
                             姓名
-                        </th>
-                        <th>
-                            廠商
                         </th>
                         <th>
                             地點
@@ -62,9 +59,6 @@
                         <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
                             <td>
                                 {{ $i }}{{ $k1 }}<br>
-                            </td>
-                            <td>
-                                {{ $factory_data[$k1] }}
                             </td>
                             <td>
                                 {{ $place_data[$k1] }}
@@ -115,7 +109,6 @@
                     @endforeach
                     <tr>
                         <td>合計</td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         @foreach($date_array as $k=>$v)

@@ -32,17 +32,15 @@
                 </form>
                 @if($lunch_order_id)
                     <br>
-                    <a href="{{ route('lunch_lists.get_money',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 收費確認表</a>
-                    <a href="{{ route('lunch_lists.teacher_money_print',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 三聯單</a>
+                    <a href="{{ route('lunch_lists.call_money',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 本期收費通知</a>
+                    <a href="{{ route('lunch_lists.get_money',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 本期收費確認表</a>
+                    <a href="{{ route('lunch_lists.teacher_money_print',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 本期三聯單</a>
                     <br>
                     <br>
                     <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
                         <tr bgcolor='#005DBE' style='color:white;'>
                             <th>
                                 姓名
-                            </th>
-                            <th>
-                                廠商
                             </th>
                             <th>
                                 地點
@@ -82,9 +80,6 @@
                                     {{ $i }}{{ $k1 }}<br>
                                 </td>
                                 <td>
-                                    <a href="{{ route('lunch_lists.more_list_factory',[$lunch_order_id,$factory_data[$k1]['id']]) }}" target="_blank">{{ $factory_data[$k1]['name'] }}</a>
-                                </td>
-                                <td>
                                     {{ $place_data[$k1] }}
                                 </td>
                                 <td>
@@ -111,7 +106,7 @@
                                     <td style="background-color:{{ $bg }}">
                                         @if(isset($v1[$k2]))
                                             @if($v1[$k2]['enable']=="eat")
-                                                <img src="{{ asset('/images/system_red.png') }}">
+                                                <a href="{{ route('lunch_lists.more_list_factory',[$lunch_order_id,$factory_data[$k1][$k2]['id']]) }}" target="_blank"><span class="badge badge-pill badge-danger">{{ mb_substr($factory_data[$k1][$k2]['name'],0,1) }}</span></a>
                                             @endif
                                         @endif
                                     </td>
@@ -129,7 +124,6 @@
                         @endforeach
                         <tr>
                             <td>合計</td>
-                            <td></td>
                             <td></td>
                             <td></td>
                             @foreach($date_array as $k=>$v)

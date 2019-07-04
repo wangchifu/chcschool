@@ -31,6 +31,7 @@
                         {{ Form::select('lunch_setup_id', $lunch_setup_array,null, ['class' => 'form-control','required'=>'required','placeholder'=>'--請選擇--']) }}
                     </div>
                     <div class="form-group">
+                        <input name="submit" type="submit" class="btn btn-info btn-sm" value="印出教師全學期收費通知">
                         <input name="submit" type="submit" class="btn btn-info btn-sm" value="印出教師全學期收據">
                         <input name="submit" type="submit" class="btn btn-info btn-sm" value="印出廠商全學期收入">
                     </div>

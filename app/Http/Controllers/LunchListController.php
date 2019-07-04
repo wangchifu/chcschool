@@ -45,8 +45,8 @@ class LunchListController extends Controller
                 ->get();
             foreach($tea_dates as $tea_date){
                 $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
-                $factory_data[$tea_date->user->name]['name'] = $tea_date->lunch_factory->name;
-                $factory_data[$tea_date->user->name]['id'] = $tea_date->lunch_factory->id;
+                $factory_data[$tea_date->user->name][$tea_date->order_date]['name'] = $tea_date->lunch_factory->name;
+                $factory_data[$tea_date->user->name][$tea_date->order_date]['id'] = $tea_date->lunch_factory->id;
                 if(substr($tea_date->lunch_place_id,0,1)=="c"){
                     $place_data[$tea_date->user->name]=substr($tea_date->lunch_place_id,1,3)."教室";
                 }else{
@@ -127,6 +127,34 @@ class LunchListController extends Controller
 
     public function semester_print(Request $request)
     {
+        if($request->input('submit')=="印出教師全學期收費通知"){
+            $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
+
+            $order_datas = LunchTeaDate::where('semester',$lunch_setup->semester)
+                ->orderBy('lunch_order_id')
+                ->orderBy('user_id')
+                ->get();
+
+            $user_datas = [];
+            $factory_money=[];
+            foreach ($order_datas as $order_data) {
+                if ($order_data->enable == "eat") {
+                    if(!isset($user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)])) $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]=null;
+                    $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]++;
+                    $factory_money[$order_data->user->name][substr($order_data->order_date, 0, 7)] = $lunch_setup->teacher_money;
+                }
+            }
+
+
+            $data = [
+                'lunch_setup'=>$lunch_setup,
+                'user_datas'=>$user_datas,
+                'factory_money'=>$factory_money,
+                'lunch_setup'=>$lunch_setup,
+            ];
+            return view('lunch_lists.semester_call_money',$data);
+        }
+
         if($request->input('submit')=="印出教師全學期收據"){
             $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
 
@@ -176,6 +204,53 @@ class LunchListController extends Controller
 
     }
 
+    public function call_money($lunch_order_id)
+    {
+        $user_data = [];
+        $factory_data=[];
+        $days_data=[];
+        $money_data=[];
+
+        $lunch_order= LunchOrder::find($lunch_order_id);
+        $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
+        $date_array = $this->get_order_date($lunch_order_id);
+
+        $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+            ->orderBy('order_date')
+            ->get();
+        foreach($tea_dates as $tea_date){
+            $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
+
+            if(substr($tea_date->lunch_place_id,0,1)=="c"){
+                $user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place_id." 教室";
+            }else{
+                $user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
+            }
+
+            $user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
+            $factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
+            if($tea_date->enable=="eat"){
+                if(!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name]=0;
+                $days_data[$tea_date->user->name]++;
+                if(!isset($money_data[$tea_date->user->name])) $money_data[$tea_date->user->name]=0;
+                $money_data[$tea_date->user->name] += $lunch_setup->teacher_money;
+            }
+        }
+
+        $teacher_money = $lunch_setup->teacher_money;
+        $data = [
+            'lunch_order'=>$lunch_order,
+            'lunch_order_id'=>$lunch_order_id,
+            'date_array'=>$date_array,
+            'user_data'=>$user_data,
+            'factory_data'=>$factory_data,
+            'days_data'=>$days_data,
+            'money_data'=>$money_data,
+            'teacher_money'=>$teacher_money,
+        ];
+        return view('lunch_lists.call_money', $data);
+    }
+
 
     public function get_money($lunch_order_id)
     {
@@ -223,6 +298,7 @@ class LunchListController extends Controller
 
     public function more_list_factory($lunch_order_id,$factory_id)
     {
+        $factory = LunchFactory::find($factory_id);
         $admin = check_power('午餐系統','A',auth()->user()->id);
 
         $lunch_order = LunchOrder::find($lunch_order_id);
@@ -234,7 +310,7 @@ class LunchListController extends Controller
 
         $date_array = [];
         $user_data = [];
-        $factory_data=[];
+        //$factory_data=[];
         $place_data=[];
         $eat_data=[];
         $days_data=[];
@@ -250,7 +326,7 @@ class LunchListController extends Controller
             $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
             //$user_data[$tea_date->user->name][$tea_date->order_date]['place'] = $tea_date->lunch_place->name;
             //$user_data[$tea_date->user->name][$tea_date->order_date]['eat_style'] = $tea_date->eat_style;
-            $factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
+            //$factory_data[$tea_date->user->name] = $tea_date->lunch_factory->name;
             if(substr($tea_date->lunch_place_id,0,1)=="c"){
                 $place_data[$tea_date->user->name]=substr($tea_date->lunch_place_id,1,3)."教室";
             }else{
@@ -272,7 +348,7 @@ class LunchListController extends Controller
             'lunch_order_array'=>$lunch_order_array,
             'date_array'=>$date_array,
             'user_data'=>$user_data,
-            'factory_data'=>$factory_data,
+            'factory'=>$factory,
             'place_data'=>$place_data,
             'eat_data'=>$eat_data,
             'days_data'=>$days_data,

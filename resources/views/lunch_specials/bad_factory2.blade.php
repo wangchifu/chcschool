@@ -31,15 +31,15 @@
                         某廠商違約了，有訂此廠商的分配至其他廠商！
                     </div>
                     <div class="card-body">
-                        <span class="text-danger">要將 {{ $bad_factory }} {{ $order_date }} 之後的訂餐分配</span><br>
+                        <span class="text-danger">要將 {{ $bad_factory }} 從 {{ $order_date1 }} 到 {{ $order_date2 }} 之間的訂餐分配</span><br>
                         <form action="{{ route('lunch_specials.bad_factory3') }}" method="post" id="this_form">
                             @csrf
                         二、步驟二：<br>
                         <div class="form-group">
-                            <label>3.選擇分給哪家廠商</label>
+                            <label>4.選擇分給哪家廠商</label>
                             {{ Form::select('good_factory_id',$factories,null,['class'=>'form-control','required'=>'required']) }}
                         </div>
-                        <label>4.選擇教職員</label>
+                        <label>5.選擇教職員</label>
                         <div class="form-group">
                             {{ Form::select('teas[]',$teas,null,['id'=>'order_date','class' => 'form-control','required'=>'required', 'multiple'=>'multiple','size'=>'10']) }}
                         </div>
@@ -48,7 +48,8 @@
                             @include('layouts.errors')
                         </div>
                             <input type="hidden" name="bad_factory_id" value="{{ $bad_factory_id }}">
-                            <input type="hidden" name="order_date" value="{{ $order_date }}">
+                            <input type="hidden" name="order_date1" value="{{ $order_date1 }}">
+                            <input type="hidden" name="order_date2" value="{{ $order_date2 }}">
                         </form>
                     </div>
                 </div>
