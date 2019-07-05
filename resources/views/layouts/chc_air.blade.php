@@ -13,16 +13,17 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 $html = curl_exec($ch);
 curl_close($ch);
 $data = json_decode($html);
-
+if(is_null($data)){
+    $data = [];
+    $select_data=[];
+}
 
 foreach($data as $k=>$v){
     $select_data[$v->County][] = $v->SiteName;
     $air_data[$v->SiteName]['AQI'] = $v->AQI;
     $air_data[$v->SiteName]['Status'] = $v->Status;
     $air_data[$v->SiteName]['PublishTime'] = $v->PublishTime;
-
 }
-
 
 
 $SiteName = $request->input('SiteName');

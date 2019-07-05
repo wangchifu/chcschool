@@ -443,6 +443,8 @@ class LunchListController extends Controller
                     }
                 }
 
+                $teacher_money = $lunch_setup->teacher_money;
+
                 $data = [
                     'factory'=>$factory,
                     'lunch_order_id'=>$lunch_order_id,
@@ -453,6 +455,7 @@ class LunchListController extends Controller
                     'eat_data'=>$eat_data,
                     'days_data'=>$days_data,
                     'money_data'=>$money_data,
+                    'teacher_money'=>$teacher_money,
                 ];
             }
         }

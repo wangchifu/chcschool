@@ -171,10 +171,12 @@
                                     </td>
                                 @endforeach
                                 <td>
+                                    <?php if(!isset($days_data[$k1])) $days_data[$k1]= null ?>
                                     {{ $days_data[$k1] }}
                                     <?php $total_days += $days_data[$k1]; ?>
                                 </td>
                                 <td>
+                                    <?php if(!isset($money_data[$k1])) $money_data[$k1]= null ?>
                                     {{ $money_data[$k1] }}
                                     <?php $total_money += $money_data[$k1]; ?>
                                 </td>
@@ -196,7 +198,7 @@
                         $l_o = \App\LunchOrder::where('id',$lunch_order_id)->first();
                         $num = \App\LunchTeaDate::where('lunch_factory_id',$factory->id)->where('semester',$l_o->semester)->where('enable','eat')->count();
                     ?>
-                    <span class="text-danger">本學期各餐期目前共收入金額為：{{ $num*$factory->teacher_money }}</span>
+                    <span class="text-danger">本學期各餐期目前共收入金額為：{{ $num*$teacher_money }}</span>
                 </div>
                 <hr class="col-md-12">
                 <div class="col-md-12">
