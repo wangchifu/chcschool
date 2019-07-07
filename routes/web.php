@@ -87,6 +87,7 @@ Route::get('calendars/print/{semester}' , 'CalendarController@print')->name('cal
 
 //廠商頁面
 Route::match(['get','post'],'lunch_lists/factory/{lunch_order_id?}', 'LunchListController@factory')->name('lunch_lists.factory');
+Route::get('lunch_lists/change_factory/', 'LunchListController@change_factory')->name('lunch_lists.change_factory');
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){

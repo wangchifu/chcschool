@@ -5,19 +5,19 @@ $i=1;
 <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1" width="100%" style="font-size: 20px;">
     <?php $all_money = 0; $all_days=0;?>
     <tr>
-        <th>
+        <th width="20%">
             項目
         </th>
-        <th>
+        <th width="15%">
             姓名
         </th>
-        <th>
+        <th width="10%">
             單價
         </th>
-        <th>
+        <th width="15%">
             餐次
         </th>
-        <th>
+        <th width="15%">
             收費
         </th>
         <th>
@@ -47,7 +47,7 @@ $i=1;
                 <?php $all_days += $total_days; ?>
             </td>
             <td>
-                {{ $lunch_setup->teacher_money*$total_days }}
+                {{ $lunch_setup->teacher_money*$total_days }} 元
                 <?php
                 $all_money+= $lunch_setup->teacher_money*$total_days;
                 ?>

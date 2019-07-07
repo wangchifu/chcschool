@@ -15,6 +15,7 @@
             </h1>
             @if(!empty(session('factory')))
             <h3>廠商：{{ $factory->name }}</h3>
+                <div class="text-right"><a href="{{ route('lunch_lists.change_factory') }}" class="btn btn-danger btn-sm" onclick="return confirm('確定？')"><i class="fas fa-sign-out-alt"></i> 廠商登出</a></div>
             @endif
         </div>
         @if(empty(session('factory')))

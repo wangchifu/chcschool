@@ -462,7 +462,11 @@ class LunchListController extends Controller
         return view('lunch_lists.factory',$data);
     }
 
-
+    public function change_factory()
+    {
+        session(['factory'=>null]);
+        return redirect()->route('lunch_lists.factory');
+    }
 
 
 

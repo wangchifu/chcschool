@@ -5,24 +5,26 @@
 @section('title', '午餐系統-報表輸出')
 
 @section('content')
-    <h2>{{ $lunch_setup->semester }} 學期教職員午餐廠商收入表</h2>
-    <table border="1" width="100%">
+    <?php
+    echo "<body onload='window.print()'>"; ?>
+        <?php $all_days=0; ?>
+    @foreach($order_data as $k=>$v)
+        <h2>{{ $lunch_setup->semester }} 學期教職員午餐 {{ $k }} 收入明細</h2>
+        <table border="1" width="100%">
         <tr>
-            <th>
+            <th width="20%">
                 廠商
             </th>
-            <th>
+            <th width="40">
                 訂餐者
             </th>
-            <th>
+            <th width="20%">
                 總訂餐數
             </th>
-            <th>
+            <th width="20%">
                 總計
             </th>
         </tr>
-        <?php $all_days=0; ?>
-    @foreach($order_data as $k=>$v)
         <tr>
             <td>
                 {{ $k }}
@@ -30,10 +32,10 @@
             <td>
                 <table border="1" width="100%">
                     <tr>
-                        <th>
+                        <th width="50%">
                             姓名
                         </th>
-                        <th>
+                        <th width="50%">
                             訂餐數
                         </th>
                     </tr>
@@ -59,18 +61,21 @@
                 {{ $lunch_setup->teacher_money*$total_days }}
             </td>
         </tr>
+        </table>
+        <p style='page-break-after:always'></p>
     @endforeach
+    <table border="1" width="100%">
         <tr>
-            <th>
+            <th width="20%">
                 合計
             </th>
-            <th>
+            <th width="40%">
 
             </th>
-            <th>
+            <th width="20%">
                 {{ $all_days }}
             </th>
-            <th>
+            <th width="20%">
                 {{ $lunch_setup->teacher_money*$all_days }}
             </th>
         </tr>
