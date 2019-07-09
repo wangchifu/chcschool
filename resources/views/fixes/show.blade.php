@@ -42,7 +42,7 @@
             <hr>
             @if(!empty($fix->reply))
                 <?php $reply = str_replace(chr(13) . chr(10), '<br>', $fix->reply);?>
-                <h4 class="text-danger">管理員回復：</h4>
+                <h4 class="text-danger">管理員回覆：</h4>
                 <p style="font-size: 1.2rem;" class="text-danger">
                     {!! $reply !!}
                 </p>
@@ -58,7 +58,7 @@
                             {{ Form::select('situation', $situation,null, ['id' => 'situation', 'class' => 'form-control']) }}
                         </div>
                         <div class="form-group">
-                            <label for="reply"><strong>回復*</strong></label>
+                            <label for="reply"><strong>回覆*</strong></label>
                             {{ Form::textarea('reply', null, ['id' => 'reply', 'class' => 'form-control', 'rows' => 5, 'placeholder' => '請輸入內容']) }}
                         </div>
                         <div class="form-group">
