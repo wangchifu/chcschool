@@ -17,7 +17,7 @@
             @endif
         </a>
         <a class="navbar-brand js-scroll-trigger" href="{{  route('index') }}">
-            {{ $setup->site_name }}
+            　{{ $setup->site_name }}
         </a>
         <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
