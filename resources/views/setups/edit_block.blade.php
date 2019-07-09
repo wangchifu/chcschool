@@ -29,9 +29,15 @@
                     @endif
                 </div>
             </td>
+            <td>
+                <div class="form-group">
+                    <label for="site_name">4.顏色</label>
+                    {{ Form::select('block_color', $block_colors,$block->block_color, ['class' => 'form-control','placeholder'=>'']) }}
+                </div>
+            </td>
         </tr>
         <tr>
-            <td colspan="3">
+            <td colspan="4">
                 @if(strpos($block->title,"跑馬燈"))
                     <div class="form-group">
                         <label for="content">4.跑馬燈設定*</label>

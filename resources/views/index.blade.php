@@ -32,29 +32,40 @@
 @endsection
 
 @section('content')
-
+    <link href="{{ asset('css/block_style.css') }}" rel="stylesheet">
     <div class="row justify-content-center">
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
                 @foreach($blocks[$setup_col->id] as $block)
-                    <div class="shadow rounded bg-white" style="padding: 10px;margin-bottom: 20px">
-                        <h5 class="font-weight-bold">{{ str_replace_last("(系統區塊)","",$block->title) }}</h5>
-                        <hr style="margin-top:5px;margin-bottom: 5px;">
-                        @if($block->title == "最新公告(系統區塊)")
-                            @include('layouts.news')
-                        @elseif($block->title == "彰化空汙旗(系統區塊)")
-                            @include('layouts.chc_air')
-                        @elseif($block->title == "樹狀目錄(系統區塊)")
-                            @include('layouts.dtree')
-                        @elseif($block->title == "榮譽榜跑馬燈")
-                            @include('layouts.marquee')
-                        @elseif($block->title == "圖片連結(系統區塊)")
-                            @include('layouts.photo_link')
-                        @elseif($block->title == "分類公告(系統區塊)")
-                            @include('layouts.post_type')
-                        @else
-                            {!! $block->content !!}
-                        @endif
+                    <?php
+                        if(!is_null($block->block_color)){
+                            $block_color = explode(',',$block->block_color);
+                        }else{
+                            $block_color[0] = "original-block";
+                            $block_color[1] = "original-title";
+                        }
+                    ?>
+                    <div class="shadow rounded {{ $block_color[0] }}">
+                        <div class="{{ $block_color[1] }}">
+                            <h5>{{ str_replace_last("(系統區塊)","",$block->title) }}</h5>
+                        </div>
+                        <div class="content2">
+                            @if($block->title == "最新公告(系統區塊)")
+                                @include('layouts.news')
+                            @elseif($block->title == "彰化空汙旗(系統區塊)")
+                                @include('layouts.chc_air')
+                            @elseif($block->title == "樹狀目錄(系統區塊)")
+                                @include('layouts.dtree')
+                            @elseif($block->title == "榮譽榜跑馬燈")
+                                @include('layouts.marquee')
+                            @elseif($block->title == "圖片連結(系統區塊)")
+                                @include('layouts.photo_link')
+                            @elseif($block->title == "分類公告(系統區塊)")
+                                @include('layouts.post_type')
+                            @else
+                                {!! $block->content !!}
+                            @endif
+                        </div>
                     </div>
                 @endforeach
             </div>

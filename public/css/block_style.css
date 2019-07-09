@@ -1,0 +1,371 @@
+/* 單色綠 */
+.original-block {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.original-title {
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #000;
+}
+.block1 {
+    border: 2px solid #35ae55;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.title1 {
+    background-color: #35ae55;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色黃 */
+.block2 {
+    border: 2px solid #f1c500;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.title2 {
+    background-color: #f1c500;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色藍 */
+.block3 {
+    border: 2px solid #3696e0;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.title3 {
+    background-color: #3696e0;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色紅 */
+.block4 {
+    border: 2px solid #e55137;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.title4 {
+    background-color: #e55137;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色淺綠 */
+.soft-block1 {
+    border: 2px solid #aed581;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title1 {
+    background-color: #aed581;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色淺黃 */
+.soft-block2 {
+    border: 2px solid #ffd54f;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title2 {
+    background-color: #ffd54f;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色淺藍 */
+.soft-block3 {
+    border: 2px solid #4fc3f7;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title3 {
+    background-color: #4fc3f7;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色淺紅 */
+.soft-block4 {
+    border: 2px solid #ef9a9a;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title4 {
+    background-color: #ef9a9a;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 單色淺藍 */
+.soft-block5 {
+    border: 2px solid #d3f6f3;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title5 {
+    background-color: #d3f6f3;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #0277bd;
+}
+
+/* 單色淺膚色 */
+.soft-block6 {
+    border: 2px solid #f9fce1;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title6 {
+    background-color: #f9fce1;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #f9a825;
+}
+
+/* 單色淺黃 */
+.soft-block7 {
+    border: 2px solid #fee9b2;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title7 {
+    background-color: #fee9b2;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #ef6c00;
+}
+
+/* 單色淺紅 */
+.soft-block8 {
+    border: 2px solid #fbd1b7;
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.soft-title8 {
+    background-color: #fbd1b7;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #d84315;
+}
+
+/* 漸層紅 */
+.gradient-block1 {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.gradient-title1 {
+    background: #ff9472; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to right,
+        #f2709c,
+        #ff9472
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to right,
+        #f2709c,
+        #ff9472
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 漸層藍 */
+.gradient-block2 {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.gradient-title2 {
+    background: #1a2980; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to left,
+        #26d0ce,
+        #1a2980
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to left,
+        #26d0ce,
+        #1a2980
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 漸層綠 */
+.gradient-block3 {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.gradient-title3 {
+    background: #1d976c; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to left,
+        #93f9b9,
+        #1d976c
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to left,
+        #93f9b9,
+        #1d976c
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 漸層黃 */
+.gradient-block4 {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.gradient-title4 {
+    background: #fdc830; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to right,
+        #f37335,
+        #fdc830
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to right,
+        #f37335,
+        #fdc830
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 預設深灰 */
+.default-block1 {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.default-title1 {
+    background: #707070; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to left,
+        #909292,
+        #707070
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to left,
+        #909292,
+        #707070
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #fff;
+}
+
+/* 預設淺灰 */
+.default-block2 {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 3px 2px 2px #ccc;
+}
+.default-title2 {
+    background: #cfcfcf; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to left,
+        #eef2f3,
+        #cfcfcf
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to left,
+        #eef2f3,
+        #cfcfcf
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    color: #333;
+}
+
+.content2 {
+    padding: 10px;
+}

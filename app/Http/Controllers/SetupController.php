@@ -213,8 +213,11 @@ class SetupController extends Controller
         foreach($setup_cols as $setup_col){
             $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
         }
+        $block_colors = config('chcschool.block_colors');
+        $block_colors = array_flip($block_colors);
         $data = [
             'setup_array'=>$setup_array,
+            'block_colors'=>$block_colors,
         ];
         return view('setups.add_block_table',$data);
     }
@@ -236,9 +239,13 @@ class SetupController extends Controller
         foreach($setup_cols as $setup_col){
             $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
         }
+        $block_colors = config('chcschool.block_colors');
+        $block_colors = array_flip($block_colors);
+
         $data = [
             'setup_array'=>$setup_array,
             'block'=>$block,
+            'block_colors'=>$block_colors,
         ];
         return view('setups.edit_block',$data);
     }
