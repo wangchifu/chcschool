@@ -37,7 +37,7 @@
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
                 @foreach($blocks[$setup_col->id] as $block)
-                    <div class="shadow rounded bg-white" style="padding: 10px;margin-bottom: 10px">
+                    <div class="shadow rounded bg-white" style="padding: 10px;margin-bottom: 20px">
                         <h5 class="font-weight-bold">{{ str_replace_last("(系統區塊)","",$block->title) }}</h5>
                         <hr style="margin-top:5px;margin-bottom: 5px;">
                         @if($block->title == "最新公告(系統區塊)")
