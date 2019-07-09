@@ -15,7 +15,7 @@ class PhotoLinksController extends Controller
      */
     public function index()
     {
-        $photo_links = PhotoLink::orderBy('order_by')
+        $photo_links = PhotoLink::orderBy('order_by','DESC')
             ->get();
         return view('photo_links.index',compact('photo_links'));
     }
