@@ -27,7 +27,7 @@
             </td>
             <td>
                 <div class="form-group">
-                    <label for="site_name">4.顏色</label>
+                    <label for="site_name">4.<a href="{{ route('setups.block_color') }}">顏色</a></label>
                     {{ Form::select('block_color', $block_colors,null, ['class' => 'form-control','placeholder'=>'']) }}
                 </div>
             </td>

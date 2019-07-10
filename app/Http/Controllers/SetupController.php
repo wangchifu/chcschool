@@ -267,6 +267,11 @@ class SetupController extends Controller
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 
+    public function block_color()
+    {
+        return view('setups.block_color');
+    }
+
     public function module()
     {
         $modules = config('chcschool.modules');

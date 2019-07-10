@@ -310,6 +310,7 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('setups/{block}/edit_block','SetupController@edit_block')->name('setups.edit_block');
     Route::patch('setups/{block}/update_block','SetupController@update_block')->name('setups.update_block');
     Route::delete('setups/{block}/delete_block','SetupController@delete_block')->name('setups.delete_block');
+    Route::get('setups/block_color','SetupController@block_color')->name('setups.block_color');
 
     //模組功能
     Route::get('setups/module','SetupController@module')->name('setups.module');
