@@ -59,14 +59,14 @@ foreach($user_datas as $k1 => $v1){
                 <td colspan='2'>
                 <table width='100%' cellSpacing='0' cellPadding='0' style='font-size:15px;'>";
                 $total_money = 0;
-                foreach($v1 as $k2 => $v2){
-                $money = $factory_money[$k1][$k2]*$v2;
-                $count += $v2;
-                $table .= "
-                <tr><td>餐期：{$k2}</td><td>單價：{$factory_money[$k1][$k2]} </td><td>訂餐數：{$v2}</td><td>小計：{$money}</td></tr>
+                foreach($lunch_orders as $lunch_order){
+                    if(!isset($v1[$lunch_order->name])) $v1[$lunch_order->name] = 0;
+                    $money = $factory_money*$v1[$lunch_order->name];
+                    $count += $v1[$lunch_order->name];
+                    $table .= "
+                <tr><td>餐期：{$lunch_order->name}</td><td>單價：{$factory_money} </td><td>訂餐數：{$v1[$lunch_order->name]}</td><td>小計：{$money}</td></tr>
                 ";
-
-                    $total_money += $factory_money[$k1][$k2] * $v2;
+                    $total_money += $factory_money * $v1[$lunch_order->name];
                 }
 
                 $total_money2 = round($total_money);

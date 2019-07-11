@@ -163,21 +163,24 @@ class LunchListController extends Controller
                 ->orderBy('user_id')
                 ->get();
 
+            $lunch_orders = LunchOrder::where('semester',$lunch_setup->semester)
+                ->get();
+
             $user_datas = [];
             $factory_money=[];
             foreach ($order_datas as $order_data) {
                 if ($order_data->enable == "eat") {
                     if(!isset($user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)])) $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]=null;
                     $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]++;
-                    $factory_money[$order_data->user->name][substr($order_data->order_date, 0, 7)] = $lunch_setup->teacher_money;
+                    $factory_money = $lunch_setup->teacher_money;
                 }
             }
-
 
             $data = [
                 'lunch_setup'=>$lunch_setup,
                 'user_datas'=>$user_datas,
                 'factory_money'=>$factory_money,
+                'lunch_orders'=>$lunch_orders,
             ];
             return view('lunch_lists.semester_print',$data);
         }
