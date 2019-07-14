@@ -15,10 +15,10 @@
                     @endif
                 @endauth
                 <td>
-                    <input type="text" name="search" id="search" placeholder="搜尋公告標題或內文" required>
+                    <input type="text" name="search" id="search" placeholder="關鍵字" required style="width: 100px;">
                 </td>
                 <td>
-                    <input type="text" name="check" placeholder="請輸入驗證碼：{{ session('search') }}" required maxlength="3">
+                    <input type="text" name="check" placeholder="請輸入：{{ session('search') }}" required maxlength="3" style="width:100px;">
                 </td>
                 <td>
                     <button><i class="fas fa-search"></i></button>
@@ -71,7 +71,7 @@
                 @endif
                 {{ substr($post->created_at,0,10) }}
             </td>
-            <td>
+            <td data-th="類別">
                 @if($post->insite == null)
                     <a href="{{ route('posts.type',0) }}">一般公告</a>
                 @else

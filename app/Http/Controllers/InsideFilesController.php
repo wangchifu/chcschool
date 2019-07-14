@@ -75,6 +75,15 @@ class InsideFilesController extends Controller
 
     public function create_folder(Request $request)
     {
+        if (strpos ($request->input('name'), "&")){
+            return back()->withErrors(['error'=>['不得有特殊字元「&」！']]);
+        }
+        if (strpos ($request->input('name'), "\"")){
+            return back()->withErrors(['error'=>['不得有特殊字元「"」！']]);
+        }
+        if (strpos ($request->input('name'), "'")){
+            return back()->withErrors(['error'=>["不得有特殊字元「'」！"]]);
+        }
         $school_code = school_code();
 
         $root = storage_path('app/privacy/'.$school_code.'/inside_files');
@@ -103,6 +112,8 @@ class InsideFilesController extends Controller
         if(!is_dir($new_path)){
             mkdir($new_path);
             InsideFile::create($att);
+        }else{
+            return back()->withErrors(['error'=>['已有此目錄！']]);
         }
         return redirect()->route('inside_files.index',$request->input('path'));
     }
@@ -118,6 +129,16 @@ class InsideFilesController extends Controller
 
     public function update(Request $request,InsideFile $inside_file)
     {
+        if (strpos ($request->input('name'), "&")){
+            return back()->withErrors(['error'=>['不得有特殊字元「&」！']]);
+        }
+        if (strpos ($request->input('name'), "\"")){
+            return back()->withErrors(['error'=>['不得有特殊字元「"」！']]);
+        }
+        if (strpos ($request->input('name'), "'")){
+            return back()->withErrors(['error'=>["不得有特殊字元「'」！"]]);
+        }
+
         $school_code = school_code();
 
         $path_array = explode('&',$request->input('path'));
@@ -220,6 +241,16 @@ class InsideFilesController extends Controller
                     'original_filename' => $file->getClientOriginalName(),
                     'extension' => $file->getClientOriginalExtension(),
                 ];
+
+                if (strpos ($info['original_filename'], "&")){
+                    return back()->withErrors(['error'=>['不得有特殊字元「&」！']]);
+                }
+                if (strpos ($info['original_filename'], "\"")){
+                    return back()->withErrors(['error'=>['不得有特殊字元「"」！']]);
+                }
+                if (strpos ($info['original_filename'], "'")){
+                    return back()->withErrors(['error'=>["不得有特殊字元「'」！"]]);
+                }
 
                 $file->storeAs($p, $info['original_filename']);
 

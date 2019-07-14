@@ -91,6 +91,15 @@ class OpenFileController extends Controller
 
     public function create_folder(Request $request)
     {
+        if (strpos ($request->input('name'), "&")){
+            return back()->withErrors(['error'=>['不得有特殊字元「&」！']]);
+        }
+        if (strpos ($request->input('name'), "\"")){
+            return back()->withErrors(['error'=>['不得有特殊字元「"」！']]);
+        }
+        if (strpos ($request->input('name'), "'")){
+            return back()->withErrors(['error'=>["不得有特殊字元「'」！"]]);
+        }
         $school_code = school_code();
 
         $root = storage_path('app/public/'.$school_code.'/open_files');
@@ -136,6 +145,15 @@ class OpenFileController extends Controller
 
     public function update(Request $request,Upload $upload)
     {
+        if (strpos ($request->input('name'), "&")){
+            return back()->withErrors(['error'=>['不得有特殊字元「&」！']]);
+        }
+        if (strpos ($request->input('name'), "\"")){
+            return back()->withErrors(['error'=>['不得有特殊字元「"」！']]);
+        }
+        if (strpos ($request->input('name'), "'")){
+            return back()->withErrors(['error'=>["不得有特殊字元「'」！"]]);
+        }
         $school_code = school_code();
 
         $path_array = explode('&',$request->input('path'));
@@ -233,11 +251,24 @@ class OpenFileController extends Controller
         //處理檔案上傳
         if ($request->hasFile('files')) {
             $files = $request->file('files');
+
             foreach($files as $file){
                 $info = [
                     'original_filename' => $file->getClientOriginalName(),
                     'extension' => $file->getClientOriginalExtension(),
                 ];
+
+
+                if (strpos ($info['original_filename'], "&")){
+                    return back()->withErrors(['error'=>['不得有特殊字元「&」！']]);
+                }
+                if (strpos ($info['original_filename'], "\"")){
+                    return back()->withErrors(['error'=>['不得有特殊字元「"」！']]);
+                }
+                if (strpos ($info['original_filename'], "'")){
+                    return back()->withErrors(['error'=>["不得有特殊字元「'」！"]]);
+                }
+
 
                 if(file_exists(storage_path('app/'.$p.'/'.$info['original_filename']))){
                     return back()->withErrors(['error'=>['已有相同檔名！']]);

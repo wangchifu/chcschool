@@ -80,7 +80,7 @@
     </div>
     <script>
         var validator = $("#this_form").validate();
-
+        /**
         var submitcount=0;
         function submitOnce (form){
             if (submitcount == 0){
@@ -97,5 +97,6 @@
             $("#submit_button").addClass('disabled');
             $("#this_form").submit();
         }
+        */
     </script>
 @endsection

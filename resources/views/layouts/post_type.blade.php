@@ -9,6 +9,7 @@ $posts = \App\Post::where('insite',null)
     ->orderBy('created_at','DESC')
     ->paginate(5);
 ?>
+<h4 class="text-info"><strong>一般公告</strong></h4>
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
@@ -23,11 +24,6 @@ $posts = \App\Post::where('insite',null)
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td colspan="4">
-            <h4 class="text-info"><strong>一般公告</strong></h4>
-        </td>
-    </tr>
     @foreach($posts as $post)
         <tr>
             <td data-th="日期">
@@ -72,11 +68,9 @@ $posts = \App\Post::where('insite',null)
             </td>
         </tr>
     @endforeach
-    <tr>
-        <td colspan="4">
-            <a href="{{ route('posts.type',0) }}"><small><i class="far fa-hand-point-up"></i> 更多 一般公告...</small></a>
-        </td>
-    </tr>
+</table>
+<a href="{{ route('posts.type',0) }}"><small><i class="far fa-hand-point-up"></i> 更多 一般公告...</small></a>
+<hr>
 @foreach($post_types as $post_type)
     <?php
     $posts = \App\Post::where('insite',$post_type->id)
@@ -84,11 +78,21 @@ $posts = \App\Post::where('insite',null)
         ->orderBy('created_at','DESC')
         ->paginate(10);
     ?>
+<h4 class="text-info"><strong>{{ $post_type->name }}</strong></h4>
+<table class="table table-striped rwd-table" style="word-break:break-all;">
+    <thead class="thead-light">
     <tr>
-        <td colspan="4">
-            <h4 class="text-info"><strong>{{ $post_type->name }}</strong></h4>
-        </td>
+        <th nowrap width="160">
+            日期
+        </th>
+        <th nowrap>
+            標題
+        </th>
+        <th nowrap width="100">發佈者</th>
+        <th nowrap width="80">點閱</th>
     </tr>
+    </thead>
+    <tbody>
         @foreach($posts as $post)
             <tr>
                 <td data-th="日期">
@@ -133,11 +137,8 @@ $posts = \App\Post::where('insite',null)
                 </td>
             </tr>
         @endforeach
-    <tr>
-        <td colspan="4">
-            <a href="{{ route('posts.type',$post_type->id) }}"><small><i class="far fa-hand-point-up"></i> 更多 {{ $post_type->name }}...</small></a>
-        </td>
-    </tr>
-@endforeach
     </tbody>
 </table>
+<a href="{{ route('posts.type',$post_type->id) }}"><small><i class="far fa-hand-point-up"></i> 更多 {{ $post_type->name }}...</small></a>
+<hr>
+@endforeach
