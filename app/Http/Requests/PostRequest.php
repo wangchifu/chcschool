@@ -24,11 +24,11 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title_image' => 'nullable|mimes:jpeg,png|max:5120',
+            'title_image' => 'nullable|mimes:jpeg,png|max:10240',
             'title' => 'required',
             'content' => 'required',
             'job_title' => 'required',
-            'files.*' => 'nullable|mimes:csv,txt,zip,jpeg,png,pdf,odt,ods|max:5120',
+            'files.*' => 'nullable|mimes:csv,txt,zip,jpeg,png,pdf,odt,ods|max:10240',
         ];
     }
 
