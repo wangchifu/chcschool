@@ -227,6 +227,7 @@ return [
         'localhost'=>'s074600',
         'chcschool.localhost'=>'s074999',
         'web.chc.edu.tw'=>'s079998',
+        'www.chc.edu.tw'=>'s079998',
         'wwwtest.hdes.chc.edu.tw'=>'s074000',
         'wwwtest.jsps.chc.edu.tw'=>'s074614',
         'www1.hdes.chc.edu.tw'=>'s074001',
