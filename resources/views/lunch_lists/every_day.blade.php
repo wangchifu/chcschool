@@ -112,8 +112,10 @@
                                     </td>
                                 @endforeach
                                 <td>
-                                    {{ $days_data[$k1] }}
-                                    <?php $total_days += $days_data[$k1]; ?>
+                                    @if(isset($days_data[$k1]))
+                                        {{ $days_data[$k1] }}
+                                        <?php $total_days += $days_data[$k1]; ?>
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $money_data[$k1] }}
