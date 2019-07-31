@@ -118,8 +118,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $money_data[$k1] }}
-                                    <?php $total_money += $money_data[$k1]; ?>
+                                    @if(isset($money_data[$k1]))
+                                        {{ $money_data[$k1] }}
+                                        <?php $total_money += $money_data[$k1]; ?>
+                                    @endif
                                 </td>
                             </tr>
                             <?php $i++; ?>
