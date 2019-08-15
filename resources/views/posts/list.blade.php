@@ -18,7 +18,7 @@
                     <input type="text" name="search" id="search" placeholder="關鍵字" required style="width: 100px;">
                 </td>
                 <td>
-                    <input type="text" name="check" placeholder="請輸入：{{ session('search') }}" required maxlength="3" style="width:100px;">
+                    <input type="text" name="check" placeholder="請輸入：{{ session('search') }}" required maxlength="3" style="width:200px;">
                 </td>
                 <td>
                     <button><i class="fas fa-search"></i></button>
