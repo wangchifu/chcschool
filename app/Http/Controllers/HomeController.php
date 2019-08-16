@@ -167,9 +167,9 @@ class HomeController extends Controller
         $marquee = "";
         foreach($honors as $honor) {
             $href = "../posts/".$honor->id;
-            $marquee .= "<a href=".$href.">"
+            $marquee .= "<i class=\"fas fa-crown text-warning\"></i> <a href=".$href.">"
                 .$honor->title."   ".
-                "</a>";
+                "</a>　　";
         }
 
 

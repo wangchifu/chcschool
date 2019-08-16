@@ -45,6 +45,12 @@
                             $block_color[1] = "original-title";
                         }
                     ?>
+
+                    @if($block->title == "榮譽榜跑馬燈")
+                        <div>
+                            @include('layouts.marquee')
+                        </div>
+                    @else
                     <div class="shadow rounded {{ $block_color[0] }}">
                         <div class="{{ $block_color[1] }}">
                             <h5>{{ str_replace_last("(系統區塊)","",$block->title) }}</h5>
@@ -56,8 +62,6 @@
                                 @include('layouts.chc_air')
                             @elseif($block->title == "樹狀目錄(系統區塊)")
                                 @include('layouts.dtree')
-                            @elseif($block->title == "榮譽榜跑馬燈")
-                                @include('layouts.marquee')
                             @elseif($block->title == "圖片連結(系統區塊)")
                                 @include('layouts.photo_link')
                             @elseif($block->title == "分類公告(系統區塊)")
@@ -67,6 +71,7 @@
                             @endif
                         </div>
                     </div>
+                    @endif
                 @endforeach
             </div>
         @endforeach
