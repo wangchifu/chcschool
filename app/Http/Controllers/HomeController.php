@@ -143,15 +143,13 @@ class HomeController extends Controller
             $bs = Block::where('setup_col_id',$setup_col->id)
                 ->orderBy('order_by')
                 ->get();
-
             $blocks[$setup_col->id] = $bs;
 
-            //跑馬燈css設定
-            if($setup_col->title == "榮譽榜跑馬燈") {
-                $marquee_css = $bs[0]->content;
-            }
         }
         //跑馬燈css預設設定
+        $marquee_block = Block::where('title',"榮譽榜跑馬燈")
+            ->first();
+        $marquee_css = $marquee_block->content;
         if(empty($marquee_css)) {
             $marquee_css = "direction='left' height='30' scrollamount='5' align='midden'";
         }
