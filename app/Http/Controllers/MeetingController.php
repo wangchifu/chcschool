@@ -24,7 +24,7 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        $meetings = Meeting::orderBy('id','DESC')->paginate(20);
+        $meetings = Meeting::orderBy('open_date','DESC')->paginate(20);
         $data = [
             'meetings'=>$meetings,
         ];
