@@ -42,6 +42,7 @@ class LunchListController extends Controller
 
             $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
                 ->orderBy('order_date')
+                ->orderBy('lunch_place_id')
                 ->get();
             foreach($tea_dates as $tea_date){
                 $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
@@ -83,7 +84,7 @@ class LunchListController extends Controller
         $lunch_order = LunchOrder::find($lunch_order_id);
 
         $order_datas = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
-            ->orderBy('user_id')
+            ->orderBy('lunch_place_id')
             ->get();
 
         $lunch_setup = LunchSetup::where('semester',$lunch_order->semester)->first();
@@ -132,7 +133,7 @@ class LunchListController extends Controller
 
             $order_datas = LunchTeaDate::where('semester',$lunch_setup->semester)
                 ->orderBy('lunch_order_id')
-                ->orderBy('user_id')
+                ->orderBy('lunch_place_id')
                 ->get();
 
             $user_datas = [];
@@ -160,7 +161,7 @@ class LunchListController extends Controller
 
             $order_datas = LunchTeaDate::where('semester',$lunch_setup->semester)
                 ->orderBy('lunch_order_id')
-                ->orderBy('user_id')
+                ->orderBy('lunch_place_id')
                 ->get();
 
             $lunch_orders = LunchOrder::where('semester',$lunch_setup->semester)
@@ -205,6 +206,7 @@ class LunchListController extends Controller
             ];*/
             $tea_dates = LunchTeaDate::where('semester',$lunch_setup->semester)
                 ->where('enable','eat')
+                ->orderBy('lunch_place_id')
                 ->get();
             foreach($tea_dates as $tea_date){
                 if(!isset($order_data[$tea_date->lunch_factory->name][$tea_date->user->name])) $order_data[$tea_date->lunch_factory->name][$tea_date->user->name]=0;
@@ -234,6 +236,7 @@ class LunchListController extends Controller
 
         $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
             ->orderBy('order_date')
+            ->orderBy('lunch_place_id')
             ->get();
         foreach($tea_dates as $tea_date){
             $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
@@ -282,6 +285,7 @@ class LunchListController extends Controller
 
         $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
             ->orderBy('order_date')
+            ->orderBy('lunch_place_id')
             ->get();
         foreach($tea_dates as $tea_date){
             $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
@@ -384,9 +388,11 @@ class LunchListController extends Controller
             $factory = LunchFactory::where('fid',$request->input('username'))
                 ->first();
 
+            /**
             if($request->input('chaptcha') != session('chaptcha')){
                 return back()->withErrors(['gsuite_error'=>['驗證碼錯誤！']]);
             }
+             * */
             if(empty($factory)){
                 if(!$factory) return back()->withErrors(['error'=>['查無此帳號！']]);
             }else{
@@ -429,6 +435,7 @@ class LunchListController extends Controller
                 $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
                     ->where('lunch_factory_id',$factory->id)
                     ->orderBy('order_date')
+                    ->orderBy('lunch_place_id')
                     ->get();
                 foreach($tea_dates as $tea_date){
                     $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
