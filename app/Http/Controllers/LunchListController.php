@@ -345,6 +345,7 @@ class LunchListController extends Controller
 
         $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
             ->where('lunch_factory_id',$factory_id)
+            ->where('enable','eat')
             ->orderBy('order_date')
             ->get();
         foreach($tea_dates as $tea_date){
