@@ -3,7 +3,7 @@ echo "<body onload='window.print()'>";
 $i=1;
 ?>
 <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1" width="100%" style="font-size: 20px;">
-    <?php $all_money = 0; $all_days=0;?>
+    <?php $all_money = 0;$all_money2 = 0; $all_days=0;?>
     <tr>
         <th width="20%">
             項目
@@ -47,9 +47,10 @@ $i=1;
                 <?php $all_days += $total_days; ?>
             </td>
             <td>
-                {{ $lunch_setup->teacher_money*$total_days }} 元
+                {{ round($lunch_setup->teacher_money*$total_days) }} 元<small>({{ $lunch_setup->teacher_money*$total_days }})</small>
                 <?php
-                $all_money+= $lunch_setup->teacher_money*$total_days;
+                $all_money+= round($lunch_setup->teacher_money*$total_days);
+                $all_money2+= $lunch_setup->teacher_money*$total_days;
                 ?>
             </td>
             <td>
@@ -64,7 +65,7 @@ $i=1;
         <td>
         </td>
         <td>{{ $all_days }}</td>
-        <td>{{ $all_money }} 元</td>
+        <td>{{ $all_money }} 元<small>({{ $all_money2 }})</small></td>
         <td>
         </td>
     </tr>

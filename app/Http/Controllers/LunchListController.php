@@ -41,6 +41,7 @@ class LunchListController extends Controller
             $date_array = $this->get_order_date($lunch_order_id);
 
             $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+                ->where('enable','eat')
                 ->orderBy('order_date')
                 ->orderBy('lunch_place_id')
                 ->get();
@@ -84,6 +85,7 @@ class LunchListController extends Controller
         $lunch_order = LunchOrder::find($lunch_order_id);
 
         $order_datas = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+            ->where('enable','eat')
             ->orderBy('lunch_place_id')
             ->get();
 
@@ -235,6 +237,7 @@ class LunchListController extends Controller
         $date_array = $this->get_order_date($lunch_order_id);
 
         $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+            ->where('enable','eat')
             ->orderBy('order_date')
             ->orderBy('lunch_place_id')
             ->get();
@@ -284,6 +287,7 @@ class LunchListController extends Controller
         $date_array = $this->get_order_date($lunch_order_id);
 
         $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+            ->where('enable','eat')
             ->orderBy('order_date')
             ->orderBy('lunch_place_id')
             ->get();
@@ -434,6 +438,7 @@ class LunchListController extends Controller
 
                 $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
                     ->where('lunch_factory_id',$factory->id)
+                    ->where('enable','eat')
                     ->orderBy('order_date')
                     ->orderBy('lunch_place_id')
                     ->get();
