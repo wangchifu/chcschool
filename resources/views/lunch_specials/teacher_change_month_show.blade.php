@@ -98,7 +98,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        {{ Form::select('lunch_place_id', $lunch_place_array,$place, ['class' => 'form-control','id'=>'place_select','placeholder'=>'--請選擇--','required'=>'required','style'=>'display:'.$none1]) }}
+                                        {{ Form::select('lunch_place_id', $lunch_place_array,$place, ['class' => 'form-control','id'=>'place_select','required'=>'required','style'=>'display:'.$none1]) }}
                                     </td>
                                     <td>
                                         <input type="text" name="class_no" id="place_class" maxlength="3" class="form-control" style="display: {{ $none2 }};" placeholder="三碼班級代號" required value="{{ $class_name }}">

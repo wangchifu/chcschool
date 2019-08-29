@@ -324,6 +324,7 @@ Route::group(['middleware' => 'admin'],function(){
     //使用者管理
     Route::get('users', 'UsersController@index')->name('users.index');
     Route::get('users/create', 'UsersController@create')->name('users.create');
+    Route::get('users/back_pwd/{user}', 'UsersController@back_pwd')->name('users.back_pwd');
     Route::post('users/store', 'UsersController@store')->name('users.store');
     Route::get('users/leave', 'UsersController@leave')->name('users.leave');
     Route::get('users/{user}', 'UsersController@edit')->name('users.edit');

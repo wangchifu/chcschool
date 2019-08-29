@@ -47,6 +47,9 @@
                     </td>
                     <td>
                         <a href="javascript:open_window('{{ route('users.edit',$user->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                        @if($user->login_type=="local")
+                            <a href="{{ route('users.back_pwd',$user->id) }}" class="btn btn-warning" onclick="return confirm('確定？')">還原密碼</a>
+                        @endif
                         <a href="{{ route('sims.impersonate',$user->id) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定模擬？')"><i class="fas fa-user-ninja"></i> 模擬登入</a>
                     </td>
                 </tr>

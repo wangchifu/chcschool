@@ -104,6 +104,13 @@ class UsersController extends Controller
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 
+    public function back_pwd(User $user)
+    {
+        $att['password'] = bcrypt('demo1234');
+        $user->update($att);
+        return back();
+    }
+
     /**
      * Display the specified resource.
      *
