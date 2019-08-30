@@ -247,7 +247,15 @@
                                             {{ $k11 }}
                                         </td>
                                         <td>
-                                            {{ $v22 }}
+                                            @if($v22=="葷食合菜")
+                                                <span class="text-danger font-weight-bold">{{ $v22 }}</span>
+                                            @elseif($v22=="素食合菜")
+                                                <span class="text-success font-weight-bold">{{ $v22 }}</span>
+                                            @elseif($v22=="葷食便當")
+                                                <span class="text-danger">{{ $v22 }}</span>
+                                            @elseif($v22=="素食便當")
+                                                <span class="text-success">{{ $v22 }}</span>
+                                            @endif
                                         </td>
                                         @foreach($date_array as $k33=>$v33)
                                             <?php
