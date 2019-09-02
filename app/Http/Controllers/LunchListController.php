@@ -42,8 +42,8 @@ class LunchListController extends Controller
 
             $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
                 ->where('enable','eat')
-                ->orderBy('order_date')
                 ->orderBy('lunch_place_id')
+                ->orderBy('order_date')
                 ->get();
             foreach($tea_dates as $tea_date){
                 $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
@@ -440,8 +440,8 @@ class LunchListController extends Controller
                 $tea_dates = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
                     ->where('lunch_factory_id',$factory->id)
                     ->where('enable','eat')
-                    ->orderBy('order_date')
                     ->orderBy('lunch_place_id')
+                    ->orderBy('order_date')
                     ->get();
                 foreach($tea_dates as $tea_date){
                     $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
