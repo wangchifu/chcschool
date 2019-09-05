@@ -79,7 +79,9 @@ class GLoginController extends Controller
 
 
             //是否已有此帳號
-            $username = str_replace('@chc.edu.tw','',$request->input('username'));
+            //$username = str_replace('@chc.edu.tw','',$request->input('username'));
+            $u = explode('@',$request->input('username'));
+            $username = $u[0];
             $user = User::where('username',$username)
                 ->where('login_type','gsuite')
                 ->first();
