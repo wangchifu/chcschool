@@ -415,6 +415,7 @@ return [
         'www.tcps.chc.edu.tw'=>'s074752',
         'www.wges.chc.edu.tw'=>'s074765',
         'www.mces.chc.edu.tw'=>'s074760',
+        'www.mcws.chc.edu.tw'=>'s074760',
         'www.yhes.chc.edu.tw'=>'s074761',
         'www.fyes.chc.edu.tw'=>'s074758',
         'www.jses.chc.edu.tw'=>'s074763',
