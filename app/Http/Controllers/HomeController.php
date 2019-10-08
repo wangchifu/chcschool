@@ -125,6 +125,7 @@ class HomeController extends Controller
     {
         $school_code = school_code();
         $files = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
+        rsort($files);
         if($files) {
             foreach ($files as $k=>$v) {
                 $photos[$k] = asset('storage/'.$school_code.'/title_image/random/'.$v);
