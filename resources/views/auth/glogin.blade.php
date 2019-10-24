@@ -11,7 +11,7 @@
             <div class="card-body">
                 <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}"></a>
                 @if(session('login_error') < 3)
-                <form id="this_form" method="POST" action="{{ route('gauth') }}" onsubmit="return submitOnce(this);">
+                <form id="this_form" method="POST" action="{{ route('gauth') }}" onsubmit="change_button()">
                     @csrf
                     <div class="form-group row">
                         <label for="username" class="col-md-4 col-form-label text-md-right">帳號</label>
@@ -48,7 +48,7 @@
 
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
-                            <button tabindex="4" type="submit" class="btn btn-primary btn-sm" id="submit_button" onclick="change_button();">
+                            <button tabindex="4" type="submit" class="btn btn-primary btn-sm" id="submit_button">
                                 <i class="fas fa-sign-in-alt"></i> 登入
                             </button>
                             <div class="text-right">
@@ -77,21 +77,9 @@
 <script>
     var validator = $("#this_form").validate();
 
-    var submitcount=0;
-    function submitOnce (form){
-        if (submitcount == 0){
-            submitcount++;
-            return true;
-        } else{
-            alert('正在操作,請不要重複提交,謝謝!');
-            return false;
-        }
-    }
     function change_button(){
-        $("#submit_button").removeAttr('onclick');
         $("#submit_button").attr('disabled','disabled');
         $("#submit_button").addClass('disabled');
-        $("#this_form").submit();
     }
 </script>
 @endsection
