@@ -54,7 +54,8 @@ $posts = \App\Post::where('insite',null)
                     @endif
                     <a href="{{ route('posts.show',$post->id) }}">{{ $title }}</a>
                 @else
-                    <span class='text-danger'>[ 內部公告，請登入後瀏覽。 ]</span>
+		    <span class='text-danger'>[ 內部公告 ]</span>
+                    {{ $title }}
                 @endif
                 @if(!empty($files))
                     <span class="text-info"><i class="fas fa-file"></i> [附件]</span>

@@ -32,8 +32,8 @@
             @if($can_see)
                 <h1>{{ $post->title }}</h1>
             @else
-                <h1 class="text-danger"><i class="fas fa-ban"></i> 內部公告</h1>
-            @endif
+                <h1 class="text-danger"><i class="fas fa-ban"></i> [ 內部公告 ]{{ $post->title  }}</h1>
+		@endif
 
 
             @if($last_id)
