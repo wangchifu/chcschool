@@ -66,7 +66,9 @@
                     </div>
                 @else
 		    <span class='text-danger'>[ 內部公告 ]</span>
-                    {{ $title }}
+                    <h5>
+                        {{ $title }}
+                    </h5>
                     <div class="text-secondary">
                         @if($post->insite==null)
                             一般公告 / {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}
