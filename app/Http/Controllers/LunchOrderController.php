@@ -132,7 +132,8 @@ class LunchOrderController extends Controller
                     $att['semester'] = $request->input('semester');
                     $att['rece_name'] = $lunch_setup->all_rece_name.'('.$att['name'].')';
                     $att['rece_date'] = $att['name'].'-28';
-                    $att['rece_num'] = 1;
+		    $att['rece_no'] = $lunch_setup->all_rece_no;
+		    $att['rece_num'] = 1;
 
                     $lunch_order = LunchOrder::create($att);
                 }
