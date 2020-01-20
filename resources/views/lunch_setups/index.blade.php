@@ -35,6 +35,8 @@
                         <?php
                         $order_dates = \App\LunchOrderDate::where('semester',$lunch_setup->semester)->where('enable','1')->get();
                         $has_ordered = (count($order_dates)==0)?0:1;
+                        $tea_order_dates = \App\LunchTeaDate::where('semester',$lunch_setup->semester)->get();
+                        $tea_has_ordered = (count($tea_order_dates)==0)?0:1;
                         ?>
                         <tr>
                             <td>
@@ -66,7 +68,11 @@
                             </td>
                             <td>
                                 @if($has_ordered)
-                                    <a href="{{ route('lunch_orders.edit',$lunch_setup->semester) }}" class="btn btn-secondary btn-sm"><i class="fas fa-calendar-alt"></i> 修改供餐日</a>
+                                    @if($tea_has_ordered)
+                                        <span class="text-danger">已有訂餐記錄</span>
+                                    @else
+                                        <a href="{{ route('lunch_orders.edit',$lunch_setup->semester) }}" class="btn btn-secondary btn-sm"><i class="fas fa-calendar-alt"></i> 修改供餐日</a>
+                                    @endif
                                 @else
                                     <a href="{{ route('lunch_orders.create',$lunch_setup->semester) }}" class="btn btn-primary btn-sm"><i class="fas fa-calendar-alt"></i> 設定供餐日</a>
                                 @endif
