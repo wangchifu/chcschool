@@ -399,6 +399,8 @@ Route::group(['middleware' => 'admin'],function(){
 
     //校務行事曆
     Route::get('calendar_weeks/index','CalendarWeekController@index')->name('calendar_weeks.index');
+    Route::get('calendar_weeks/{semester}/edit','CalendarWeekController@edit')->name('calendar_weeks.edit');
+    Route::post('calendar_weeks/update','CalendarWeekController@update')->name('calendar_weeks.update');
     Route::post('calendar_weeks/create','CalendarWeekController@create')->name('calendar_weeks.create');
     Route::post('calendar_weeks/store','CalendarWeekController@store')->name('calendar_weeks.store');
     Route::get('calendar_weeks/{semester}/destroy','CalendarWeekController@destroy')->name('calendar_weeks.destroy');

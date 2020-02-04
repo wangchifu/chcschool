@@ -31,6 +31,28 @@ class CalendarWeekController extends Controller
         return view('calendar_weeks.index',$data);
     }
 
+    public function edit($semester)
+    {
+        $calendar_weeks = CalendarWeek::where('semester',$semester)
+            ->orderBy('week')
+            ->get();
+        $data = [
+            'semester'=>$semester,
+            'calendar_weeks'=>$calendar_weeks,
+        ];
+        return view('calendar_weeks.edit',$data);
+    }
+
+    public function update(Request $request)
+    {
+        foreach($request->input('week_id') as $k=>$v){
+            $calendar_week = CalendarWeek::find($k);
+            $att['start_end'] = $v;
+            $calendar_week->update($att);
+        }
+        return redirect()->route('calendars.index');
+    }
+
     public function create(Request $request)
     {
         $semester = get_date_semester($request->input('open_date'));

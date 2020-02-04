@@ -57,6 +57,11 @@
                             </th>
                             <th width="100">
                                 起迄
+                            @auth
+                                @if(auth()->user()->admin)
+                                    <a href="{{ route('calendar_weeks.edit',$semester) }}" class="badge badge-info">修改</a>
+                                @endif
+                            @endauth
                             </th>
                             @foreach(config('chcschool.calendar_kind') as $v)
                                 <th nowrap>
