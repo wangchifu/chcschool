@@ -522,7 +522,7 @@ class LunchSpecialController extends Controller
             $att2['order_date'] = $v;
             $att2['semester'] = $request->input('semester');
             $att2['lunch_order_id'] = $lunch_order->id;
-            if(isset($order_date[$v])){
+            if(isset($ps[$v])){
                 $att2['date_ps'] = $ps[$v];
             }else{
                 $att2['date_ps'] = null;
