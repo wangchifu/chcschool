@@ -246,6 +246,8 @@ Route::group(['middleware' => 'exec'],function(){
     Route::patch('calendars/{calendar}' , 'CalendarController@update')->name('calendars.update');
     Route::delete('calendars/{calendar}', 'CalendarController@destroy')->name('calendars.destroy');
     Route::get('calendars/{calendar}/delete' , 'CalendarController@delete')->name('calendars.delete');
+    Route::get('calendars/{calendar}/edit' , 'CalendarController@edit')->name('calendars.edit');
+    Route::post('calendars/update' , 'CalendarController@update')->name('calendars.update');
 
     //行政人員編輯
     Route::get('contents_exec/{content}/edit', 'ContentsController@exec_edit')->name('contents.exec_edit');

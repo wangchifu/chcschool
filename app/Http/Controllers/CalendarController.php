@@ -169,9 +169,13 @@ class CalendarController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Calendar $calendar)
     {
-        //
+        $data = [
+            'calendar'=>$calendar,
+        ];
+
+        return view('calendars.edit',$data);
     }
 
     /**
@@ -181,9 +185,12 @@ class CalendarController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $calendar = Calendar::find($request->input('id'));
+        $att['content'] = $request->input('content');
+        $calendar->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     /**

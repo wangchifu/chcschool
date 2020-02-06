@@ -87,6 +87,7 @@
                                                 <small class="text-primary">{{ $i }}.{{ $v['content'] }}</small>
                                                 @auth
                                                     @if($v['user_id'] == auth()->user()->id)
+                                                        <a href="javascript:open_url('{{ route('calendars.edit',$k) }}','新視窗')" class="text-info"><i class="fas fa-edit"></i></a>
                                                         <a href="{{ route('calendars.delete',$k) }}" class="text-danger" id="del{{ $k }}" onclick="return confirm('確定要刪？')"><i class="fas fa-minus-square"></i></a>
                                                     @endif
                                                 @endauth
@@ -104,5 +105,10 @@
             </div>
         </div>
     </div>
-
+    <script>
+        function open_url(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=850,height=300');
+        }
+    </script>
 @endsection
