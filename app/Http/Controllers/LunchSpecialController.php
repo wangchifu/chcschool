@@ -469,4 +469,70 @@ class LunchSpecialController extends Controller
         return redirect()->route('lunch_specials.index');
     }
 
+    public function add7(Request $request)
+    {
+        $semester = $request->input('semester');
+        $has7 = null;
+        if($semester){
+            $this_year = substr($semester,0,3)+1911;
+            if(substr($semester,-1,1)=="2"){
+                $this_year++;
+            }
+            $semester_dates = get_month_date($this_year."-07");
+
+            $has7 = LunchOrder::where('name',$this_year."-07")->first();
+
+        }else{
+            $semester_dates = [];
+            $this_year = "";
+        }
+
+        $data = [
+            'has7'=>$has7,
+            'this_year'=>$this_year,
+            'semester'=>$semester,
+            'semester_dates'=>$semester_dates,
+        ];
+        return view('lunch_specials.add7',$data);
+    }
+
+    public function store7(Request $request)
+    {
+        $order_date = $request->input('order_date');
+        $ps = $request->input('ps');
+
+        $lunch_setup = LunchSetup::where('semester',$request->input('semester'))
+            ->first();
+
+        $att['name'] = $request->input('name');
+        $att['semester'] = $request->input('semester');
+        $att['rece_name'] = $lunch_setup->all_rece_name;
+        $att['rece_date'] = $att['name'].'-28';
+        $att['rece_no'] = $lunch_setup->all_rece_no;
+        $att['rece_num'] = 1;
+        $lunch_order = LunchOrder::create($att);
+
+        $semester_dates = get_month_date($att['name']);
+        foreach($semester_dates as $k=>$v){
+            if(isset($order_date[$v])){
+                $att2['enable'] = "1";
+            }else{
+                $att2['enable'] = "0";
+            }
+            $att2['order_date'] = $v;
+            $att2['semester'] = $request->input('semester');
+            $att2['lunch_order_id'] = $lunch_order->id;
+            if(isset($order_date[$v])){
+                $att2['date_ps'] = $ps[$v];
+            }else{
+                $att2['date_ps'] = null;
+            }
+
+            LunchOrderDate::create($att2);
+        }
+
+        return redirect()->route('lunch_specials.index');
+
+    }
+
 }

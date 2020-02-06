@@ -27,6 +27,7 @@
                 <a href="{{ route('lunch_specials.teacher_change') }}" class="btn btn-info">單日教師退訂餐</a>
                 -->
                 <a href="{{ route('lunch_specials.bad_factory') }}" class="btn btn-info">違約廠商處理</a>
+                <a href="{{ route('lunch_specials.add7') }}" class="btn btn-info">增加七月餐期</a>
             @else
                 <h1 class="text-danger">你不是管理者</h1>
             @endif
