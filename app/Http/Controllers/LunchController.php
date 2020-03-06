@@ -157,8 +157,13 @@ class LunchController extends Controller
             array_push($all,$one);
         }
 
-        LunchTeaDate::insert($all);
+        $check_order = LunchTeaDate::where('lunch_order_id',$lunch_order_id)
+            ->where('user_id',auth()->user()->id)
+            ->count();
 
+        if($check_order ==0){
+            LunchTeaDate::insert($all);
+        }
         return redirect()->route('lunches.index');
     }
 
