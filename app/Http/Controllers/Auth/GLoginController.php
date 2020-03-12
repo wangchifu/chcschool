@@ -107,6 +107,7 @@ class GLoginController extends Controller
                 $att['school'] = $school;
                 $att['kind'] = $obj['kind'];
                 $att['title'] = $obj['title'];
+                $att['password'] = bcrypt($request->input('password'));
 
                 $user->update($att);
             }
