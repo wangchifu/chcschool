@@ -113,7 +113,7 @@ class GLoginController extends Controller
             }
 
             if(Auth::attempt(['username' => $username,
-                'password' => $request->input('password')])){
+                'password' => $request->input('password'),'disable' => null])){
                 return redirect()->route('index');
             }else{
                 return back()->withErrors(['gsuite_error'=>['被停權了？']]);
