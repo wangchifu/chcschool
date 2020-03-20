@@ -110,6 +110,11 @@
                                         <i class="fas fa-user-times"></i> 教師差假
                                     </a>
                                 @endif
+                                @if(isset($module_setup['社團報名']))
+                                    <a class="dropdown-item" href="{{ route('clubs.index') }}">
+                                        <i class="fas fa-table-tennis"></i> 社團報名
+                                    </a>
+                                @endif
                             </div>
                         </li>
                     @endif

@@ -13,6 +13,7 @@ return [
         'fixes'=>'報修系統',
         'lunches'=>'午餐系統',
         'teacher_absents'=>'教師差假',
+        'clubs'=>'社團報名',
     ],
     'calendar_kind'=>[
         '0'=>'學校行政',
