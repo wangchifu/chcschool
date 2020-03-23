@@ -48,10 +48,6 @@
                                 {{ Form::number('money',$club->money,['id'=>'money','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">
-                                <label for="people">開課人數</label>
-                                {{ Form::number('people',$club->people,['id'=>'people','class' => 'form-control']) }}
-                            </div>
-                            <div class="form-group">
                                 <label for="teacher_info">師資</label>
                                 {{ Form::text('teacher_info',$club->teacher_info,['id'=>'teacher_info','class' => 'form-control']) }}
                             </div>
@@ -119,11 +115,11 @@
                                 {{ Form::text('place',$club->place,['id'=>'place','class' => 'form-control']) }}
                             </div>
                             <div class="form-group">
-                                <label for="ps">備註</label>
-                                {{ Form::text('ps',$club->ps,['id'=>'ps','class' => 'form-control']) }}
+                                <label for="people"><strong>開課人數(最少)*</strong></label>
+                                {{ Form::number('people',$club->people,['id'=>'people','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">
-                                <label for="taking"><strong>正取人數*</strong></label>
+                                <label for="taking"><strong>正取人數(最多)*</strong></label>
                                 {{ Form::number('taking',$club->taking,['id'=>'taking','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">
@@ -133,6 +129,10 @@
                             <div class="form-group">
                                 <label for="year_limit"><strong>年級限制*</strong><small class="text-primary">(用小寫,分隔 如：1,2,3,4,5,6 代表這些年級均可)</small></label>
                                 {{ Form::text('year_limit',$club->year_limit,['id'=>'year_limit','class' => 'form-control','required'=>'required']) }}
+                            </div>
+                            <div class="form-group">
+                                <label for="ps">備註</label>
+                                {{ Form::text('ps',$club->ps,['id'=>'ps','class' => 'form-control']) }}
                             </div>
                             <div class="form-group">
                                 <a class="btn btn-secondary btn-sm" href="{{ route('clubs.setup') }}"><i class="fas fa-backward"></i> 返回</a>

@@ -50,9 +50,6 @@
                                     收費
                                 </th>
                                 <th>
-                                    人數
-                                </th>
-                                <th>
                                     師資
                                 </th>
                                 <th>
@@ -65,7 +62,7 @@
                                     集合地點
                                 </th>
                                 <th>
-                                    備註
+                                    最少
                                 </th>
                                 <th>
                                     正取
@@ -75,6 +72,9 @@
                                 </th>
                                 <th>
                                     年級
+                                </th>
+                                <th>
+                                    備註
                                 </th>
                             </tr>
                             @foreach($clubs as $club)
@@ -97,9 +97,6 @@
                                     {{ $club->money }}
                                 </td>
                                 <td>
-                                    {{ $club->people }}
-                                </td>
-                                <td>
                                     {{ $club->teacher_info }}
                                 </td>
                                 <td>
@@ -112,7 +109,7 @@
                                     {{ $club->place }}
                                 </td>
                                 <td>
-                                    {{ $club->ps }}
+                                    {{ $club->people }}
                                 </td>
                                 <td>
                                     {{ $club->taking }}
@@ -122,6 +119,9 @@
                                 </td>
                                 <td>
                                     {{ $club->year_limit }}
+                                </td>
+                                <td>
+                                    {{ $club->ps }}
                                 </td>
                             </tr>
                             @endforeach

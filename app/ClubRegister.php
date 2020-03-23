@@ -11,4 +11,13 @@ class ClubRegister extends Model
         'club_id',
         'club_student_id',
     ];
+    public function user()
+    {
+        return $this->belongsTo(ClubStudent::class,'club_student_id','id');
+    }
+
+    public function club()
+    {
+        return $this->belongsTo(Club::class,'club_id','id');
+    }
 }

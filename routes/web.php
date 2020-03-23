@@ -98,6 +98,11 @@ Route::get('clubs/parents_do' , 'ClubsController@parents_do')->name('clubs.paren
 Route::get('clubs/parents_logout' , 'ClubsController@parents_logout')->name('clubs.parents_logout');
 Route::get('clubs/change_pwd' , 'ClubsController@change_pwd')->name('clubs.change_pwd');
 Route::patch('clubs/change_pwd_do' , 'ClubsController@change_pwd_do')->name('clubs.change_pwd_do');
+Route::post('clubs/{club_student}/get_telephone' , 'ClubsController@get_telephone')->name('clubs.get_telephone');
+Route::get('clubs/{club}/show_club' , 'ClubsController@show_club')->name('clubs.show_club');
+Route::get('clubs/{club}/sign_up' , 'ClubsController@sign_up')->name('clubs.sign_up');
+Route::get('clubs/{club_id}/sign_down' , 'ClubsController@sign_down')->name('clubs.sign_down');
+Route::get('clubs/{club}/sign_show' , 'ClubsController@sign_show')->name('clubs.sign_show');
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Club;
+use App\ClubRegister;
 use App\ClubSemester;
 use App\ClubStudent;
 use Illuminate\Http\Request;
@@ -291,9 +292,13 @@ class ClubsController extends Controller
 
         $clubs = Club::where('semester',$user->semester)->get();
 
+        $club_semester = ClubSemester::where('semester',$user->semester)
+            ->first();
+
         $data = [
             'user'=>$user,
             'clubs'=>$clubs,
+            'club_semester'=>$club_semester,
         ];
         return view('clubs.parents_do',$data);
     }
@@ -333,6 +338,101 @@ class ClubsController extends Controller
         $att['pwd'] = $request->input('password1');
         $user->update($att);
         return redirect()->route('clubs.parents_do');
+    }
+
+    public function get_telephone(Request $request,ClubStudent $club_student)
+    {
+        $att = $request->all();
+        $club_student->update($att);
+        return redirect()->route('clubs.parents_do');
+    }
+
+    public function show_club(Club $club)
+    {
+        if(empty(session('parents'))){
+            return redirect()->route('clubs.semester_select');
+        }
+
+        $data = [
+            'club'=>$club
+        ];
+
+        return view('clubs.show_club',$data);
+    }
+
+    public function sign_up(Club $club)
+    {
+        if(empty(session('parents'))){
+            return redirect()->route('clubs.semester_select');
+        }
+
+        $user = ClubStudent::where('id',session('parents'))
+            ->first();
+        $club_register = ClubRegister::where('semester',$user->semester)
+            ->where('club_id',$club->id)
+            ->where('club_student_id',$user->id)
+            ->first();
+        $club_semester = ClubSemester::where('semester',$user->semester)
+            ->first();
+
+        $check_num = ClubRegister::where('semester',$user->semester)
+            ->where('club_student_id',$user->id)
+            ->count();
+
+        $count_num = ClubRegister::where('semester',$user->semester)
+            ->where('club_id',$club->id)
+            ->count();
+
+
+        if(empty($club_register) and $check_num < $club_semester->club_limit and $count_num < ($club->taking+$club->prepare)){
+            $att['semester'] = $user->semester;
+            $att['club_id'] = $club->id;
+            $att['club_student_id'] = $user->id;
+            ClubRegister::create($att);
+        }
+
+        return redirect()->route('clubs.parents_do');
+
+    }
+
+    public function sign_down($club_id)
+    {
+        if(empty(session('parents'))){
+            return redirect()->route('clubs.semester_select');
+        }
+
+        $user = ClubStudent::where('id',session('parents'))
+            ->first();
+
+        ClubRegister::where('semester',$user->semester)
+            ->where('club_id',$club_id)
+            ->where('club_student_id',$user->id)
+            ->delete();
+
+        return redirect()->route('clubs.parents_do');
+
+    }
+
+    public function sign_show(Club $club)
+    {
+        if(empty(session('parents'))){
+            return redirect()->route('clubs.semester_select');
+        }
+
+        $user = ClubStudent::where('id',session('parents'))
+            ->first();
+
+        $club_registers = ClubRegister::where('semester',$user->semester)
+            ->where('club_id',$club->id)
+            ->orderBy('created_at')
+            ->get();
+        $data = [
+            'user'=>$user,
+            'club'=>$club,
+            'club_registers'=>$club_registers,
+        ];
+
+        return view('clubs.sign_show',$data);
     }
 
 }
