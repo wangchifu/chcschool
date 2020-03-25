@@ -21,6 +21,7 @@
                     <small>可報 {{ $club_semester->club_limit }} 社團</small>
                 </div>
                 <div class="card-body">
+                    @include('layouts.errors')
                     <table class="table table-hover">
                         <tr>
                             <th>
@@ -36,7 +37,7 @@
                                 上課時間
                             </th>
                             <th>
-                                年級
+                                年級限制
                             </th>
                             <th>
                                 最少人數

@@ -383,6 +383,33 @@ class ClubsController extends Controller
             ->where('club_id',$club->id)
             ->count();
 
+        //時間重疊就不能報名
+        $want_t = explode('-',$club->start_time);
+        $check_registers = ClubRegister::where('semester',$user->semester)
+            ->where('club_student_id',$user->id)
+            ->get();
+        foreach($check_registers as $check_register){
+            $ss = explode(';',$check_register->club->start_time);
+            foreach($ss as $k=>$v){
+                $check_t = explode('-',$v);
+                if($want_t[0] == $check_t[0]){
+                    $beginTime1 = strtotime(date('Y-m-d').' '.$want_t[1]);
+                    $endTime1 = strtotime(date('Y-m-d').' '.$want_t[2]);
+                    $beginTime2 = strtotime(date('Y-m-d').' '.$check_t[1]);
+                    $endTime2 = strtotime(date('Y-m-d').' '.$check_t[2]);
+
+                    if($this->is_time_cross($beginTime1, $endTime1, $beginTime2, $endTime2)){
+                        return back()->withErrors(['errors'=>[$club->name.' 此社團和已報名的社團時間衝突！']]);
+                    }
+                }
+            }
+        }
+
+        //年級不對
+        if(!in_array(substr($user->class_num,0,1),explode(',',$club->year_limit))){
+            return back()->withErrors(['errors'=>[$club->name.' 此社團有年級限制，與你不符！']]);
+        }
+
 
         if(empty($club_register) and $check_num < $club_semester->club_limit and $count_num < ($club->taking+$club->prepare)){
             $att['semester'] = $user->semester;
@@ -433,6 +460,28 @@ class ClubsController extends Controller
         ];
 
         return view('clubs.sign_show',$data);
+    }
+
+
+
+//檢查時間是否重疊
+    public function is_time_cross($beginTime1 = '', $endTime1 = '', $beginTime2 = '', $endTime2 = '') {
+        $status = $beginTime2 - $beginTime1;
+        if ($status > 0) {
+            $status2 = $beginTime2 - $endTime1;
+            if ($status2 >= 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            $status2 = $endTime2 - $beginTime1;
+            if ($status2 > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
 }
