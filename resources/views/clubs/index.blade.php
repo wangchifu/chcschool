@@ -62,7 +62,7 @@
                                 <td>
                                     <a href="{{ route('clubs.stu_adm',$club_semester->semester) }}" class="btn btn-warning btn-sm">學生管理</a>
                                     <a href="{{ route('clubs.semester_edit',$club_semester->id) }}" class="btn btn-primary btn-sm">編輯</a>
-                                    <a href="" class="btn btn-danger btn-sm">刪除</a>
+                                    <a href="{{ route('clubs.semester_delete',$club_semester->semester) }}" class="btn btn-danger btn-sm" onclick="return confirm('底下所有的資料都會清除喔！')">刪除</a>
                                 </td>
                             </tr>
                             @endforeach

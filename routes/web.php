@@ -217,6 +217,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('clubs' , 'ClubsController@index')->name('clubs.index');
     Route::get('clubs/semester_create' , 'ClubsController@semester_create')->name('clubs.semester_create');
     Route::post('clubs/semester_store' , 'ClubsController@semester_store')->name('clubs.semester_store');
+    Route::get('clubs/{semester}/semester_delete' , 'ClubsController@semester_delete')->name('clubs.semester_delete');
     Route::get('clubs/{club_semester}/semester_edit' , 'ClubsController@semester_edit')->name('clubs.semester_edit');
     Route::patch('clubs/{club_semester}/semester_update' , 'ClubsController@semester_update')->name('clubs.semester_update');
     Route::get('clubs/setup/{semester?}' , 'ClubsController@setup')->name('clubs.setup');

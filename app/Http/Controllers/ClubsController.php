@@ -50,6 +50,15 @@ class ClubsController extends Controller
         return redirect()->route('clubs.index');
     }
 
+    public function semester_delete($semester)
+    {
+        ClubSemester::where('semester',$semester)->delete();
+        Club::where('semester',$semester)->delete();
+        ClubStudent::where('semester',$semester)->delete();
+        ClubRegister::where('semester',$semester)->delete();
+        return redirect()->route('clubs.index');
+    }
+
     public function semester_edit(ClubSemester $club_semester)
     {
         $data = [
