@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <label for="start_time"><strong>上課時間*</strong><small class="text-primary">(請用24小時制)</small></label>
                                 <br>
-                                1.週<select name="start1_time1">
+                                1.週<select name="start1_time1" style="height:30px;">
                                     <option value="一">一</option>
                                     <option value="二">二</option>
                                     <option value="三">三</option>
@@ -68,7 +68,7 @@
                                 </select>
                                 <input type="text" name="start1_time2" required placeholder="16:00(五碼)" maxlength="5">到<input type="text" name="start1_time3" required placeholder="17:30(五碼)" maxlength="5">
                                 <br>
-                                2.週<select name="start2_time1">
+                                2.週<select name="start2_time1" style="height:30px;">
                                     <option value="0">無第二次</option>
                                     <option value="一">一</option>
                                     <option value="二">二</option>
