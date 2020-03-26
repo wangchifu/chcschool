@@ -25,9 +25,10 @@
                         $admin = check_power('社團報名','A',auth()->user()->id);
                     ?>
                     @if($admin)
-
+                        <a href="{{ route('clubs.report_situation') }}" class="btn btn-info btn-sm">報名狀況</a>
+                        <a href="{{ route('clubs.report_money') }}" class="btn btn-info btn-sm">收費報表</a>
                     @endif
-                        <a href="{{ route('clubs.semester_select') }}" class="btn btn-info btn-sm" target="_blank">學生入口</a>
+                        <a href="{{ route('clubs.semester_select') }}" class="btn btn-info btn-sm" target="_blank">學生入口 <i class="fas fa-forward"></i> </i></a>
                 </div>
             </div>
 

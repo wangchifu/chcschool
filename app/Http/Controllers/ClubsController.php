@@ -7,6 +7,7 @@ use App\ClubRegister;
 use App\ClubSemester;
 use App\ClubStudent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class ClubsController extends Controller
@@ -121,6 +122,32 @@ class ClubsController extends Controller
             return redirect()->route('clubs.setup',$semester);
         }
 
+    }
+
+    public function club_copy(Request $request)
+    {
+        $clubs1 = Club::where('semester',$request->input('semester1'))->get();
+        foreach($clubs1 as $club){
+            $att['no'] = $club->no;
+            $att['semester'] = $request->input('semester2');
+            $att['name'] = $club->name;
+            $att['contact_person'] = $club->contact_person;
+            $att['telephone_num'] = $club->telephone_num;
+            $att['money'] = $club->money;
+            $att['people'] = $club->people;
+            $att['teacher_info'] = $club->teacher_info;
+            $att['start_date'] = $club->start_date;
+            $att['start_time'] = $club->start_time;
+            $att['place'] = $club->place;
+            $att['ps'] = $club->ps;
+            $att['taking'] = $club->taking;
+            $att['prepare'] = $club->prepare;
+            $att['year_limit'] = $club->year_limit;
+
+            Club::create($att);
+        }
+
+        return redirect()->route('clubs.setup',$att['semester']);
     }
 
     public function club_edit(Club $club)
@@ -384,7 +411,7 @@ class ClubsController extends Controller
             ->count();
 
         //時間重疊就不能報名
-        $want_t = explode('-',$club->start_time);
+        $tt = explode(';',$club->start_time);
         $check_registers = ClubRegister::where('semester',$user->semester)
             ->where('club_student_id',$user->id)
             ->get();
@@ -392,16 +419,21 @@ class ClubsController extends Controller
             $ss = explode(';',$check_register->club->start_time);
             foreach($ss as $k=>$v){
                 $check_t = explode('-',$v);
-                if($want_t[0] == $check_t[0]){
-                    $beginTime1 = strtotime(date('Y-m-d').' '.$want_t[1]);
-                    $endTime1 = strtotime(date('Y-m-d').' '.$want_t[2]);
-                    $beginTime2 = strtotime(date('Y-m-d').' '.$check_t[1]);
-                    $endTime2 = strtotime(date('Y-m-d').' '.$check_t[2]);
 
-                    if($this->is_time_cross($beginTime1, $endTime1, $beginTime2, $endTime2)){
-                        return back()->withErrors(['errors'=>[$club->name.' 此社團和已報名的社團時間衝突！']]);
+                foreach($tt as $k2=>$v2){
+                    $want_t = explode('-',$v2);
+                    if($want_t[0] == $check_t[0]){
+                        $beginTime1 = strtotime(date('Y-m-d').' '.$want_t[1]);
+                        $endTime1 = strtotime(date('Y-m-d').' '.$want_t[2]);
+                        $beginTime2 = strtotime(date('Y-m-d').' '.$check_t[1]);
+                        $endTime2 = strtotime(date('Y-m-d').' '.$check_t[2]);
+
+                        if($this->is_time_cross($beginTime1, $endTime1, $beginTime2, $endTime2)){
+                            return back()->withErrors(['errors'=>[$club->name.' 此社團和已報名的社團時間衝突！']]);
+                        }
                     }
                 }
+
             }
         }
 
@@ -460,6 +492,177 @@ class ClubsController extends Controller
         ];
 
         return view('clubs.sign_show',$data);
+    }
+
+    public function report_situation($semester=null)
+    {
+        $club_semesters_array = ClubSemester::orderby('semester','DESC')->pluck('semester','semester')->toArray();
+        if($semester == null){
+            $s = ClubSemester::orderBy('semester','DESC')->first();
+            $semester = $s->semester;
+        }
+
+        if($semester){
+            $clubs = Club::where('semester',$semester)->get();
+        }
+
+        $data = [
+            'club_semesters_array'=>$club_semesters_array,
+            'semester'=>$semester,
+            'clubs'=>$clubs,
+        ];
+
+        return view('clubs.report_situation',$data);
+    }
+
+    public function report_situation_download($semester)
+    {
+        $clubs = Club::where('semester',$semester)->get();
+        $n = 1;
+        foreach($clubs as $club){
+            $club_registers = \App\ClubRegister::where('semester',$semester)
+                ->where('club_id',$club->id)
+                ->get();
+            $taking = $club->taking;
+            $prepare = $club->prepare;
+            $i=1;
+            $j=1;
+            if(count($club_registers) < $club->people){
+                $open = "不開班";
+            }else{
+                $open = "開班成功";
+            }
+            if(count($club_registers) >0){
+                foreach($club_registers as $club_register){
+                    if($i <= $taking) $order = "正取".$i;
+                    if($i > $taking and $j <= $prepare){
+                        $order = "備取".$j;
+                        $j++;
+                    }
+
+                    $data[$n] =[
+                        '社團'=>$club->name,
+                        '班級座號'=>$club_register->user->class_num,
+                        '姓名'=>$club_register->user->name,
+                        '家長電話'=>$club_register->user->parents_telephone,
+                        '錄取狀況'=>$order,
+                        '開班狀態'=>$open,
+                    ];
+                    $i++;
+                    $n++;
+                }
+            }else{
+                $data[$n] =[
+                    '社團'=>$club->name,
+                    '班級座號'=>'',
+                    '姓名'=>'',
+                    '家長電話'=>'',
+                    '錄取狀況'=>'',
+                    '開班狀態'=>$open,
+                ];
+                $i++;
+                $n++;
+            }
+
+        }
+
+
+        $list = collect($data);
+
+        return (new FastExcel($list))->download($semester.'_社團報名結果.xlsx');
+    }
+
+    public function report_register_delete(ClubRegister $club_register)
+    {
+        $admin = check_power('社團報名','A',auth()->user()->id);
+        if($admin){
+            $club_register->delete();
+        }
+
+        return redirect()->route('clubs.report_situation');
+    }
+
+    public function report_money($semester=null)
+    {
+        $club_semesters_array = ClubSemester::orderby('semester','DESC')->pluck('semester','semester')->toArray();
+        if($semester == null){
+            $s = ClubSemester::orderBy('semester','DESC')->first();
+            $semester = $s->semester;
+        }
+        $clubs = [];
+        $register_data = [];
+        if($semester){
+            $clubs = Club::where('semester',$semester)->get();
+            $club_registers = ClubRegister::where('semester',$semester)->orderBy('club_student_id')->get();
+            foreach($club_registers as $club_register){
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] = $club_register->user->name;
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] = substr($club_register->user->class_num,0,1);
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] = substr($club_register->user->class_num,1,2);
+                $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
+
+            }
+        }
+
+        $data = [
+            'club_semesters_array'=>$club_semesters_array,
+            'semester'=>$semester,
+            'clubs'=>$clubs,
+            'club_registers'=>$club_registers,
+            'register_data'=>$register_data,
+        ];
+
+        return view('clubs.report_money',$data);
+    }
+
+    public function report_money_download($semester)
+    {
+        $club_semesters_array = ClubSemester::orderby('semester','DESC')->pluck('semester','semester')->toArray();
+
+        $clubs = Club::where('semester',$semester)->get();
+        $club_registers = ClubRegister::where('semester',$semester)->orderBy('club_student_id')->get();
+        foreach($club_registers as $club_register){
+            $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
+            $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
+            $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] = $club_register->user->name;
+            $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] = substr($club_register->user->class_num,0,1);
+            $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] = substr($club_register->user->class_num,1,2);
+            $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
+
+        }
+
+        $check_id=0;
+        $n=1;
+        foreach($club_registers as $club_register){
+            if($check_id != $club_register->user->id){
+                $data[$n]=[
+                    '學號'=>$register_data[$club_register->club->name][$club_register->user->id]['stud_no'],
+                    '座號'=>(int)$register_data[$club_register->club->name][$club_register->user->id]['stud_num'],
+                    '姓名'=>$register_data[$club_register->club->name][$club_register->user->id]['stud_name'],
+                    '身分證字號'=>'',
+                    '生日'=>'',
+                    '年級'=>$register_data[$club_register->club->name][$club_register->user->id]['stud_year'],
+                    '班別'=>(int)$register_data[$club_register->club->name][$club_register->user->id]['stud_class'],
+                    '減免'=>'',
+                ];
+                foreach($clubs as $club){
+                    if(isset($register_data[$club->name][$club_register->user->id]['money'])){
+                        $data[$n][$club->name] = $register_data[$club->name][$club_register->user->id]['money'];
+                    }else{
+                        $data[$n][$club->name] = '';
+                    }
+
+                }
+                $n++;
+            }
+            $check_id = $club_register->user->id;
+        }
+
+        $list = collect($data);
+
+        return (new FastExcel($list))->download($semester.'_社團報名繳費單.xlsx');
+
     }
 
 

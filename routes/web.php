@@ -222,6 +222,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('clubs/setup/{semester?}' , 'ClubsController@setup')->name('clubs.setup');
     Route::get('clubs/{semester}/club_create' , 'ClubsController@club_create')->name('clubs.club_create');
     Route::post('clubs/club_store' , 'ClubsController@club_store')->name('clubs.club_store');
+    Route::post('clubs/club_copy' , 'ClubsController@club_copy')->name('clubs.club_copy');
     Route::get('clubs/{club}/club_edit' , 'ClubsController@club_edit')->name('clubs.club_edit');
     Route::patch('clubs/{club}/club_update' , 'ClubsController@club_update')->name('clubs.club_update');
     Route::get('clubs/{club}/club_delete' , 'ClubsController@club_delete')->name('clubs.club_delete');
@@ -233,6 +234,11 @@ Route::group(['middleware' => 'auth'],function(){
     Route::patch('clubs/{club_student}/stu_update' , 'ClubsController@stu_update')->name('clubs.stu_update');
     Route::get('clubs/{club_student}/stu_delete' , 'ClubsController@stu_delete')->name('clubs.stu_delete');
 
+    Route::get('clubs/report_situation/{semester?}' , 'ClubsController@report_situation')->name('clubs.report_situation');
+    Route::get('clubs/{semester}/report_situation_download' , 'ClubsController@report_situation_download')->name('clubs.report_situation_download');
+    Route::get('clubs/{club_register}/report_register_delete' , 'ClubsController@report_register_delete')->name('clubs.report_register_delete');
+    Route::get('clubs/report_money/{semester?}' , 'ClubsController@report_money')->name('clubs.report_money');
+    Route::get('clubs/{semester}/report_money_download' , 'ClubsController@report_money_download')->name('clubs.report_money_download');
     Route::get('clubs/report' , 'ClubsController@report')->name('clubs.report');
 
 

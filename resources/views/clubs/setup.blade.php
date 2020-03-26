@@ -31,7 +31,19 @@
                                 {{ Form::select('semester', $club_semesters_array,$semester, ['id'=>'semester','class' => 'form-control','placeholder'=>'--請選擇學期--','onchange'=>'jump()']) }}
                             </div>
                         </form>
-                        <a href="{{ route('clubs.club_create',$semester) }}" class="btn btn-success btn-sm">新增社團</a>
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="{{ route('clubs.club_create',$semester) }}" class="btn btn-success btn-sm">新增社團</a>
+                                </td>
+                                <td>
+                                    <form method="post" action="{{ route('clubs.club_copy') }}">
+                                        @csrf
+                                        從<input text="text" name="semester1" maxlength="4" size="4" required>學期 複製全部社團到<input text="text" name="semester2" maxlength="4" size="4" required>學期 <input type="submit" value="複製" onclick="return confirm('確定複製嗎？')">
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
                         <table class="table table-striped">
                             <tr>
                                 <th>
@@ -71,7 +83,7 @@
                                     備取
                                 </th>
                                 <th>
-                                    年級
+                                    年級限制
                                 </th>
                                 <th>
                                     備註
