@@ -107,8 +107,10 @@
                                 <?php $check_id = $club_register->user->id; ?>
                             @endforeach
                         </table>
-                    @else
+                    @elseif(!$admin)
                         <span class="text-danger">你不是管理者</span>
+                    @else
+                        <span class="text-danger">請先新增學期</span>
                     @endif
                 </div>
             </div>

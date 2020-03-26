@@ -71,7 +71,11 @@ class ClubsController extends Controller
         $clubs = [];
         if($semester == null){
             $s = ClubSemester::orderBy('semester','DESC')->first();
-            $semester = $s->semester;
+            if($s){
+                $semester = $s->semester;
+            }else{
+                $semester = null;
+            }
         }
         if($semester){
             $clubs = Club::where('semester',$semester)->get();
@@ -499,11 +503,18 @@ class ClubsController extends Controller
         $club_semesters_array = ClubSemester::orderby('semester','DESC')->pluck('semester','semester')->toArray();
         if($semester == null){
             $s = ClubSemester::orderBy('semester','DESC')->first();
-            $semester = $s->semester;
+            if($s){
+                $semester = $s->semester;
+            }else{
+                $semester = null;
+            }
+
         }
 
         if($semester){
             $clubs = Club::where('semester',$semester)->get();
+        }else{
+            $clubs = [];
         }
 
         $data = [
@@ -587,7 +598,12 @@ class ClubsController extends Controller
         $club_semesters_array = ClubSemester::orderby('semester','DESC')->pluck('semester','semester')->toArray();
         if($semester == null){
             $s = ClubSemester::orderBy('semester','DESC')->first();
-            $semester = $s->semester;
+            if($s){
+                $semester = $s->semester;
+            }else{
+                $semester = null;
+            }
+
         }
         $clubs = [];
         $register_data = [];
@@ -603,6 +619,8 @@ class ClubsController extends Controller
                 $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
 
             }
+        }else{
+            $club_registers = [];
         }
 
         $data = [

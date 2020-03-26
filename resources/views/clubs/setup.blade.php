@@ -31,6 +31,7 @@
                                 {{ Form::select('semester', $club_semesters_array,$semester, ['id'=>'semester','class' => 'form-control','placeholder'=>'--請選擇學期--','onchange'=>'jump()']) }}
                             </div>
                         </form>
+                        @if($semester)
                         <table>
                             <tr>
                                 <td>
@@ -44,6 +45,9 @@
                                 </td>
                             </tr>
                         </table>
+                        @else
+                            <span class="text-danger">請先新增學期</span>
+                        @endif
                         <table class="table table-striped">
                             <tr>
                                 <th>
