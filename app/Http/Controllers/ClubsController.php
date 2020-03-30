@@ -639,7 +639,6 @@ class ClubsController extends Controller
             'clubs'=>$clubs,
             'club_registers'=>$club_registers,
             'register_data'=>$register_data,
-            'user_data'=>$user_data,
         ];
 
         return view('clubs.report_money',$data);
