@@ -69,6 +69,9 @@
                                                 錄取狀況
                                             </th>
                                             <th>
+                                                報名時間
+                                            </th>
+                                            <th>
                                                 開班狀態
                                             </th>
                                             <th>
@@ -107,6 +110,9 @@
                                                         備取{{ $j }}
                                                         <?php $j++; ?>
                                                     @endif
+                                                </td>
+                                                <td>
+                                                    {{ $club_register->created_at }}
                                                 </td>
                                                 <td>
                                                     @if(count($club_registers) < $club->people)

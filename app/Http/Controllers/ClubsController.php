@@ -552,7 +552,7 @@ class ClubsController extends Controller
             }else{
                 $open = "開班成功";
             }
-            if(count($club_registers) >0){
+            if(count($club_registers) > 0){
                 foreach($club_registers as $club_register){
                     if($i <= $taking) $order = "正取".$i;
                     if($i > $taking and $j <= $prepare){
@@ -566,6 +566,7 @@ class ClubsController extends Controller
                         '姓名'=>$club_register->user->name,
                         '家長電話'=>$club_register->user->parents_telephone,
                         '錄取狀況'=>$order,
+                        '報名時間'=>date('Y-m-d H:i:s',strtotime($club_register->created_at)),
                         '開班狀態'=>$open,
                     ];
                     $i++;
@@ -578,6 +579,7 @@ class ClubsController extends Controller
                     '姓名'=>'',
                     '家長電話'=>'',
                     '錄取狀況'=>'',
+                    '報名時間'=>'',
                     '開班狀態'=>$open,
                 ];
                 $i++;
@@ -626,7 +628,6 @@ class ClubsController extends Controller
                 $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] = substr($club_register->user->class_num,0,1);
                 $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] = substr($club_register->user->class_num,1,2);
                 $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
-
             }
         }else{
             $club_registers = [];
@@ -638,6 +639,7 @@ class ClubsController extends Controller
             'clubs'=>$clubs,
             'club_registers'=>$club_registers,
             'register_data'=>$register_data,
+            'user_data'=>$user_data,
         ];
 
         return view('clubs.report_money',$data);
