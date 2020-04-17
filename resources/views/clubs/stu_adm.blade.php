@@ -28,7 +28,7 @@
                         <h4>學生管理</h4>
                         {{ Form::open(['route' => ['clubs.stu_import',$semester], 'method' => 'POST', 'files' => true]) }}
                         <input type="file" name="file" required>
-                        <input type="submit" class="btn btn-success btn-sm" value="匯入學生" onclick="return confirm('會先清空學生喔！')">
+                        <input type="submit" class="btn btn-success btn-sm" value="匯入學生" onclick="return confirm('會先清空學生，也會清空這學期已報名的資料喔！')">
                         {{ Form::close() }}
                         <a href="{{ asset('images/cloudschool_club.png') }}" target="_blank">請先至 cloudschool 下載列表</a>
                     @else

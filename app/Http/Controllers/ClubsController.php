@@ -209,6 +209,7 @@ class ClubsController extends Controller
         if ($request->hasFile('file')) {
 
             ClubStudent::where('semester',$semester)->delete();
+            ClubRegister::where('semester',$semester)->delete();
 
             $file = $request->file('file');
             $collection = (new FastExcel)->import($file);
