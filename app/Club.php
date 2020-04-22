@@ -22,5 +22,6 @@ class Club extends Model
         'taking',
         'prepare',
         'year_limit',
+        'class_id',
     ];
 }

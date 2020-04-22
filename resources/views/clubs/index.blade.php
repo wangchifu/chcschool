@@ -33,10 +33,16 @@
                                     學期
                                 </th>
                                 <th>
-                                    開始報名日期
+                                    特色社團開始
                                 </th>
                                 <th>
-                                    結束報名日期
+                                    特色社團結束
+                                </th>
+                                <th>
+                                    課後活動開始
+                                </th>
+                                <th>
+                                    課後活動結束
                                 </th>
                                 <th>
                                     最多可報
@@ -55,6 +61,12 @@
                                 </td>
                                 <td>
                                     {{ $club_semester->stop_date }}
+                                </td>
+                                <td>
+                                    {{ $club_semester->start_date2 }}
+                                </td>
+                                <td>
+                                    {{ $club_semester->stop_date2 }}
                                 </td>
                                 <td>
                                     {{ $club_semester->club_limit }}

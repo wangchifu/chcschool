@@ -15,9 +15,21 @@
             @if($user->parents_telephone)
                 <div class="card">
                 <div class="card-header">
-                    <h4>
-                        社團列表
-                    </h4>
+                    <form name=myform>
+                    <div class="form-group">
+                        <label>
+                            請選擇：
+                        </label>
+                        {{ Form::select('class_id', $club_classes,$class_id, ['id'=>'class_id','class' => 'form-control','onchange'=>'jump()']) }}
+                    </div>
+                    </form>
+                    <h3>
+                        @if($class_id==1)
+                            學生特色社團
+                        @elseif($class_id==2)
+                            學生課後活動
+                        @endif
+                    </h3>
                     <small>可報 {{ $club_semester->club_limit }} 社團</small>
                 </div>
                 <div class="card-body">
@@ -55,6 +67,7 @@
                         <?php
                         $check_num = \App\ClubRegister::where('semester',$user->semester)
                             ->where('club_student_id',$user->id)
+                            ->where('class_id',$class_id)
                             ->count();
                         ?>
                         @foreach($clubs as $club)
@@ -88,7 +101,7 @@
                                             ->where('club_id',$club->id)
                                             ->count();
                                     ?>
-                                    <a href="{{ route('clubs.sign_show',$club->id) }}" class="badge badge-info">{{ $count_num }}</a>
+                                    <a href="{{ route('clubs.sign_show',['club_id'=>$club->id,'class_id'=>$class_id]) }}" class="badge badge-info">{{ $count_num }}</a>
                                 </th>
                                 <td>
                                     <?php
@@ -114,15 +127,13 @@
                                                 }
                                                 $i++;
                                             }
-                                            for($n=1;$n<=($taking+$prepare);$n++){
-                                                if($my_order<=$taking){
-                                                    $order = "正取".$n;
-                                                    break;
-                                                }
-                                                if($my_order<=($taking+$prepare)){
-                                                    $order = "備取".($my_order-$taking);
-                                                    break;
-                                                }
+
+                                            if($my_order<=$taking){
+                                                $order = "正取".$my_order;
+                                            }
+
+                                            if($my_order > $taking and $my_order <= ($taking+$prepare)){
+                                                $order = "備取".($my_order-$taking);
                                             }
                                         ?>
                                         <span class="text-success">已報名({{ $order }})</span><a href="{{ route('clubs.sign_down',$club->id) }}" onclick="return confirm('確定取消報名？')"><i class="fas fa-times-circle text-danger"></i></a>
@@ -156,6 +167,7 @@
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
                             <i class="fas fa-save"></i> 同意資料蒐集
                         </button>
+                        <input type="hidden" name="class_id" value="{{ $class_id }}">
                         {{ Form::close() }}
                     </div>
                 </div>
@@ -163,4 +175,11 @@
 
         </div>
     </div>
+    <script>
+        function jump(){
+            if(document.myform.class_id.options[document.myform.class_id.selectedIndex].value!=''){
+                location= document.myform.class_id.options[document.myform.class_id.selectedIndex].value;
+            }
+        }
+    </script>
 @endsection

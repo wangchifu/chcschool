@@ -10,7 +10,7 @@
             <h1>社團資訊</h1>
             @include('clubs.nav')
             <br>
-            <a class="btn btn-secondary btn-sm" href="{{ route('clubs.parents_do') }}"><i class="fas fa-backward"></i> 返回</a>
+            <a class="btn btn-secondary btn-sm" href="{{ route('clubs.parents_do',$class_id) }}"><i class="fas fa-backward"></i> 返回</a>
             <div class="card">
                 <div class="card-header">
                 <h4>

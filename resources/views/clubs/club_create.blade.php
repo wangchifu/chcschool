@@ -29,8 +29,8 @@
                             {{ Form::open(['route' => 'clubs.club_store', 'method' => 'POST']) }}
                             <input type="hidden" name="semester" value="{{ $semester }}">
                             <div class="form-group">
-                                <label for="no"><strong>社團編號*</strong><small class="text-primary">(如 A)</small></label>
-                                {{ Form::text('no',null,['id'=>'no','class' => 'form-control','required'=>'required']) }}
+                                <label for="class_id"><strong>社團類別*</strong></label>
+                                {{ Form::select('class_id',$club_classes,null,['id'=>'class_id','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">
                                 <label for="name"><strong>社團名稱*</strong></label>

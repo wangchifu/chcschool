@@ -11,5 +11,7 @@ class ClubSemester extends Model
         'start_date',
         'stop_date',
         'club_limit',
+        'start_date2',
+        'stop_date2',
     ];
 }

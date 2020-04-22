@@ -42,6 +42,10 @@ class ClubsController extends Controller
 
         if(!$check){
             $att = $request->all();
+            $att['start_date'] = $request->input('year_1').'-'.$request->input('month_1').'-'.$request->input('day_1').'-'.$request->input('hour_1').'-'.$request->input('min_1');
+            $att['stop_date'] = $request->input('year_2').'-'.$request->input('month_2').'-'.$request->input('day_2').'-'.$request->input('hour_2').'-'.$request->input('min_2');
+            $att['start_date2'] = $request->input('year2_1').'-'.$request->input('month2_1').'-'.$request->input('day2_1').'-'.$request->input('hour2_1').'-'.$request->input('min2_1');
+            $att['stop_date2'] = $request->input('year2_2').'-'.$request->input('month2_2').'-'.$request->input('day2_2').'-'.$request->input('hour2_2').'-'.$request->input('min2_2');
             ClubSemester::create($att);
         }else{
             return back()->withErrors(['errors'=>[$semester.'學期已經有設定了！']]);
@@ -70,6 +74,10 @@ class ClubsController extends Controller
     public function semester_update(Request $request,ClubSemester $club_semester)
     {
         $att = $request->all();
+        $att['start_date'] = $request->input('year_1').'-'.$request->input('month_1').'-'.$request->input('day_1').'-'.$request->input('hour_1').'-'.$request->input('min_1');
+        $att['stop_date'] = $request->input('year_2').'-'.$request->input('month_2').'-'.$request->input('day_2').'-'.$request->input('hour_2').'-'.$request->input('min_2');
+        $att['start_date2'] = $request->input('year2_1').'-'.$request->input('month2_1').'-'.$request->input('day2_1').'-'.$request->input('hour2_1').'-'.$request->input('min2_1');
+        $att['stop_date2'] = $request->input('year2_2').'-'.$request->input('month2_2').'-'.$request->input('day2_2').'-'.$request->input('hour2_2').'-'.$request->input('min2_2');
         $club_semester->update($att);
         return redirect()->route('clubs.index');
     }
@@ -87,12 +95,14 @@ class ClubsController extends Controller
             }
         }
         if($semester){
-            $clubs = Club::where('semester',$semester)->get();
+            $clubs1 = Club::where('semester',$semester)->where('class_id','1')->get();
+            $clubs2 = Club::where('semester',$semester)->where('class_id','2')->get();
         }
 
         $data = [
             'club_semesters_array'=>$club_semesters_array,
-            'clubs'=>$clubs,
+            'clubs1'=>$clubs1,
+            'clubs2'=>$clubs2,
             'semester'=>$semester,
         ];
         return view('clubs.setup',$data);
@@ -100,28 +110,98 @@ class ClubsController extends Controller
 
     public function club_create($semester)
     {
+        $club_classes = [
+            '1'=>'學生特色社團',
+            '2'=>'學生課後活動',
+        ];$club_classes = [
+            '1'=>'學生特色社團',
+            '2'=>'學生課後活動',
+        ];
         $data = [
-            'semester'=>$semester
+            'semester'=>$semester,
+            'club_classes'=>$club_classes,
         ];
         return view('clubs.club_create',$data);
     }
 
     public function club_store(Request $request)
     {
+        $no_array = [
+            '1'=>'A',
+            '2'=>'B',
+            '3'=>'C',
+            '4'=>'D',
+            '5'=>'E',
+            '6'=>'F',
+            '7'=>'G',
+            '8'=>'H',
+            '9'=>'I',
+            '10'=>'J',
+            '11'=>'K',
+            '12'=>'L',
+            '13'=>'M',
+            '14'=>'N',
+            '15'=>'O',
+            '16'=>'P',
+            '17'=>'Q',
+            '18'=>'R',
+            '19'=>'S',
+            '20'=>'T',
+            '21'=>'U',
+            '22'=>'V',
+            '23'=>'W',
+            '24'=>'X',
+            '25'=>'Y',
+            '26'=>'Z',
+            '27'=>'AA',
+            '28'=>'AB',
+            '29'=>'AC',
+            '30'=>'AD',
+            '31'=>'AE',
+            '32'=>'AF',
+            '33'=>'AG',
+            '34'=>'AH',
+            '35'=>'AI',
+            '36'=>'AJ',
+            '37'=>'AK',
+            '38'=>'AL',
+            '39'=>'AM',
+            '40'=>'AN',
+            '41'=>'AO',
+            '42'=>'AP',
+            '43'=>'AQ',
+            '44'=>'AR',
+            '45'=>'AS',
+            '46'=>'AT',
+            '47'=>'AU',
+            '48'=>'AV',
+            '49'=>'AW',
+            '50'=>'AX',
+        ];
         $semester= $request->input('semester');
-        $no = $request->input('no');
         $name = $request->input('name');
+        $class_id = $request->input('class_id');
+        $count = Club::where('semester',$semester)
+            ->where('class_id',$class_id)
+            ->count();
+        $no = $no_array[$count+1];
+
+        /**
         $check1 = Club::where('semester',$semester)
             ->where('no',$no)
+            ->where('class_id',$class_id)
             ->first();
+         */
         $check2 = Club::where('semester',$semester)
             ->where('no',$no)
             ->where('name',$name)
+            ->where('class_id',$class_id)
             ->first();
-        if($check1 or $check2){
-            return back()->withErrors(['errors'=>[$request->no.'此編號或社團已經有設定了！']]);
+        if($check2){
+            return back()->withErrors(['errors'=>[$request->input['name'].' 此類別中已經有設定此名稱的社團！']]);
         }else{
             $att = $request->all();
+            $att['no'] = $no;
             $s1 = $att['start1_time1']."-".$att['start1_time2']."-".$att['start1_time3'];
             $s2 = $att['start2_time1']."-".$att['start2_time2']."-".$att['start2_time3'];
             if($att['start2_time1']==="0"){
@@ -139,9 +219,11 @@ class ClubsController extends Controller
 
     public function club_copy(Request $request)
     {
-        $clubs1 = Club::where('semester',$request->input('semester1'))->get();
-        foreach($clubs1 as $club){
+        $clubs = Club::where('semester',$request->input('semester1'))->get();
+
+        foreach($clubs as $club){
             $att['no'] = $club->no;
+            $att['class_id'] = $club->class_id;
             $att['semester'] = $request->input('semester2');
             $att['name'] = $club->name;
             $att['contact_person'] = $club->contact_person;
@@ -165,8 +247,13 @@ class ClubsController extends Controller
 
     public function club_edit(Club $club)
     {
+        $club_classes = [
+            '1'=>'學生特色社團',
+            '2'=>'學生課後活動',
+        ];
         $data = [
-            'club'=>$club
+            'club'=>$club,
+            'club_classes'=>$club_classes,
         ];
 
         return view('clubs.club_edit',$data);
@@ -288,16 +375,30 @@ class ClubsController extends Controller
         return view('clubs.semester_select',$data);
     }
 
-    public function parents_login($semester)
+    public function parents_login($semester,$class_id)
     {
         $club_semester = ClubSemester::where('semester',$semester)->first();
-        if(date('Ymd') >= str_replace('-','',$club_semester->start_date) and date('Ymd') <= str_replace('-','',$club_semester->stop_date)){
-            $data = [
-                'semester'=>$semester,
-            ];
-            return view('clubs.parents_login',$data);
-        }else{
-            return back();
+        if($class_id=='1'){
+            if(date('YmdHi') >= str_replace('-','',$club_semester->start_date) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date)){
+                $data = [
+                    'semester'=>$semester,
+                    'class_id'=>$class_id,
+                ];
+                return view('clubs.parents_login',$data);
+            }else{
+                return back();
+            }
+        }
+        if($class_id=='2'){
+            if(date('YmdHi') >= str_replace('-','',$club_semester->start_date2) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date2)){
+                $data = [
+                    'semester'=>$semester,
+                    'class_id'=>$class_id,
+                ];
+                return view('clubs.parents_login',$data);
+            }else{
+                return back();
+            }
         }
 
     }
@@ -316,30 +417,66 @@ class ClubsController extends Controller
                     return back()->withErrors(['error'=>['密碼錯誤！']]);
                 }else{
                     session(['parents'=>$check->id]);
-                    return redirect()->route('clubs.parents_do');
+                    return redirect()->route('clubs.parents_do',$request->input('class_id'));
                 };
             }
 
         }
     }
 
-    public function parents_do()
+    public function parents_do($class_id)
     {
         if(empty(session('parents'))){
             return redirect()->route('clubs.semester_select');
         }
+
+
         $user = ClubStudent::where('id',session('parents'))
             ->first();
 
-        $clubs = Club::where('semester',$user->semester)->get();
+        $class_id = ($class_id)?$class_id:1;
+
+        $clubs = Club::where('semester',$user->semester)
+            ->where('class_id',$class_id)
+            ->get();
 
         $club_semester = ClubSemester::where('semester',$user->semester)
             ->first();
+
+
+        //檢查是否非可報名時間
+        if($class_id=='1'){
+            if(date('YmdHi') >= str_replace('-','',$club_semester->start_date) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date)){
+
+            }else{
+                echo "<body onload=alert('非報名時間')>";
+                echo "<a href=2 onclick =history.back()>返回</a>";
+                die();
+            }
+        }
+        if($class_id=='2'){
+            if(date('YmdHi') >= str_replace('-','',$club_semester->start_date2) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date2)){
+
+            }else{
+                echo "<body onload=alert('非報名時間')>";
+                echo "<a href=1 onclick =history.back()>返回</a>";
+                die();
+
+            }
+        }
+
+
+        $club_classes = [
+            '1'=>'1.學生特色社團 ('.$club_semester->start_date.'~'.$club_semester->stop_date.')',
+            '2'=>'2.學生課後活動 ('.$club_semester->start_date2.'~'.$club_semester->stop_date2.')',
+        ];
 
         $data = [
             'user'=>$user,
             'clubs'=>$clubs,
             'club_semester'=>$club_semester,
+            'club_classes'=>$club_classes,
+            'class_id'=>$class_id,
         ];
         return view('clubs.parents_do',$data);
     }
@@ -350,7 +487,7 @@ class ClubsController extends Controller
         return redirect()->route('clubs.semester_select');
     }
 
-    public function change_pwd()
+    public function change_pwd($class_id)
     {
         if(empty(session('parents'))){
             return redirect()->route('clubs.semester_select');
@@ -359,6 +496,7 @@ class ClubsController extends Controller
             ->first();
         $data = [
             'user'=>$user,
+            'class_id'=>$class_id,
         ];
         return view('clubs.change_pwd',$data);
     }
@@ -378,14 +516,14 @@ class ClubsController extends Controller
 
         $att['pwd'] = $request->input('password1');
         $user->update($att);
-        return redirect()->route('clubs.parents_do');
+        return redirect()->route('clubs.parents_do',$request->input('class_id'));
     }
 
     public function get_telephone(Request $request,ClubStudent $club_student)
     {
         $att = $request->all();
         $club_student->update($att);
-        return redirect()->route('clubs.parents_do');
+        return redirect()->route('clubs.parents_do',$request->input('class_id'));
     }
 
     public function show_club(Club $club)
@@ -416,12 +554,32 @@ class ClubsController extends Controller
         $club_semester = ClubSemester::where('semester',$user->semester)
             ->first();
 
+        if($club->class_id==1){
+            if(date('YmdHi') >= str_replace('-','',$club_semester->start_date) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date)){
+
+            }else{
+                return back();
+            }
+        }
+
+        if($club->class_id==2){
+            if(date('YmdHi') >= str_replace('-','',$club_semester->start_date2) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date2)){
+
+            }else{
+                return back();
+
+            }
+        }
+
+
         $check_num = ClubRegister::where('semester',$user->semester)
             ->where('club_student_id',$user->id)
+            ->where('class_id',$club->class_id)
             ->count();
 
         $count_num = ClubRegister::where('semester',$user->semester)
             ->where('club_id',$club->id)
+            ->where('class_id',$club->class_id)
             ->count();
 
         //時間重疊就不能報名
@@ -461,10 +619,11 @@ class ClubsController extends Controller
             $att['semester'] = $user->semester;
             $att['club_id'] = $club->id;
             $att['club_student_id'] = $user->id;
+            $att['class_id'] = $club->class_id;
             ClubRegister::create($att);
         }
 
-        return redirect()->route('clubs.parents_do');
+        return redirect()->route('clubs.parents_do',$club->class_id);
 
     }
 
@@ -477,16 +636,18 @@ class ClubsController extends Controller
         $user = ClubStudent::where('id',session('parents'))
             ->first();
 
+        $club = Club::find($club_id);
+
         ClubRegister::where('semester',$user->semester)
             ->where('club_id',$club_id)
             ->where('club_student_id',$user->id)
             ->delete();
 
-        return redirect()->route('clubs.parents_do');
+        return redirect()->route('clubs.parents_do',$club->class_id);
 
     }
 
-    public function sign_show(Club $club)
+    public function sign_show(Club $club,$class_id)
     {
         if(empty(session('parents'))){
             return redirect()->route('clubs.semester_select');
@@ -503,6 +664,7 @@ class ClubsController extends Controller
             'user'=>$user,
             'club'=>$club,
             'club_registers'=>$club_registers,
+            'class_id'=>$class_id,
         ];
 
         return view('clubs.sign_show',$data);
@@ -522,23 +684,26 @@ class ClubsController extends Controller
         }
 
         if($semester){
-            $clubs = Club::where('semester',$semester)->get();
+            $clubs1 = Club::where('semester',$semester)->where('class_id','1')->get();
+            $clubs2 = Club::where('semester',$semester)->where('class_id','2')->get();
         }else{
-            $clubs = [];
+            $clubs1 = [];
+            $clubs2 = [];
         }
 
         $data = [
             'club_semesters_array'=>$club_semesters_array,
             'semester'=>$semester,
-            'clubs'=>$clubs,
+            'clubs1'=>$clubs1,
+            'clubs2'=>$clubs2,
         ];
 
         return view('clubs.report_situation',$data);
     }
 
-    public function report_situation_download($semester)
+    public function report_situation_download($semester,$class_id)
     {
-        $clubs = Club::where('semester',$semester)->get();
+        $clubs = Club::where('semester',$semester)->where('class_id',$class_id)->get();
         $n = 1;
         foreach($clubs as $club){
             $club_registers = \App\ClubRegister::where('semester',$semester)
@@ -617,12 +782,23 @@ class ClubsController extends Controller
             }
 
         }
-        $clubs = [];
+        $clubs1 = [];
+        $clubs2 = [];
         $register_data = [];
         if($semester){
-            $clubs = Club::where('semester',$semester)->get();
-            $club_registers = ClubRegister::where('semester',$semester)->orderBy('club_student_id')->get();
-            foreach($club_registers as $club_register){
+            $clubs1 = Club::where('semester',$semester)->where('class_id','1')->get();
+            $clubs2 = Club::where('semester',$semester)->where('class_id','2')->get();
+            $club_registers1 = ClubRegister::where('semester',$semester)->where('class_id','1')->orderBy('club_student_id')->get();
+            $club_registers2 = ClubRegister::where('semester',$semester)->where('class_id','2')->orderBy('club_student_id')->get();
+            foreach($club_registers1 as $club_register){
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] = $club_register->user->name;
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] = substr($club_register->user->class_num,0,1);
+                $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] = substr($club_register->user->class_num,1,2);
+                $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
+            }
+            foreach($club_registers2 as $club_register){
                 $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
                 $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
                 $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] = $club_register->user->name;
@@ -631,26 +807,28 @@ class ClubsController extends Controller
                 $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
             }
         }else{
-            $club_registers = [];
+            $club_registers1 = [];
+            $club_registers2 = [];
         }
 
         $data = [
             'club_semesters_array'=>$club_semesters_array,
             'semester'=>$semester,
-            'clubs'=>$clubs,
-            'club_registers'=>$club_registers,
+            'clubs1'=>$clubs1,
+            'clubs2'=>$clubs2,
+            'club_registers1'=>$club_registers1,
+            'club_registers2'=>$club_registers2,
             'register_data'=>$register_data,
         ];
 
         return view('clubs.report_money',$data);
     }
 
-    public function report_money_download($semester)
+    public function report_money_download($semester,$class_id)
     {
-        $club_semesters_array = ClubSemester::orderby('semester','DESC')->pluck('semester','semester')->toArray();
 
-        $clubs = Club::where('semester',$semester)->get();
-        $club_registers = ClubRegister::where('semester',$semester)->orderBy('club_student_id')->get();
+        $clubs = Club::where('semester',$semester)->where('class_id',$class_id)->get();
+        $club_registers = ClubRegister::where('semester',$semester)->where('class_id',$class_id)->orderBy('club_student_id')->get();
         foreach($club_registers as $club_register){
             $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
             $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
@@ -690,7 +868,9 @@ class ClubsController extends Controller
 
         $list = collect($data);
 
-        return (new FastExcel($list))->download($semester.'_社團報名繳費單.xlsx');
+        if($class_id==1) $name = "學生特色社團";
+        if($class_id==2) $name = "學生課後活動";
+        return (new FastExcel($list))->download($semester.'_'.$name.'繳費單.xlsx');
 
     }
 

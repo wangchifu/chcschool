@@ -31,7 +31,8 @@
                             <label for="exampleInputPassword2">確認新密碼*</label>
                             <input type="password" class="form-control" name="password2" id="exampleInputPassword2" required tabindex="3">
                         </div>
-                        <a href="{{ route('clubs.parents_do') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
+                        <a href="{{ route('clubs.parents_do',$class_id) }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
+                        <input type="hidden" name="class_id" value="{{ $class_id }}">
                         <button type="submit" class="btn btn-primary btn-sm" tabindex="5" onclick="return confirm('確定？')"><i class="fas fa-save"></i> 送出</button>
                     </form>
                     @include('layouts.errors')

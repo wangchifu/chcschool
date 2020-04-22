@@ -32,8 +32,11 @@
                             </div>
                         </form>
                         <a href="{{ route('clubs.report') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
-                        <a href="{{ route('clubs.report_money_download',$semester) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> 下載 Excel 檔</a>
 
+                        <h4 class="text-primary">
+                            [ 1.學生特色社團 ]
+                        </h4>
+                            <a href="{{ route('clubs.report_money_download',['semester'=>$semester,'class_id'=>'1']) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> 下載 Excel 檔</a>
                         <table class="table table-striped">
                             <tr>
                                 <th>
@@ -60,14 +63,14 @@
                                 <th>
                                     減免
                                 </th>
-                                @foreach($clubs as $club)
+                                @foreach($clubs1 as $club)
                                     <th>
                                         {{ $club->name }}
                                     </th>
                                 @endforeach
                             </tr>
                             <?php $check_id=0; ?>
-                            @foreach($club_registers as $club_register)
+                            @foreach($club_registers1 as $club_register)
                                 @if($check_id != $club_register->user->id)
                                     <tr>
                                         <td>
@@ -94,7 +97,85 @@
                                         <td>
 
                                         </td>
-                                        @foreach($clubs as $club)
+                                        @foreach($clubs1 as $club)
+                                            <td>
+                                                @if(isset($register_data[$club->name][$club_register->user->id]['money']))
+                                                    {{ $register_data[$club->name][$club_register->user->id]['money'] }}
+                                                @else
+                                                @endif
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endif
+                                <?php $check_id = $club_register->user->id; ?>
+                            @endforeach
+                        </table>
+                        <hr>
+                        <h4 class="text-primary">
+                            [ 2.學生課後活動 ]
+                        </h4>
+                            <a href="{{ route('clubs.report_money_download',['semester'=>$semester,'class_id'=>'2']) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> 下載 Excel 檔</a>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>
+                                    學號
+                                </th>
+                                <th>
+                                    座號
+                                </th>
+                                <th>
+                                    姓名
+                                </th>
+                                <th>
+                                    身分證字號
+                                </th>
+                                <th>
+                                    生日
+                                </th>
+                                <th>
+                                    年級
+                                </th>
+                                <th>
+                                    班別
+                                </th>
+                                <th>
+                                    減免
+                                </th>
+                                @foreach($clubs2 as $club)
+                                    <th>
+                                        {{ $club->name }}
+                                    </th>
+                                @endforeach
+                            </tr>
+                            <?php $check_id=0; ?>
+                            @foreach($club_registers2 as $club_register)
+                                @if($check_id != $club_register->user->id)
+                                    <tr>
+                                        <td>
+                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] }}
+                                        </td>
+                                        <td>
+                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] }}
+                                        </td>
+                                        <td>
+                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] }}
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] }}
+                                        </td>
+                                        <td>
+                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] }}
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        @foreach($clubs2 as $club)
                                             <td>
                                                 @if(isset($register_data[$club->name][$club_register->user->id]['money']))
                                                     {{ $register_data[$club->name][$club_register->user->id]['money'] }}

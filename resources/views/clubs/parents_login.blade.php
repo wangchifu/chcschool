@@ -30,6 +30,7 @@
                                     <input id="pwd" type="password" class="form-control" name="pwd" required>
                                 </div>
                             </div>
+                            <input type="hidden" name="class_id" value="{{ $class_id }}">
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary btn-sm">

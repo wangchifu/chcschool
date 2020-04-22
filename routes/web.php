@@ -92,17 +92,17 @@ Route::get('lunch_lists/change_factory/', 'LunchListController@change_factory')-
 
 //社團家長頁面
 Route::get('clubs/semester_select' , 'ClubsController@semester_select')->name('clubs.semester_select');
-Route::get('clubs/{semester}/parents_login' , 'ClubsController@parents_login')->name('clubs.parents_login');
+Route::get('clubs/{semester}/{class_id}/parents_login' , 'ClubsController@parents_login')->name('clubs.parents_login');
 Route::post('clubs/do_login' , 'ClubsController@do_login')->name('clubs.do_login');
-Route::get('clubs/parents_do' , 'ClubsController@parents_do')->name('clubs.parents_do');
+Route::get('clubs/parents_do/{class_id}' , 'ClubsController@parents_do')->name('clubs.parents_do');
 Route::get('clubs/parents_logout' , 'ClubsController@parents_logout')->name('clubs.parents_logout');
-Route::get('clubs/change_pwd' , 'ClubsController@change_pwd')->name('clubs.change_pwd');
+Route::get('clubs/{class_id}/change_pwd' , 'ClubsController@change_pwd')->name('clubs.change_pwd');
 Route::patch('clubs/change_pwd_do' , 'ClubsController@change_pwd_do')->name('clubs.change_pwd_do');
 Route::post('clubs/{club_student}/get_telephone' , 'ClubsController@get_telephone')->name('clubs.get_telephone');
 Route::get('clubs/{club}/show_club' , 'ClubsController@show_club')->name('clubs.show_club');
 Route::get('clubs/{club}/sign_up' , 'ClubsController@sign_up')->name('clubs.sign_up');
 Route::get('clubs/{club_id}/sign_down' , 'ClubsController@sign_down')->name('clubs.sign_down');
-Route::get('clubs/{club}/sign_show' , 'ClubsController@sign_show')->name('clubs.sign_show');
+Route::get('clubs/{club}/{class_id}/sign_show' , 'ClubsController@sign_show')->name('clubs.sign_show');
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
@@ -236,10 +236,10 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('clubs/{club_student}/stu_delete' , 'ClubsController@stu_delete')->name('clubs.stu_delete');
 
     Route::get('clubs/report_situation/{semester?}' , 'ClubsController@report_situation')->name('clubs.report_situation');
-    Route::get('clubs/{semester}/report_situation_download' , 'ClubsController@report_situation_download')->name('clubs.report_situation_download');
+    Route::get('clubs/{semester}/report_situation_download/{class_id}' , 'ClubsController@report_situation_download')->name('clubs.report_situation_download');
     Route::get('clubs/{club_register}/report_register_delete' , 'ClubsController@report_register_delete')->name('clubs.report_register_delete');
     Route::get('clubs/report_money/{semester?}' , 'ClubsController@report_money')->name('clubs.report_money');
-    Route::get('clubs/{semester}/report_money_download' , 'ClubsController@report_money_download')->name('clubs.report_money_download');
+    Route::get('clubs/{semester}/{class_id}/report_money_download' , 'ClubsController@report_money_download')->name('clubs.report_money_download');
     Route::get('clubs/report' , 'ClubsController@report')->name('clubs.report');
 
 

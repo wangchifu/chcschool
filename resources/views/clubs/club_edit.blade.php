@@ -28,6 +28,10 @@
                             <h4>{{ $club->semester }}修改社團</h4>
                             {{ Form::model($club,['route' => ['clubs.club_update',$club->id], 'method' => 'patch']) }}
                             <div class="form-group">
+                                <label for="class_id"><strong>社團類別*</strong></label>
+                                {{ Form::select('class_id',$club_classes,$club->class_id,['id'=>'class_id','class' => 'form-control','required'=>'required']) }}
+                            </div>
+                            <div class="form-group">
                                 <label for="no"><strong>社團編號*</strong><small class="text-primary">(如 A)</small></label>
                                 {{ Form::text('no',$club->no,['id'=>'no','class' => 'form-control','required'=>'required']) }}
                             </div>
