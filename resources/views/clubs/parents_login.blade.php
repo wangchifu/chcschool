@@ -45,7 +45,7 @@
             </div>
         @else
             <script>
-                document.location.href="{{ route('clubs.parents_do') }}";
+                document.location.href="{{ route('clubs.parents_do',$class_id) }}";
             </script>
         @endif
     </div>
