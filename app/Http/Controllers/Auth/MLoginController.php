@@ -59,7 +59,7 @@ class MLoginController extends Controller
                         return back()->withErrors(['error'=>['GSuite帳號不是從這邊登入']]);
                     }
                 }else{
-                    return back()->withErrors(['error'=>['密碼錯誤！']]);
+                    return back()->withErrors(['error'=>['帳號或密碼錯誤']]);
                 }
             }
 
