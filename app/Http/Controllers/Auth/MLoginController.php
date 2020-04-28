@@ -49,7 +49,7 @@ class MLoginController extends Controller
                 ->first();
 
             if(empty($user)){
-                return back()->withErrors(['error'=>['無此管理帳號']]);
+                return back()->withErrors(['error'=>['帳號或密碼錯誤']]);
             }else{
                 if(password_verify($request->input('password'), $user->password)){
                     if($user->disable == "1"){
