@@ -42,10 +42,10 @@ class ClubsController extends Controller
 
         if(!$check){
             $att = $request->all();
-            $att['start_date'] = $request->input('year_1').'-'.$request->input('month_1').'-'.$request->input('day_1').'-'.$request->input('hour_1').'-'.$request->input('min_1');
-            $att['stop_date'] = $request->input('year_2').'-'.$request->input('month_2').'-'.$request->input('day_2').'-'.$request->input('hour_2').'-'.$request->input('min_2');
-            $att['start_date2'] = $request->input('year2_1').'-'.$request->input('month2_1').'-'.$request->input('day2_1').'-'.$request->input('hour2_1').'-'.$request->input('min2_1');
-            $att['stop_date2'] = $request->input('year2_2').'-'.$request->input('month2_2').'-'.$request->input('day2_2').'-'.$request->input('hour2_2').'-'.$request->input('min2_2');
+            $att['start_date'] = $request->input('year_1').'-'.sprintf("%02s",$request->input('month_1')).'-'.sprintf("%02s",$request->input('day_1')).'-'.sprintf("%02s",$request->input('hour_1')).'-'.sprintf("%02s",$request->input('min_1'));
+            $att['stop_date'] = $request->input('year_2').'-'.sprintf("%02s",$request->input('month_2')).'-'.sprintf("%02s",$request->input('day_2')).'-'.sprintf("%02s",$request->input('hour_2')).'-'.sprintf("%02s",$request->input('min_2'));
+            $att['start_date2'] = $request->input('year2_1').'-'.sprintf("%02s",$request->input('month2_1')).'-'.sprintf("%02s",$request->input('day2_1')).'-'.sprintf("%02s",$request->input('hour2_1')).'-'.sprintf("%02s",$request->input('min2_1'));
+            $att['stop_date2'] = $request->input('year2_2').'-'.sprintf("%02s",$request->input('month2_2')).'-'.sprintf("%02s",$request->input('day2_2')).'-'.sprintf("%02s",$request->input('hour2_2')).'-'.sprintf("%02s",$request->input('min2_2'));
             ClubSemester::create($att);
         }else{
             return back()->withErrors(['errors'=>[$semester.'學期已經有設定了！']]);
@@ -74,10 +74,10 @@ class ClubsController extends Controller
     public function semester_update(Request $request,ClubSemester $club_semester)
     {
         $att = $request->all();
-        $att['start_date'] = $request->input('year_1').'-'.$request->input('month_1').'-'.$request->input('day_1').'-'.$request->input('hour_1').'-'.$request->input('min_1');
-        $att['stop_date'] = $request->input('year_2').'-'.$request->input('month_2').'-'.$request->input('day_2').'-'.$request->input('hour_2').'-'.$request->input('min_2');
-        $att['start_date2'] = $request->input('year2_1').'-'.$request->input('month2_1').'-'.$request->input('day2_1').'-'.$request->input('hour2_1').'-'.$request->input('min2_1');
-        $att['stop_date2'] = $request->input('year2_2').'-'.$request->input('month2_2').'-'.$request->input('day2_2').'-'.$request->input('hour2_2').'-'.$request->input('min2_2');
+        $att['start_date'] = $request->input('year_1').'-'.sprintf("%02s",$request->input('month_1')).'-'.sprintf("%02s",$request->input('day_1')).'-'.sprintf("%02s",$request->input('hour_1')).'-'.sprintf("%02s",$request->input('min_1'));
+        $att['stop_date'] = $request->input('year_2').'-'.sprintf("%02s",$request->input('month_2')).'-'.sprintf("%02s",$request->input('day_2')).'-'.sprintf("%02s",$request->input('hour_2')).'-'.sprintf("%02s",$request->input('min_2'));
+        $att['start_date2'] = $request->input('year2_1').'-'.sprintf("%02s",$request->input('month2_1')).'-'.sprintf("%02s",$request->input('day2_1')).'-'.sprintf("%02s",$request->input('hour2_1')).'-'.sprintf("%02s",$request->input('min2_1'));
+        $att['stop_date2'] = $request->input('year2_2').'-'.sprintf("%02s",$request->input('month2_2')).'-'.sprintf("%02s",$request->input('day2_2')).'-'.sprintf("%02s",$request->input('hour2_2')).'-'.sprintf("%02s",$request->input('min2_2'));
         $club_semester->update($att);
         return redirect()->route('clubs.index');
     }
