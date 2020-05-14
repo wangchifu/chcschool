@@ -7,7 +7,7 @@
 $posts = \App\Post::where('insite',null)
     ->orderBy('top','DESC')
     ->orderBy('created_at','DESC')
-    ->paginate(5);
+    ->paginate(10);
 ?>
 <h4 class="text-info"><strong>一般公告</strong></h4>
 <table class="table table-striped rwd-table" style="word-break:break-all;">
@@ -124,7 +124,7 @@ $posts = \App\Post::where('insite',null)
                         @endif
                         <a href="{{ route('posts.show',$post->id) }}">{{ $title }}</a>
                     @else
-                        <span class='text-danger'>[ 內部公告，請登入後瀏覽。 ]</span>
+                        {{ $title }}
                     @endif
                     @if(!empty($files))
                         <span class="text-info"><i class="fas fa-file"></i> [附件]</span>
