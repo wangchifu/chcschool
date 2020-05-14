@@ -323,7 +323,12 @@ Route::group(['middleware' => 'admin_exec'],function(){
     Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
     Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
 
-
+    //圖片連結管理
+    Route::get('photo_links', 'PhotoLinksController@index')->name('photo_links.index');
+    Route::post('photo_links', 'PhotoLinksController@store')->name('photo_links.store');
+    Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');
+    Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');
+    Route::patch('photo_links/{photo_link}', 'PhotoLinksController@update')->name('photo_links.update');
 
 });
 
@@ -418,12 +423,6 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('links/{link}/edit', 'LinksController@edit')->name('links.edit');
     Route::patch('links/{link}', 'LinksController@update')->name('links.update');
 
-    //圖片連結管理
-    Route::get('photo_links', 'PhotoLinksController@index')->name('photo_links.index');
-    Route::post('photo_links', 'PhotoLinksController@store')->name('photo_links.store');
-    Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');
-    Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');
-    Route::patch('photo_links/{photo_link}', 'PhotoLinksController@update')->name('photo_links.update');
 
     //樹狀目錄
     Route::get('trees', 'TreesController@index')->name('trees.index');

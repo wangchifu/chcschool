@@ -115,6 +115,7 @@
                                         <i class="fas fa-table-tennis"></i> 社團報名
                                     </a>
                                 @endif
+                                <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                             </div>
                         </li>
                     @endif
