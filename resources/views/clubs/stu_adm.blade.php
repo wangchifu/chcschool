@@ -99,6 +99,7 @@
                                     {{ $club_student->parents_telephone }}
                                 </td>
                                 <td>
+                                    <a href="{{ route('clubs.stu_backPWD',$club_student->id) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定還原密碼為生日嗎？')">還密</a>
                                     <a href="{{ route('clubs.stu_edit',$club_student->id) }}" class="btn btn-primary btn-sm">編輯</a>
                                     <a href="{{ route('clubs.stu_delete',$club_student->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？')">刪除</a>
                                 </td>

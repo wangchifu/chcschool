@@ -234,6 +234,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('clubs/{club_student}/stu_edit' , 'ClubsController@stu_edit')->name('clubs.stu_edit');
     Route::patch('clubs/{club_student}/stu_update' , 'ClubsController@stu_update')->name('clubs.stu_update');
     Route::get('clubs/{club_student}/stu_delete' , 'ClubsController@stu_delete')->name('clubs.stu_delete');
+    Route::get('clubs/{club_student}/stu_backPWD' , 'ClubsController@stu_backPWD')->name('clubs.stu_backPWD');
 
     Route::get('clubs/report_situation/{semester?}' , 'ClubsController@report_situation')->name('clubs.report_situation');
     Route::get('clubs/{semester}/report_situation_download/{class_id}' , 'ClubsController@report_situation_download')->name('clubs.report_situation_download');

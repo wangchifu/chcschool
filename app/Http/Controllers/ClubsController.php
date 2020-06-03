@@ -361,6 +361,13 @@ class ClubsController extends Controller
         return redirect()->route('clubs.stu_adm',$club_student->semester);
     }
 
+    public function stu_backPWD(ClubStudent $club_student)
+    {
+        $att['pwd'] = $club_student->birthday;
+        $club_student->update($att);
+        return redirect()->route('clubs.stu_adm',$club_student->semester);
+    }
+
     public function report()
     {
         return view('clubs.report');

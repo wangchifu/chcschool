@@ -18,7 +18,7 @@
                     <form name=myform>
                     <div class="form-group">
                         <label>
-                            請選擇：
+                            <strong class="text-danger">請選擇：可下拉選單選擇報名項目</strong>
                         </label>
                         {{ Form::select('class_id', $club_classes,$class_id, ['id'=>'class_id','class' => 'form-control','onchange'=>'jump()']) }}
                     </div>
@@ -30,10 +30,39 @@
                             學生課後活動
                         @endif
                     </h3>
-                    <small>可報 {{ $club_semester->club_limit }} 社團</small>
+                    <strong class="text-primary">可報 {{ $club_semester->club_limit }} 社團</strong>
                 </div>
+                <style>
+                    .blink {
+                        animation-duration: 1s;
+                        animation-name: blink;
+                        animation-iteration-count: infinite;
+                        animation-direction: alternate;
+                        animation-timing-function: ease-in-out;
+                    }
+                    @keyframes blink {
+                        from {
+                            opacity: 1;
+                        }
+                        to {
+                            opacity: 0;
+                        }
+                    }
+                </style>
                 <div class="card-body">
-                    @include('layouts.errors')
+                    @if($errors->any())
+                        <div class="form-group">
+                            <h5>
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                    <li class="text-danger blink">
+                                            {{ $error }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                            </h5>
+                        </div>
+                    @endif
                     <table class="table table-hover">
                         <tr>
                             <th>
