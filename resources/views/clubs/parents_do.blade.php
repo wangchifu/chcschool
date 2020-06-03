@@ -18,7 +18,7 @@
                     <form name=myform>
                     <div class="form-group">
                         <label>
-                            <strong class="text-danger">請選擇：可下拉選單選擇報名項目</strong>
+                            <strong class="text-danger">請選擇：可下拉選單選擇報名類別</strong>
                         </label>
                         {{ Form::select('class_id', $club_classes,$class_id, ['id'=>'class_id','class' => 'form-control','onchange'=>'jump()']) }}
                     </div>
