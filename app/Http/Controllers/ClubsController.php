@@ -917,56 +917,6 @@ class ClubsController extends Controller
         if($class_id==2) $name = "學生課後活動";
         return (new FastExcel($list))->download($semester.'_'.$name.'繳費單.xlsx');
 
-        /**
-        $clubs = Club::where('semester',$semester)->where('class_id',$class_id)->get();
-        $club_registers = ClubRegister::where('semester',$semester)->where('class_id',$class_id)->orderBy('club_student_id')->get();
-        foreach($club_registers as $club_register){
-            $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
-            $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
-            $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] = $club_register->user->name;
-            $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] = substr($club_register->user->class_num,0,1);
-            $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] = substr($club_register->user->class_num,1,2);
-            $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
-
-        }
-
-        $check_id=0;
-        $n=1;
-        foreach($club_registers as $club_register){
-            if($check_id != $club_register->user->id){
-                $data[$n]=[
-                    '學號'=>$register_data[$club_register->club->name][$club_register->user->id]['stud_no'],
-                    '座號'=>(int)$register_data[$club_register->club->name][$club_register->user->id]['stud_num'],
-                    '姓名'=>$register_data[$club_register->club->name][$club_register->user->id]['stud_name'],
-                    '身分證字號'=>'',
-                    '生日'=>'',
-                    '年級'=>$register_data[$club_register->club->name][$club_register->user->id]['stud_year'],
-                    '班別'=>(int)$register_data[$club_register->club->name][$club_register->user->id]['stud_class'],
-                    '減免'=>'',
-                ];
-                foreach($clubs as $club){
-                    if(isset($register_data[$club->name][$club_register->user->id]['money'])){
-                        $data[$n][$club->name] = $register_data[$club->name][$club_register->user->id]['money'];
-                    }else{
-                        $data[$n][$club->name] = '';
-                    }
-
-                }
-                $n++;
-            }
-            $check_id = $club_register->user->id;
-        }
-
-        $list = collect($data);
-
-        if($class_id==1) $name = "學生特色社團";
-        if($class_id==2) $name = "學生課後活動";
-        return (new FastExcel($list))->download($semester.'_'.$name.'繳費單.xlsx');
-         *
-         * */
-
-
-
     }
 
 
