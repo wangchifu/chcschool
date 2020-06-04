@@ -63,51 +63,47 @@
                                 <th>
                                     減免
                                 </th>
-                                @foreach($clubs1 as $club)
+                                @foreach($open_clubs_name1 as $k =>$v)
                                     <th>
-                                        {{ $club->name }}
+                                        {{ $v }}
                                     </th>
                                 @endforeach
                             </tr>
-                            <?php $check_id=0; ?>
-                            @foreach($club_registers1 as $club_register)
-                                @if($check_id != $club_register->user->id)
-                                    <tr>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] }}
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] }}
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] }}
-                                        </td>
-                                        <td>
+                            @foreach($students1 as $k=>$v)
+                                <tr>
+                                    <td>
+                                        {{ $v['no'] }}
+                                    </td>
+                                    <td>
+                                        {{ (int)$v['num'] }}
+                                    </td>
+                                    <td>
+                                        {{ $v['name'] }}
+                                    </td>
+                                    <td>
 
-                                        </td>
-                                        <td>
+                                    </td>
+                                    <td>
 
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] }}
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] }}
-                                        </td>
-                                        <td>
+                                    </td>
+                                    <td>
+                                        {{ $v['year'] }}
+                                    </td>
+                                    <td>
+                                        {{ (int)$v['class'] }}
+                                    </td>
+                                    <td>
 
+                                    </td>
+                                    @foreach($open_clubs_name1 as $k2=>$v2)
+                                        <td>
+                                            @if(isset($register_data1[$k][$k2]))
+                                                {{ $register_data1[$k][$k2] }}
+                                            @else
+                                            @endif
                                         </td>
-                                        @foreach($clubs1 as $club)
-                                            <td>
-                                                @if(isset($register_data[$club->name][$club_register->user->id]['money']))
-                                                    {{ $register_data[$club->name][$club_register->user->id]['money'] }}
-                                                @else
-                                                @endif
-                                            </td>
-                                        @endforeach
-                                    </tr>
-                                @endif
-                                <?php $check_id = $club_register->user->id; ?>
+                                    @endforeach
+                                </tr>
                             @endforeach
                         </table>
                         <hr>
@@ -141,51 +137,47 @@
                                 <th>
                                     減免
                                 </th>
-                                @foreach($clubs2 as $club)
+                                @foreach($open_clubs_name2 as $k =>$v)
                                     <th>
-                                        {{ $club->name }}
+                                        {{ $v }}
                                     </th>
                                 @endforeach
                             </tr>
-                            <?php $check_id=0; ?>
-                            @foreach($club_registers2 as $club_register)
-                                @if($check_id != $club_register->user->id)
-                                    <tr>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] }}
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] }}
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] }}
-                                        </td>
-                                        <td>
+                            @foreach($students2 as $k=>$v)
+                                <tr>
+                                    <td>
+                                        {{ $v['no'] }}
+                                    </td>
+                                    <td>
+                                        {{ (int)$v['num'] }}
+                                    </td>
+                                    <td>
+                                        {{ $v['name'] }}
+                                    </td>
+                                    <td>
 
-                                        </td>
-                                        <td>
+                                    </td>
+                                    <td>
 
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] }}
-                                        </td>
-                                        <td>
-                                            {{ $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] }}
-                                        </td>
-                                        <td>
+                                    </td>
+                                    <td>
+                                        {{ $v['year'] }}
+                                    </td>
+                                    <td>
+                                        {{ (int)$v['class'] }}
+                                    </td>
+                                    <td>
 
+                                    </td>
+                                    @foreach($open_clubs_name2 as $k2=>$v2)
+                                        <td>
+                                            @if(isset($register_data2[$k][$k2]))
+                                                {{ $register_data2[$k][$k2] }}
+                                            @else
+                                            @endif
                                         </td>
-                                        @foreach($clubs2 as $club)
-                                            <td>
-                                                @if(isset($register_data[$club->name][$club_register->user->id]['money']))
-                                                    {{ $register_data[$club->name][$club_register->user->id]['money'] }}
-                                                @else
-                                                @endif
-                                            </td>
-                                        @endforeach
-                                    </tr>
-                                @endif
-                                <?php $check_id = $club_register->user->id; ?>
+                                    @endforeach
+                                </tr>
                             @endforeach
                         </table>
                     @elseif(!$admin)

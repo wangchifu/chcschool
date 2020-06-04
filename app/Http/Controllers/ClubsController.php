@@ -789,43 +789,72 @@ class ClubsController extends Controller
             }
 
         }
-        $clubs1 = [];
-        $clubs2 = [];
-        $register_data = [];
-        if($semester){
+
+        if($semester) {
             $clubs1 = Club::where('semester',$semester)->where('class_id','1')->get();
             $clubs2 = Club::where('semester',$semester)->where('class_id','2')->get();
-            $club_registers1 = ClubRegister::where('semester',$semester)->where('class_id','1')->orderBy('club_student_id')->get();
-            $club_registers2 = ClubRegister::where('semester',$semester)->where('class_id','2')->orderBy('club_student_id')->get();
+
+            foreach($clubs1 as $club){
+                $check_people = ClubRegister::where('club_id',$club->id)->count();
+                if($check_people >= $club->people and $club->money != 0){
+                    $open_clubs1[] = $club->id;
+                    $open_clubs_name1[$club->id] = $club->name;
+                }
+            }
+
+            foreach($clubs2 as $club){
+                $check_people = ClubRegister::where('club_id',$club->id)->count();
+                if($check_people >= $club->people and $club->money != 0){
+                    $open_clubs2[] = $club->id;
+                    $open_clubs_name2[$club->id] = $club->name;
+                }
+            }
+
+
+            $club_registers1 = ClubRegister::where('semester',$semester)
+                ->where('class_id','1')
+                ->whereIn('club_id',$open_clubs1)
+                ->orderBy('club_student_id')->get();
+            $club_registers2 = ClubRegister::where('semester',$semester)
+                ->where('class_id','2')
+                ->whereIn('club_id',$open_clubs2)
+                ->orderBy('club_student_id')->get();
             foreach($club_registers1 as $club_register){
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] = $club_register->user->name;
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] = substr($club_register->user->class_num,0,1);
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] = substr($club_register->user->class_num,1,2);
-                $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
+                $students1[$club_register->user->id]['no'] = $club_register->user->no;
+                $students1[$club_register->user->id]['num'] = substr($club_register->user->class_num,3,2);
+                $students1[$club_register->user->id]['name'] = $club_register->user->name;
+                $students1[$club_register->user->id]['year'] = substr($club_register->user->class_num,0,1);
+                $students1[$club_register->user->id]['class'] = substr($club_register->user->class_num,1,2);
+                $register_data1[$club_register->user->id][$club_register->club->id] = $club_register->club->money;
             }
             foreach($club_registers2 as $club_register){
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_no'] = $club_register->user->no;
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_num'] = substr($club_register->user->class_num,3,2);
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_name'] = $club_register->user->name;
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_year'] = substr($club_register->user->class_num,0,1);
-                $register_data[$club_register->club->name][$club_register->user->id]['stud_class'] = substr($club_register->user->class_num,1,2);
-                $register_data[$club_register->club->name][$club_register->user->id]['money'] = $club_register->club->money;
+                $students2[$club_register->user->id]['no'] = $club_register->user->no;
+                $students2[$club_register->user->id]['num'] = substr($club_register->user->class_num,3,2);
+                $students2[$club_register->user->id]['name'] = $club_register->user->name;
+                $students2[$club_register->user->id]['year'] = substr($club_register->user->class_num,0,1);
+                $students2[$club_register->user->id]['class'] = substr($club_register->user->class_num,1,2);
+                $register_data2[$club_register->user->id][$club_register->club->id] = $club_register->club->money;
             }
+
         }else{
+            $students1 = [];
+            $students2 = [];
             $club_registers1 = [];
             $club_registers2 = [];
         }
 
+
         $data = [
             'club_semesters_array'=>$club_semesters_array,
             'semester'=>$semester,
-            'clubs1'=>$clubs1,
-            'clubs2'=>$clubs2,
+            'open_clubs_name1'=>$open_clubs_name1,
+            'open_clubs_name2'=>$open_clubs_name2,
             'club_registers1'=>$club_registers1,
             'club_registers2'=>$club_registers2,
-            'register_data'=>$register_data,
+            'register_data1'=>$register_data1,
+            'register_data2'=>$register_data2,
+            'students1'=>$students1,
+            'students2'=>$students2,
         ];
 
         return view('clubs.report_money',$data);
@@ -834,6 +863,61 @@ class ClubsController extends Controller
     public function report_money_download($semester,$class_id)
     {
 
+        $clubs = Club::where('semester',$semester)->where('class_id',$class_id)->get();
+        foreach($clubs as $club){
+            $check_people = ClubRegister::where('club_id',$club->id)->count();
+            if($check_people >= $club->people and $club->money != 0){
+                $open_clubs[] = $club->id;
+                $open_clubs_name[$club->id] = $club->name;
+            }
+        }
+
+
+
+        $club_registers = ClubRegister::where('semester',$semester)
+            ->where('class_id',$class_id)
+            ->whereIn('club_id',$open_clubs)
+            ->orderBy('club_student_id')->get();
+
+
+        foreach($club_registers as $club_register){
+            $students[$club_register->user->id]['no'] = $club_register->user->no;
+            $students[$club_register->user->id]['num'] = substr($club_register->user->class_num,3,2);
+            $students[$club_register->user->id]['name'] = $club_register->user->name;
+            $students[$club_register->user->id]['year'] = substr($club_register->user->class_num,0,1);
+            $students[$club_register->user->id]['class'] = substr($club_register->user->class_num,1,2);
+            $register_data[$club_register->user->id][$club_register->club->id] = $club_register->club->money;
+        }
+
+        $n=1;
+        foreach($students as $k=>$v){
+            $data[$n]=[
+                '學號'=>$v['no'],
+                '座號'=>(int)$v['num'],
+                '姓名'=>$v['name'],
+                '身分證字號'=>'',
+                '生日'=>'',
+                '年級'=>$v['year'],
+                '班別'=>(int)$v['class'],
+                '減免'=>'',
+            ];
+            foreach($open_clubs_name as $k2=>$v2){
+                if(isset($register_data[$k][$k2])){
+                    $data[$n][$v2] = $register_data[$k][$k2];
+                }else{
+                    $data[$n][$v2] = '';
+                }
+            }
+            $n++;
+        }
+
+        $list = collect($data);
+
+        if($class_id==1) $name = "學生特色社團";
+        if($class_id==2) $name = "學生課後活動";
+        return (new FastExcel($list))->download($semester.'_'.$name.'繳費單.xlsx');
+
+        /**
         $clubs = Club::where('semester',$semester)->where('class_id',$class_id)->get();
         $club_registers = ClubRegister::where('semester',$semester)->where('class_id',$class_id)->orderBy('club_student_id')->get();
         foreach($club_registers as $club_register){
@@ -878,6 +962,10 @@ class ClubsController extends Controller
         if($class_id==1) $name = "學生特色社團";
         if($class_id==2) $name = "學生課後活動";
         return (new FastExcel($list))->download($semester.'_'.$name.'繳費單.xlsx');
+         *
+         * */
+
+
 
     }
 
