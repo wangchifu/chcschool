@@ -52,7 +52,7 @@
                         CKEDITOR.replace('content'
                             ,{
                                 toolbar: [
-                                    { name: 'document', items: [ 'Bold', 'Italic','TextColor','-','Link','Unlink','-','Outdent', 'Indent', '-', 'Undo', 'Redo' ] },
+                                    { name: 'document', items: [ 'Bold', 'Italic','TextColor','-','BulletedList','NumberedList','-','Link','Unlink','-','Outdent', 'Indent', '-', 'Undo', 'Redo' ] },
                                 ],
                                 filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
                                 filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
