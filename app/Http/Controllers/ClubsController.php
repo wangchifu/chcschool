@@ -794,7 +794,11 @@ class ClubsController extends Controller
             $clubs1 = Club::where('semester',$semester)->where('class_id','1')->get();
             $clubs2 = Club::where('semester',$semester)->where('class_id','2')->get();
 
-            foreach($clubs1 as $club){
+	    $open_clubs1 = [];
+	    $open_clubs2 = [];
+	    $open_clubs_name1 = [];
+	    $open_clubs_name2 = [];
+	    foreach($clubs1 as $club){
                 $check_people = ClubRegister::where('club_id',$club->id)->count();
                 if($check_people >= $club->people and $club->money != 0){
                     $open_clubs1[] = $club->id;
@@ -818,7 +822,12 @@ class ClubsController extends Controller
             $club_registers2 = ClubRegister::where('semester',$semester)
                 ->where('class_id','2')
                 ->whereIn('club_id',$open_clubs2)
-                ->orderBy('club_student_id')->get();
+		->orderBy('club_student_id')->get();
+	    $register_data1 = [];
+	    $register_data2 = [];
+	    $students1 = [];
+	    $students2 = [];
+
             foreach($club_registers1 as $club_register){
                 $students1[$club_register->user->id]['no'] = $club_register->user->no;
                 $students1[$club_register->user->id]['num'] = substr($club_register->user->class_num,3,2);
