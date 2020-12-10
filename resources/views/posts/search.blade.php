@@ -12,7 +12,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('posts.index') }}">公告列表</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">關字字搜尋</li>
+                    <li class="breadcrumb-item active" aria-current="page">關鍵字搜尋</li>
                 </ol>
             </nav>
             @include('posts.list')
