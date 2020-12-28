@@ -91,7 +91,7 @@
                                 {{ Form::number('taking',null,['id'=>'taking','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">
-                                <label for="prepare"><strong>備取人數*</strong></label>
+                                <label for="prepare"><strong>候補人數*</strong></label>
                                 {{ Form::number('prepare',null,['id'=>'prepare','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">

@@ -110,7 +110,7 @@
                                                         正取{{ $i }}
                                                     @endif
                                                     @if($i > $taking and $j <= $prepare)
-                                                        備取{{ $j }}
+                                                        候補{{ $j }}
                                                         <?php $j++; ?>
                                                     @endif
                                                 </td>
@@ -214,7 +214,7 @@
                                                                 正取{{ $i }}
                                                             @endif
                                                             @if($i > $taking and $j <= $prepare)
-                                                                備取{{ $j }}
+                                                                候補{{ $j }}
                                                                 <?php $j++; ?>
                                                             @endif
                                                         </td>

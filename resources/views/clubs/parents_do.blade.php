@@ -84,7 +84,7 @@
                                 最少人數
                             </th>
                             <th>
-                                正取/備取
+                                正取/候補
                             </th>
                             <th>
                                 已報
@@ -162,7 +162,7 @@
                                             }
 
                                             if($my_order > $taking and $my_order <= ($taking+$prepare)){
-                                                $order = "備取".($my_order-$taking);
+                                                $order = "候補".($my_order-$taking);
                                             }
                                         ?>
                                         <span class="text-success">已報名({{ $order }})</span><a href="{{ route('clubs.sign_down',$club->id) }}" onclick="return confirm('確定取消報名？')"><i class="fas fa-times-circle text-danger"></i></a>

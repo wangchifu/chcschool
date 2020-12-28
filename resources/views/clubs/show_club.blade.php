@@ -59,7 +59,7 @@
                         {{ $club->taking }}<hr>
                     </div>
                     <div class="form-group">
-                        <label for="prepare"><strong>備取人數*</strong></label><br>
+                        <label for="prepare"><strong>候補人數*</strong></label><br>
                         {{ $club->prepare }}<hr>
                     </div>
                     <div class="form-group">
