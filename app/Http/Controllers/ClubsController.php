@@ -434,10 +434,10 @@ class ClubsController extends Controller
 
     public function parents_do($class_id)
     {
+
         if(empty(session('parents'))){
             return redirect()->route('clubs.semester_select');
         }
-
 
         $user = ClubStudent::where('id',session('parents'))
             ->first();

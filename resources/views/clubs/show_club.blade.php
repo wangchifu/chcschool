@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <h4>{{ $club->semester }}社團資訊</h4>
                     <div class="form-group">
-                        <a class="btn btn-secondary btn-sm" href="{{ route('clubs.parents_do') }}"><i class="fas fa-backward"></i> 返回</a>
+                        <a class="btn btn-secondary btn-sm" href="{{ route('clubs.parents_do',$club->class_id) }}"><i class="fas fa-backward"></i> 返回</a>
                     </div>
                     <div class="form-group">
                         <label for="no"><strong>社團編號*</strong></label><br>
@@ -71,7 +71,7 @@
                         {{ $club->ps }}
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-secondary btn-sm" href="{{ route('clubs.parents_do') }}"><i class="fas fa-backward"></i> 返回</a>
+                        <a class="btn btn-secondary btn-sm" href="{{ route('clubs.parents_do',$club->class_id) }}"><i class="fas fa-backward"></i> 返回</a>
                     </div>
                 </div>
             </div>
