@@ -33,7 +33,7 @@ $blogs = \App\Blog::orderBy('created_at','DESC')
                     </h4>
                 </a>
                 <?php
-                $content = str_limit(strip_tags($blog->content),'600');
+                $content = str_limit(strip_tags($blog->content),'150');
                 $content = str_replace('&nbsp;','',$content);
                 ?>
                 @if($blog->title_image)
