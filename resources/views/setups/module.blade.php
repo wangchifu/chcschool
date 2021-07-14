@@ -148,6 +148,8 @@
                                                     已指定「社團業務」：
                                                     {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
                                                 @endforeach
+                                            @elseif($v=="校園部落格")
+                                                行政人員可編輯新文章，管理員可刪除任一文章
                                             @endif
                                         </td>
                                     </tr>

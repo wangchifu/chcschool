@@ -115,6 +115,11 @@
                                         <i class="fas fa-table-tennis"></i> 社團報名
                                     </a>
                                 @endif
+                                @if(isset($module_setup['校園部落格']))
+                                    <a class="dropdown-item" href="{{ route('blogs.index') }}">
+                                        <i class="fas fa-newspaper"></i> 校園部落格
+                                    </a>
+                                @endif
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                             </div>
                         </li>

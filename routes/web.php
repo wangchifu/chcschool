@@ -104,6 +104,12 @@ Route::get('clubs/{club}/sign_up' , 'ClubsController@sign_up')->name('clubs.sign
 Route::get('clubs/{club_id}/sign_down' , 'ClubsController@sign_down')->name('clubs.sign_down');
 Route::get('clubs/{club}/{class_id}/sign_show' , 'ClubsController@sign_show')->name('clubs.sign_show');
 
+
+//校園部落格
+Route::get('blogs' , 'BlogsController@index')->name('blogs.index');
+Route::get('blogs/{blog}' , 'BlogsController@show')->where('blog', '[0-9]+')->name('blogs.show');
+
+
 //登入的使用者可用
 Route::group(['middleware' => 'auth'],function(){
 //結束模擬
@@ -305,6 +311,15 @@ Route::group(['middleware' => 'exec'],function(){
     Route::get('departments_exec/{department}/edit', 'DepartmentController@exec_edit')->name('departments.exec_edit');
     Route::patch('departments_exec/{department}', 'DepartmentController@exec_update')->name('departments.exec_update');
 
+    //行政人員編輯校園部落格
+    Route::get('blogs/create' , 'BlogsController@create')->name('blogs.create');
+    Route::post('blogs' , 'BlogsController@store')->name('blogs.store');
+    Route::get('blogs/{blog}/edit' , 'BlogsController@edit')->name('blogs.edit');
+    Route::patch('blogs/{blog}' , 'BlogsController@update')->name('blogs.update');
+    //刪標題圖片
+    Route::get('blogs/{blog}/delete_title_image' , 'BlogsController@delete_title_image')->name('blogs.delete_title_image');
+
+
 });
 
 //行政人員及管理者
@@ -331,6 +346,10 @@ Route::group(['middleware' => 'admin_exec'],function(){
     Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');
     Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');
     Route::patch('photo_links/{photo_link}', 'PhotoLinksController@update')->name('photo_links.update');
+
+
+    //校園部落格
+    Route::delete('blogs/{blog}', 'BlogsController@destroy')->name('blogs.destroy');
 
 });
 

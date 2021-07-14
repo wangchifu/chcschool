@@ -66,6 +66,8 @@
                                 @include('layouts.photo_link')
                             @elseif($block->title == "分類公告(系統區塊)")
                                 @include('layouts.post_type')
+                            @elseif($block->title == "校園部落格(系統區塊)")
+                                @include('layouts.blog')
                             @else
                                 {!! $block->content !!}
                             @endif

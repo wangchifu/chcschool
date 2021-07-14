@@ -14,6 +14,7 @@ return [
         'lunches'=>'午餐系統',
         'teacher_absents'=>'教師差假',
         'clubs'=>'社團報名',
+        'blogs'=>'校園部落格',
     ],
     'calendar_kind'=>[
         '0'=>'學校行政',
