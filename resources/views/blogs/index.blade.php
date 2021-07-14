@@ -23,7 +23,7 @@
                 <tbody>
                     @foreach($blogs as $blog)
                         <tr>
-                            <td width="10%">
+                            <td width="20%">
 
                                 @if($blog->title_image)
                                     <a href="{{ route('blogs.show',$blog->id) }}">
