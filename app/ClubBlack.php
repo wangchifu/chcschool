@@ -9,6 +9,7 @@ class ClubBlack extends Model
     protected $fillable = [
         'semester',
         'no',
+        'class_id',
     ];
 
     public function club_student()

@@ -457,10 +457,17 @@ class ClubsController extends Controller
         //檢查是否為黑名單
         $black = ClubBlack::where('semester',$user->semester)
             ->where('no',$user->no)
+            ->where('class_id',$class_id)
             ->first();
+        if($class_id==1){
+            $n = "1.學生特色社團";
+        }
+        if($class_id==2){
+            $n = "2.學生課後活動";
+        }
         if(!empty($black)){
             session(['parents'=>null]);
-            echo "<body onload=alert('你被處罰此學期無法報名社團活動')>";
+            echo "<body onload=alert('你被處罰此學期無法報名".$n."')>";
             header("refresh:3;url=".route('clubs.semester_select'));
             die();
         }

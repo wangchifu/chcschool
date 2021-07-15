@@ -55,6 +55,9 @@
                                     被處罰無法選社團的學期
                                 </td>
                                 <td>
+                                    社團類別
+                                </td>
+                                <td>
 
                                 </td>
                             </tr>
@@ -64,6 +67,17 @@
                                 </td>
                                 <td>
                                     {{ Form::text('semester',null,['id'=>'semester','class' => 'form-control', 'maxlength'=>'4','required'=>'required']) }}
+                                </td>
+                                <td>
+                                    <select class="form-control" name="class_id" required>
+                                        <option></option>
+                                        <option value="1">
+                                            1.學生特色社團
+                                        </option>
+                                        <option value="2">
+                                            2.學生課後活動
+                                        </option>
+                                    </select>
                                 </td>
                                 <td>
                                     <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定送出嗎？')">
@@ -83,6 +97,9 @@
                                         被處罰的學期
                                     </th>
                                     <th>
+                                        類別
+                                    </th>
+                                    <th>
                                         學生
                                     </th>
                                 </tr>
@@ -92,6 +109,14 @@
                                     <tr>
                                         <td>
                                             {{ $club_black->semester }}
+                                        </td>
+                                        <td>
+                                            @if($club_black->class_id==1)
+                                                1.學生特色社團
+                                            @endif
+                                            @if($club_black->class_id==2)
+                                                2.學生課後活動
+                                            @endif
                                         </td>
                                         <td>
                                             學號 {{ $club_black->no }} {{ $club_black->club_student->class_num }}班 {{ $club_black->club_student->name }}
