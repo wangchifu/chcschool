@@ -53,7 +53,11 @@
                     @else
                     <div class="shadow rounded {{ $block_color[0] }}">
                         <div class="{{ $block_color[1] }}">
-                            <h5>{{ str_replace_last("(系統區塊)","",$block->title) }}</h5>
+                            <?php
+                                $title = str_replace_last("(系統區塊)","",$block->title);
+                                $title = str_replace_last("_圖文版","",$title);
+                            ?>
+                            <h5>{{ $title }}</h5>
                         </div>
                         <div class="content2">
                             @if($block->title == "最新公告(系統區塊)")
@@ -66,6 +70,8 @@
                                 @include('layouts.photo_link')
                             @elseif($block->title == "分類公告(系統區塊)")
                                 @include('layouts.post_type')
+                            @elseif($block->title == "分類公告_圖文版(系統區塊)")
+                                @include('layouts.post_type2')
                             @elseif($block->title == "校園部落格(系統區塊)")
                                 @include('layouts.blog')
                             @else
