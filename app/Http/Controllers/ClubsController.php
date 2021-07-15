@@ -1075,7 +1075,10 @@ class ClubsController extends Controller
     {
         $att = $request->all();
 
-        $check = ClubBlack::where('no',$att['no'])->where('semester',$att['semester'])->first();
+        $check = ClubBlack::where('no',$att['no'])
+            ->where('semester',$att['semester'])
+            ->where('class_id',$att['class_id'])
+            ->first();
         if(!empty($check)) return back()->withErrors(['errors'=>[$att['semester'].'學期 學號'. $att['no'] .' 此生已經有設定了！']]);
 
         $check2 = ClubStudent::where('no',$att['no'])->first();

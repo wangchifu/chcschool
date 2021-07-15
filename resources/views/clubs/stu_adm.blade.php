@@ -49,22 +49,19 @@
                         <table>
                             <tr>
                                 <td>
-                                    學號
-                                </td>
-                                <td>
                                     被處罰無法選社團的學期
                                 </td>
                                 <td>
                                     社團類別
                                 </td>
                                 <td>
+                                    學號
+                                </td>
+                                <td>
 
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    {{ Form::text('no',null,['id'=>'no','class' => 'form-control','maxlength'=>'6','required'=>'required']) }}
-                                </td>
                                 <td>
                                     {{ Form::text('semester',null,['id'=>'semester','class' => 'form-control', 'maxlength'=>'4','required'=>'required']) }}
                                 </td>
@@ -78,6 +75,9 @@
                                             2.學生課後活動
                                         </option>
                                     </select>
+                                </td>
+                                <td>
+                                    {{ Form::text('no',null,['id'=>'no','class' => 'form-control','maxlength'=>'6','required'=>'required']) }}
                                 </td>
                                 <td>
                                     <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定送出嗎？')">
