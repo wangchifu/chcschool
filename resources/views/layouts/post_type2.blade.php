@@ -134,10 +134,12 @@ $posts = \App\Post::where('insite',null)
                 $content = str_limit(strip_tags($post->content),'150');
                 $content = str_replace('&nbsp;','',$content);
                 ?>
-                @if($post->title_image)
-                    <a href="{{ route('posts.show',$post->id) }}">
-                        <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100px">
-                    </a>
+                @if($can_see)
+                    @if($post->title_image)
+                        <a href="{{ route('posts.show',$post->id) }}">
+                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100px">
+                        </a>
+                    @endif
                 @endif
                 <p class="pp1">
                     @if($can_see)
