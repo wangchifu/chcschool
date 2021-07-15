@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Club;
+use App\ClubBlack;
 use App\ClubRegister;
 use App\ClubSemester;
 use App\ClubStudent;
@@ -285,9 +286,19 @@ class ClubsController extends Controller
         $club_students = ClubStudent::where('semester',$semester)
             ->orderBy('class_num')
             ->get();
+
+        $club_blacks = ClubBlack::orderBy('semester')->get();
+
+        $black_list = [];
+        foreach($club_blacks as $club_black){
+            $black_list[$club_black->semester][$club_black->no] = 1;
+        }
+
         $data = [
             'club_students'=>$club_students,
+            'club_blacks'=>$club_blacks,
             'semester'=>$semester,
+            'black_list'=>$black_list,
         ];
         return view('clubs.stu_adm',$data);
     }
@@ -376,6 +387,7 @@ class ClubsController extends Controller
 
     public function semester_select()
     {
+        session(['parents'=>null]);
         $club_semesters = ClubSemester::orderBy('semester')->get();
         $data = [
             'club_semesters'=>$club_semesters,
@@ -434,13 +446,25 @@ class ClubsController extends Controller
 
     public function parents_do($class_id)
     {
-
         if(empty(session('parents'))){
             return redirect()->route('clubs.semester_select');
         }
 
         $user = ClubStudent::where('id',session('parents'))
             ->first();
+
+
+        //檢查是否為黑名單
+        $black = ClubBlack::where('semester',$user->semester)
+            ->where('no',$user->no)
+            ->first();
+        if(!empty($black)){
+            session(['parents'=>null]);
+            echo "<body onload=alert('你被處罰此學期無法報名社團活動')>";
+            header("refresh:3;url=".route('clubs.semester_select'));
+            die();
+        }
+
 
         $class_id = ($class_id)?$class_id:1;
 
@@ -1038,6 +1062,26 @@ class ClubsController extends Controller
                 return false;
             }
         }
+    }
+
+    public function black(Request  $request)
+    {
+        $att = $request->all();
+
+        $check = ClubBlack::where('no',$att['no'])->where('semester',$att['semester'])->first();
+        if(!empty($check)) return back()->withErrors(['errors'=>[$att['semester'].'學期 學號'. $att['no'] .' 此生已經有設定了！']]);
+
+        $check2 = ClubStudent::where('no',$att['no'])->first();
+        if(empty($check2)) return back()->withErrors(['errors'=>['學號'. $att['no'] .' 查無此學生！']]);
+
+        ClubBlack::create($att);
+        return redirect()->route('clubs.stu_adm',$att['back_semester']);
+    }
+
+    public function destroy_black($semester,ClubBlack $club_black)
+    {
+        $club_black->delete();
+        return redirect()->route('clubs.stu_adm',$semester);
     }
 
 }

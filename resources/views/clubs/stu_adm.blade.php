@@ -39,6 +39,72 @@
             <br>
             @if($admin)
                 <div class="card">
+                    <div class="card-header">
+                        <h5>
+                            學生黑名單列表
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {{ Form::open(['route' => 'clubs.store_black', 'method' => 'POST']) }}
+                        <table>
+                            <tr>
+                                <td>
+                                    學號
+                                </td>
+                                <td>
+                                    被處罰無法選社團的學期
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ Form::text('no',null,['id'=>'no','class' => 'form-control','maxlength'=>'6','required'=>'required']) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('semester',null,['id'=>'semester','class' => 'form-control', 'maxlength'=>'4','required'=>'required']) }}
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定送出嗎？')">
+                                        <i class="fas fa-save"></i> 新增送出
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="back_semester" value="{{ $semester }}">
+                        {{ Form::close() }}
+                        @include('layouts.errors')
+                        <hr>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        被處罰的學期
+                                    </th>
+                                    <th>
+                                        學生
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($club_blacks as $club_black)
+                                    <tr>
+                                        <td>
+                                            {{ $club_black->semester }}
+                                        </td>
+                                        <td>
+                                            學號 {{ $club_black->no }} {{ $club_black->club_student->class_num }}班 {{ $club_black->club_student->name }}
+                                            <a href="{{ route('clubs.destroy_black',[$semester,$club_black->id]) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定嗎？')">刪除</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="card">
                 <div class="card-header">
                     <h5>
                         {{ $semester }} 學生列表
@@ -76,7 +142,14 @@
                         </tr>
                         <?php $i=1; ?>
                         @foreach($club_students as $club_student)
-                            <tr>
+                            <?php
+                                if(isset($black_list[$semester][$club_student->no])){
+                                    $black = "bg-dark text-danger";
+                                }else{
+                                    $black = "";
+                                }
+                            ?>
+                            <tr class="{{ $black }}">
                                 <td>
                                     {{ $i }}
                                 </td>

@@ -183,7 +183,7 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        為了平時聯絡或發生殊殊狀況時的聯繫，社團老師必須有學生家長的聯絡電話，請填入「家長電話」並同意此資料的蒐集，才能操作本系統。
+                        為了平時聯絡或發生殊殊狀況時的聯繫，社團老師必須有學生家長的聯絡電話或手機號碼，請填入「家長電話」並同意此資料的蒐集，才能操作本系統。
                         <br>
                         <br>
                         {{ Form::open(['route' => ['clubs.get_telephone',$user->id], 'method' => 'POST']) }}
@@ -192,6 +192,12 @@
                             {{ Form::text('parents_telephone',null,['id'=>'parents_telephone','class' => 'form-control','placeholder'=>'請在此填入電話','maxlength'=>'10','required'=>'required']) }}
                         </div>
                         <small class="text-secondary">(錯誤資料將會影響報名資格，請留下正確聯絡電話)</small>
+                        <br>
+                        <br>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+                            <label class="form-check-label text-danger" for="exampleCheck1">同意報名成功正取後，若無故不繳費而佔名額，可能被處罰下學期無法報名</label>
+                        </div>
                         <br>
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
                             <i class="fas fa-save"></i> 同意資料蒐集

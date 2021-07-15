@@ -250,6 +250,9 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('clubs/{semester}/{class_id}/report_money2_print' , 'ClubsController@report_money2_print')->name('clubs.report_money2_print');
     Route::get('clubs/report' , 'ClubsController@report')->name('clubs.report');
 
+    Route::post('clubs/black' , 'ClubsController@black')->name('clubs.store_black');
+    Route::get('clubs/{semester}/{club_black}/destroy_black' , 'ClubsController@destroy_black')->name('clubs.destroy_black');
+
 
 });
 
