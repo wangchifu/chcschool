@@ -64,7 +64,7 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 @foreach($links as $link)
                                     <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
-                                        <i class="fas fa-globe"></i> {{ $link->name }}1111111111111111
+                                        <i class="fas fa-globe"></i> {{ $link->name }}
                                     </a>
                                 @endforeach
                             </div>
