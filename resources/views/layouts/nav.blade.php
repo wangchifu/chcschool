@@ -41,7 +41,7 @@
                             學校介紹
                         </a>
                         <?php $departments = \App\Department::orderBy('order_by')->get(); ?>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                             @foreach($departments as $department)
                                 <a class="dropdown-item" href="{{ route('departments.show',$department->id) }}">
                                     <i class="fas fa-puzzle-piece"></i> {{ $department->title }}
@@ -61,10 +61,10 @@
                             <?php
                             $links = \App\Link::where('type_id',$type->id)->orderBy('order_by')->get();
                             ?>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 @foreach($links as $link)
                                     <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
-                                        <i class="fas fa-globe"></i> {{ $link->name }}
+                                        <i class="fas fa-globe"></i> {{ $link->name }}1111111111111111
                                     </a>
                                 @endforeach
                             </div>
@@ -79,7 +79,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 校務行政
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 @if(isset($module_setup['校務行事曆']))
                                     <a class="dropdown-item" href="{{ route('calendars.index') }}">
                                         <i class="fas fa-calendar"></i> 校務行事曆
@@ -129,7 +129,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 系統設定
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-user"></i> 帳號管理</a>
                                 <a class="dropdown-item" href="{{ route('groups.index') }}"><i class="fas fa-users"></i> 群組管理</a>
                                 <a class="dropdown-item" href="{{ route('departments.index') }}"><i class="fas fa-puzzle-piece"></i> 學校介紹管理</a>
@@ -145,7 +145,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user"></i> {{ auth()->user()->title }} {{ auth()->user()->name }}
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                             @if(auth()->user()->login_type=="local")
                                 <a class="dropdown-item" href="{{ route('edit_password') }}"><i class="fas fa-key"></i> 更改密碼</a>
                             @endif
