@@ -1,8 +1,3 @@
-@auth
-    @can('create',\App\Post::class)
-        <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
-    @endauth
-@endauth
 <?php
 $posts = \App\Post::where('insite',null)
     ->orderBy('top','DESC')
@@ -44,6 +39,11 @@ $posts = \App\Post::where('insite',null)
 </ul>
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="margin: 10px;">
+        @auth
+            @can('create',\App\Post::class)
+                <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
+            @endauth
+        @endauth
         <table class="table table-striped" style="word-break: break-all;">
             <tbody>
             @foreach($posts as $post)
@@ -118,6 +118,11 @@ $posts = \App\Post::where('insite',null)
                 ->orderBy('created_at','DESC')
                 ->paginate(10);
             ?>
+            @auth
+                @can('create',\App\Post::class)
+                    <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
+                @endauth
+            @endauth
             <table class="table table-striped" style="word-break: break-all;">
                 <tbody>
                 @foreach($posts as $post)
