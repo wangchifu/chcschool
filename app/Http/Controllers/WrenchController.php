@@ -73,7 +73,7 @@ class WrenchController extends Controller
 
     public function store(Request $request)
     {
-        $sql = "INSERT INTO wrenches (school,job_title,name,email, content, created_at,updated_at) VALUES ('".auth()->user()->school."','".auth()->user()->title."','".auth()->user()->name."','".$request->input('email')."','".$request->input('content')."','".date('Y-m-d H:i:s')."','".date('Y-m-d H:i:s')."');";
+        $sql = "INSERT INTO wrenches (school,job_title,name,email, content, show, created_at,updated_at) VALUES ('".auth()->user()->school."','".auth()->user()->title."','".auth()->user()->name."','".$request->input('email')."','".$request->input('content')."',0,'".date('Y-m-d H:i:s')."','".date('Y-m-d H:i:s')."');";
         $this->db->exec($sql);
 
         $id = $this->db->lastInsertRowID();
