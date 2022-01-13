@@ -40,6 +40,7 @@ class WrenchController extends Controller
 	    $wrenches[$i]['name'] = $row['name'];
             $wrenches[$i]['content'] = $row['content'];
             $wrenches[$i]['reply'] = $row['reply'];
+            if(!isset($row['show'])) $row['show'] = 0;
             $wrenches[$i]['show'] = $row['show'];
             $wrenches[$i]['created_at'] = $row['created_at'];
             $wrenches[$i]['updated_at'] = $row['updated_at'];
