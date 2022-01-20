@@ -83,7 +83,7 @@
                             {{ $folder->user->name }}
                         </td>
                         <td>
-                            @if(file_exists(storage_path($f.'/'.$folder->name))))
+                            @if(file_exists(storage_path($f.'/'.$folder->name)))
                                 {{ date ("Y-m-d H:i:s",filemtime(storage_path($f.'/'.$folder->name))) }}
                             @endif
                         </td>
