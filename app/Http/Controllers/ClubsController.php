@@ -415,7 +415,7 @@ class ClubsController extends Controller
         //$semester = get_date_semester(date('Y-m-d'));
         //改列尚在報名中的
         $this_date = date('Y-m-d-H-i');
-        $club_semesters = ClubSemester::where('stop_date','>=',$this_date)->orderBy('semester')->get();
+        $club_semesters = ClubSemester::where('stop_date','>=',$this_date)->orWhere('stop_date2','>=',$this_date)->orderBy('semester')->get();
         $data = [
             'club_semesters'=>$club_semesters,
         ];
