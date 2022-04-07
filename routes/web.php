@@ -1,21 +1,21 @@
 <?php
-if(isset($_SERVER['REQUEST_URI'])) {
+if (isset($_SERVER['REQUEST_URI'])) {
     if (strpos($_SERVER['REQUEST_URI'], '//')) {
         die('what do you want!!??');
     }
 };
 //檢查有無新版本的sql檔
-$sqls= get_files(database_path('sqls'));
+$sqls = get_files(database_path('sqls'));
 
-if(isset($_SERVER['HTTP_HOST'])){
-    $install_sqls = \App\Sql::where('install',1)->pluck('name')->toArray();
+if (isset($_SERVER['HTTP_HOST'])) {
+    $install_sqls = \App\Sql::where('install', 1)->pluck('name')->toArray();
 
-    foreach($sqls as $k=>$v){
-        if(!in_array($v,$install_sqls)){
-            $file = database_path('sqls') .'/'.$v;
+    foreach ($sqls as $k => $v) {
+        if (!in_array($v, $install_sqls)) {
+            $file = database_path('sqls') . '/' . $v;
             \Illuminate\Support\Facades\DB::unprepared(file_get_contents($file));
             $att['name'] = $v;
-            $att['install'] =1;
+            $att['install'] = 1;
             \App\Sql::create($att);
         }
     }
@@ -31,8 +31,8 @@ if(isset($_SERVER['HTTP_HOST'])){
 |
 */
 
-Route::get('/','HomeController@index')->name('index');
-Route::post('not_bot','HomeController@not_bot')->name('not_bot');
+Route::get('/', 'HomeController@index')->name('index');
+Route::post('not_bot', 'HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('admin_login');
@@ -60,54 +60,54 @@ Route::get('pic', 'HomeController@pic')->name('pic');
 
 
 //公告系統
-Route::get('posts' , 'PostsController@index')->name('posts.index');
+Route::get('posts', 'PostsController@index')->name('posts.index');
 //Route::get('posts/insite' , 'PostsController@insite')->name('posts.insite');
 //Route::get('posts/honor' , 'PostsController@honor')->name('posts.honor');
-Route::get('posts/{post}' , 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
-Route::match(['post','get'],'posts/search/{search?}' , 'PostsController@search')->name('posts.search');
-Route::get('posts/{job_title}/job_title' , 'PostsController@job_title')->name('posts.job_title');
-Route::get('posts/{type}/type' , 'PostsController@type')->name('posts.type');
-Route::post('posts/select_type' , 'PostsController@select_type')->name('posts.select_type');
+Route::get('posts/{post}', 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
+Route::match(['post', 'get'], 'posts/search/{search?}', 'PostsController@search')->name('posts.search');
+Route::get('posts/{job_title}/job_title', 'PostsController@job_title')->name('posts.job_title');
+Route::get('posts/{type}/type', 'PostsController@type')->name('posts.type');
+Route::post('posts/select_type', 'PostsController@select_type')->name('posts.select_type');
 
 //公開文件
-Route::get('open_files/{path?}' , 'OpenFileController@index')->name('open_files.index');
-Route::get('open_files_download/{path}' , 'OpenFileController@download')->name('open_files.download');
+Route::get('open_files/{path?}', 'OpenFileController@index')->name('open_files.index');
+Route::get('open_files_download/{path}', 'OpenFileController@download')->name('open_files.download');
 
 //圖片連結
 Route::get('photo_links/show', 'PhotoLinksController@show')->name('photo_links.show');
 
 //內容頁面
-Route::get('contents/{content}/show' , 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
+Route::get('contents/{content}/show', 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
 //處室
 Route::get('departments/{department}/show', 'DepartmentController@show')->name('departments.show');
 
 //校務行事曆
-Route::get('calendars/index/{semester?}' , 'CalendarController@index')->name('calendars.index');
-Route::get('calendars/print/{semester}' , 'CalendarController@print')->name('calendars.print');
+Route::get('calendars/index/{semester?}', 'CalendarController@index')->name('calendars.index');
+Route::get('calendars/print/{semester}', 'CalendarController@print')->name('calendars.print');
 
 //廠商頁面
-Route::match(['get','post'],'lunch_lists/factory/{lunch_order_id?}', 'LunchListController@factory')->name('lunch_lists.factory');
+Route::match(['get', 'post'], 'lunch_lists/factory/{lunch_order_id?}', 'LunchListController@factory')->name('lunch_lists.factory');
 Route::get('lunch_lists/change_factory/', 'LunchListController@change_factory')->name('lunch_lists.change_factory');
 
 
 //社團家長頁面
-Route::get('clubs/semester_select' , 'ClubsController@semester_select')->name('clubs.semester_select');
-Route::get('clubs/{semester}/{class_id}/parents_login' , 'ClubsController@parents_login')->name('clubs.parents_login');
-Route::post('clubs/do_login' , 'ClubsController@do_login')->name('clubs.do_login');
-Route::get('clubs/parents_do/{class_id}' , 'ClubsController@parents_do')->name('clubs.parents_do');
-Route::get('clubs/parents_logout' , 'ClubsController@parents_logout')->name('clubs.parents_logout');
-Route::get('clubs/{class_id}/change_pwd' , 'ClubsController@change_pwd')->name('clubs.change_pwd');
-Route::patch('clubs/change_pwd_do' , 'ClubsController@change_pwd_do')->name('clubs.change_pwd_do');
-Route::post('clubs/{club_student}/get_telephone' , 'ClubsController@get_telephone')->name('clubs.get_telephone');
-Route::get('clubs/{club}/show_club' , 'ClubsController@show_club')->name('clubs.show_club');
-Route::get('clubs/{club}/sign_up' , 'ClubsController@sign_up')->name('clubs.sign_up');
-Route::get('clubs/{club_id}/sign_down' , 'ClubsController@sign_down')->name('clubs.sign_down');
-Route::get('clubs/{club}/{class_id}/sign_show' , 'ClubsController@sign_show')->name('clubs.sign_show');
+Route::get('clubs/semester_select', 'ClubsController@semester_select')->name('clubs.semester_select');
+Route::get('clubs/{semester}/{class_id}/parents_login', 'ClubsController@parents_login')->name('clubs.parents_login');
+Route::post('clubs/do_login', 'ClubsController@do_login')->name('clubs.do_login');
+Route::get('clubs/parents_do/{class_id}', 'ClubsController@parents_do')->name('clubs.parents_do');
+Route::get('clubs/parents_logout', 'ClubsController@parents_logout')->name('clubs.parents_logout');
+Route::get('clubs/{class_id}/change_pwd', 'ClubsController@change_pwd')->name('clubs.change_pwd');
+Route::patch('clubs/change_pwd_do', 'ClubsController@change_pwd_do')->name('clubs.change_pwd_do');
+Route::post('clubs/{club_student}/get_telephone', 'ClubsController@get_telephone')->name('clubs.get_telephone');
+Route::get('clubs/{club}/show_club', 'ClubsController@show_club')->name('clubs.show_club');
+Route::get('clubs/{club}/sign_up', 'ClubsController@sign_up')->name('clubs.sign_up');
+Route::get('clubs/{club_id}/sign_down', 'ClubsController@sign_down')->name('clubs.sign_down');
+Route::get('clubs/{club}/{class_id}/sign_show', 'ClubsController@sign_show')->name('clubs.sign_show');
 
 
 //校園部落格
-Route::get('blogs' , 'BlogsController@index')->name('blogs.index');
-Route::get('blogs/{blog}' , 'BlogsController@show')->where('blog', '[0-9]+')->name('blogs.show');
+Route::get('blogs', 'BlogsController@index')->name('blogs.index');
+Route::get('blogs/{blog}', 'BlogsController@show')->where('blog', '[0-9]+')->name('blogs.show');
 
 //行政待辦
 Route::get('tasks/index', 'TaskController@index')->name('tasks.index');
@@ -121,8 +121,8 @@ Route::post('tasks/self_store', 'TaskController@self_store')->name('tasks.self_s
 Route::post('tasks/user_condition', 'TaskController@user_condition')->name('tasks.user_condition');
 
 //登入的使用者可用
-Route::group(['middleware' => 'auth'],function(){
-//結束模擬
+Route::group(['middleware' => 'auth'], function () {
+    //結束模擬
     Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
 
     //下載上傳的檔案
@@ -132,17 +132,17 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('file_open/{file}', 'HomeController@openFile')->name('openFile');
 
     //會議文稿
-    Route::get('meetings' , 'MeetingController@index')->name('meetings.index');
-    Route::get('meetings/{meeting}' , 'MeetingController@show')->where('meeting', '[0-9]+')->name('meetings.show');
-    Route::get('meetings/{meeting}/download' , 'MeetingController@txtDown')->name('meetings.txtDown');
+    Route::get('meetings', 'MeetingController@index')->name('meetings.index');
+    Route::get('meetings/{meeting}', 'MeetingController@show')->where('meeting', '[0-9]+')->name('meetings.show');
+    Route::get('meetings/{meeting}/download', 'MeetingController@txtDown')->name('meetings.txtDown');
 
     //報修系統
     Route::get('fixes', 'FixController@index')->name('fixes.index');
     Route::get('fixes_search/{situation}/type', 'FixController@search')->name('fixes.search');
-    Route::get('fixes/{fix}' , 'FixController@show')->where('fix', '[0-9]+')->name('fixes.show');
+    Route::get('fixes/{fix}', 'FixController@show')->where('fix', '[0-9]+')->name('fixes.show');
     Route::get('fixes/create', 'FixController@create')->name('fixes.create');
     Route::post('fixes', 'FixController@store')->name('fixes.store');
-    Route::match(['delete','get'],'fixes/{fix}/delete', 'FixController@destroy')->name('fixes.destroy');
+    Route::match(['delete', 'get'], 'fixes/{fix}/delete', 'FixController@destroy')->name('fixes.destroy');
 
     //教室預約
     Route::get('classroom_orders/index', 'ClassroomOrderController@index')->name('classroom_orders.index');
@@ -238,75 +238,73 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('teacher_absents/travel/{teacher_absent_outlay}/update_outlay', 'TeacherAbsentController@update_outlay')->name('teacher_absents.update_outlay');
     Route::post('teacher_absents/travel/travel_print', 'TeacherAbsentController@travel_print')->name('teacher_absents.travel_print');
 
-//內部文件
-    Route::get('inside_files/{path?}' , 'InsideFilesController@index')->name('inside_files.index');
-    Route::get('inside_files_download/{path}' , 'InsideFilesController@download')->name('inside_files.download');
+    //內部文件
+    Route::get('inside_files/{path?}', 'InsideFilesController@index')->name('inside_files.index');
+    Route::get('inside_files_download/{path}', 'InsideFilesController@download')->name('inside_files.download');
 
     //社團報名
-    Route::get('clubs' , 'ClubsController@index')->name('clubs.index');
-    Route::get('clubs/semester_create' , 'ClubsController@semester_create')->name('clubs.semester_create');
-    Route::post('clubs/semester_store' , 'ClubsController@semester_store')->name('clubs.semester_store');
-    Route::get('clubs/{semester}/semester_delete' , 'ClubsController@semester_delete')->name('clubs.semester_delete');
-    Route::get('clubs/{club_semester}/semester_edit' , 'ClubsController@semester_edit')->name('clubs.semester_edit');
-    Route::patch('clubs/{club_semester}/semester_update' , 'ClubsController@semester_update')->name('clubs.semester_update');
-    Route::get('clubs/setup/{semester?}' , 'ClubsController@setup')->name('clubs.setup');
-    Route::get('clubs/{semester}/club_create' , 'ClubsController@club_create')->name('clubs.club_create');
-    Route::post('clubs/club_store' , 'ClubsController@club_store')->name('clubs.club_store');
-    Route::post('clubs/club_copy' , 'ClubsController@club_copy')->name('clubs.club_copy');
-    Route::get('clubs/{club}/club_edit' , 'ClubsController@club_edit')->name('clubs.club_edit');
-    Route::patch('clubs/{club}/club_update' , 'ClubsController@club_update')->name('clubs.club_update');
-    Route::get('clubs/{club}/club_delete' , 'ClubsController@club_delete')->name('clubs.club_delete');
-    Route::get('clubs/{semester}/stu_adm' , 'ClubsController@stu_adm')->name('clubs.stu_adm');
-    Route::post('clubs/{semester}/stu_import' , 'ClubsController@stu_import')->name('clubs.stu_import');
-    Route::get('clubs/{semester}/stu_create' , 'ClubsController@stu_create')->name('clubs.stu_create');
-    Route::post('clubs/{semester}/stu_store' , 'ClubsController@stu_store')->name('clubs.stu_store');
-    Route::get('clubs/{club_student}/stu_edit' , 'ClubsController@stu_edit')->name('clubs.stu_edit');
-    Route::patch('clubs/{club_student}/stu_update' , 'ClubsController@stu_update')->name('clubs.stu_update');
-    Route::get('clubs/{club_student}/stu_delete' , 'ClubsController@stu_delete')->name('clubs.stu_delete');
-    Route::get('clubs/{club_student}/stu_backPWD' , 'ClubsController@stu_backPWD')->name('clubs.stu_backPWD');
+    Route::get('clubs', 'ClubsController@index')->name('clubs.index');
+    Route::get('clubs/semester_create', 'ClubsController@semester_create')->name('clubs.semester_create');
+    Route::post('clubs/semester_store', 'ClubsController@semester_store')->name('clubs.semester_store');
+    Route::get('clubs/{semester}/semester_delete', 'ClubsController@semester_delete')->name('clubs.semester_delete');
+    Route::get('clubs/{club_semester}/semester_edit', 'ClubsController@semester_edit')->name('clubs.semester_edit');
+    Route::patch('clubs/{club_semester}/semester_update', 'ClubsController@semester_update')->name('clubs.semester_update');
+    Route::get('clubs/setup/{semester?}', 'ClubsController@setup')->name('clubs.setup');
+    Route::get('clubs/{semester}/club_create', 'ClubsController@club_create')->name('clubs.club_create');
+    Route::post('clubs/club_store', 'ClubsController@club_store')->name('clubs.club_store');
+    Route::post('clubs/club_copy', 'ClubsController@club_copy')->name('clubs.club_copy');
+    Route::get('clubs/{club}/club_edit', 'ClubsController@club_edit')->name('clubs.club_edit');
+    Route::patch('clubs/{club}/club_update', 'ClubsController@club_update')->name('clubs.club_update');
+    Route::get('clubs/{club}/club_delete', 'ClubsController@club_delete')->name('clubs.club_delete');
+    Route::get('clubs/{semester}/stu_adm', 'ClubsController@stu_adm')->name('clubs.stu_adm');
+    Route::post('clubs/{semester}/stu_import', 'ClubsController@stu_import')->name('clubs.stu_import');
+    Route::get('clubs/{semester}/stu_create', 'ClubsController@stu_create')->name('clubs.stu_create');
+    Route::post('clubs/{semester}/stu_store', 'ClubsController@stu_store')->name('clubs.stu_store');
+    Route::get('clubs/{club_student}/stu_edit', 'ClubsController@stu_edit')->name('clubs.stu_edit');
+    Route::patch('clubs/{club_student}/stu_update', 'ClubsController@stu_update')->name('clubs.stu_update');
+    Route::get('clubs/{club_student}/stu_delete', 'ClubsController@stu_delete')->name('clubs.stu_delete');
+    Route::get('clubs/{club_student}/stu_backPWD', 'ClubsController@stu_backPWD')->name('clubs.stu_backPWD');
 
-    Route::get('clubs/report_situation/{semester?}' , 'ClubsController@report_situation')->name('clubs.report_situation');
-    Route::get('clubs/{semester}/report_situation_download/{class_id}' , 'ClubsController@report_situation_download')->name('clubs.report_situation_download');
-    Route::get('clubs/{club_register}/report_register_delete' , 'ClubsController@report_register_delete')->name('clubs.report_register_delete');
-    Route::get('clubs/report_money/{semester?}' , 'ClubsController@report_money')->name('clubs.report_money');
-    Route::get('clubs/{semester}/{class_id}/report_money_download' , 'ClubsController@report_money_download')->name('clubs.report_money_download');
-    Route::get('clubs/{semester}/{class_id}/report_money2_print' , 'ClubsController@report_money2_print')->name('clubs.report_money2_print');
-    Route::get('clubs/report' , 'ClubsController@report')->name('clubs.report');
+    Route::get('clubs/report_situation/{semester?}', 'ClubsController@report_situation')->name('clubs.report_situation');
+    Route::get('clubs/{semester}/report_situation_download/{class_id}', 'ClubsController@report_situation_download')->name('clubs.report_situation_download');
+    Route::get('clubs/{club_register}/report_register_delete', 'ClubsController@report_register_delete')->name('clubs.report_register_delete');
+    Route::get('clubs/report_money/{semester?}', 'ClubsController@report_money')->name('clubs.report_money');
+    Route::get('clubs/{semester}/{class_id}/report_money_download', 'ClubsController@report_money_download')->name('clubs.report_money_download');
+    Route::get('clubs/{semester}/{class_id}/report_money2_print', 'ClubsController@report_money2_print')->name('clubs.report_money2_print');
+    Route::get('clubs/report', 'ClubsController@report')->name('clubs.report');
 
-    Route::post('clubs/black' , 'ClubsController@black')->name('clubs.store_black');
-    Route::get('clubs/{semester}/{club_black}/destroy_black' , 'ClubsController@destroy_black')->name('clubs.destroy_black');
+    Route::post('clubs/black', 'ClubsController@black')->name('clubs.store_black');
+    Route::get('clubs/{semester}/{club_black}/destroy_black', 'ClubsController@destroy_black')->name('clubs.destroy_black');
 
 
     //報錯
     Route::get('wrench/index/{page?}', 'WrenchController@index')->name('wrench.index');
     Route::post('wrench/store', 'WrenchController@store')->name('wrench.store');
     Route::get('wrench/download/{wrench_id}/{filename}', 'WrenchController@download')->name('wrench.download');
-
-
 });
 
 //行政人員可用
-Route::group(['middleware' => 'exec'],function(){
+Route::group(['middleware' => 'exec'], function () {
 
-    Route::get('posts/create' , 'PostsController@create')->name('posts.create');
-    Route::post('posts' , 'PostsController@store')->name('posts.store');
+    Route::get('posts/create', 'PostsController@create')->name('posts.create');
+    Route::post('posts', 'PostsController@store')->name('posts.store');
 
     //刪標題圖片
-    Route::get('posts/{post}/delete_title_image' , 'PostsController@delete_title_image')->name('posts.delete_title_image');
+    Route::get('posts/{post}/delete_title_image', 'PostsController@delete_title_image')->name('posts.delete_title_image');
     //刪檔案
-    Route::get('posts/{post}/delete_file/{filename}' , 'PostsController@delete_file')->name('posts.delete_file');
+    Route::get('posts/{post}/delete_file/{filename}', 'PostsController@delete_file')->name('posts.delete_file');
 
     //公開文件
-    Route::get('open_files_create' , 'OpenFileController@create')->name('open_files.create');
+    Route::get('open_files_create', 'OpenFileController@create')->name('open_files.create');
 
-    Route::post('open_files_create_folder' , 'OpenFileController@create_folder')->name('open_files.create_folder');
-    Route::post('open_files_upload_file' , 'OpenFileController@upload_file')->name('open_files.upload_file');
+    Route::post('open_files_create_folder', 'OpenFileController@create_folder')->name('open_files.create_folder');
+    Route::post('open_files_upload_file', 'OpenFileController@upload_file')->name('open_files.upload_file');
 
     //內部文件
-    Route::get('inside_files_create' , 'InsideFilesController@create')->name('inside_files.create');
+    Route::get('inside_files_create', 'InsideFilesController@create')->name('inside_files.create');
 
-    Route::post('inside_files_create_folder' , 'InsideFilesController@create_folder')->name('inside_files.create_folder');
-    Route::post('inside_files_upload_file' , 'InsideFilesController@upload_file')->name('inside_files.upload_file');
+    Route::post('inside_files_create_folder', 'InsideFilesController@create_folder')->name('inside_files.create_folder');
+    Route::post('inside_files_upload_file', 'InsideFilesController@upload_file')->name('inside_files.upload_file');
 
 
     //報修回復
@@ -314,35 +312,35 @@ Route::group(['middleware' => 'exec'],function(){
 
 
     //會議文稿
-    Route::get('meetings/create' , 'MeetingController@create')->name('meetings.create');
-    Route::post('meetings' , 'MeetingController@store')->name('meetings.store');
+    Route::get('meetings/create', 'MeetingController@create')->name('meetings.create');
+    Route::post('meetings', 'MeetingController@store')->name('meetings.store');
     //報告內容
-    Route::get('meetings_reports/{meeting}/create' , 'ReportController@create')->name('meetings_reports.create');
-    Route::post('meetings_reports' , 'ReportController@store')->name('meetings_reports.store');
-    Route::get('meetings_reports/{report}/edit' , 'ReportController@edit')->name('meetings_reports.edit');
-    Route::patch('meetings_reports/{report}' , 'ReportController@update')->name('meetings_reports.update');
+    Route::get('meetings_reports/{meeting}/create', 'ReportController@create')->name('meetings_reports.create');
+    Route::post('meetings_reports', 'ReportController@store')->name('meetings_reports.store');
+    Route::get('meetings_reports/{report}/edit', 'ReportController@edit')->name('meetings_reports.edit');
+    Route::patch('meetings_reports/{report}', 'ReportController@update')->name('meetings_reports.update');
     Route::delete('meetings_reports/{report}', 'ReportController@destroy')->name('meetings_reports.destroy');
     //刪檔案
-    Route::get('meetings_reports/{file}/fileDel' , 'ReportController@fileDel')->name('meetings_reports.fileDel');
+    Route::get('meetings_reports/{file}/fileDel', 'ReportController@fileDel')->name('meetings_reports.fileDel');
 
     //校務行事曆
-    Route::get('calendars/{semester}/create' , 'CalendarController@create')->name('calendars.create');
-    Route::post('calendars' , 'CalendarController@store')->name('calendars.store');
-    Route::get('calendars/{calendar}/edit' , 'CalendarController@edit')->name('calendars.edit');
-    Route::patch('calendars/{calendar}' , 'CalendarController@update')->name('calendars.update');
+    Route::get('calendars/{semester}/create', 'CalendarController@create')->name('calendars.create');
+    Route::post('calendars', 'CalendarController@store')->name('calendars.store');
+    Route::get('calendars/{calendar}/edit', 'CalendarController@edit')->name('calendars.edit');
+    Route::patch('calendars/{calendar}', 'CalendarController@update')->name('calendars.update');
     Route::delete('calendars/{calendar}', 'CalendarController@destroy')->name('calendars.destroy');
-    Route::get('calendars/{calendar}/delete' , 'CalendarController@delete')->name('calendars.delete');
-    Route::get('calendars/{calendar}/edit' , 'CalendarController@edit')->name('calendars.edit');
-    Route::post('calendars/update' , 'CalendarController@update')->name('calendars.update');
+    Route::get('calendars/{calendar}/delete', 'CalendarController@delete')->name('calendars.delete');
+    Route::get('calendars/{calendar}/edit', 'CalendarController@edit')->name('calendars.edit');
+    Route::post('calendars/update', 'CalendarController@update')->name('calendars.update');
 
     //校務月曆
-    Route::get('monthly_calendars/index/{month?}' , 'MonthlyCalendarController@index')->name('monthly_calendars.index');
-    Route::post('monthly_calendars/store' , 'MonthlyCalendarController@store')->name('monthly_calendars.store');
-    Route::post('monthly_calendars/block_store' , 'MonthlyCalendarController@block_store')->name('monthly_calendars.block_store');
-    Route::post('monthly_calendars/file' , 'MonthlyCalendarController@file')->name('monthly_calendars.file');
-    Route::post('monthly_calendars/file/store' , 'MonthlyCalendarController@file_store')->name('monthly_calendars.file_store');
-    Route::get('monthly_calendars/destroy/{monthly_calendar}' , 'MonthlyCalendarController@destroy')->name('monthly_calendars.destroy');
-    Route::get('monthly_calendars/block_destroy/{monthly_calendar}' , 'MonthlyCalendarController@block_destroy')->name('monthly_calendars.block_destroy');
+    Route::get('monthly_calendars/index/{month?}', 'MonthlyCalendarController@index')->name('monthly_calendars.index');
+    Route::post('monthly_calendars/store', 'MonthlyCalendarController@store')->name('monthly_calendars.store');
+    Route::post('monthly_calendars/block_store', 'MonthlyCalendarController@block_store')->name('monthly_calendars.block_store');
+    Route::post('monthly_calendars/file', 'MonthlyCalendarController@file')->name('monthly_calendars.file');
+    Route::post('monthly_calendars/file/store', 'MonthlyCalendarController@file_store')->name('monthly_calendars.file_store');
+    Route::get('monthly_calendars/destroy/{monthly_calendar}', 'MonthlyCalendarController@destroy')->name('monthly_calendars.destroy');
+    Route::get('monthly_calendars/block_destroy/{monthly_calendar}', 'MonthlyCalendarController@block_destroy')->name('monthly_calendars.block_destroy');
 
 
     //行政人員編輯
@@ -354,29 +352,27 @@ Route::group(['middleware' => 'exec'],function(){
     Route::patch('departments_exec/{department}', 'DepartmentController@exec_update')->name('departments.exec_update');
 
     //行政人員編輯校園部落格
-    Route::get('blogs/create' , 'BlogsController@create')->name('blogs.create');
-    Route::post('blogs' , 'BlogsController@store')->name('blogs.store');
-    Route::get('blogs/{blog}/edit' , 'BlogsController@edit')->name('blogs.edit');
-    Route::patch('blogs/{blog}' , 'BlogsController@update')->name('blogs.update');
+    Route::get('blogs/create', 'BlogsController@create')->name('blogs.create');
+    Route::post('blogs', 'BlogsController@store')->name('blogs.store');
+    Route::get('blogs/{blog}/edit', 'BlogsController@edit')->name('blogs.edit');
+    Route::patch('blogs/{blog}', 'BlogsController@update')->name('blogs.update');
     //刪標題圖片
-    Route::get('blogs/{blog}/delete_title_image' , 'BlogsController@delete_title_image')->name('blogs.delete_title_image');
-
-
+    Route::get('blogs/{blog}/delete_title_image', 'BlogsController@delete_title_image')->name('blogs.delete_title_image');
 });
 
 //行政人員及管理者
-Route::group(['middleware' => 'admin_exec'],function(){
-    Route::get('posts/{post}/edit' , 'PostsController@edit')->name('posts.edit');
-    Route::patch('posts/{post}' , 'PostsController@update')->name('posts.update');
+Route::group(['middleware' => 'admin_exec'], function () {
+    Route::get('posts/{post}/edit', 'PostsController@edit')->name('posts.edit');
+    Route::patch('posts/{post}', 'PostsController@update')->name('posts.update');
     Route::delete('posts/{post}', 'PostsController@destroy')->name('posts.destroy');
 
-    Route::get('open_files_delete/{path}' , 'OpenFileController@delete')->name('open_files.delete');
-    Route::get('open_files_edit/{upload}/{path}' , 'OpenFileController@edit')->name('open_files.edit');
-    Route::patch('open_files_update/{upload}' , 'OpenFileController@update')->name('open_files.update');
+    Route::get('open_files_delete/{path}', 'OpenFileController@delete')->name('open_files.delete');
+    Route::get('open_files_edit/{upload}/{path}', 'OpenFileController@edit')->name('open_files.edit');
+    Route::patch('open_files_update/{upload}', 'OpenFileController@update')->name('open_files.update');
 
-    Route::get('inside_files_delete/{path}' , 'InsideFilesController@delete')->name('inside_files.delete');
-    Route::get('inside_files_edit/{inside_file}/{path}' , 'InsideFilesController@edit')->name('inside_files.edit');
-    Route::patch('inside_files_update/{inside_file}' , 'InsideFilesController@update')->name('inside_files.update');
+    Route::get('inside_files_delete/{path}', 'InsideFilesController@delete')->name('inside_files.delete');
+    Route::get('inside_files_edit/{inside_file}/{path}', 'InsideFilesController@edit')->name('inside_files.edit');
+    Route::patch('inside_files_update/{inside_file}', 'InsideFilesController@update')->name('inside_files.update');
 
 
     Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
@@ -392,55 +388,55 @@ Route::group(['middleware' => 'admin_exec'],function(){
 
     //校園部落格
     Route::delete('blogs/{blog}', 'BlogsController@destroy')->name('blogs.destroy');
-
 });
 
 
 //管理者可用
-Route::group(['middleware' => 'admin'],function(){
+Route::group(['middleware' => 'admin'], function () {
     //模擬登入
     Route::get('sims/{user}/impersonate', 'SimulationController@impersonate')->name('sims.impersonate');
     //網站管理
-    Route::get('setups','SetupController@index')->name('setups.index');
+    Route::get('setups', 'SetupController@index')->name('setups.index');
     Route::post('setups/add_logo', 'SetupController@add_logo')->name('setups.add_logo');
     //Route::post('setups/add_img', 'SetupController@add_img')->name('setups.add_img');
     Route::post('setups/add_imgs', 'SetupController@add_imgs')->name('setups.add_imgs');
     Route::get('setups/{folder}/del_img/{filename}', 'SetupController@del_img')->name('setups.del_img');
-    Route::get('setups/photo','SetupController@photo')->name('setups.photo');
-    Route::patch('setups/{setup}/photo/update_title_image','SetupController@update_title_image')->name('setups.update_title_image');
+    Route::get('setups/photo', 'SetupController@photo')->name('setups.photo');
+    Route::post('setups/photo_desc', 'SetupController@photo_desc')->name('setups.photo_desc');
+    Route::patch('setups/{setup}/photo/update_title_image', 'SetupController@update_title_image')->name('setups.update_title_image');
     //Route::patch('setups/{setup}', 'SetupController@update')->where('setup', '[0-9]+')->name('setups.update');
     Route::patch('setups/{setup}/nav_color', 'SetupController@nav_color')->where('setup', '[0-9]+')->name('setups.nav_color');
     Route::get('setups/nav_default/', 'SetupController@nav_default')->name('setups.nav_default');
     Route::patch('setups/{setup}/text', 'SetupController@text')->name('setups.text');
-    Route::get('setups/col','SetupController@col')->name('setups.col');
-    Route::get('setups/add_col_table','SetupController@add_col_table')->name('setups.add_col_table');
+    Route::get('setups/col', 'SetupController@col')->name('setups.col');
+    Route::get('setups/add_col_table', 'SetupController@add_col_table')->name('setups.add_col_table');
     Route::post('setups/add_col', 'SetupController@add_col')->name('setups.add_col');
-    Route::get('setups/{setup_col}/edit_col','SetupController@edit_col')->name('setups.edit_col');
-    Route::patch('setups/{setup_col}/update_col','SetupController@update_col')->name('setups.update_col');
-    Route::delete('setups/{setup_col}/delete_col','SetupController@delete_col')->name('setups.delete_col');
+    Route::get('setups/{setup_col}/edit_col', 'SetupController@edit_col')->name('setups.edit_col');
+    Route::patch('setups/{setup_col}/update_col', 'SetupController@update_col')->name('setups.update_col');
+    Route::delete('setups/{setup_col}/delete_col', 'SetupController@delete_col')->name('setups.delete_col');
 
     //區塊管理
-    Route::get('setups/block','SetupController@block')->name('setups.block');
-    Route::get('setups/add_block_table','SetupController@add_block_table')->name('setups.add_block_table');
+    Route::get('setups/block', 'SetupController@block')->name('setups.block');
+    Route::get('setups/add_block_table', 'SetupController@add_block_table')->name('setups.add_block_table');
     Route::post('setups/add_block', 'SetupController@add_block')->name('setups.add_block');
-    Route::get('setups/{block}/edit_block','SetupController@edit_block')->name('setups.edit_block');
-    Route::patch('setups/{block}/update_block','SetupController@update_block')->name('setups.update_block');
-    Route::delete('setups/{block}/delete_block','SetupController@delete_block')->name('setups.delete_block');
-    Route::get('setups/block_color','SetupController@block_color')->name('setups.block_color');
+    Route::get('setups/{block}/edit_block', 'SetupController@edit_block')->name('setups.edit_block');
+    Route::patch('setups/{block}/update_block', 'SetupController@update_block')->name('setups.update_block');
+    Route::delete('setups/{block}/delete_block', 'SetupController@delete_block')->name('setups.delete_block');
+    Route::get('setups/block_color', 'SetupController@block_color')->name('setups.block_color');
 
     //模組功能
-    Route::get('setups/module','SetupController@module')->name('setups.module');
-    Route::post('setups/module','SetupController@update_module')->name('setups.update_module');
+    Route::get('setups/module', 'SetupController@module')->name('setups.module');
+    Route::post('setups/module', 'SetupController@update_module')->name('setups.update_module');
 
     //空間管理
-    Route::get('setups/quota','SetupController@quota')->name('setups.quota');
-    Route::get('setups/batch_delete_posts','SetupController@batch_delete_posts')->name('setups.batch_delete_posts');
-    Route::delete('delete/batch_delete','SetupController@batch_delete')->name('setups.batch_delete');
+    Route::get('setups/quota', 'SetupController@quota')->name('setups.quota');
+    Route::get('setups/batch_delete_posts', 'SetupController@batch_delete_posts')->name('setups.batch_delete_posts');
+    Route::delete('delete/batch_delete', 'SetupController@batch_delete')->name('setups.batch_delete');
 
     //使用者權限
-    Route::get('user_powers/{module}/{type}','UserPowerController@create')->name('user_powers.create');
-    Route::post('user_powers','UserPowerController@store')->name('user_powers.store');
-    Route::get('user_powers_destroy/{user_power}','UserPowerController@destroy')->name('user_powers.destroy');
+    Route::get('user_powers/{module}/{type}', 'UserPowerController@create')->name('user_powers.create');
+    Route::post('user_powers', 'UserPowerController@store')->name('user_powers.store');
+    Route::get('user_powers_destroy/{user_power}', 'UserPowerController@destroy')->name('user_powers.destroy');
 
     //使用者管理
     Route::get('users', 'UsersController@index')->name('users.index');
@@ -508,22 +504,22 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('posts/{post_type}/delete_type', 'PostsController@delete_type')->name('posts.delete_type');
 
     //會議文稿
-    Route::get('meetings/{meeting}/edit' , 'MeetingController@edit')->name('meetings.edit');
-    Route::patch('meetings/{meeting}' , 'MeetingController@update')->name('meetings.update');
+    Route::get('meetings/{meeting}/edit', 'MeetingController@edit')->name('meetings.edit');
+    Route::patch('meetings/{meeting}', 'MeetingController@update')->name('meetings.update');
     Route::delete('meetings/{meeting}', 'MeetingController@destroy')->name('meetings.destroy');
 
     //校務行事曆
-    Route::get('calendar_weeks/index','CalendarWeekController@index')->name('calendar_weeks.index');
-    Route::get('calendar_weeks/{semester}/edit','CalendarWeekController@edit')->name('calendar_weeks.edit');
-    Route::post('calendar_weeks/update','CalendarWeekController@update')->name('calendar_weeks.update');
-    Route::post('calendar_weeks/create','CalendarWeekController@create')->name('calendar_weeks.create');
-    Route::post('calendar_weeks/store','CalendarWeekController@store')->name('calendar_weeks.store');
-    Route::get('calendar_weeks/{semester}/destroy','CalendarWeekController@destroy')->name('calendar_weeks.destroy');
+    Route::get('calendar_weeks/index', 'CalendarWeekController@index')->name('calendar_weeks.index');
+    Route::get('calendar_weeks/{semester}/edit', 'CalendarWeekController@edit')->name('calendar_weeks.edit');
+    Route::post('calendar_weeks/update', 'CalendarWeekController@update')->name('calendar_weeks.update');
+    Route::post('calendar_weeks/create', 'CalendarWeekController@create')->name('calendar_weeks.create');
+    Route::post('calendar_weeks/store', 'CalendarWeekController@store')->name('calendar_weeks.store');
+    Route::get('calendar_weeks/{semester}/destroy', 'CalendarWeekController@destroy')->name('calendar_weeks.destroy');
 
     //今日午餐
-    Route::get('lunch_today/index','LunchTodayController@index')->name('lunch_todays.index');
-    Route::post('lunch_today/update','LunchTodayController@update')->name('lunch_todays.update');
-    Route::get('lunch_today/{lunch_today}/delete','LunchTodayController@delete')->name('lunch_todays.delete');
+    Route::get('lunch_today/index', 'LunchTodayController@index')->name('lunch_todays.index');
+    Route::post('lunch_today/update', 'LunchTodayController@update')->name('lunch_todays.update');
+    Route::get('lunch_today/{lunch_today}/delete', 'LunchTodayController@delete')->name('lunch_todays.delete');
 
     //報錯管理員回覆
     Route::post('wrench/reply', 'WrenchController@reply')->name('wrench.reply');
@@ -534,17 +530,16 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('teach_system', 'HomeController@teach_system')->name('teach_system');
 });
 
-Route::group(['middleware' => 'local'],function(){
+Route::group(['middleware' => 'local'], function () {
     //更改密碼
-    Route::get('edit_password','HomeController@edit_password')->name('edit_password');
-    Route::patch('update_password','HomeController@update_password')->name('update_password');
+    Route::get('edit_password', 'HomeController@edit_password')->name('edit_password');
+    Route::patch('update_password', 'HomeController@update_password')->name('update_password');
 });
 
-Route::post('lunch_today/return_date1','LunchTodayController@return_date1')->name('lunch_todays.return_date1');
-Route::post('lunch_today/return_date2','LunchTodayController@return_date2')->name('lunch_todays.return_date2');
-Route::post('lunch_today/return_date3','LunchTodayController@return_date3')->name('lunch_todays.return_date3');
-Route::post('lunch_today/return_date4','LunchTodayController@return_date4')->name('lunch_todays.return_date4');
+Route::post('lunch_today/return_date1', 'LunchTodayController@return_date1')->name('lunch_todays.return_date1');
+Route::post('lunch_today/return_date2', 'LunchTodayController@return_date2')->name('lunch_todays.return_date2');
+Route::post('lunch_today/return_date3', 'LunchTodayController@return_date3')->name('lunch_todays.return_date3');
+Route::post('lunch_today/return_date4', 'LunchTodayController@return_date4')->name('lunch_todays.return_date4');
 
-Route::post('monthly_calendars/return_month' , 'MonthlyCalendarController@return_month')->name('monthly_calendars.return_month');
+Route::post('monthly_calendars/return_month', 'MonthlyCalendarController@return_month')->name('monthly_calendars.return_month');
 Route::post('classroom_orders/block_show', 'ClassroomOrderController@block_show')->name('classroom_orders.block_show');
-

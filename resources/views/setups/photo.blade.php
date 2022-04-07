@@ -84,11 +84,60 @@
                     {{ Form::close() }}
                     @if(!empty($photos))
                         @foreach($photos as $k=>$v)
-                            <div style="float:left;padding: 10px;">
-                                <img src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v) }}" width="200">
-                                <a href="{{ route('setups.del_img',['folder'=>'title_image&random','filename'=>$v]) }}" onclick="return confirm('確定移除輪播圖片嗎')">
-                                    <i class="fas fa-times-circle text-danger"></i></a>
-                            </div>
+                        <form method="post" action="{{ route('setups.photo_desc') }}">
+                            @csrf
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            圖片
+                                        </th>
+                                        <th>
+                                            連結
+                                        </th>
+                                        <th>
+                                            標題
+                                        </th>
+                                        <th>
+                                            說明
+                                        </th>
+                                        <th>
+                                            動作
+                                        </th>
+                                    </tr>
+        
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <img src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v) }}" width="200">
+                                            <br>
+                                            {{ $v }}
+                                            <a href="{{ route('setups.del_img',['folder'=>'title_image&random','filename'=>$v]) }}" onclick="return confirm('確定移除輪播圖片嗎')">
+                                                <i class="fas fa-times-circle text-danger"></i></a>
+                                        </td>
+                                        <td>
+                                            <?php 
+                                                $link = (isset($photo_desc[$v]['link']))?$photo_desc[$v]['link']:null;
+                                                $title = (isset($photo_desc[$v]['title']))?$photo_desc[$v]['title']:null;
+                                                $desc = (isset($photo_desc[$v]['desc']))?$photo_desc[$v]['desc']:null;
+                                            ?>
+                                            <input type="text" class="form-control" name="link" value="{{ $link }}">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="title" value="{{ $title }}">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="desc" value="{{ $desc }}">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">儲存</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <input type="hidden" name="image_name" value="{{ $v }}">
+                        </form>
                         @endforeach
                     @endif
                 </div>

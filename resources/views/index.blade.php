@@ -15,7 +15,26 @@
             @foreach($photos as $k=>$v)
                 <?php $active = ($k==0)?"active":""; ?>
                 <div class="carousel-item {{ $active }}">
-                    <img class="d-block w-100" src="{{ $v }}">
+                    @if(isset($photo_desc[$v]['link']) and !empty($photo_desc[$v]['link']))
+                        <a href="{{ $photo_desc[$v]['link'] }}" target="_blank">
+                            <img class="d-block w-100" src="{{ asset('storage/' . $school_code . '/title_image/random/' . $v) }}">
+                        </a>
+                    @else
+                        <img class="d-block w-100" src="{{ asset('storage/' . $school_code . '/title_image/random/' . $v) }}">
+                    @endif
+                    <div class="carousel-caption d-none d-md-block">
+                        @if(isset($photo_desc[$v]['title']))
+                        <h1>{{ $photo_desc[$v]['title'] }}</h1>
+                        @endif
+                        <p>
+                            @if(isset($photo_desc[$v]['desc']))
+                            <strong>{{ $photo_desc[$v]['desc'] }}</strong> 
+                            @endif
+                            @if(isset($photo_desc[$v]['link']) and !empty($photo_desc[$v]['link']))
+                            <a href="{{ $photo_desc[$v]['link'] }}" target="_blank" class="btn btn-info btn-sm">詳情</a>
+                            @endif
+                        </p>
+                    </div>
                 </div>
             @endforeach
         </div>

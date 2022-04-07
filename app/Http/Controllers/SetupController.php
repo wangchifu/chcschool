@@ -7,6 +7,7 @@ use App\Module;
 use App\Post;
 use App\Setup;
 use App\SetupCol;
+use App\TitleImageDesc;
 use Illuminate\Http\Request;
 
 class SetupController extends Controller
@@ -20,25 +21,41 @@ class SetupController extends Controller
     {
         $setup = Setup::first();
         $data = [
-            'setup'=>$setup,
+            'setup' => $setup,
         ];
-        return view('setups.index',$data);
+        return view('setups.index', $data);
     }
 
     public function photo()
     {
         $school_code = school_code();
         $setup = Setup::first();
-        $photos = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
+        $photos = get_files(storage_path('app/public/' . $school_code . '/title_image/random'));
+        $title_image_desc = TitleImageDesc::all();
+        $photo_desc = [];
+        foreach ($title_image_desc as $desc) {
+            $photo_desc[$desc->image_name]['link'] = $desc->link;
+            $photo_desc[$desc->image_name]['title'] = $desc->title;
+            $photo_desc[$desc->image_name]['desc'] = $desc->desc;
+        }
         $data = [
-            'school_code'=>$school_code,
-            'setup'=>$setup,
-            'photos'=>$photos,
+            'school_code' => $school_code,
+            'setup' => $setup,
+            'photos' => $photos,
+            'photo_desc' => $photo_desc,
         ];
-        return view('setups.photo',$data);
+        return view('setups.photo', $data);
     }
 
-    public function update_title_image(Request $request,Setup $setup)
+    public function photo_desc(Request $request)
+    {
+        TitleImageDesc::where('image_name', $request->input('image_name'))->delete();
+        $att = $request->all();
+        TitleImageDesc::create($att);
+        return redirect()->route('setups.photo');
+    }
+
+    public function update_title_image(Request $request, Setup $setup)
     {
         $att['title_image'] = $request->input('title_image');
         $setup->update($att);
@@ -49,7 +66,7 @@ class SetupController extends Controller
     {
         //新增使用者的上傳目錄
         $school_code = school_code();
-        $new_path = 'public/'. $school_code .'/title_image';
+        $new_path = 'public/' . $school_code . '/title_image';
 
         //處理檔案上傳
         if ($request->hasFile('logo')) {
@@ -60,20 +77,20 @@ class SetupController extends Controller
                 'extension' => $logo->getClientOriginalExtension(),
             ];
 
-            if($info['extension'] != "png" and $info['extension'] != "ico"){
-                return back()->withErrors(['errors'=>'只接受 png 或 ico 檔']);
+            if ($info['extension'] != "png" and $info['extension'] != "ico") {
+                return back()->withErrors(['errors' => '只接受 png 或 ico 檔']);
             }
             $logo->storeAs($new_path, 'logo.ico');
-
         }
         return redirect()->route('setups.photo');
     }
 
-    public function del_img($folder,$filename)
+    public function del_img($folder, $filename)
     {
         $school_code = school_code();
-        $folder = str_replace('&','/',$folder);
-        unlink(storage_path('app/public/'.$school_code.'/'.$folder.'/'.$filename));
+        $folder = str_replace('&', '/', $folder);
+        unlink(storage_path('app/public/' . $school_code . '/' . $folder . '/' . $filename));
+        TitleImageDesc::where('image_name', $filename)->delete();
         return redirect()->route('setups.photo');
     }
 
@@ -81,18 +98,18 @@ class SetupController extends Controller
     {
         //新增使用者的上傳目錄
         $school_code = school_code();
-        $new_path = 'public/'. $school_code .'/title_image/random';
+        $new_path = 'public/' . $school_code . '/title_image/random';
 
         //處理檔案上傳
         if ($request->hasFile('files')) {
             $files = $request->file('files');
-            $n=1;
-            foreach($files as $file){
+            $n = 1;
+            foreach ($files as $file) {
                 $info = [
                     'original_filename' => $file->getClientOriginalName(),
                     'extension' => $file->getClientOriginalExtension(),
                 ];
-                $filename = date("Y-m-d-H-i-s")."-".$n.".".$info['extension'];
+                $filename = date("Y-m-d-H-i-s") . "-" . $n . "." . $info['extension'];
                 $file->storeAs($new_path, $filename);
                 $n++;
             }
@@ -101,12 +118,12 @@ class SetupController extends Controller
         return redirect()->route('setups.photo');
     }
 
-    public function nav_color(Request $request,Setup $setup)
+    public function nav_color(Request $request, Setup $setup)
     {
         $nav_color = $request->input('color');
         $att['nav_color'] = "";
-        foreach($nav_color as $v){
-            $att['nav_color'] .= $v.",";
+        foreach ($nav_color as $v) {
+            $att['nav_color'] .= $v . ",";
         }
         $setup->update($att);
         return redirect()->route('setups.index');
@@ -120,11 +137,11 @@ class SetupController extends Controller
         return redirect()->route('setups.index');
     }
 
-    public function text(Request $request,Setup $setup)
+    public function text(Request $request, Setup $setup)
     {
         $request->validate([
-            'site_name'=>'required',
-            'views'=>['required','numeric'],
+            'site_name' => 'required',
+            'views' => ['required', 'numeric'],
         ]);
         $att['site_name'] = $request->input('site_name');
         $att['views'] = $request->input('views');
@@ -137,9 +154,9 @@ class SetupController extends Controller
     {
         $setup_cols = SetupCol::orderBy('order_by')->get();
         $data = [
-            'setup_cols'=>$setup_cols,
+            'setup_cols' => $setup_cols,
         ];
-        return view('setups.col',$data);
+        return view('setups.col', $data);
     }
 
     public function add_col_table()
@@ -150,9 +167,9 @@ class SetupController extends Controller
     public function add_col(Request $request)
     {
         $request->validate([
-            'title'=>'required',
-            'order_by'=>['nullable','numeric'],
-            'num'=>['required','numeric'],
+            'title' => 'required',
+            'order_by' => ['nullable', 'numeric'],
+            'num' => ['required', 'numeric'],
         ]);
         $att['title'] = $request->input('title');
         $att['num'] = $request->input('num');
@@ -164,17 +181,17 @@ class SetupController extends Controller
     public function edit_col(SetupCol $setup_col)
     {
         $data = [
-            'setup_col'=>$setup_col,
+            'setup_col' => $setup_col,
         ];
-        return view('setups.edit_col',$data);
+        return view('setups.edit_col', $data);
     }
 
-    public function update_col(Request $request,SetupCol $setup_col)
+    public function update_col(Request $request, SetupCol $setup_col)
     {
         $request->validate([
-            'title'=>'required',
-            'order_by'=>['nullable','numeric'],
-            'num'=>['required','numeric'],
+            'title' => 'required',
+            'order_by' => ['nullable', 'numeric'],
+            'num' => ['required', 'numeric'],
         ]);
         $att['order_by'] = $request->input('order_by');
         $att['title'] = $request->input('title');
@@ -186,7 +203,7 @@ class SetupController extends Controller
     public function delete_col(SetupCol $setup_col)
     {
         $att['setup_col_id'] = null;
-        Block::where('setup_col_id',$setup_col->id)->update($att);
+        Block::where('setup_col_id', $setup_col->id)->update($att);
         $setup_col->delete();
         echo "<body onload='opener.location.reload();window.close();'>";
     }
@@ -194,40 +211,40 @@ class SetupController extends Controller
     public function block()
     {
         $setup_cols = SetupCol::orderBy('order_by')->get();
-        foreach($setup_cols as $setup_col){
-            $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
+        foreach ($setup_cols as $setup_col) {
+            $setup_array[$setup_col->id] = $setup_col->title . '(' . $setup_col->id . ')';
         }
 
         $blocks = Block::orderBy('setup_col_id')
             ->orderBy('order_by')
             ->get();
         $data = [
-            'setup_array'=>$setup_array,
-            'blocks'=>$blocks,
+            'setup_array' => $setup_array,
+            'blocks' => $blocks,
         ];
-        return view('setups.block',$data);
+        return view('setups.block', $data);
     }
 
     public function add_block_table()
     {
         $setup_cols = SetupCol::orderBy('order_by')->get();
-        foreach($setup_cols as $setup_col){
-            $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
+        foreach ($setup_cols as $setup_col) {
+            $setup_array[$setup_col->id] = $setup_col->title . '(' . $setup_col->id . ')';
         }
         $block_colors = config('chcschool.block_colors');
         $block_colors = array_flip($block_colors);
         $data = [
-            'setup_array'=>$setup_array,
-            'block_colors'=>$block_colors,
+            'setup_array' => $setup_array,
+            'block_colors' => $block_colors,
         ];
-        return view('setups.add_block_table',$data);
+        return view('setups.add_block_table', $data);
     }
 
     public function add_block(Request $request)
     {
         $request->validate([
-            'title'=>'required',
-            'order_by'=>['nullable','numeric'],
+            'title' => 'required',
+            'order_by' => ['nullable', 'numeric'],
         ]);
         $att = $request->all();
         Block::create($att);
@@ -237,25 +254,25 @@ class SetupController extends Controller
     public function edit_block(Block $block)
     {
         $setup_cols = SetupCol::orderBy('order_by')->get();
-        foreach($setup_cols as $setup_col){
-            $setup_array[$setup_col->id] = $setup_col->title.'('.$setup_col->id.')';
+        foreach ($setup_cols as $setup_col) {
+            $setup_array[$setup_col->id] = $setup_col->title . '(' . $setup_col->id . ')';
         }
         $block_colors = config('chcschool.block_colors');
         $block_colors = array_flip($block_colors);
 
         $data = [
-            'setup_array'=>$setup_array,
-            'block'=>$block,
-            'block_colors'=>$block_colors,
+            'setup_array' => $setup_array,
+            'block' => $block,
+            'block_colors' => $block_colors,
         ];
-        return view('setups.edit_block',$data);
+        return view('setups.edit_block', $data);
     }
 
-    function update_block(Request $request,Block $block)
+    function update_block(Request $request, Block $block)
     {
         $request->validate([
-            'title'=>'required',
-            'order_by'=>['nullable','numeric'],
+            'title' => 'required',
+            'order_by' => ['nullable', 'numeric'],
         ]);
         $att = $request->all();
         $block->update($att);
@@ -277,22 +294,22 @@ class SetupController extends Controller
     {
         $modules = config('chcschool.modules');
         $data = [
-            'modules'=>$modules,
+            'modules' => $modules,
         ];
-        return view('setups.module',$data);
+        return view('setups.module', $data);
     }
 
     public function update_module(Request $request)
     {
         $modules = Module::orderBy('id')->get();
-        foreach($modules as $m){
+        foreach ($modules as $m) {
             $m->delete();
         }
 
 
         $module = $request->input('module');
 
-        foreach($module as $k=>$v){
+        foreach ($module as $k => $v) {
             $att['name'] = $k;
             $att['active'] = $v;
             Module::create($att);
@@ -304,65 +321,65 @@ class SetupController extends Controller
     {
         $school_code = school_code();
 
-        $f1 = storage_path('app/public/'.$school_code);
+        $f1 = storage_path('app/public/' . $school_code);
         $quota['public']['all'] = get_dir_size($f1);
 
-        $f2 = storage_path('app/privacy/'.$school_code);
+        $f2 = storage_path('app/privacy/' . $school_code);
         $quota['privacy']['all'] = get_dir_size($f2);
 
-        $dir_size = $quota['public']['all']+$quota['privacy']['all'];
+        $dir_size = $quota['public']['all'] + $quota['privacy']['all'];
 
-        $size = round($dir_size/1024,2);
-        $per = round($size*100/5120,2);
+        $size = round($dir_size / 1024, 2);
+        $per = round($size * 100 / 5120, 2);
 
 
         //公告  public/code/posts
-        $posts = storage_path('app/public/'.$school_code.'/posts');
+        $posts = storage_path('app/public/' . $school_code . '/posts');
         $quota['public']['公告附件'] = get_dir_size($posts);
 
         //檔案庫  public/code/open_files
-        $open_files = storage_path('app/public/'.$school_code.'/open_files');
+        $open_files = storage_path('app/public/' . $school_code . '/open_files');
         $quota['public']['檔案庫'] = get_dir_size($open_files);
 
         //ckeditor public/code/photos
-        $photos = storage_path('app/public/'.$school_code.'/photos');
+        $photos = storage_path('app/public/' . $school_code . '/photos');
         $quota['public']['ckeditor圖片'] = get_dir_size($photos);
 
         //ckeditor public/code/files
-        $files = storage_path('app/public/'.$school_code.'/files');
+        $files = storage_path('app/public/' . $school_code . '/files');
         $quota['public']['ckeditor檔案'] = get_dir_size($files);
 
         //標題圖片  public/code/title_image
-        $title_image = storage_path('app/public/'.$school_code.'/title_image');
+        $title_image = storage_path('app/public/' . $school_code . '/title_image');
         $quota['public']['首頁橫幅圖片'] = get_dir_size($title_image);
 
         //圖片連結  public/code/photo_links
-        $photo_links = storage_path('app/public/'.$school_code.'/photo_links');
+        $photo_links = storage_path('app/public/' . $school_code . '/photo_links');
         $quota['public']['圖片連結封面'] = get_dir_size($photo_links);
 
         //校園部落格 public/code/blogs
-        $blogs = storage_path('app/public/'.$school_code.'/blogs');
+        $blogs = storage_path('app/public/' . $school_code . '/blogs');
         $quota['public']['校園部落格封面'] = get_dir_size($blogs);
 
         //內部文件  privacy/code/inside_files
-        $inside_files = storage_path('app/privacy/'.$school_code.'/inside_files');
+        $inside_files = storage_path('app/privacy/' . $school_code . '/inside_files');
         $quota['privacy']['內部文件'] = get_dir_size($inside_files);
 
         //會議文稿  privacy/code/reports
-        $reports = storage_path('app/privacy/'.$school_code.'/reports');
+        $reports = storage_path('app/privacy/' . $school_code . '/reports');
         $quota['privacy']['會議文稿附件'] = get_dir_size($reports);
 
         //午餐  privacy/code/lunches
-        $lunches = storage_path('app/privacy/'.$school_code.'/lunches');
+        $lunches = storage_path('app/privacy/' . $school_code . '/lunches');
         $quota['privacy']['午餐模組印章檔'] = get_dir_size($lunches);
 
         $data = [
-            'quota'=>$quota,
-            'size'=>$size,
-            'per'=>$per,
+            'quota' => $quota,
+            'size' => $size,
+            'per' => $per,
         ];
 
-        return view('setups.quota',$data);
+        return view('setups.quota', $data);
     }
 
     public function batch_delete_posts()
@@ -373,11 +390,11 @@ class SetupController extends Controller
     public function batch_delete(Request $request)
     {
 
-        $posts = Post::where('id','<=',$request->input('post_no'))->get();
-        if(auth()->user()->admin ==1){
+        $posts = Post::where('id', '<=', $request->input('post_no'))->get();
+        if (auth()->user()->admin == 1) {
             $school_code = school_code();
-            foreach($posts as $post){
-                $folder = storage_path('app/public/'.$school_code.'/posts/'.$post->id);
+            foreach ($posts as $post) {
+                $folder = storage_path('app/public/' . $school_code . '/posts/' . $post->id);
                 if (is_dir($folder)) {
                     delete_dir($folder);
                 }
