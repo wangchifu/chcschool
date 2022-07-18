@@ -17,13 +17,14 @@ $data = json_decode($html);
 if(is_null($data)){
     $data = [];
     $select_data=[];
-}
-//dd($data->records);
-foreach($data->records as $k=>$v){
-    $select_data[$v->county][] = $v->sitename;
-    $air_data[$v->sitename]['AQI'] = $v->aqi;
-    $air_data[$v->sitename]['Status'] = $v->status;
-    $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
+    $air_data=[];
+}else{
+    foreach($data->records as $k=>$v){
+        $select_data[$v->county][] = $v->sitename;
+        $air_data[$v->sitename]['AQI'] = $v->aqi;
+        $air_data[$v->sitename]['Status'] = $v->status;
+        $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
+    }
 }
 
 $SiteName = $request->input('SiteName');
