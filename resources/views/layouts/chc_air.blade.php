@@ -3,8 +3,9 @@
 //$url = "http://opendata.epa.gov.tw/ws/Data/AQI/?\$format=json";
 //$url = "http://opendata.epa.gov.tw/webapi/Data/REWIQA/?\$orderby=SiteName&\$skip=0&\$top=1000&format=json";
 //$url = "http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json";
-$url = "http://opendata2.epa.gov.tw/AQI.json";
-
+//$url = "http://opendata2.epa.gov.tw/AQI.json";
+//curl -X GET "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=ab9e1a2c-b503-4a4f-a369-b1b5a7b24938" -H "accept: */*"
+$url = "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=".env('AIR_API_KEY');
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
@@ -17,14 +18,13 @@ if(is_null($data)){
     $data = [];
     $select_data=[];
 }
-
-foreach($data as $k=>$v){
-    $select_data[$v->County][] = $v->SiteName;
-    $air_data[$v->SiteName]['AQI'] = $v->AQI;
-    $air_data[$v->SiteName]['Status'] = $v->Status;
-    $air_data[$v->SiteName]['PublishTime'] = $v->PublishTime;
+//dd($data->records);
+foreach($data->records as $k=>$v){
+    $select_data[$v->county][] = $v->sitename;
+    $air_data[$v->sitename]['AQI'] = $v->aqi;
+    $air_data[$v->sitename]['Status'] = $v->status;
+    $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
 }
-
 
 $SiteName = $request->input('SiteName');
 
