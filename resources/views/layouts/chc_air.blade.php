@@ -5,27 +5,50 @@
 //$url = "http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json";
 //$url = "http://opendata2.epa.gov.tw/AQI.json";
 //curl -X GET "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=ab9e1a2c-b503-4a4f-a369-b1b5a7b24938" -H "accept: */*"
-$url = "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=".env('AIR_API_KEY');
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_HEADER, 0);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-$html = curl_exec($ch);
-curl_close($ch);
-$data = json_decode($html);
-if(is_null($data)){
-    $data = [];
-    $select_data=[];
-    $air_data=[];
+$chk_file = date('YmdH0000');
+if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
+    $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$chk_file.'.txt'));
 }else{
-    foreach($data->records as $k=>$v){
-        $select_data[$v->county][] = $v->sitename;
-        $air_data[$v->sitename]['AQI'] = $v->aqi;
-        $air_data[$v->sitename]['Status'] = $v->status;
-        $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
+    $url = "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=".env('AIR_API_KEY');
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $html = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($html);
+
+    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
+        $count = file_get_contents('../../service/chc_air/download/'.date('Ymd').'.txt');
+    }else{
+        $count = 0;
+    }
+    $file_count = fopen('../../service/chc_air/download/'.date('Ymd').'.txt','w');
+    $count++;
+    fwrite($file_count,$count);
+    fclose($file_count);
+
+    if(is_null($data)){
+        $data = [];
+        //$select_data=[];
+        $air_data=[];
+    }else{
+        foreach($data->records as $k=>$v){
+            $select_data[$v->county][] = $v->sitename;
+            $air_data[$v->sitename]['AQI'] = $v->aqi;
+            $air_data[$v->sitename]['Status'] = $v->status;
+            $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
+        }
+        $fname = str_replace('/','',$v->publishtime);
+        $fname = str_replace(' ','',$fname);
+        $fname = str_replace(':','',$fname);
+        $file = fopen('../../service/chc_air/download/'.$fname.'.txt','w');
+        fwrite($file,serialize($air_data));
     }
 }
+
 
 $SiteName = $request->input('SiteName');
 
@@ -44,11 +67,9 @@ if(empty($_COOKIE['chc_air'])){
 setcookie("chc_air", $select_site, time()+31556926);
 
 
-foreach($select_data as $k=>$v){
-    foreach($v as $k2=>$v2){
-        $selected = ($v2==$select_site)?"selected":"";
-        $options .= "<option value='$v2' $selected>$v2</option>";
-    }
+foreach($air_data as $k=>$v){
+    $selected = ($k==$select_site)?"selected":"";
+    $options .= "<option value='$k' $selected>$k</option>";
 }
 
 ?>
