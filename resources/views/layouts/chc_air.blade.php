@@ -6,7 +6,13 @@
 //$url = "http://opendata2.epa.gov.tw/AQI.json";
 //curl -X GET "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=ab9e1a2c-b503-4a4f-a369-b1b5a7b24938" -H "accept: */*"
 
-$chk_file = date('YmdH0000');
+if(date('i')>10){
+    $chk_file = date('YmdH0000');
+}else{
+    $last = sprintf('%02s',date('H')-1);
+    $chk_file = date('Ymd').$last.'0000';
+}
+
 if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
     $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$chk_file.'.txt'));
 }else{
