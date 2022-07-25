@@ -422,6 +422,8 @@ class LunchSpecialController extends Controller
         $bad_factory_id = $request->input('bad_factory_id');
         $order_date1 = $request->input('order_date1');
         $order_date2 = $request->input('order_date2');
+        $teachers = [];
+        $teas = [];
 
         $tea_orders = LunchTeaDate::where('lunch_factory_id', $bad_factory_id)
             ->where('order_date', '>=', $order_date1)
