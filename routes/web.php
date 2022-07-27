@@ -271,6 +271,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('clubs/{club_register}/report_register_delete', 'ClubsController@report_register_delete')->name('clubs.report_register_delete');
     Route::get('clubs/report_money/{semester?}', 'ClubsController@report_money')->name('clubs.report_money');
     Route::get('clubs/{semester}/{class_id}/report_money_download', 'ClubsController@report_money_download')->name('clubs.report_money_download');
+    Route::get('clubs/{semester}/{class_id}/report_money_download2', 'ClubsController@report_money_download2')->name('clubs.report_money_download2');
     Route::get('clubs/{semester}/{class_id}/report_money2_print', 'ClubsController@report_money2_print')->name('clubs.report_money2_print');
     Route::get('clubs/report', 'ClubsController@report')->name('clubs.report');
 

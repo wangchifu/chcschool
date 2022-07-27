@@ -38,6 +38,7 @@
                         </h4>
                             <a href="{{ route('clubs.report_money_download',['semester'=>$semester,'class_id'=>'1']) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> 下載 Excel 檔</a>
                             <a href="{{ route('clubs.report_money2_print',['semester'=>$semester,'class_id'=>'1']) }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-download"></i> 列印 學生特色社團收據三聯單</a>
+                            <a href="{{ route('clubs.report_money_download2',['semester'=>$semester,'class_id'=>'1']) }}" class="btn btn-success btn-sm"><i class="fas fa-download"></i> 下載「彰化智慧校園」收費模組匯入單檔</a>
                         <table class="table table-striped">
                             <tr>
                                 <th>
@@ -113,6 +114,7 @@
                         </h4>
                             <a href="{{ route('clubs.report_money_download',['semester'=>$semester,'class_id'=>'2']) }}" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> 下載 Excel 檔</a>
                             <a href="{{ route('clubs.report_money2_print',['semester'=>$semester,'class_id'=>'2']) }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-download"></i> 列印 學生課後活動收據三聯單</a>
+                            <a href="{{ route('clubs.report_money_download2',['semester'=>$semester,'class_id'=>'2']) }}" class="btn btn-success btn-sm"><i class="fas fa-download"></i> 下載「彰化智慧校園」收費模組匯入單檔</a>
                         <table class="table table-striped">
                             <tr>
                                 <th>
