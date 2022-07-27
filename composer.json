@@ -12,6 +12,7 @@
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.7",
+        "phpoffice/phpexcel": "^1.8",
         "rap2hpoutre/fast-excel": "^1.7",
         "unisharp/laravel-filemanager": "^1.9"
     },

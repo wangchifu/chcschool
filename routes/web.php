@@ -203,6 +203,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('lunch_lists/more_list_factory/{lunch_order_id}/{factory_id}', 'LunchListController@more_list_factory')->name('lunch_lists.more_list_factory');
     Route::get('lunch_lists/every_day/{lunch_order_id?}', 'LunchListController@every_day')->name('lunch_lists.every_day');
     Route::get('lunch_lists/teacher_money_print/{lunch_order_id}', 'LunchListController@teacher_money_print')->name('lunch_lists.teacher_money_print');
+    Route::get('lunch_lists/every_day_download/{lunch_order_id}', 'LunchListController@every_day_download')->name('lunch_lists.every_day_download');
     Route::get('lunch_lists/call_money/{lunch_order_id}', 'LunchListController@call_money')->name('lunch_lists.call_money');
     Route::get('lunch_lists/get_money/{lunch_order_id}', 'LunchListController@get_money')->name('lunch_lists.get_money');
     Route::get('lunch_lists/all_semester', 'LunchListController@all_semester')->name('lunch_lists.all_semester');

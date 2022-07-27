@@ -35,6 +35,7 @@
                     <a href="{{ route('lunch_lists.call_money',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 本期收費通知</a>
                     <a href="{{ route('lunch_lists.get_money',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 本期收費確認表</a>
                     <a href="{{ route('lunch_lists.teacher_money_print',$lunch_order_id) }}" class="btn btn-secondary btn-sm" target="_blank"><i class="fas fa-print"></i> 本期三聯單</a>
+                    <a href="{{ route('lunch_lists.every_day_download',$lunch_order_id) }}" class="btn btn-success btn-sm"><i class="fas fa-download"></i> 下載此期「彰化智慧校園」收費模組匯入單</a>
                     <br>
                     <br>
                     <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
