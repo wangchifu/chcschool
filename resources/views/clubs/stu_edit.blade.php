@@ -25,7 +25,7 @@
                         $admin = check_power('社團報名','A',auth()->user()->id);
                     ?>
                     @if($admin)
-                        <h4>{{ $club_student->semester }} 修改學生</h4>
+                        <h4>{{ $club_student->semester }}學期 修改 {{ $sc }}班 學生</h4>
                         {{ Form::open(['route' => ['clubs.stu_update',$club_student->id], 'method' => 'PATCH']) }}
                         <div class="form-group">
                             <label for="no"><strong>學號*</strong><small class="text-primary">(6碼 如 108001)</small></label>
@@ -49,13 +49,14 @@
                         </div>
                         <div class="form-group">
                             <label for="parents_telephone">家長電話</label>
-                            {{ Form::text('parents_telephone',$club_student->parents_telephone,['id'=>'parents_telephone','class' => 'form-control','required'=>'required']) }}
+                            {{ Form::text('parents_telephone',$club_student->parents_telephone,['id'=>'parents_telephone','class' => 'form-control']) }}
                         </div>
-                        <a class="btn btn-secondary btn-sm" href="{{ route('clubs.stu_adm',$club_student->semester) }}"><i class="fas fa-backward"></i> 返回</a>
+                        <a class="btn btn-secondary btn-sm" href="#" onclick="history.go(-1)"><i class="fas fa-backward"></i> 返回</a>
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
                             <i class="fas fa-save"></i> 儲存
                         </button>
                         @include('layouts.errors')
+                        <input type="hidden" name="student_class_id" value={{ $student_class_id }}>
                         {{ Form::close() }}
                     @else
                         <span class="text-danger">你不是管理者</span>

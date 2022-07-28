@@ -25,7 +25,7 @@
                         $admin = check_power('社團報名','A',auth()->user()->id);
                     ?>
                     @if($admin)
-                        <h4>{{ $semester }} 新增學生</h4>
+                        <h4>{{ $semester }} 新增 {{ $sc }}班 學生</h4>
                         {{ Form::open(['route' => ['clubs.stu_store',$semester], 'method' => 'POST']) }}
                         <div class="form-group">
                             <label for="no"><strong>學號*</strong><small class="text-primary">(6碼 如 108001)</small></label>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="form-group">
                             <label for="class_num"><strong>班級座號(帳號)*</strong><small class="text-primary">(5碼 如 10101)</small></label>
-                            {{ Form::text('class_num',null,['id'=>'class_num','class' => 'form-control','maxlength'=>'5','required'=>'required']) }}
+                            {{ Form::text('class_num',$sc,['id'=>'class_num','class' => 'form-control','maxlength'=>'5','required'=>'required']) }}
                         </div>
                         <div class="form-group">
                             <label for="birthday"><strong>生日*</strong><small class="text-primary">(8碼 如 20130101)</small></label>
@@ -45,13 +45,14 @@
                         </div>
                         <div class="form-group">
                             <label for="parents_telephone">家長電話</label>
-                            {{ Form::text('parents_telephone',null,['id'=>'parents_telephone','class' => 'form-control','required'=>'required']) }}
+                            {{ Form::text('parents_telephone',null,['id'=>'parents_telephone','class' => 'form-control']) }}
                         </div>
-                        <a class="btn btn-secondary btn-sm" href="{{ route('clubs.stu_adm',$semester) }}"><i class="fas fa-backward"></i> 返回</a>
+                        <a class="btn btn-secondary btn-sm" href="#" onclick="history.go(-1)"><i class="fas fa-backward"></i> 返回</a>
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
                             <i class="fas fa-save"></i> 儲存
                         </button>
                         @include('layouts.errors')
+                        <input type="hidden" name="student_class_id" value={{ $student_class_id }}>
                         {{ Form::close() }}
                     @else
                         <span class="text-danger">你不是管理者</span>

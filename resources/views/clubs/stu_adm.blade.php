@@ -28,8 +28,9 @@
                         <h4>學生管理</h4>
                         {{ Form::open(['route' => ['clubs.stu_import',$semester], 'method' => 'POST', 'files' => true]) }}
                         <input type="file" name="file" required>
-                        <input type="submit" class="btn btn-success btn-sm" value="匯入學生" onclick="return confirm('會先清空學生，也會清空這學期已報名的資料喔！')">
+                        <input type="submit" class="btn btn-success btn-sm" value="匯入學生" onclick="return confirm('確定嗎？')">
                         {{ Form::close() }}
+                        @include('layouts.errors')
                         <a href="{{ asset('images/cloudschool_club.png') }}" target="_blank">請先至 cloudschool 下載列表</a>
                     @else
                         <span class="text-danger">你不是管理者</span>
@@ -37,6 +38,35 @@
                 </div>
             </div>
             <br>
+            <h4>已匯入學生班級資料</h4>
+                <table class="table">
+                    <thead class="table-warning">
+                    <tr>
+                        <th>
+                            學期
+                        </th>
+                        <th>
+                            班級數
+                        </th>
+                        <th>
+                            學生數
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                              {{ $semester }}
+                            </td>
+                            <td>
+                                {{ $class_num }} <a href="{{ route('clubs.stu_adm_more',['semester'=>$semester,'student_class_id'=>null]) }}" class="btn btn-info btn-sm">詳細資料</a>
+                            </td>
+                            <td>
+                                {{ $club_student_num }}   
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             @if($admin)
                 <div class="card">
                     <div class="card-header">
@@ -128,85 +158,6 @@
                         </table>
                     </div>
                 </div>
-                <br>
-                <div class="card">
-                <div class="card-header">
-                    <h5>
-                        {{ $semester }} 學生列表
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <a href="{{ route('clubs.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
-                    <a href="{{ route('clubs.stu_create',$semester) }}" class="btn btn-success btn-sm">新增學生</a>
-                    <table class="table table-hover">
-                        <tr>
-                            <th>
-                                序
-                            </th>
-                            <th>
-                                學號
-                            </th>
-                            <th>
-                                班級座號(帳號)
-                            </th>
-                            <th>
-                                密碼
-                            </th>
-                            <th>
-                                姓名
-                            </th>
-                            <th>
-                                生日
-                            </th>
-                            <th>
-                                家長電話
-                            </th>
-                            <th>
-                                動作
-                            </th>
-                        </tr>
-                        <?php $i=1; ?>
-                        @foreach($club_students as $club_student)
-                            <?php
-                                if(isset($black_list[$semester][$club_student->no])){
-                                    $black = "bg-dark text-danger";
-                                }else{
-                                    $black = "";
-                                }
-                            ?>
-                            <tr class="{{ $black }}">
-                                <td>
-                                    {{ $i }}
-                                </td>
-                                <td>
-                                    {{ $club_student->no }}
-                                </td>
-                                <td>
-                                    {{ $club_student->class_num }}
-                                </td>
-                                <td>
-                                    {{ $club_student->pwd }}
-                                </td>
-                                <td>
-                                    {{ $club_student->name }}
-                                </td>
-                                <td>
-                                    {{ $club_student->birthday }}
-                                </td>
-                                <td>
-                                    {{ $club_student->parents_telephone }}
-                                </td>
-                                <td>
-                                    <a href="{{ route('clubs.stu_backPWD',$club_student->id) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定還原密碼為生日嗎？')">還密</a>
-                                    <a href="{{ route('clubs.stu_edit',$club_student->id) }}" class="btn btn-primary btn-sm">編輯</a>
-                                    <a href="{{ route('clubs.stu_delete',$club_student->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？')">刪除</a>
-                                </td>
-                            </tr>
-                            <?php $i++; ?>
-                        @endforeach
-                    </table>
-                </div>
-            </div>
             @endif
         </div>
     </div>

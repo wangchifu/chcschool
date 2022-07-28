@@ -14,5 +14,7 @@ class ClubStudent extends Model
         'pwd',
         'birthday',
         'parents_telephone',
+        'sex',
+        'disable',
     ];
 }

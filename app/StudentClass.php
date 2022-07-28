@@ -4,11 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LunchClass extends Model
+class StudentClass extends Model
 {
     protected $fillable = [
         'semester',
-        'class_id',
+        'student_year',
+        'student_class',
         'class_name',
+        'user_ids',
+        'user_names',
     ];
 }

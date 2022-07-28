@@ -258,13 +258,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('clubs/{club}/club_update', 'ClubsController@club_update')->name('clubs.club_update');
     Route::get('clubs/{club}/club_delete', 'ClubsController@club_delete')->name('clubs.club_delete');
     Route::get('clubs/{semester}/stu_adm', 'ClubsController@stu_adm')->name('clubs.stu_adm');
+    Route::get('clubs/{semester}/stu_adm_more/{student_class_id?}', 'ClubsController@stu_adm_more')->name('clubs.stu_adm_more');
     Route::post('clubs/{semester}/stu_import', 'ClubsController@stu_import')->name('clubs.stu_import');
-    Route::get('clubs/{semester}/stu_create', 'ClubsController@stu_create')->name('clubs.stu_create');
+    Route::get('clubs/{semester}/stu_create/{student_class}', 'ClubsController@stu_create')->name('clubs.stu_create');
     Route::post('clubs/{semester}/stu_store', 'ClubsController@stu_store')->name('clubs.stu_store');
-    Route::get('clubs/{club_student}/stu_edit', 'ClubsController@stu_edit')->name('clubs.stu_edit');
+    Route::get('clubs/{club_student}/stu_edit/{student_class}', 'ClubsController@stu_edit')->name('clubs.stu_edit');
     Route::patch('clubs/{club_student}/stu_update', 'ClubsController@stu_update')->name('clubs.stu_update');
-    Route::get('clubs/{club_student}/stu_delete', 'ClubsController@stu_delete')->name('clubs.stu_delete');
-    Route::get('clubs/{club_student}/stu_backPWD', 'ClubsController@stu_backPWD')->name('clubs.stu_backPWD');
+    Route::get('clubs/{club_student}/stu_delete/{student_class_id}', 'ClubsController@stu_delete')->name('clubs.stu_delete');
+    Route::get('clubs/{club_student}/stu_disable/{student_class_id}', 'ClubsController@stu_disable')->name('clubs.stu_disable');
+    Route::get('clubs/{club_student}/stu_backPWD/{student_class_id}', 'ClubsController@stu_backPWD')->name('clubs.stu_backPWD');
 
     Route::get('clubs/report_situation/{semester?}', 'ClubsController@report_situation')->name('clubs.report_situation');
     Route::get('clubs/{semester}/report_situation_download/{class_id}', 'ClubsController@report_situation_download')->name('clubs.report_situation_download');

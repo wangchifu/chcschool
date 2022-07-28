@@ -8,6 +8,7 @@ use App\ClubRegister;
 use App\ClubSemester;
 use App\ClubStudent;
 use App\LunchSetup;
+use App\StudentClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -309,9 +310,14 @@ class ClubsController extends Controller
 
     public function stu_adm($semester)
     {
-        $club_students = ClubStudent::where('semester', $semester)
+        $class_num = StudentClass::where('semester', $semester)
+            ->orderBy('student_year')
+            ->orderBy('student_class')
+            ->count();
+        $club_student_num = ClubStudent::where('semester', $semester)
+            ->where('disable', null)
             ->orderBy('class_num')
-            ->get();
+            ->count();
 
         $club_blacks = ClubBlack::orderBy('semester')->get();
 
@@ -321,16 +327,45 @@ class ClubsController extends Controller
         }
 
         $data = [
-            'club_students' => $club_students,
+            'club_student_num' => $club_student_num,
             'club_blacks' => $club_blacks,
             'semester' => $semester,
             'black_list' => $black_list,
+            'class_num' => $class_num,
         ];
         return view('clubs.stu_adm', $data);
     }
 
+    public function stu_adm_more($semester, $student_class_id = null)
+    {
+        $student_classes = StudentClass::where('semester', $semester)
+            ->orderBy('student_year')
+            ->orderBy('student_class')
+            ->get();
+
+        $student_class_id = ($student_class_id == null) ? $student_classes->first()->id : $student_class_id;
+
+        $this_class = StudentClass::find($student_class_id);
+        $sc = $this_class->student_year . sprintf("%02s", $this_class->student_class);
+
+        $club_students = ClubStudent::where('semester', $semester)
+            ->where('disable', null)
+            ->where('class_num', 'like', $sc . '%')
+            ->orderBy('class_num')
+            ->get();
+
+        $data = [
+            'club_students' => $club_students,
+            'semester' => $semester,
+            'student_classes' => $student_classes,
+            'this_class' => $this_class,
+        ];
+        return view('clubs.stu_adm_more', $data);
+    }
+
     public function stu_import(Request $request, $semester)
     {
+        /** 
         if ($request->hasFile('file')) {
 
             ClubStudent::where('semester', $semester)->delete();
@@ -348,14 +383,78 @@ class ClubsController extends Controller
                 ClubStudent::create($att);
             }
         }
+         */
+
+        //處理檔案上傳
+        if ($request->hasFile('file')) {
+            //ClubStudent::where('semester', $semester)->delete();
+            //ClubRegister::where('semester', $semester)->delete();
+
+            $file = $request->file('file');
+            $collection = (new FastExcel)->import($file);
+            //dd($collection);
+            foreach ($collection as $line) {
+
+                if (!isset($line['姓名']) or !isset($line['性別']) or !isset($line['年級(數字)']) or !isset($line['班序(數字)']) or !isset($line['班序(數字)']) or !isset($line['生日(西元)']) or !isset($line['學號']) or !isset($line['座號']) or !isset($line['導師姓名'])) {
+                    return back()->withErrors(['欄位有錯，請檢查 excel 檔']);
+                }
+
+                if (empty($line['姓名']) and empty($line['年級(數字)'])) {
+                    break;
+                }
+                $class_teacher[$line['年級(數字)']][$line['班序(數字)']] = $line['導師姓名'];
+
+                $att['semester'] = $semester;
+                $att['no'] = $line['學號'];
+                $att['name'] = $line['姓名'];
+                $b = explode('/', $line['生日(西元)']);
+                $att['pwd'] = $b[0] . sprintf("%02s", $b[1]) . sprintf("%02s", $b[2]);
+                $att['class_num'] = $line['年級(數字)'] . sprintf("%02s", $line['年級(數字)']) . sprintf("%02s", $line['座號']);
+                $att['birthday'] = $att['pwd'];
+                $att['sex'] = $line['性別'];
+
+                $student = ClubStudent::where('semester', $att['semester'])
+                    ->where('no', $att['no'])
+                    ->first();
+                if (empty($student)) {
+                    ClubStudent::create($att);
+                } else {
+                    $student->update($att);
+                }
+            }
+            foreach ($class_teacher as $k => $v) {
+                foreach ($v as $k1 => $v1) {
+                    $att2['semester'] = $semester;
+                    $att2['student_year'] = $k;
+                    $att2['student_class'] = $k1;
+                    $att2['user_names'] = $v1;
+
+                    $student_class = StudentClass::where('semester', $att2['semester'])
+                        ->where('student_year', $att2['student_year'])
+                        ->where('student_class', $att2['student_class'])
+                        ->first();
+                    if (empty($student_class)) {
+                        StudentClass::create($att2);
+                    } else {
+                        //避免先前拉過API 已經有導師了
+                        $att2['user_ids'] = null;
+                        $student_class->update($att2);
+                    }
+                }
+            }
+        }
+
 
         return redirect()->route('clubs.stu_adm', $semester);
     }
 
-    public function stu_create($semester)
+    public function stu_create($semester, StudentClass $student_class)
     {
+        $sc = $student_class->student_year . sprintf("%02s", $student_class->student_class);
         $data = [
-            'semester' => $semester
+            'semester' => $semester,
+            'student_class_id' => $student_class->id,
+            'sc' => $sc,
         ];
 
         return view('clubs.stu_create', $data);
@@ -372,14 +471,17 @@ class ClubsController extends Controller
             $att['pwd'] = $att['birthday'];
             $att['semester'] = $semester;
             ClubStudent::create($att);
-            return redirect()->route('clubs.stu_adm', $semester);
+            return redirect()->route('clubs.stu_adm_more', ['semester' => $semester, 'student_class_id' => $att['student_class_id']]);
         }
     }
 
-    public function stu_edit(ClubStudent $club_student)
+    public function stu_edit(ClubStudent $club_student, StudentClass $student_class)
     {
+        $sc = $student_class->student_year . sprintf("%02s", $student_class->student_class);
         $data = [
             'club_student' => $club_student,
+            'student_class_id' => $student_class->id,
+            'sc' => $sc,
         ];
         return view('clubs.stu_edit', $data);
     }
@@ -389,20 +491,27 @@ class ClubsController extends Controller
         $att = $request->all();
 
         $club_student->update($att);
-        return redirect()->route('clubs.stu_adm', $club_student->semester);
+        return redirect()->route('clubs.stu_adm_more', ['semester' => $club_student->semester, 'student_class_id' => $att['student_class_id']]);
     }
 
-    public function stu_delete(ClubStudent $club_student)
+    public function stu_delete(ClubStudent $club_student, $student_class_id)
     {
         $club_student->delete();
-        return redirect()->route('clubs.stu_adm', $club_student->semester);
+        return redirect()->route('clubs.stu_adm_more', ['semester' => $club_student->semester, 'student_class_id' => $student_class_id]);
     }
 
-    public function stu_backPWD(ClubStudent $club_student)
+    public function stu_disable(ClubStudent $club_student, $student_class_id)
+    {
+        $att['disable'] = 1;
+        $club_student->update($att);
+        return redirect()->route('clubs.stu_adm_more', ['semester' => $club_student->semester, 'student_class_id' => $student_class_id]);
+    }
+
+    public function stu_backPWD(ClubStudent $club_student, $student_class_id)
     {
         $att['pwd'] = $club_student->birthday;
         $club_student->update($att);
-        return redirect()->route('clubs.stu_adm', $club_student->semester);
+        return redirect()->route('clubs.stu_adm_more', ['semester' => $club_student->semester, 'student_class_id' => $student_class_id]);
     }
 
     public function report()
