@@ -407,7 +407,7 @@ class ClubsController extends Controller
                 $att['semester'] = $semester;
                 $att['no'] = $line['學號'];
                 $att['name'] = $line['姓名'];
-                $b = explode('/', $line['生日(西元)']);
+                $b = explode('/', $line['生日(西元)']->format('Y/m/d'));
                 $att['pwd'] = $b[0] . sprintf("%02s", $b[1]) . sprintf("%02s", $b[2]);
                 $att['class_num'] = $line['年級(數字)'] . sprintf("%02s", $line['年級(數字)']) . sprintf("%02s", $line['座號']);
                 $att['birthday'] = $att['pwd'];
