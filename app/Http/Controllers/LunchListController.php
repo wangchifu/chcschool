@@ -612,7 +612,7 @@ class LunchListController extends Controller
                 foreach ($tea_dates as $tea_date) {
                     $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
                     if (substr($tea_date->lunch_place_id, 0, 1) == "c") {
-                        $place_data[$tea_date->user->name] = substr($tea_date->lunch_place_id, 1, 3) . "教室";
+                        $place_data[$tea_date->user->name] = substr($tea_date->lunch_place_id, 1, 4) . "教室";
                     } else {
                         $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
                     }
