@@ -7,6 +7,7 @@
 @section('content')
     <?php
     $active['teacher'] ="";
+    $active['student'] ="";
     $active['list'] ="";
     $active['special'] ="";
     $active['order'] ="";

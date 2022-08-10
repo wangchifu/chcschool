@@ -4,6 +4,9 @@
     </li>
     @if($admin)
     <li class="nav-item">
+        <a class="nav-link {{ $active['student'] }}" href="{{ route('lunch_stus.index') }}">學生訂餐</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{ $active['list'] }}" href="{{ route('lunch_lists.index') }}">報表輸出</a>
     </li>
     <li class="nav-item">

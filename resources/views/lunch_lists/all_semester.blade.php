@@ -8,6 +8,7 @@
     <?php
 
     $active['teacher'] ="";
+    $active['student'] ="";
     $active['list'] ="active";
     $active['special'] ="";
     $active['order'] ="";

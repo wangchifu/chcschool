@@ -1,29 +1,18 @@
-@extends('layouts.master')
+@extends('layouts.master_clean')
 
 @section('nav_school_active', 'active')
 
-@section('title', '社團報名-')
+@section('title', '午餐系統-學生設定')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>社團報名</h1>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ route('clubs.index') }}">學期設定</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('clubs.setup') }}">社團設定</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('clubs.report') }}">報表輸出</a>
-                </li>
-            </ul>
-            <?php
-                $admin = check_power('社團報名','A',auth()->user()->id);
-            ?>
+            <br>
+            <br>            
+            <h3>午餐系統-學生設定</h3>
+            <br>
             @if($admin)
-                <div class="card">
+            <div class="card">
                 <div class="card-header">
                     <h5>
                         @if(empty($this_class->class_name))
@@ -32,7 +21,7 @@
                         {{ $semester }} 學期 {{ $this_class->class_name }}學生列表
                         @endif
                         請選擇：  
-                    </h5>          
+                    </h5>
                     <table>
                         <tr>                    
                             <td>
@@ -54,11 +43,9 @@
                                 </form>  
                             </td>
                         </tr>
-                    </table>                     
+                    </table> 
                 </div>
-                <div class="card-body">
-                    <a href="{{ route('clubs.stu_adm',$semester) }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
-                    <a href="{{ route('clubs.stu_create',['semester'=>$semester,'student_class'=>$this_class->id]) }}" class="btn btn-success btn-sm">新增此班學生</a>
+                <div class="card-body">                                        
                     <table class="table table-hover">
                         <tr>
                             <th>
@@ -71,17 +58,8 @@
                                 班級座號(帳號)
                             </th>
                             <th>
-                                密碼
-                            </th>
-                            <th>
                                 姓名
-                            </th>
-                            <th>
-                                生日
-                            </th>
-                            <th>
-                                家長電話
-                            </th>
+                            </th>                            
                             <th>
                                 動作
                             </th>
@@ -104,25 +82,11 @@
                                 </td>
                                 <td>
                                     {{ $club_student->class_num }}
-                                </td>
-                                <td>
-                                    {{ $club_student->pwd }}
-                                </td>
+                                </td>                                
                                 <td>
                                     {{ $club_student->name }}
-                                </td>
-                                <td>
-                                    {{ $club_student->birthday }}
-                                </td>
-                                <td>
-                                    {{ $club_student->parents_telephone }}
-                                </td>
-                                <td>
-                                    <a href="{{ route('clubs.stu_backPWD',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定還原密碼為生日嗎？')">還密</a>
-                                    <a href="{{ route('clubs.stu_edit',['club_student'=>$club_student->id,'student_class'=>$this_class->id]) }}" class="btn btn-primary btn-sm">編輯</a>
-                                    <!--
-                                    <a href="{{ route('clubs.stu_delete',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？')">刪除</a>
-                                    -->
+                                </td>                                
+                                <td>                                                                                                        
                                     <a href="{{ route('clubs.stu_disable',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定停用？')">停用</a>
                                 </td>
                             </tr>
@@ -134,6 +98,8 @@
             @endif
         </div>
     </div>
+    <br>
+    <br>
     <script>
         function jump(){
           if($('#select_class').val() !=''){

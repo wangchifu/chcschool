@@ -99,6 +99,8 @@ class ClubsController extends Controller
                 $semester = null;
             }
         }
+        $clubs1 = [];
+        $clubs2 = [];
         if ($semester) {
             $clubs1 = Club::where('semester', $semester)->where('class_id', '1')->orderBy('no')->get();
             $clubs2 = Club::where('semester', $semester)->where('class_id', '2')->orderBy('no')->get();

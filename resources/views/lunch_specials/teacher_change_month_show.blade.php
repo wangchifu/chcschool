@@ -10,6 +10,7 @@
     <?php
 
     $active['teacher'] ="";
+    $active['student'] ="";
     $active['list'] ="";
     $active['special'] ="active";
     $active['order'] ="";
@@ -72,7 +73,7 @@
                         <div class="card-body">
                             <?php
                             if(substr($lunch_place_id,0,1)=="c"){
-                                $class_name = substr($lunch_place_id,1,3);
+                                $class_name = substr($lunch_place_id,1,4);
                                 $place = null;
                                 $none1 = "none";
                                 $none2 = null;
@@ -101,7 +102,7 @@
                                         {{ Form::select('lunch_place_id', $lunch_place_array,$place, ['class' => 'form-control','id'=>'place_select','required'=>'required','style'=>'display:'.$none1]) }}
                                     </td>
                                     <td>
-                                        <input type="text" name="class_no" id="place_class" maxlength="3" class="form-control" style="display: {{ $none2 }};" placeholder="三碼班級代號" required value="{{ $class_name }}">
+                                        <input type="text" name="class_no" id="place_class" maxlength="4" class="form-control" style="display: {{ $none2 }};" placeholder="班級代號" required value="{{ $class_name }}">
                                     </td>
                                 </tr>
                             </table>

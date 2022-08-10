@@ -8,6 +8,7 @@
     <?php
 
     $active['teacher'] ="";
+    $active['student'] ="";
     $active['list'] ="";
     $active['special'] ="";
     $active['order'] ="";
@@ -86,6 +87,69 @@
                     </tbody>
                 </table>
                 {{ $lunch_setups->links() }}
+                <hr>
+                <div class="card">
+                    <div class="card-header">
+                        學生管理
+                    </div>
+                    <div class="card-body">
+                        {{ Form::open(['route' => ['lunch_setups.stu_store'], 'method' => 'POST', 'files' => true]) }}
+                        <div class="form-group">
+                            <lable>學期代碼</lable>
+                            <input type="text" name="semester" value="{{ get_date_semester(date('Y-m-d')) }}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <lable>學生檔案</lable>
+                            <input type="file" name="file" required class="form-control">
+                        </div>                        
+                        <input type="submit" class="btn btn-success btn-sm" value="匯入學生" onclick="return confirm('確定嗎？請耐心等待，不要亂按！')">
+                        {{ Form::close() }}
+                        @include('layouts.errors')
+                        <a href="{{ asset('images/cloudschool_club.png') }}" target="_blank">請先至 cloudschool 下載列表</a>
+                        <hr>
+                        <table class="table">
+                            <thead class="table-warning">
+                            <tr>
+                                <th>
+                                    學期
+                                </th>
+                                <th>
+                                    班級數
+                                </th>
+                                <th>
+                                    學生數
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($lunch_setups as $lunch_setup)
+                                <tr>
+                                    <td>
+                                      {{ $lunch_setup->semester }}
+                                    </td>
+                                    <?php 
+                                    $club_student_num = \App\ClubStudent::where('semester',$lunch_setup->semester)
+                                        ->where('disable', null)
+                                        ->orderBy('semester')
+                                        ->orderBy('class_num')
+                                        ->count();
+                                    $student_class_num = \App\StudentClass::where('semester',$lunch_setup->semester)
+                                        ->orderBy('student_year')
+                                        ->orderBy('student_class')
+                                        ->count();
+                                    ?>
+                                    <td>
+                                        {{ $student_class_num }} <a href="javascript:open_window('{{ route('lunch_setups.stu_more',$lunch_setup->semester) }}','新視窗')" class="btn btn-info btn-sm">詳細資料</a>
+                                    </td>
+                                    <td>
+                                        {{ $club_student_num }}   
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <hr>
                 <div class="card">
                     <div class="card-header">
@@ -229,5 +293,9 @@
     <script>
         var validator = $("#this_form1").validate();
         var validator = $("#this_form2").validate();
+        function open_window(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=850,height=650');
+        }
     </script>
 @endsection

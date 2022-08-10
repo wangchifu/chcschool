@@ -8,6 +8,7 @@
     <?php
 
     $active['teacher'] ="active";
+    $active['student'] ="";
     $active['list'] ="";
     $active['special'] ="";
     $active['order'] ="";
@@ -68,7 +69,7 @@
                                                 {{ Form::select('lunch_place_id', $lunch_place_array,null, ['id'=>'place_select','class' => 'form-control','placeholder'=>'--請選擇地點--','required'=>'required']) }}
                                             </td>
                                             <td>
-                                                <input type="text" name="class_no" id="place_class" maxlength="3" class="form-control" style="display: none;" placeholder="三碼班級代號" required value="1">
+                                                <input type="text" name="class_no" id="place_class" maxlength="4" class="form-control" style="display: none;" placeholder="班級代號" required value="1">
                                             </td>
                                         </tr>
                                     </table>
@@ -181,7 +182,7 @@
                                     <td>
                                         <label>2.取餐地點</label>
                                         @if(substr($lunch_tea_dates[0]->lunch_place_id,0,1)=="c")
-                                            <h4>{{ substr($lunch_tea_dates[0]->lunch_place_id,1,3) }}教室</h4>
+                                            <h4>{{ substr($lunch_tea_dates[0]->lunch_place_id,1,4) }}教室</h4>
                                         @else
                                             <h4>{{ $lunch_tea_dates[0]->lunch_place->name }}</h4>
                                         @endif

@@ -204,7 +204,7 @@
                 </div>
                 <hr class="col-md-12">
                 <div class="col-md-12">
-                    <h3>二、各地點及葷素食</h3>
+                    <h3>二、教師各地點數量</h3>
                     <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
                         <tr bgcolor='#005DBE' style='color:white;'>
                             <th>
@@ -279,6 +279,69 @@
                         @endforeach
 
                     </table>
+                </div>
+                <hr class="col-md-12">
+                <div class="col-md-12">
+                    <h3>三、班級學生(+老師)數量</h3>
+                    <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
+                        <tr bgcolor='#005DBE' style='color:white;'>
+                            <th rowspan="2">
+                                班級
+                            </th>
+                            @foreach($date_array as $kk=>$vv)
+                                <?php
+                                    $dd = explode('-',$kk);
+                                    if(get_chinese_weekday2($kk)=="六"){
+                                        $txt_bg="text-success";
+                                    }elseif(get_chinese_weekday2($kk)=="日"){
+                                        $txt_bg="text-danger";
+                                    }else{
+                                        $txt_bg="";
+                                    }
+                                ?>
+                                <th colspan="2">
+                                    {{ $dd[1] }}<br>{{ $dd[2] }}<br><span class="{{ $txt_bg }}">{{ get_chinese_weekday2($kk) }}</span>
+                                </th>
+                            @endforeach
+                        </tr>
+                        <tr>
+                            @foreach($date_array as $kk=>$vv)
+                                <td>
+                                    <span class="text-danger">葷</span>
+                                </td> 
+                                <td>
+                                    <span class="text-success">素</span>
+                                </td> 
+                            @endforeach  
+                        </tr>
+                        <?php $all = 0; ?>
+                        @foreach($student_classes as $student_class)
+                        <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
+                            <td>
+                                {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
+                            </td>                                        
+                            @foreach($date_array as $kk=>$vv)
+                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
+                                    {{ $lunch_class_data[$student_class->id][$kk][1] }}
+                                    @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk]))
+                                    <br>
+                                    <small>+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk] }}</small>
+                                    @endif
+                                </td>
+                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素">
+                                    {{ $lunch_class_data[$student_class->id][$kk][4] }}
+                                    @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk]))
+                                    <br>
+                                    <small>+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk] }}</small>
+                                    @endif
+                                </td>
+                            <?php $all = $all+$lunch_class_data[$student_class->id][$kk][1]+$lunch_class_data[$student_class->id][$kk][4]; ?>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </table>
+                    <br>
+                    此餐期總餐數：{{ $all }} (不含老師)
                 </div>
 
             @endif

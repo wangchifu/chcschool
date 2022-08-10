@@ -10,6 +10,7 @@
     <?php
 
     $active['teacher'] ="";
+    $active['student'] ="";
     $active['list'] ="";
     $active['special'] ="active";
     $active['order'] ="";

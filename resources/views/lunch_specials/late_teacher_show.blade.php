@@ -10,6 +10,7 @@
     <?php
 
     $active['teacher'] ="";
+    $active['student'] ="";
     $active['list'] ="";
     $active['special'] ="active";
     $active['order'] ="";
@@ -74,7 +75,7 @@
                                         {{ Form::select('lunch_place_id', $lunch_place_array,null, ['id'=>'place_select','class' => 'form-control','placeholder'=>'--請選擇地點--','required'=>'required']) }}
                                     </td>
                                     <td>
-                                        <input type="text" name="class_no" id="place_class" maxlength="3" class="form-control" style="display: none;" placeholder="三碼班級代號" required value="1">
+                                        <input type="text" name="class_no" id="place_class" maxlength="4" class="form-control" style="display: none;" placeholder="班級代號" required value="1">
                                     </td>
                                 </tr>
                             </table>

@@ -173,6 +173,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('lunch_setup/{lunch_place}/place_update', 'LunchSetupController@place_update')->name('lunch_setups.place_update');
     Route::post('lunch_setup/factory_add', 'LunchSetupController@factory_add')->name('lunch_setups.factory_add');
     Route::patch('lunch_setup/{lunch_factory}/factory_update', 'LunchSetupController@factory_update')->name('lunch_setups.factory_update');
+    Route::post('lunch_setup/stu_store', 'LunchSetupController@stu_store')->name('lunch_setups.stu_store');
+    Route::get('lunch_setup/{semester}/stu_more/{student_class_id?}', 'LunchSetupController@stu_more')->name('lunch_setups.stu_more');
 
     Route::get('lunch_orders/index', 'LunchOrderController@index')->name('lunch_orders.index');
     Route::get('lunch_orders/{semester}/create', 'LunchOrderController@create')->name('lunch_orders.create');
@@ -208,6 +210,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('lunch_lists/get_money/{lunch_order_id}', 'LunchListController@get_money')->name('lunch_lists.get_money');
     Route::get('lunch_lists/all_semester', 'LunchListController@all_semester')->name('lunch_lists.all_semester');
     Route::post('lunch_lists/semester_print', 'LunchListController@semester_print')->name('lunch_lists.semester_print');
+
+    Route::get('lunch_stus/index/{semester?}', 'LunchStuController@index')->name('lunch_stus.index');
+    Route::get('lunch_stus/delete/{semester}', 'LunchStuController@delete')->name('lunch_stus.delete');
+    Route::post('lunch_stus/store/{semester}', 'LunchStuController@store')->name('lunch_stus.store');
+    Route::post('lunch_stus/change_num', 'LunchStuController@change_num')->name('lunch_stus.change_num');
+
     //顯示上傳的圖片
     Route::get('img/{path}', 'HomeController@getImg')->name('getImg');
 
