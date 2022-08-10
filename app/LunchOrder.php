@@ -14,6 +14,7 @@ class LunchOrder extends Model
         'rece_no',
         'rece_num',
         'order_ps',
+        'order_ps_ps',
     ];
     public function lunch_order_dates()
     {

@@ -55,13 +55,23 @@
                     <?php $i=1; ?>
                     @if(count($lunch_class_dates) > 0)                    
                     @include('layouts.errors')
-                @endif          @foreach($lunch_orders as $lunch_order)
+                @endif          
+                @foreach($lunch_orders as $lunch_order)
                         @if($i==1)
                         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">                        
                         @else                        
                         <div class="tab-pane fade" id="pills-{{ $i }}" role="tabpanel" aria-labelledby="pills-tab{{ $i }}">                        
                         @endif
-                        <div class="overflow-auto">                            
+                        <div class="overflow-auto">   
+                            <form action="{{ route('lunch_stus.store_ps',$lunch_order->id) }}" method="post">
+                                @csrf
+                            <div class="form-group">
+                                <label>學生異動說明：</label>
+                                <textarea class="form-control" name="order_ps_ps">{{ $lunch_order->order_ps_ps }}</textarea> 
+                                <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？')">儲存</button>
+                            </div>       
+                            
+                            </form>                
                             <table>
                                 <thead style="background-color:dodgerblue;color:white">
                                     <tr>

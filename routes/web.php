@@ -215,6 +215,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('lunch_stus/delete/{semester}', 'LunchStuController@delete')->name('lunch_stus.delete');
     Route::post('lunch_stus/store/{semester}', 'LunchStuController@store')->name('lunch_stus.store');
     Route::post('lunch_stus/change_num', 'LunchStuController@change_num')->name('lunch_stus.change_num');
+    Route::post('lunch_stus/store_ps/{lunch_order}', 'LunchStuController@store_ps')->name('lunch_stus.store_ps');
 
     //顯示上傳的圖片
     Route::get('img/{path}', 'HomeController@getImg')->name('getImg');
