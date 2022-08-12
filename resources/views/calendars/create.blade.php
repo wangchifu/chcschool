@@ -55,15 +55,9 @@
                                     <div id="show{{ $calendar_week->week }}">
                                         <p>
                                             <label for='var1'>本週行事1：</label>
-                                            <input id="date{{ $calendar_week->week }}_0" name="date{{ $calendar_week->week }}[]" maxlength="10" width="180" placeholder="非必填">
-                                            <small class="text-secondary">*上面指定日期可順便填入校務月曆*</small>
-                                            <script>
-                                                $('#date{{ $calendar_week->week }}_0').datepicker({
-                                                    uiLibrary: 'bootstrap4',
-                                                    format: 'yyyy-mm-dd',
-                                                    locale: 'zh-TW',
-                                                });
-                                            </script>
+                                            <input type="date" id="date{{ $calendar_week->week }}_0" name="date{{ $calendar_week->week }}[]"  maxlength="10" width="180" placeholder="非必填">
+                                            <small class="text-secondary">*(非必填)左邊指定日期可順便填入校務月曆*</small>
+
                                             <input type='text' name='w{{ $calendar_week->week }}_content[]' class='form-control' placeholder="填寫本週行事1">
                                             <button type="button" onclick="add({{ $calendar_week->week }})">+增加</button>
                                         </p>

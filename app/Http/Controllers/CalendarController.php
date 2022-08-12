@@ -25,7 +25,7 @@ class CalendarController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index($semester=null)
+    public function index($semester = null)
     {
         $has_week = null;
         $calendar_weeks = [];
@@ -35,25 +35,25 @@ class CalendarController extends Controller
         $semesters = [];
         //取學期選單
         $ss = DB::select('select semester from calendar_weeks group by semester');
-        foreach($ss as $s){
+        foreach ($ss as $s) {
             $semesters[$s->semester] = $s->semester;
         }
 
         rsort($semesters);
 
-        $semester = ($semester)?$semester:get_date_semester(date('Y-m-d'));
+        $semester = ($semester) ? $semester : get_date_semester(date('Y-m-d'));
 
-        $calendar_week = CalendarWeek::where('semester',$semester)->first();
-        if(!empty($calendar_week)){
+        $calendar_week = CalendarWeek::where('semester', $semester)->first();
+        if (!empty($calendar_week)) {
             $has_week = 1;
-            $calendar_weeks = CalendarWeek::where('semester',$semester)
+            $calendar_weeks = CalendarWeek::where('semester', $semester)
                 ->orderBy('week')
                 ->get();
 
-            $calendars = Calendar::where('semester',$semester)
+            $calendars = Calendar::where('semester', $semester)
                 ->get();
 
-            if(!empty($calendars)) {
+            if (!empty($calendars)) {
                 foreach ($calendars as $calendar) {
                     $calendar_d[$calendar->user->order_by][$calendar->calendar_week_id][$calendar->calendar_kind][$calendar->id]['user_id'] = $calendar->user->id;
                     $calendar_d[$calendar->user->order_by][$calendar->calendar_week_id][$calendar->calendar_kind][$calendar->id]['content'] = $calendar->content;
@@ -70,20 +70,18 @@ class CalendarController extends Controller
                             }
                         }
                     }
-
                 }
             }
-
         }
         $data = [
-            'has_week'=>$has_week,
-            'calendar_weeks'=>$calendar_weeks,
-            'calendar_data'=>$calendar_data,
-            'semesters'=>$semesters,
-            'semester'=>$semester,
-            'this_semester'=>$this_semester,
+            'has_week' => $has_week,
+            'calendar_weeks' => $calendar_weeks,
+            'calendar_data' => $calendar_data,
+            'semesters' => $semesters,
+            'semester' => $semester,
+            'this_semester' => $this_semester,
         ];
-        return view('calendars.index',$data);
+        return view('calendars.index', $data);
     }
 
     /**
@@ -93,16 +91,14 @@ class CalendarController extends Controller
      */
     public function create($semester)
     {
-        $calendar_weeks = CalendarWeek::where('semester',$semester)
+        $calendar_weeks = CalendarWeek::where('semester', $semester)
             ->orderBy('week')
             ->get();
         $data = [
-            'calendar_weeks'=>$calendar_weeks,
-            'semester'=>$semester,
+            'calendar_weeks' => $calendar_weeks,
+            'semester' => $semester,
         ];
-        return view('calendars.create',$data);
-
-
+        return view('calendars.create', $data);
     }
 
     /**
@@ -113,17 +109,21 @@ class CalendarController extends Controller
      */
     public function store(Request $request)
     {
-        $calendar_weeks = CalendarWeek::where('semester',$request->input('semester'))
+        $request->validate([
+            'name' => 'required',
+            'order_by' => ['nullable', 'numeric'],
+        ]);
+        $calendar_weeks = CalendarWeek::where('semester', $request->input('semester'))
             ->orderBy('week')
             ->get();
 
         $all = [];
         $item = [];
-        foreach($calendar_weeks as $calendar_week){
-            $content = $request->input('w'.$calendar_week->week.'_content');
-            $calendar_date = $request->input('date'.$calendar_week->week);
-            foreach($content as $k=>$v){
-                if(!empty($v)){
+        foreach ($calendar_weeks as $calendar_week) {
+            $content = $request->input('w' . $calendar_week->week . '_content');
+            $calendar_date = $request->input('date' . $calendar_week->week);
+            foreach ($content as $k => $v) {
+                if (!empty($v)) {
                     $att['calendar_week_id'] = $calendar_week->id;
                     $att['semester'] = $request->input('semester');
                     $att['calendar_kind'] = $request->input('calendar_kind');
@@ -133,25 +133,24 @@ class CalendarController extends Controller
                     $att['order_by'] = auth()->user()->order_by;
 
                     $one = [
-                        'calendar_week_id'=>$att['calendar_week_id'],
-                        'semester'=>$att['semester'],
-                        'calendar_kind'=>$att['calendar_kind'],
-                        'content'=>substr($calendar_date[$k],5,5).' '.$att['content'],
-                        'user_id'=>$att['user_id'],
-                        'job_title'=>$att['job_title'],
-                        'order_by'=>$att['order_by'],
-                        'created_at'=>now(),
-                        'updated_at'=>now(),
+                        'calendar_week_id' => $att['calendar_week_id'],
+                        'semester' => $att['semester'],
+                        'calendar_kind' => $att['calendar_kind'],
+                        'content' => substr($calendar_date[$k], 5, 5) . ' ' . $att['content'],
+                        'user_id' => $att['user_id'],
+                        'job_title' => $att['job_title'],
+                        'order_by' => $att['order_by'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ];
 
-                    array_push($all,$one);
+                    array_push($all, $one);
 
-                    if(isset($calendar_date[$k])){
-                        if($calendar_date[$k] != null){
+                    if (isset($calendar_date[$k])) {
+                        if ($calendar_date[$k] != null) {
                             $item[$calendar_date[$k]] = $att['content'];
                         }
                     }
-
                 }
             }
         }
@@ -159,7 +158,7 @@ class CalendarController extends Controller
         Calendar::insert($all);
 
         //寫入校務月曆
-        foreach($item as $k=>$v){
+        foreach ($item as $k => $v) {
             $att3['item_date'] = $k;
             $att3['item'] = $v;
             $att3['user_id'] = auth()->user()->id;
@@ -168,7 +167,6 @@ class CalendarController extends Controller
 
 
         return redirect()->route('calendars.index');
-
     }
 
     /**
@@ -191,10 +189,10 @@ class CalendarController extends Controller
     public function edit(Calendar $calendar)
     {
         $data = [
-            'calendar'=>$calendar,
+            'calendar' => $calendar,
         ];
 
-        return view('calendars.edit',$data);
+        return view('calendars.edit', $data);
     }
 
     /**
@@ -225,9 +223,9 @@ class CalendarController extends Controller
 
     public function delete(Calendar $calendar)
     {
-        if($calendar->user_id != auth()->user()->id){
+        if ($calendar->user_id != auth()->user()->id) {
             $words = "你不要亂來！";
-            return view('layouts.error',compact('words'));
+            return view('layouts.error', compact('words'));
         }
 
         $calendar->delete();
@@ -235,7 +233,7 @@ class CalendarController extends Controller
         return redirect()->route('calendars.index');
     }
 
-    public function print($semester=null)
+    public function print($semester = null)
     {
         $has_week = null;
         $calendar_weeks = [];
@@ -245,25 +243,25 @@ class CalendarController extends Controller
         $calendar_d = [];
         //取學期選單
         $ss = DB::select('select semester from calendar_weeks group by semester');
-        foreach($ss as $s){
+        foreach ($ss as $s) {
             $semesters[$s->semester] = $s->semester;
         }
 
         rsort($semesters);
 
-        $semester = ($semester)?$semester:get_date_semester(date('Y-m-d'));
+        $semester = ($semester) ? $semester : get_date_semester(date('Y-m-d'));
 
-        $calendar_week = CalendarWeek::where('semester',$semester)->first();
-        if(!empty($calendar_week)){
+        $calendar_week = CalendarWeek::where('semester', $semester)->first();
+        if (!empty($calendar_week)) {
             $has_week = 1;
-            $calendar_weeks = CalendarWeek::where('semester',$semester)
+            $calendar_weeks = CalendarWeek::where('semester', $semester)
                 ->orderBy('week')
                 ->get();
 
-            $calendars = Calendar::where('semester',$semester)
+            $calendars = Calendar::where('semester', $semester)
                 ->get();
 
-            if(!empty($calendars)) {
+            if (!empty($calendars)) {
                 foreach ($calendars as $calendar) {
                     $calendar_d[$calendar->user->order_by][$calendar->calendar_week_id][$calendar->calendar_kind][$calendar->id]['user_id'] = $calendar->user->id;
                     $calendar_d[$calendar->user->order_by][$calendar->calendar_week_id][$calendar->calendar_kind][$calendar->id]['content'] = $calendar->content;
@@ -280,19 +278,17 @@ class CalendarController extends Controller
                             }
                         }
                     }
-
                 }
             }
-
         }
         $data = [
-            'has_week'=>$has_week,
-            'calendar_weeks'=>$calendar_weeks,
-            'calendar_data'=>$calendar_data,
-            'semesters'=>$semesters,
-            'semester'=>$semester,
-            'this_semester'=>$this_semester,
+            'has_week' => $has_week,
+            'calendar_weeks' => $calendar_weeks,
+            'calendar_data' => $calendar_data,
+            'semesters' => $semesters,
+            'semester' => $semester,
+            'this_semester' => $this_semester,
         ];
-        return view('calendars.print',$data);
+        return view('calendars.print', $data);
     }
 }
