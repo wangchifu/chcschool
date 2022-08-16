@@ -109,10 +109,6 @@ class CalendarController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'order_by' => ['nullable', 'numeric'],
-        ]);
         $calendar_weeks = CalendarWeek::where('semester', $request->input('semester'))
             ->orderBy('week')
             ->get();
