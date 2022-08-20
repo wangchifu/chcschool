@@ -7,8 +7,8 @@ CREATE TABLE `rss_feeds` (
                             `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
                             `type` tinyint NOT NULL,
                             `num` int(10) UNSIGNED NOT NULL,
-                            `created_at` timestamp DEFAULT NULL,
-                            `updated_at` timestamp DEFAULT NULL
+                            `created_at` timestamp NULL,
+                            `updated_at` timestamp NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ALTER TABLE `rss_feeds`
