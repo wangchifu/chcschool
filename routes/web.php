@@ -534,6 +534,11 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('lunch_today/update', 'LunchTodayController@update')->name('lunch_todays.update');
     Route::get('lunch_today/{lunch_today}/delete', 'LunchTodayController@delete')->name('lunch_todays.delete');
 
+    //RSS訊息
+    Route::get('rss_feed/index', 'RssFeedController@index')->name('rss_feeds.index');
+    Route::post('rss_feed/store', 'RssFeedController@store')->name('rss_feeds.store');
+    Route::get('rss_feed/{rss_feed}/destory', 'RssFeedController@destory')->name('rss_feeds.destory');
+
     //報錯管理員回覆
     Route::post('wrench/reply', 'WrenchController@reply')->name('wrench.reply');
     Route::get('wrench/set_show/{id}', 'WrenchController@set_show')->name('wrench.set_show');

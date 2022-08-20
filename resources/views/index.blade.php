@@ -105,6 +105,8 @@
                                 @include('layouts.monthly_calendar')
                             @elseif($block->title == "教室預約(系統區塊)")
                                 @include('layouts.classroom_order')
+                            @elseif($block->title == "RSS訊息(系統區塊)")
+                                @include('layouts.rss_feed')
                             @else
                                 {!! $block->content !!}
                             @endif

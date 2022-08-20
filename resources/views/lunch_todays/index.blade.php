@@ -7,8 +7,8 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>
-                今日午餐
+            <h1 class="text-danger">
+                今日午餐(已停用)
             </h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">

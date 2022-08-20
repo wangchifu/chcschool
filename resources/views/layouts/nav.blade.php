@@ -154,7 +154,10 @@
                                 <a class="dropdown-item" href="{{ route('links.index') }}"><i class="fas fa-link"></i> 選單連結</a>
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                                 <a class="dropdown-item" href="{{ route('trees.index') }}"><i class="fas fa-tree"></i> 樹狀目錄</a>
+                                <!--
                                 <a class="dropdown-item" href="{{ route('lunch_todays.index') }}"><i class="fas fa-utensils"></i> 今日午餐</a>
+                                -->
+                                <a class="dropdown-item" href="{{ route('rss_feeds.index') }}"><i class="fas fa-rss"></i> RSS 訊息</a>
                                 <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>
                             </div>
                         </li>
