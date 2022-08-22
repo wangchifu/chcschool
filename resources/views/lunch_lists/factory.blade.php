@@ -330,14 +330,18 @@
                             </td>                                        
                             @foreach($date_array as $kk=>$vv)
                                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
+                                    @if(isset($lunch_class_data[$student_class->id][$kk][1]))
                                     {{ $lunch_class_data[$student_class->id][$kk][1] }}
+                                    @endif
                                     @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk]))
                                     <br>
                                     <small>+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk] }}</small>
                                     @endif
                                 </td>
                                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素">
+                                    @if(isset($lunch_class_data[$student_class->id][$kk][4]))
                                     {{ $lunch_class_data[$student_class->id][$kk][4] }}
+                                    @endif
                                     @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk]))
                                     <br>
                                     <small>+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk] }}</small>

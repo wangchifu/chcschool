@@ -4,7 +4,11 @@ $rss_feeds = \App\RssFeed::all();
 @foreach($rss_feeds as $rss_feed)
 <?php
     $rss = new DOMDocument();   
-	$rss->load($rss_feed->url);
+	if($rss->load($rss_feed->url)){
+
+    }else{
+        dd('123');
+    }
     
 	$feeds = array();
     $i=1;
