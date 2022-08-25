@@ -27,120 +27,100 @@
         @if($admin)            
             @if(count($lunch_class_dates) > 0)
                 <a href="#" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#change_num">班級變更人數</a>
-                <a href="{{ route('lunch_stus.delete',$semester) }}" class="btn btn-danger btn-sm" onclick="return confirm('你確定要刪除嗎？')">刪除本學期班級訂餐資料</a>
+                <a href="{{ route('lunch_stus.delete',$lunch_order_id) }}" class="btn btn-danger btn-sm" onclick="return confirm('你確定要刪除嗎？')">刪除此期班級訂餐資料</a>
                 @include('layouts.errors')
             @endif
         <form name="myform">
             <div class="form-control">
-                {{ Form::select('semester', $semester_array,$semester, ['class' => 'form-control','onchange'=>'jump()']) }}
+                {{ Form::select('lunch_order_id', $lunch_order_array,$lunch_order_id, ['id'=>'lunch_order_id','class' => 'form-control','onchange'=>'jump()']) }}
             </div>
         </form>        
             @if(count($lunch_class_dates) > 0)         
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <?php $i=1; ?>
-                    @foreach($lunch_orders as $lunch_order)
-                        @if($i==1)
-                            <li class="nav-item">
-                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">{{ $lunch_order->name }}</a>
-                            </li>
-                        @else
-                            <li class="nav-item">
-                                <a class="nav-link" id="pills-tab{{ $i }}" data-toggle="pill" href="#pills-{{ $i }}" role="tab" aria-controls="pills-{{ $i }}" aria-selected="false">{{ $lunch_order->name }}</a>
-                            </li>                            
-                        @endif
-                        <?php $i++; ?>
-                    @endforeach                    
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <?php $i=1; ?>
-                    @if(count($lunch_class_dates) > 0)                    
-                    @include('layouts.errors')
-                @endif          
-                @foreach($lunch_orders as $lunch_order)
-                        @if($i==1)
-                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">                        
-                        @else                        
-                        <div class="tab-pane fade" id="pills-{{ $i }}" role="tabpanel" aria-labelledby="pills-tab{{ $i }}">                        
-                        @endif
-                        <div class="overflow-auto">   
-                            <form action="{{ route('lunch_stus.store_ps',$lunch_order->id) }}" method="post">
-                                @csrf
-                            <div class="form-group">
-                                <label>學生異動說明：</label>
-                                <textarea class="form-control" name="order_ps_ps">{{ $lunch_order->order_ps_ps }}</textarea> 
-                                <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？')">儲存</button>
-                            </div>       
-                            
-                            </form>                
-                            <table>
-                                <thead style="background-color:dodgerblue;color:white">
-                                    <tr>
-                                        <td rowspan="2">
-                                            班級
-                                        </td>
-                                        @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                            @if($lunch_order_date->enable==1)
-                                            <td nowrap colspan="2">
-                                                {{ substr($lunch_order_date->order_date,8,2) }}<br>
-                                                <span class="small">({{ get_chinese_weekday2($lunch_order_date->order_date) }})</span>
-                                            </td>                                           
-                                            @endif
-                                        @endforeach                                
-                                    </tr>
-                                    <tr>
-                                        @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                            @if($lunch_order_date->enable==1)
-                                            <td style="background-color:red">
-                                                葷
-                                            </td> 
-                                            <td style="background-color:green">
-                                                素
-                                            </td>                                          
-                                            @endif
-                                        @endforeach  
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $all = 0; ?>
-                                    @foreach($student_classes as $student_class)
-                                    <tr>
-                                        <td style="background-color:#D2E9FF">
-                                            {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
-                                        </td>                                        
-                                        @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                            @if($lunch_order_date->enable==1)
-                                            <td style="background-color:#FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
-                                                {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][1] }}
-                                            </td>
-                                            <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素">
-                                                {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][4] }}
-                                            </td>
-                                            @endif
-                                        <?php $all = $all+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]; ?>
-                                        @endforeach
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>                  
-                            總餐次：{{ $all }}                    
-                        </div>
-                        </div>
-                        <?php $i++; ?>
-                    @endforeach
-                </div>
+                <form action="{{ route('lunch_stus.store_ps',$lunch_order->id) }}" method="post">
+                    @csrf
+                <div class="form-group">
+                    <label>學生異動說明：</label>
+                    <textarea class="form-control" name="order_ps_ps">{{ $lunch_order->order_ps_ps }}</textarea> 
+                    <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？')">儲存</button>
+                </div>       
+                
+                </form>                
+                <table>
+                    <thead style="background-color:dodgerblue;color:white">
+                        <tr>
+                            <td rowspan="2">
+                                班級
+                            </td>
+                            <td rowspan="2">
+                                廠商
+                            </td>
+                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                @if($lunch_order_date->enable==1)
+                                <td nowrap colspan="2">
+                                    {{ substr($lunch_order_date->order_date,8,2) }}<br>
+                                    <span class="small">({{ get_chinese_weekday2($lunch_order_date->order_date) }})</span>
+                                </td>                                           
+                                @endif
+                            @endforeach                                
+                        </tr>
+                        <tr>
+                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                @if($lunch_order_date->enable==1)
+                                <td style="background-color:red">
+                                    葷
+                                </td> 
+                                <td style="background-color:green">
+                                    素
+                                </td>                                          
+                                @endif
+                            @endforeach  
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $all = 0; ?>
+                        @foreach($student_classes as $student_class)
+                        <tr>
+                            <td style="background-color:#D2E9FF">
+                                {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
+                            </td>           
+                            <?php $i=1; ?>                           
+                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                @if($lunch_order_date->enable==1)
+                                    @if($i==1)
+                                        <td>
+                                            {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date]['factory'] }}
+                                        </td>  
+                                    @endif
+                                <td style="background-color:#FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
+                                    {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][1] }}
+                                </td>
+                                <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素">
+                                    {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][4] }}
+                                </td>
+                                <?php $i++; ?>
+                                @endif
+                            <?php $all = $all+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]; ?>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>                  
+                總餐次：{{ $all }}   
             @else
             @if(!empty($lunch_orders))
-            <form method="post" action="{{ route('lunch_stus.store',$semester) }}" id="store_form">
+            <form method="post" action="{{ route('lunch_stus.store',$lunch_order_id) }}" id="store_form">
                 @csrf                
-                <div class="form-control">
-                    {{ Form::select('lunch_factory_id', $factory_array,null,['class' => 'form-control']) }}
-                </div>
                 <span class="text-danger small">若底下無班級，請至「午餐設定」下方匯入本學期學生資料。</span>
+                <br>
+                從<input type="date" name="sample_date" id="sample_date" value="{{ date('Y-m-d') }}"><a href="#" class="btn btn-success btn-sm" onclick="copy()">複製</a>
                 <table>
                     <thead style="background-color:dodgerblue;color:white">
                         <tr>
                             <td>
                                 班級
+                            </td>
+                            <td>
+                                廠商
                             </td>
                             <td>
                                 葷 
@@ -158,11 +138,22 @@
                                 {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
                             </td>
                             <td>
-                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data1[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" required onkeydown="focusNext(event,{{ $n }})">
+                                <select name="lunch_factory_id[{{ $student_class->id }}]">
+                                    @foreach($factory_array as $k=>$v)
+                                    <option value="{{ $k }}">{{ $v }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <?php 
+                                $e1 = (isset($sample_data[$student_class->id][1]))?$sample_data[$student_class->id][1]:null;
+                                $e4 = (isset($sample_data[$student_class->id][4]))?$sample_data[$student_class->id][4]:null;
+                            ?>
+                            <td>
+                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data1[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" required onkeydown="focusNext(event,{{ $n }})" value="{{ $e1 }}">
                             </td>
                             <?php $n++; ?>
                             <td>
-                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4[{{ $student_class->id }}]" style="width:25px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素" onkeydown="focusNext(event,{{ $n }})">
+                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4[{{ $student_class->id }}]" style="width:25px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e4 }}">
                             </td>
                             <?php $n++; ?>
                         </tr>
@@ -233,9 +224,14 @@
 <script>
 
     function jump(){
-        if(document.myform.semester.options[document.myform.semester.selectedIndex].value!=''){
-            location="/lunch_stus/index/" + document.myform.semester.options[document.myform.semester.selectedIndex].value;
+        if(document.myform.lunch_order_id.options[document.myform.lunch_order_id.selectedIndex].value!=''){
+            location="/lunch_stus/index/" + document.myform.lunch_order_id.options[document.myform.lunch_order_id.selectedIndex].value;
         }
+    }
+
+    function copy(){
+        sample_date = $('#sample_date').val();
+        location="/lunch_stus/index/" + document.myform.lunch_order_id.options[document.myform.lunch_order_id.selectedIndex].value+'/'+sample_date;
     }
     
 

@@ -211,9 +211,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('lunch_lists/all_semester', 'LunchListController@all_semester')->name('lunch_lists.all_semester');
     Route::post('lunch_lists/semester_print', 'LunchListController@semester_print')->name('lunch_lists.semester_print');
 
-    Route::get('lunch_stus/index/{semester?}', 'LunchStuController@index')->name('lunch_stus.index');
+    Route::get('lunch_stus/index/{lunch_order_id?}/{sample_date?}', 'LunchStuController@index')->name('lunch_stus.index');
     Route::get('lunch_stus/delete/{semester}', 'LunchStuController@delete')->name('lunch_stus.delete');
-    Route::post('lunch_stus/store/{semester}', 'LunchStuController@store')->name('lunch_stus.store');
+    Route::post('lunch_stus/store/{lunch_order_id}', 'LunchStuController@store')->name('lunch_stus.store');
     Route::post('lunch_stus/change_num', 'LunchStuController@change_num')->name('lunch_stus.change_num');
     Route::post('lunch_stus/store_ps/{lunch_order}', 'LunchStuController@store_ps')->name('lunch_stus.store_ps');
 
