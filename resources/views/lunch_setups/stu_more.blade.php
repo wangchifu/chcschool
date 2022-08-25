@@ -103,7 +103,7 @@
     <script>
         function jump(){
           if($('#select_class').val() !=''){
-            location="/lunch_setup/"+{{ $semester }}+"/stu_adm_more/" + $('#select_class').val();
+            location="/lunch_setup/"+{{ $semester }}+"/stu_more/" + $('#select_class').val();
           }
         }
     </script>
