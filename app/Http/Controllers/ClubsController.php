@@ -28,7 +28,7 @@ class ClubsController extends Controller
 
     public function index()
     {
-        $club_semesters = ClubSemester::orderby('semester')->get();
+        $club_semesters = ClubSemester::orderby('semester', 'DESC')->get();
         $data = [
             'club_semesters' => $club_semesters
         ];
