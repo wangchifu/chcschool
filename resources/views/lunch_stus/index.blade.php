@@ -100,9 +100,26 @@
                                 <?php $i++; ?>
                                 @endif
                             <?php $all = $all+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]; ?>
+                            <?php
+                                if(!isset($one_day[$lunch_order_date->order_date])) $one_day[$lunch_order_date->order_date]=0;
+                                $one_day[$lunch_order_date->order_date] = $one_day[$lunch_order_date->order_date]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4];
+                            ?>
                             @endforeach
                         </tr>
                         @endforeach
+                        <tr>
+                            <td>
+                                小計
+                            </td>
+                            <td class="text-center">-</td>
+                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                @if($lunch_order_date->enable==1)
+                                <td colspan="2">
+                                    {{ $one_day[$lunch_order_date->order_date] }}
+                                </td>
+                                @endif
+                            @endforeach
+                        </tr>
                     </tbody>
                 </table>                  
                 總餐次：{{ $all }}   
