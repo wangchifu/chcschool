@@ -28,7 +28,7 @@ class LunchStuController extends Controller
         $lunch_order_id = (empty($lunch_order_id)) ? array_key_first($lunch_order_array) : $lunch_order_id;
         $lunch_order = LunchOrder::find($lunch_order_id);
         $semester = $lunch_order->semester;
-        $club_student_num = ClubStudent::where('semester', $semester)->count();
+
 
         $factory_array = LunchFactory::where('disable', null)
             ->pluck('name', 'id')
@@ -71,7 +71,6 @@ class LunchStuController extends Controller
             'lunch_order' => $lunch_order,
             'lunch_orders' => $lunch_orders,
             'student_classes' => $student_classes,
-            'club_student_num' => $club_student_num,
             'factory_array' => $factory_array,
             'lunch_class_dates' => $lunch_class_dates,
             'lunch_class_data' => $lunch_class_data,

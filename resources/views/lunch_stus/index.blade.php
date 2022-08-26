@@ -43,8 +43,8 @@
                     <textarea class="form-control" name="order_ps_ps">{{ $lunch_order->order_ps_ps }}</textarea> 
                     <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？')">儲存</button>
                 </div>       
-                
-                </form>                
+                </form>      
+                <h3>{{ $lunch_order_array[$lunch_order_id] }}</h3>          
                 <table>
                     <thead style="background-color:dodgerblue;color:white">
                         <tr>
@@ -130,6 +130,7 @@
                 <span class="text-danger small">若底下無班級，請至「午餐設定」下方匯入本學期學生資料。</span>
                 <br>
                 從<input type="date" name="sample_date" id="sample_date" value="{{ date('Y-m-d') }}"><a href="#" class="btn btn-success btn-sm" onclick="copy()">複製</a>
+                <h3>{{ $lunch_order_array[$lunch_order_id] }}</h3>
                 <table>
                     <thead style="background-color:dodgerblue;color:white">
                         <tr>
