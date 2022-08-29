@@ -352,9 +352,40 @@
                                     @endif
                                 </td>
                             <?php $all = $all+$lunch_class_data[$student_class->id][$kk][1]+$lunch_class_data[$student_class->id][$kk][4]; ?>
+                            <?php
+                                if(!isset($one_day[$kk])) $one_day[$kk]=0;
+                                if(!isset($one_day1[$kk])) $one_day1[$kk]=0;
+                                if(!isset($one_day4[$kk])) $one_day4[$kk]=0;
+                                $one_day[$kk] = $one_day[$kk]+$lunch_class_data[$student_class->id][$kk][1]+$lunch_class_data[$student_class->id][$kk][4];
+                                $one_day1[$kk] = $one_day1[$kk]+$lunch_class_data[$student_class->id][$kk][1];
+                                $one_day4[$kk] = $one_day4[$kk]+$lunch_class_data[$student_class->id][$kk][4];
+                            ?>
                             @endforeach
                         </tr>
                         @endforeach
+                        <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
+                            <td>
+                                小計
+                            </td>
+                            @foreach($date_array as $kk=>$vv)
+                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} 葷">
+                                    <span class="text-danger">{{ $one_day1[$kk] }}</span>
+                                </td>
+                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} 素 ">
+                                    <span class="text-success">{{ $one_day4[$kk] }}</span>
+                                </td>
+                            @endforeach
+                        </tr>
+                        <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
+                            <td>
+                                合計
+                            </td>
+                            @foreach($date_array as $kk=>$vv)
+                                <td colspan="2" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} 合計">
+                                    {{ $one_day[$kk] }}
+                                </td>
+                            @endforeach
+                        </tr>
                     </table>
                     <br>
                     此餐期總餐數：{{ $all }} (不含老師)            
