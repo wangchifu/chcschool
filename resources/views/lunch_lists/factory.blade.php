@@ -337,7 +337,7 @@
                                     @endif
                                     @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk]))
                                     <br>
-                                    <small>+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk] }}</small>
+                                    <small class="text-primary font-weight-bold">+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk] }}</small>
                                     @endif
                                 </td>
                                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素">
