@@ -109,6 +109,10 @@
                                         @if(isset($v1[$k2]))
                                             @if($v1[$k2]['enable']=="eat")
                                                 <a href="{{ route('lunch_lists.more_list_factory',[$lunch_order_id,$factory_data[$k1][$k2]['id']]) }}" target="_blank"><span class="badge badge-pill badge-danger">{{ mb_substr($factory_data[$k1][$k2]['name'],0,1) }}</span></a>
+                                                <?php 
+                                                    if(!isset($count_one_day[$k2])) $count_one_day[$k2]=0;
+                                                    $count_one_day[$k2]++; 
+                                                ?>
                                             @endif
                                         @endif
                                     </td>
@@ -133,7 +137,11 @@
                             <td></td>
                             <td></td>
                             @foreach($date_array as $k=>$v)
-                                <td></td>
+                                <td>
+                                    @if(isset($count_one_day[$k]))
+                                        {{ $count_one_day[$k] }}
+                                    @endif
+                                </td>
                             @endforeach
                             <td>{{ $total_days }}</td>
                             <td>{{ $total_money }}</td>

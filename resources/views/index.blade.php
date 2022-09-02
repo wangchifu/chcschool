@@ -51,33 +51,6 @@
 @endsection
 
 @section('content')
-<?php
-$str = "SHOW TABLES LIKE 'rss_feeds'";
-$str2 = "
-CREATE TABLE `rss_feeds` (
-                            `id` int(10) UNSIGNED NOT NULL,
-                            `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-                            `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-                            `type` tinyint NOT NULL,
-                            `num` int(10) UNSIGNED NOT NULL,
-                            `created_at` timestamp NULL,
-                            `updated_at` timestamp NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-ALTER TABLE `rss_feeds`
-    ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `rss_feeds`
-    MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-COMMIT;
-";
-$r = \Illuminate\Support\Facades\DB::select($str);
-if ($r) {
-}
-else {
-    \Illuminate\Support\Facades\DB::unprepared($str2);
-}
-?>
     <link href="{{ asset('css/block_style.css') }}" rel="stylesheet">
     <div class="row justify-content-center">
         @foreach($setup_cols as $setup_col)

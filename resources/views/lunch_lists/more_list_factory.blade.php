@@ -93,6 +93,10 @@
                                             $p_e_data[$place_data[$k1]][$eat_data[$k1]][$k2]++;
                                             ?>
                                             <img src="{{ asset('/images/system_red.png') }}">
+                                            <?php 
+                                                    if(!isset($count_one_day[$k2])) $count_one_day[$k2]=0;
+                                                    $count_one_day[$k2]++; 
+                                            ?>
                                         @endif
                                     @endif
                                 </td>
@@ -117,7 +121,11 @@
                         <td></td>
                         <td></td>
                         @foreach($date_array as $k=>$v)
-                            <td></td>
+                            <td>
+                                @if(isset($count_one_day[$k]))
+                                        {{ $count_one_day[$k] }}
+                                @endif
+                            </td>
                         @endforeach
                         <td>{{ $total_days }}</td>
                         <td>{{ $total_money }}</td>
@@ -196,4 +204,6 @@
             @endif
         </div>
     </div>
+    <br>
+    <br>
 @endsection
