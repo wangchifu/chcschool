@@ -417,7 +417,7 @@ function check_ip()
         return true;
     } elseif ($my_ip == $local_ip2) {
         return true;
-    } elseif ($my_ip_array[0] == $r_ip1[0] and $my_ip_array[1] == $r_ip1[1] and $my_ip_array[2] == $r_ip1[2] and $my_ip_array[4] >= $r_ip1[4] and $my_ip_array[4] <= $r_ip2[4]) {
+    } elseif ($my_ip_array[0] == $r_ip1[0] and $my_ip_array[1] == $r_ip1[1] and $my_ip_array[2] == $r_ip1[2] and $my_ip_array[3] >= $r_ip1[3] and $my_ip_array[3] <= $r_ip2[3]) {
         return true;
     } else {
         return false;
