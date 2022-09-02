@@ -149,6 +149,7 @@ class SetupController extends Controller
         $att['footer'] = $request->input('footer');
         $att['ip1'] = $request->input('ip1');
         $att['ip2'] = $request->input('ip2');
+        $att['ipv6'] = $request->input('ipv6');
         $setup->update($att);
         return redirect()->route('setups.index');
     }

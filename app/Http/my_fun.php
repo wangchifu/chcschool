@@ -410,15 +410,23 @@ function check_ip()
     $my_ip = GetIP();
     $local_ip1 = "::1";
     $local_ip2 = "127.0.0.1";
-    $r_ip1 = explode('.', '163.23.93.65');
-    $r_ip2 = explode('.', '163.23.93.126');
-    $my_ip_array = explode('.', $my_ip);
-    if ($my_ip == $local_ip1) {
-        return true;
-    } elseif ($my_ip == $local_ip2) {
-        return true;
-    } elseif ($my_ip_array[0] == $r_ip1[0] and $my_ip_array[1] == $r_ip1[1] and $my_ip_array[2] == $r_ip1[2] and $my_ip_array[3] >= $r_ip1[3] and $my_ip_array[3] <= $r_ip2[3]) {
-        return true;
+    $setup = \App\Setup::first();
+    $r_ip1 = explode('.', $setup->ip1);
+    $r_ip2 = explode('.', $setup->ip2);
+    $ipv6_check = substr($setup->ipv6, 0, 13);
+    if (empty($setup->ip1) or $setup->ip2) {
+        $my_ip_array = explode('.', $my_ip);
+        if ($my_ip == $local_ip1) {
+            return true;
+        } elseif ($my_ip == $local_ip2) {
+            return true;
+        } elseif ($my_ip_array[0] == $r_ip1[0] and $my_ip_array[1] == $r_ip1[1] and $my_ip_array[2] == $r_ip1[2] and $my_ip_array[3] >= $r_ip1[3] and $my_ip_array[3] <= $r_ip2[3]) {
+            return true;
+        } elseif ($ipv6_check == substr($my_ip, 0, 13)) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
         return false;
     }

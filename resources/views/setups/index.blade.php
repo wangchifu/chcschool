@@ -34,11 +34,12 @@
                         {{ Form::text('site_name',$setup->site_name,['class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
-                        <label for="views">學校真實IP範圍</label>
+                        <label for="views">學校真實IP範圍</label><br>
+                        <small>[<a href="http://gg.gg/chc_ipv4"  target="_blank">ipv4參考文件</a>]</small> <small>[<a href="http://gg.gg/chc_ipv6" target="_blank">ipv6參考文件</a>]</small>
                         <table>
                             <tr>
                                 <td>
-                                    從
+                                    IPv4 從
                                 </td>
                                 <td>
                                     {{ Form::text('ip1',$setup->ip1,['class' => 'form-control']) }}
@@ -48,6 +49,14 @@
                                 </td>
                                 <td>
                                     {{ Form::text('ip2',$setup->ip2,['class' => 'form-control']) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    IPv6
+                                </td>
+                                <td colspan="3">
+                                    {{ Form::text('ipv6',$setup->ipv6,['class' => 'form-control','placeholder'=>'如：2001:288:5637::/48']) }}
                                 </td>
                             </tr>
                         </table>

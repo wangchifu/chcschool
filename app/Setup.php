@@ -14,5 +14,6 @@ class Setup extends Model
         'footer',
         'ip1',
         'ip2',
+        'ipv6',
     ];
 }
