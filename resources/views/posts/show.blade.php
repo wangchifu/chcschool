@@ -13,7 +13,7 @@
             <!-- Title -->
             <?php
             if($post->insite==1){
-                if(auth()->check()){
+                if(auth()->check() or check_ip()){
                     $can_see = 1;
                 }else{
                     $can_see = 0;

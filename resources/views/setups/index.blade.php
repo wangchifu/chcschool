@@ -34,6 +34,25 @@
                         {{ Form::text('site_name',$setup->site_name,['class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
+                        <label for="views">學校真實IP範圍</label>
+                        <table>
+                            <tr>
+                                <td>
+                                    從
+                                </td>
+                                <td>
+                                    {{ Form::text('ip1',$setup->ip1,['class' => 'form-control']) }}
+                                </td>
+                                <td>
+                                    到
+                                </td>
+                                <td>
+                                    {{ Form::text('ip2',$setup->ip2,['class' => 'form-control']) }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="form-group">
                         <label for="views">瀏覽人數</label>
                         {{ Form::text('views',$setup->views,['class' => 'form-control','required'=>'required']) }}
                     </div>

@@ -19,6 +19,7 @@ class SetupController extends Controller
      */
     public function index()
     {
+        $i = "";
         $setup = Setup::first();
         $data = [
             'setup' => $setup,
@@ -146,6 +147,8 @@ class SetupController extends Controller
         $att['site_name'] = $request->input('site_name');
         $att['views'] = $request->input('views');
         $att['footer'] = $request->input('footer');
+        $att['ip1'] = $request->input('ip1');
+        $att['ip2'] = $request->input('ip2');
         $setup->update($att);
         return redirect()->route('setups.index');
     }

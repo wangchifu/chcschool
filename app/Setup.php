@@ -12,5 +12,7 @@ class Setup extends Model
         'title_image',
         'views',
         'footer',
+        'ip1',
+        'ip2',
     ];
 }
