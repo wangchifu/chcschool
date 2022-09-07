@@ -71,6 +71,7 @@
                                     </th>
                                 @endforeach
                             </tr>
+                            <?php $all1 = 0; ?>
                             @foreach($students1 as $k=>$v)
                                 <tr>
                                     <td>
@@ -101,6 +102,9 @@
                                         <td>
                                             @if(isset($register_data1[$k][$k2]))
                                                 {{ $register_data1[$k][$k2] }}
+                                                <?php 
+                                                    $all1 = $all1+$register_data1[$k][$k2];
+                                                ?>
                                             @else
                                             @endif
                                         </td>
@@ -108,6 +112,8 @@
                                 </tr>
                             @endforeach
                         </table>
+                        總金額1：{{ $all1 }}
+                        <br><br>
                         <hr>
                         <h4 class="text-primary">
                             [ 2.學生課後活動 ]
@@ -147,6 +153,7 @@
                                     </th>
                                 @endforeach
                             </tr>
+                            <?php $all2 = 0; ?>
                             @foreach($students2 as $k=>$v)
                                 <tr>
                                     <td>
@@ -180,10 +187,15 @@
                                             @else
                                             @endif
                                         </td>
+                                        <?php 
+                                            $all2 = $all2+$register_data2[$k][$k2];
+                                        ?>
                                     @endforeach
                                 </tr>
                             @endforeach
                         </table>
+                        總金額2：{{ $all2 }}
+                        <br><br>
                     @elseif(!$admin)
                         <span class="text-danger">你不是管理者</span>
                     @else
