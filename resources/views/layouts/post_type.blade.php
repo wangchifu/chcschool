@@ -134,7 +134,7 @@ $posts = \App\Post::where('insite',null)
                             <td data-th="標題">
                                 <?php
                                 if($post->insite==1){
-                                    if(auth()->check()){
+                                    if(auth()->check() or check_ip()){
                                         $can_see = 1;
                                     }else{
                                         $can_see = 0;
@@ -147,12 +147,13 @@ $posts = \App\Post::where('insite',null)
                                 //有無附件
                                 $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
                                 ?>
+                                @if($post->insite==1)
+                                    <span class="text-danger">[ 內部公告 ]</span>
+                                @endif
                                 @if($can_see)
-                                    @if($post->insite==1)
-                                        <span class="text-danger">[ 內部公告 ]</span>
-                                    @endif
                                     <a href="{{ route('posts.show',$post->id) }}">{{ $title }}</a>
                                 @else
+                    
                                     {{ $title }}
                                 @endif
                                 @if(!empty($files))
