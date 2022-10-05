@@ -288,12 +288,14 @@
                             @foreach($date_array as $kk=>$vv)
                             <th>
                                 <?php 
+                                    if(!isset($one_h[$kk])) $one_h[$kk]=0;
                                     if($one_h[$kk]==0) $one_h[$kk]="";
                                 ?>
                                 {{ $one_h[$kk] }}
                             </th> 
                             <th>
                                 <?php 
+                                    if(!isset($one_s[$kk])) $one_s[$kk]=0;
                                     if($one_s[$kk]==0) $one_s[$kk]="";
                                 ?>
                                 {{ $one_s[$kk]}}
