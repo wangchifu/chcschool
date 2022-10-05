@@ -25,7 +25,7 @@
             ?>
             @include('setups.nav',$active)
             <div class="card my-4">
-                <h3 class="card-header">文字標題</h3>
+                <h3 class="card-header">基本設定</h3>
                 <div class="card-body">
                     @include('layouts.errors')
                     {{ Form::open(['route' => ['setups.text',$setup->id], 'method' => 'patch','id'=>'this_form1']) }}
@@ -79,6 +79,31 @@
                                 filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
                             });
                     </script>
+                    <?php 
+                        $r1 = (empty($setup->close_website))?"checked":"";
+                        $r2 = (empty($setup->close_website))?"":"checked";
+                    ?>
+                    <div class="form-group">
+                        <label for="footer">關閉網站</label>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                          <input type="radio" class="form-check-input" name="set_close_website" value="on" {{ $r1 }}>設定為「網站開放」
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label text-danger">
+                                          <input type="radio" class="form-check-input" name="set_close_website" value="off" {{ $r2 }}>設定為「網站關閉」
+                                        </label>
+                                    </div>
+                                    <label for="close_website">原因</label>
+                                    {{ Form::text('close_website',$setup->close_website,['class' => 'form-control']) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
                             <i class="fas fa-save"></i> 儲存設定

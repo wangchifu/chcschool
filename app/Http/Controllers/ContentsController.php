@@ -3,10 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Content;
+use App\Setup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ContentsController extends Controller
 {
+    public function __construct()
+    {
+        $setup = Setup::first();
+        //檢查有無關閉網站
+        if (!empty($setup->close_website)) {
+            Redirect::to('close')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +25,7 @@ class ContentsController extends Controller
     public function index()
     {
         $contents = Content::all();
-        return view('contents.index',compact('contents'));
+        return view('contents.index', compact('contents'));
     }
 
     /**
@@ -37,8 +47,8 @@ class ContentsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'=>'required',
-            'content'=>'required',
+            'title' => 'required',
+            'content' => 'required',
         ]);
         Content::create($request->all());
         return redirect()->route('contents.index');
@@ -52,7 +62,7 @@ class ContentsController extends Controller
      */
     public function show(Content $content)
     {
-        return view('contents.show',compact('content'));
+        return view('contents.show', compact('content'));
     }
 
     /**
@@ -63,12 +73,12 @@ class ContentsController extends Controller
      */
     public function edit(Content $content)
     {
-        return view('contents.edit',compact('content'));
+        return view('contents.edit', compact('content'));
     }
 
     public function exec_edit(Content $content)
     {
-        return view('contents.exec_edit',compact('content'));
+        return view('contents.exec_edit', compact('content'));
     }
 
     /**
@@ -81,8 +91,8 @@ class ContentsController extends Controller
     public function update(Request $request, Content $content)
     {
         $request->validate([
-            'title'=>'required',
-            'content'=>'required',
+            'title' => 'required',
+            'content' => 'required',
         ]);
         $content->update($request->all());
         return redirect()->route('contents.index');
@@ -91,11 +101,11 @@ class ContentsController extends Controller
     public function exec_update(Request $request, Content $content)
     {
         $request->validate([
-            'title'=>'required',
-            'content'=>'required',
+            'title' => 'required',
+            'content' => 'required',
         ]);
         $content->update($request->all());
-        return redirect()->route('contents.show',$content->id);
+        return redirect()->route('contents.show', $content->id);
     }
 
     /**

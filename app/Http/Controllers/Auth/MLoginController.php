@@ -9,62 +9,76 @@ use Illuminate\Support\Facades\Auth;
 
 class MLoginController extends Controller
 {
+    public function showLoginForm(Request $request)
+    {
+        if (auth()->check()) {
+            return redirect()->route('index');
+        }
+        return view('auth.login');
+    }
+
+    public function showLoginForm_close(Request $request)
+    {
+        if (auth()->check()) {
+            return redirect()->route('setups.index');
+        }
+        return view('auth.login_close');
+    }
     //停用者不得登入
     public function auth(Request $request)
     {
-        if(session('login_error') >= 3){
+        if (session('login_error') >= 3) {
             return view('errors.500');
         }
 
-        if($request->input('chaptcha') != session('chaptcha')){
-            if(!session('login_error')){
+        if ($request->input('chaptcha') != session('chaptcha')) {
+            if (!session('login_error')) {
                 session(['login_error' => '1']);
-            }else{
+            } else {
                 $a = session('login_error');
                 $a++;
                 session(['login_error' => $a]);
             }
-            return back()->withErrors(['gsuite_error'=>['驗證碼錯誤！']]);
+            return back()->withErrors(['gsuite_error' => ['驗證碼錯誤！']]);
         }
 
         if (Auth::attempt([
             'username' => $request->input('username'),
-            'password'=>$request->input('password'),
+            'password' => $request->input('password'),
             'disable' => null,
-            'login_type'=>'local',
+            'login_type' => 'local',
         ])) {
             // 如果認證通過...
-            return redirect()->route('index');
-        }else{
+            return redirect()->route('setups.index');
+        } else {
 
-            if(!session('login_error')){
+            if (!session('login_error')) {
                 session(['login_error' => 1]);
-            }else{
+            } else {
                 $a = session('login_error');
                 $a++;
                 session(['login_error' => $a]);
             }
 
-            $user = User::where('username',$request->input('username'))
+            $user = User::where('username', $request->input('username'))
                 ->first();
 
-            if(empty($user)){
-                return back()->withErrors(['error'=>['帳號或密碼錯誤']]);
-            }else{
-                if(password_verify($request->input('password'), $user->password)){
-                    if($user->disable == "1"){
-                        return back()->withErrors(['error'=>['你被停權了']]);
+            if (empty($user)) {
+                return back()->withErrors(['error' => ['帳號或密碼錯誤']]);
+            } else {
+                if (password_verify($request->input('password'), $user->password)) {
+                    if ($user->disable == "1") {
+                        return back()->withErrors(['error' => ['你被停權了']]);
                     }
-                    if($user->login_type == "gsuite"){
-                        return back()->withErrors(['error'=>['GSuite帳號不是從這邊登入']]);
+                    if ($user->login_type == "gsuite") {
+                        return back()->withErrors(['error' => ['GSuite帳號不是從這邊登入']]);
                     }
-                }else{
-                    return back()->withErrors(['error'=>['帳號或密碼錯誤']]);
+                } else {
+                    return back()->withErrors(['error' => ['帳號或密碼錯誤']]);
                 }
             }
 
-            return back()->withErrors(['error'=>['錯誤！']]);
+            return back()->withErrors(['error' => ['錯誤！']]);
         }
-
     }
 }

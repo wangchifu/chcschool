@@ -30,12 +30,14 @@ if (isset($_SERVER['HTTP_HOST'])) {
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('close', 'SetupController@close')->name('close');
 
 Route::get('/', 'HomeController@index')->name('index');
 Route::post('not_bot', 'HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('admin_login');
+Route::get('login', 'Auth\MLoginController@showLoginForm')->name('admin_login');
+Route::get('login_close', 'Auth\MLoginController@showLoginForm_close')->name('admin_login_close');
 //Route::post('login', 'Auth\LoginController@login');
 Route::post('login', 'Auth\MLoginController@auth')->name('auth');
 
@@ -56,7 +58,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('login');
 Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
 
-Route::get('pic', 'HomeController@pic')->name('pic');
+Route::get('pic', 'SetupController@pic')->name('pic');
 
 
 //公告系統

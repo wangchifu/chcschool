@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\Fix;
 use App\Fun;
 use App\Http\Requests\FixRequest;
+use App\Setup;
 use App\User;
 use App\UserPower;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class FixController extends Controller
 {
     public function __construct()
     {
+        $setup = Setup::first();
+        //檢查有無關閉網站
+        if (!empty($setup->close_website)) {
+            Redirect::to('close')->send();
+        }
         $module_setup = get_module_setup();
         if (!isset($module_setup['報修系統'])) {
             echo "<h1>已停用</h1>";
@@ -26,25 +33,25 @@ class FixController extends Controller
      */
     public function index()
     {
-        $fixes = Fix::orderBy('id','DESC')
+        $fixes = Fix::orderBy('id', 'DESC')
             ->paginate(20);
-        $fix_admin = check_power('報修系統','A',auth()->user()->id);
-        $data= [
-            'fixes'=>$fixes,
-            'fix_admin'=>$fix_admin,
+        $fix_admin = check_power('報修系統', 'A', auth()->user()->id);
+        $data = [
+            'fixes' => $fixes,
+            'fix_admin' => $fix_admin,
         ];
-        return view('fixes.index',$data);
+        return view('fixes.index', $data);
     }
     public function search($situation)
     {
-        $fixes = Fix::where('situation',$situation)
-            ->orderBy('id','DESC')
+        $fixes = Fix::where('situation', $situation)
+            ->orderBy('id', 'DESC')
             ->paginate(20);
         $data = [
-            'situation'=>$situation,
-            'fixes'=>$fixes,
+            'situation' => $situation,
+            'fixes' => $fixes,
         ];
-        return view('fixes.search',$data);
+        return view('fixes.search', $data);
     }
 
     /**
@@ -78,15 +85,15 @@ class FixController extends Controller
         $user->update($att2);
 
         //寄信給管理者
-        $user_powers = UserPower::where('name','報修系統')
-            ->where('type','A')
+        $user_powers = UserPower::where('name', '報修系統')
+            ->where('type', 'A')
             ->get();
 
-        foreach($user_powers as $user_power){
-            if(!empty($user_power->user->email)){
-                $subject = '學校網站中「'.auth()->user()->name.'」在「報修設備」寫了：'.$att['title'];
+        foreach ($user_powers as $user_power) {
+            if (!empty($user_power->user->email)) {
+                $subject = '學校網站中「' . auth()->user()->name . '」在「報修設備」寫了：' . $att['title'];
                 $body = $att['content'];
-                send_mail($user_power->user->email,$subject,$body);
+                send_mail($user_power->user->email, $subject, $body);
             }
         }
         return redirect()->route('fixes.index');
@@ -100,12 +107,12 @@ class FixController extends Controller
      */
     public function show(Fix $fix)
     {
-        $fix_admin = check_power('報修系統','A',auth()->user()->id);
+        $fix_admin = check_power('報修系統', 'A', auth()->user()->id);
         $data = [
-            'fix'=>$fix,
-            'fix_admin'=>$fix_admin,
+            'fix' => $fix,
+            'fix_admin' => $fix_admin,
         ];
-        return view('fixes.show',$data);
+        return view('fixes.show', $data);
     }
 
     /**
@@ -135,21 +142,21 @@ class FixController extends Controller
         $user->update($att);
 
         //寄信
-        if(!empty($fix->user->email)){
-            $situation=['2'=>'處理中','1'=>'處理完畢'];
+        if (!empty($fix->user->email)) {
+            $situation = ['2' => '處理中', '1' => '處理完畢'];
 
             $subject = '回覆「學校網站」中「報修設備」的問題';
             $body = "您問到：\r\n";
-            $body .= $request->input('title')."\r\n";
+            $body .= $request->input('title') . "\r\n";
             $body .= "\r\n系統管理員回覆：\r\n";
-            $body .= $situation[$request->input('situation')]."\r\n";
+            $body .= $situation[$request->input('situation')] . "\r\n";
             $body .= $request->input('reply');
             $body .= "\r\n-----這是系統信件，請勿回信-----";
-            send_mail($fix->user->email,$subject,$body);
+            send_mail($fix->user->email, $subject, $body);
         }
 
 
-        return redirect()->route('fixes.show',$fix->id);
+        return redirect()->route('fixes.show', $fix->id);
     }
 
     /**

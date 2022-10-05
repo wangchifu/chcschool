@@ -4,16 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
 use App\Blog;
+use App\Setup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class BlogsController extends Controller
 {
 
     public function __construct()
     {
+        $setup = Setup::first();
+        //檢查有無關閉網站
+        if (!empty($setup->close_website)) {
+            Redirect::to('close')->send();
+        }
         $module_setup = get_module_setup();
-        if(!isset($module_setup['校園部落格'])) {
+        if (!isset($module_setup['校園部落格'])) {
             echo "<h1>已停用</h1>";
             die();
         }
@@ -27,15 +34,15 @@ class BlogsController extends Controller
     {
         $school_code = school_code();
 
-        $blogs = Blog::orderBy('created_at','DESC')
+        $blogs = Blog::orderBy('created_at', 'DESC')
             ->paginate(10);
 
 
         $data = [
-            'blogs'=>$blogs,
-            'school_code'=>$school_code,
+            'blogs' => $blogs,
+            'school_code' => $school_code,
         ];
-        return view('blogs.index',$data);
+        return view('blogs.index', $data);
     }
 
     /**
@@ -70,7 +77,7 @@ class BlogsController extends Controller
         $blog = Blog::create($att);
 
         $school_code = school_code();
-        $folder = 'public/'. $school_code .'/blogs/'.$blog->id;
+        $folder = 'public/' . $school_code . '/blogs/' . $blog->id;
 
         //執行上傳檔案
         if ($request->hasFile('title_image')) {
@@ -88,23 +95,23 @@ class BlogsController extends Controller
      */
     public function edit(Blog $blog)
     {
-        if(auth()->user()->id != $blog->user_id and auth()->user()->admin !=1){
+        if (auth()->user()->id != $blog->user_id and auth()->user()->admin != 1) {
             return back();
         }
 
         $school_code = school_code();
 
         //有無標題圖片
-        $title_image = file_exists(storage_path('app/public/'.$school_code.'/blogs/'.$blog->id.'/title_image.png'));
+        $title_image = file_exists(storage_path('app/public/' . $school_code . '/blogs/' . $blog->id . '/title_image.png'));
 
 
         $data = [
-            'blog'=>$blog,
-            'title_image'=>$title_image,
-            'school_code'=>$school_code,
+            'blog' => $blog,
+            'title_image' => $title_image,
+            'school_code' => $school_code,
         ];
 
-        return view('blogs.edit',$data);
+        return view('blogs.edit', $data);
     }
 
     /**
@@ -129,7 +136,7 @@ class BlogsController extends Controller
         $blog->update($att);
 
         $school_code = school_code();
-        $folder = 'public/'. $school_code .'/blogs/'.$blog->id;
+        $folder = 'public/' . $school_code . '/blogs/' . $blog->id;
 
         //執行上傳檔案
         if ($request->hasFile('title_image')) {
@@ -142,22 +149,21 @@ class BlogsController extends Controller
 
     public function delete_title_image(Blog $blog)
     {
-        if($blog->user_id != auth()->user()->id){
+        if ($blog->user_id != auth()->user()->id) {
             return back();
         }
 
         $school_code = school_code();
-        $file = storage_path('app/public/'.$school_code.'/blogs/'.$blog->id.'/title_image.png');
+        $file = storage_path('app/public/' . $school_code . '/blogs/' . $blog->id . '/title_image.png');
 
-        if(file_exists($file)){
+        if (file_exists($file)) {
             unlink($file);
         }
 
         $att['title_image'] = null;
         $blog->update($att);
 
-        return redirect()->route('blogs.edit',$blog->id);
-
+        return redirect()->route('blogs.edit', $blog->id);
     }
 
 
@@ -169,11 +175,11 @@ class BlogsController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        if(auth()->user()->id != $blog->user_id and auth()->user()->admin !=1){
+        if (auth()->user()->id != $blog->user_id and auth()->user()->admin != 1) {
             return back();
         }
         $school_code = school_code();
-        $folder = storage_path('app/public/'.$school_code.'/blogs/'.$blog->id);
+        $folder = storage_path('app/public/' . $school_code . '/blogs/' . $blog->id);
         if (is_dir($folder)) {
             delete_dir($folder);
         }
@@ -181,7 +187,6 @@ class BlogsController extends Controller
         $blog->delete();
 
         return redirect()->route('blogs.index');
-
     }
 
 
@@ -197,9 +202,9 @@ class BlogsController extends Controller
     public function show(Blog $blog)
     {
 
-        $s_key = "pv".$blog->id;
-        if(!session($s_key)){
-            $att['views'] = $blog->views+1;
+        $s_key = "pv" . $blog->id;
+        if (!session($s_key)) {
+            $att['views'] = $blog->views + 1;
             $blog->update($att);
         }
         session([$s_key => '1']);
@@ -207,24 +212,21 @@ class BlogsController extends Controller
 
         $next_blog = Blog::where('id', '>', $blog->id)->first();
         $last_blog = Blog::where('id', '<', $blog->id)
-            ->orderBy('id','DESC')
+            ->orderBy('id', 'DESC')
             ->first();
 
-        $last_id = (empty($last_blog))?null:$last_blog->id;
-        $next_id = (empty($next_blog))?null:$next_blog->id;
+        $last_id = (empty($last_blog)) ? null : $last_blog->id;
+        $next_id = (empty($next_blog)) ? null : $next_blog->id;
 
         $school_code = school_code();
 
         $data = [
-            'school_code'=>$school_code,
-            'last_id'=>$last_id,
-            'next_id'=>$next_id,
-            'blog'=>$blog,
+            'school_code' => $school_code,
+            'last_id' => $last_id,
+            'next_id' => $next_id,
+            'blog' => $blog,
         ];
 
-        return view('blogs.show',$data);
+        return view('blogs.show', $data);
     }
-
-
-
 }

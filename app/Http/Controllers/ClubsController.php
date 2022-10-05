@@ -8,9 +8,11 @@ use App\ClubRegister;
 use App\ClubSemester;
 use App\ClubStudent;
 use App\LunchSetup;
+use App\Setup;
 use App\StudentClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Rap2hpoutre\FastExcel\FastExcel;
 use PHPExcel_IOFactory;
 use PHPExcel;
@@ -19,6 +21,11 @@ class ClubsController extends Controller
 {
     public function __construct()
     {
+        $setup = Setup::first();
+        //檢查有無關閉網站
+        if (!empty($setup->close_website)) {
+            Redirect::to('close')->send();
+        }
         $module_setup = get_module_setup();
         if (!isset($module_setup['社團報名'])) {
             echo "<h1>已停用</h1>";

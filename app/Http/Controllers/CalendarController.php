@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\Calendar;
 use App\CalendarWeek;
 use App\MonthlyCalendar;
+use App\Setup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class CalendarController extends Controller
 {
     public function __construct()
     {
+        $setup = Setup::first();
+        //檢查有無關閉網站
+        if (!empty($setup->close_website)) {
+            Redirect::to('close')->send();
+        }
         $module_setup = get_module_setup();
         if (!isset($module_setup['校務行事曆'])) {
             echo "<h1>已停用</h1>";
