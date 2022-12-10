@@ -31,7 +31,9 @@
                             <strong>{{ $photo_desc[$v]['desc'] }}</strong> 
                             @endif
                             @if(isset($photo_desc[$v]['link']) and !empty($photo_desc[$v]['link']))
-                            <a href="{{ $photo_desc[$v]['link'] }}" target="_blank" class="btn btn-info btn-sm">詳情</a>
+                            <!--
+                                <a href="{{ $photo_desc[$v]['link'] }}" target="_blank" class="btn btn-info btn-sm">詳情</a>
+                            -->
                             @endif
                         </p>
                     </div>
