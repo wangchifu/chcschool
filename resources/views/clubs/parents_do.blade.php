@@ -30,7 +30,7 @@
                             學生課後活動
                         @endif
                     </h3>
-                    <strong class="text-primary">可報 {{ $club_semester->club_limit }} 社團</strong>
+                    <strong class="text-primary">可報 {{ $club_semester->club_limit }} 社團，報名完成後，建議「拍照、截圖、<span onclick="window.print();" class="btn btn-secondary btn-sm"><i class="fas fa-print"></i> 列印</span>」下來</strong>
                 </div>
                 <style>
                     .blink {
@@ -143,6 +143,7 @@
                                         <a href="{{ route('clubs.sign_up',$club->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定報名？')"><i class="fas fa-plus-circle"></i> 報名</a>
                                     @elseif($club_register)
                                         <?php
+                                            $register_time = $club_register->created_at;
                                             $taking = $club->taking;
                                             $prepare = $club->prepare;
                                             $club_registers = \App\ClubRegister::where('semester',$user->semester)
@@ -166,6 +167,7 @@
                                             }
                                         ?>
                                         <span class="text-success">已報名({{ $order }})</span><a href="{{ route('clubs.sign_down',$club->id) }}" onclick="return confirm('確定取消報名？')"><i class="fas fa-times-circle text-danger"></i></a>
+                                        <br><small>({{ $register_time }})</small>
                                     @else
                                         <span class="text-secondary">---</span>
                                     @endif

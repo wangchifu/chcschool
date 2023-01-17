@@ -280,6 +280,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('clubs/{club_student}/stu_backPWD/{student_class_id}', 'ClubsController@stu_backPWD')->name('clubs.stu_backPWD');
 
     Route::get('clubs/report_situation/{semester?}', 'ClubsController@report_situation')->name('clubs.report_situation');
+    Route::get('clubs/report_not_situation/{semester?}', 'ClubsController@report_not_situation')->name('clubs.report_not_situation');
     Route::get('clubs/{semester}/report_situation_download/{class_id}', 'ClubsController@report_situation_download')->name('clubs.report_situation_download');
     Route::get('clubs/{club_register}/report_register_delete', 'ClubsController@report_register_delete')->name('clubs.report_register_delete');
     Route::get('clubs/report_money/{semester?}', 'ClubsController@report_money')->name('clubs.report_money');

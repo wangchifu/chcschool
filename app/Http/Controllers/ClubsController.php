@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Club;
 use App\ClubBlack;
 use App\ClubRegister;
+use App\ClubNotRegister;
 use App\ClubSemester;
 use App\ClubStudent;
 use App\LunchSetup;
@@ -874,6 +875,11 @@ class ClubsController extends Controller
             ->where('club_student_id', $user->id)
             ->delete();
 
+        $att['semester'] = $user->semester;
+        $att['ip'] = GetIP();
+        $att['event'] = "學號：".$user->no." 班級座號：".$user->class_num." ".$user->name." 取消報名了「".$club->name."」";
+        ClubNotRegister::create($att);
+
         return redirect()->route('clubs.parents_do', $club->class_id);
     }
 
@@ -928,6 +934,30 @@ class ClubsController extends Controller
         ];
 
         return view('clubs.report_situation', $data);
+    }
+
+    public function report_not_situation($semester = null)
+    {
+        $club_semesters_array = ClubSemester::orderby('semester', 'DESC')->pluck('semester', 'semester')->toArray();
+        if ($semester == null) {
+            $s = ClubSemester::orderBy('semester', 'DESC')->first();
+            if ($s) {
+                $semester = $s->semester;
+                $not_registers = ClubNotRegister::where('semester',$semester)->get();
+            } else {
+                $semester = null;
+                $not_registers = [];
+            }
+        }
+
+
+        $data = [
+            'club_semesters_array' => $club_semesters_array,
+            'semester' => $semester,
+            'not_registers'=>$not_registers,
+        ];
+
+        return view('clubs.report_not_situation', $data);
     }
 
     public function report_situation_download($semester, $class_id)

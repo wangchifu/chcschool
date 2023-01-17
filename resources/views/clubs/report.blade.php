@@ -26,6 +26,7 @@
                     ?>
                     @if($admin)
                         <a href="{{ route('clubs.report_situation') }}" class="btn btn-info btn-sm">報名狀況</a>
+                        <a href="{{ route('clubs.report_not_situation') }}" class="btn btn-info btn-sm">取消報名狀況</a>
                         <a href="{{ route('clubs.report_money') }}" class="btn btn-info btn-sm">收費報表</a>
                     @endif
                         <a href="{{ route('clubs.semester_select') }}" class="btn btn-info btn-sm" target="_blank">學生入口 <i class="fas fa-forward"></i> </i></a>
