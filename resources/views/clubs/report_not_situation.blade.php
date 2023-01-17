@@ -78,7 +78,7 @@
 
         function jump(){
             if(document.myform.semester.options[document.myform.semester.selectedIndex].value!=''){
-                location="/clubs/report_situation/" + document.myform.semester.options[document.myform.semester.selectedIndex].value;
+                location="/clubs/report_not_situation/" + document.myform.semester.options[document.myform.semester.selectedIndex].value;
             }
         }
 
