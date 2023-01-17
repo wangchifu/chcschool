@@ -939,6 +939,7 @@ class ClubsController extends Controller
     public function report_not_situation($semester = null)
     {
         $club_semesters_array = ClubSemester::orderby('semester', 'DESC')->pluck('semester', 'semester')->toArray();
+        $not_registers = [];
         if ($semester == null) {
             $s = ClubSemester::orderBy('semester', 'DESC')->first();
             if ($s) {
@@ -946,8 +947,9 @@ class ClubsController extends Controller
                 $not_registers = ClubNotRegister::where('semester',$semester)->get();
             } else {
                 $semester = null;
-                $not_registers = [];
             }
+        }else{
+            $not_registers = ClubNotRegister::where('semester',$semester)->get();
         }
 
 
