@@ -59,6 +59,13 @@
                 <div class="card-body">
                     <a href="{{ route('clubs.stu_adm',$semester) }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
                     <a href="{{ route('clubs.stu_create',['semester'=>$semester,'student_class'=>$this_class->id]) }}" class="btn btn-success btn-sm">新增此班學生</a>
+                    <br>
+                    <span class="text-danger">停用學生：</span><br>
+                    @foreach($club_students as $club_student)
+                            @if($club_student->disable == 1)
+                            {{ $club_student->class_num }} {{ $club_student->name }}({{ $club_student->no }}) <a href="{{ route('clubs.stu_enable',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="badge badge-secondary badge-sm" onclick="return confirm('確定復原此學生？記得重編座號！！！')">復原</a>,<br>
+                            @endif
+                    @endforeach
                     <table class="table table-hover">
                         <tr>
                             <th>
@@ -88,6 +95,7 @@
                         </tr>
                         <?php $i=1; ?>
                         @foreach($club_students as $club_student)
+                            @if($club_student->disable == null)
                             <?php
                                 if(isset($black_list[$semester][$club_student->no])){
                                     $black = "bg-dark text-danger";
@@ -123,10 +131,11 @@
                                     <!--
                                     <a href="{{ route('clubs.stu_delete',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？')">刪除</a>
                                     -->
-                                    <a href="{{ route('clubs.stu_disable',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定停用？')">停用</a>
+                                    <a href="{{ route('clubs.stu_disable',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定停用？座號將被改為99號！！')">停用</a>
                                 </td>
                             </tr>
                             <?php $i++; ?>
+                            @endif
                         @endforeach
                     </table>
                 </div>

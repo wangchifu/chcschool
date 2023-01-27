@@ -73,6 +73,7 @@ class ClubsController extends Controller
         Club::where('semester', $semester)->delete();
         ClubStudent::where('semester', $semester)->delete();
         ClubRegister::where('semester', $semester)->delete();
+        ClubNotRegister::where('semester', $semester)->delete();
         return redirect()->route('clubs.index');
     }
 
@@ -247,7 +248,7 @@ class ClubsController extends Controller
             '102' => 'CX',
             '103' => 'CY',
             '104' => 'CZ',
-            
+
         ];
         $semester = $request->input('semester');
         $name = $request->input('name');
@@ -369,6 +370,7 @@ class ClubsController extends Controller
 
     public function club_delete(Club $club)
     {
+        ClubRegister::where('club_id', $club->id)->delete();
         $club->delete();
         return redirect()->route('clubs.setup', $club->semester);
     }
@@ -414,7 +416,7 @@ class ClubsController extends Controller
         $sc = $this_class->student_year . sprintf("%02s", $this_class->student_class);
 
         $club_students = ClubStudent::where('semester', $semester)
-            ->where('disable', null)
+            //->where('disable', null)
             ->where('class_num', 'like', $sc . '%')
             ->orderBy('class_num')
             ->get();
@@ -567,9 +569,17 @@ class ClubsController extends Controller
 
     public function stu_disable(ClubStudent $club_student, $student_class_id)
     {
+        $att['class_num'] = substr($club_student->class_num, 0, 3) . '99';
         $att['disable'] = 1;
         $club_student->update($att);
         return redirect()->route('clubs.stu_adm_more', ['semester' => $club_student->semester, 'student_class_id' => $student_class_id]);
+    }
+
+    public function stu_enable(ClubStudent $club_student, $student_class_id)
+    {
+        $att['disable'] = null;
+        $club_student->update($att);
+        return redirect()->back();
     }
 
     public function stu_backPWD(ClubStudent $club_student, $student_class_id)
@@ -634,6 +644,9 @@ class ClubsController extends Controller
             if (!$check) {
                 return back()->withErrors(['error' => ['查無此帳號！']]);
             } else {
+                if ($check->disable == 1) {
+                    return back()->withErrors(['error' => ['此帳號已被停用！']]);
+                }
                 if ($request->input('pwd') != $check->pwd) {
                     return back()->withErrors(['error' => ['密碼錯誤！']]);
                 } else {
@@ -877,7 +890,7 @@ class ClubsController extends Controller
 
         $att['semester'] = $user->semester;
         $att['ip'] = GetIP();
-        $att['event'] = "學號：".$user->no." 班級座號：".$user->class_num." ".$user->name." 取消報名了「".$club->name."」";
+        $att['event'] = "學號：" . $user->no . " 班級座號：" . $user->class_num . " " . $user->name . " 取消報名了「" . $club->name . "」";
         ClubNotRegister::create($att);
 
         return redirect()->route('clubs.parents_do', $club->class_id);
@@ -944,19 +957,19 @@ class ClubsController extends Controller
             $s = ClubSemester::orderBy('semester', 'DESC')->first();
             if ($s) {
                 $semester = $s->semester;
-                $not_registers = ClubNotRegister::where('semester',$semester)->get();
+                $not_registers = ClubNotRegister::where('semester', $semester)->get();
             } else {
                 $semester = null;
             }
-        }else{
-            $not_registers = ClubNotRegister::where('semester',$semester)->get();
+        } else {
+            $not_registers = ClubNotRegister::where('semester', $semester)->get();
         }
 
 
         $data = [
             'club_semesters_array' => $club_semesters_array,
             'semester' => $semester,
-            'not_registers'=>$not_registers,
+            'not_registers' => $not_registers,
         ];
 
         return view('clubs.report_not_situation', $data);

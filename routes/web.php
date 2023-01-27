@@ -277,6 +277,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('clubs/{club_student}/stu_update', 'ClubsController@stu_update')->name('clubs.stu_update');
     Route::get('clubs/{club_student}/stu_delete/{student_class_id}', 'ClubsController@stu_delete')->name('clubs.stu_delete');
     Route::get('clubs/{club_student}/stu_disable/{student_class_id}', 'ClubsController@stu_disable')->name('clubs.stu_disable');
+    Route::get('clubs/{club_student}/stu_enable/{student_class_id}', 'ClubsController@stu_enable')->name('clubs.stu_enable');
     Route::get('clubs/{club_student}/stu_backPWD/{student_class_id}', 'ClubsController@stu_backPWD')->name('clubs.stu_backPWD');
 
     Route::get('clubs/report_situation/{semester?}', 'ClubsController@report_situation')->name('clubs.report_situation');
