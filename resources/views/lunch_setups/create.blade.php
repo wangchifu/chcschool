@@ -41,14 +41,16 @@
                             <li>
                                 <input type="checkbox" name="eat_styles[]" value="1" id="eat_style1" checked> <label for="eat_style1"><span class="text-danger">葷食</span>合菜</label>
                             </li>
+                            <!--
                             <li>
-                                <input type="checkbox" name="eat_styles[]" value="2" id="eat_style2" checked> <label for="eat_style2"><span class="text-success">素食</span>合菜</label>
+                                <input type="checkbox" name="eat_styles[]" value="2" id="eat_style2"> <label for="eat_style2"><span class="text-success">素食</span>合菜</label>
                             </li>
                             <li>
                                 <input type="checkbox" name="eat_styles[]" value="3" id="eat_style3"> <label for="eat_style3"><span class="text-danger">葷食</span>便當</label>
                             </li>
+                            -->
                             <li>
-                                <input type="checkbox" name="eat_styles[]" value="4" id="eat_style4"> <label for="eat_style4"><span class="text-success">素食</span>便當</label>
+                                <input type="checkbox" name="eat_styles[]" value="4" id="eat_style4" checked> <label for="eat_style4"><span class="text-success">素食</span>便當</label>
                             </li>
                         </ul>
                     </div>
