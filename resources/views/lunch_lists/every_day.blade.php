@@ -86,13 +86,13 @@
                                 </td>
                                 <td>
                                     @if($eat_data[$k1]==1)
-                                        葷食合菜
+                                        <img src="{{ asset('images/meat.png') }}">葷食合菜
                                     @elseif($eat_data[$k1]==2)
-                                        素食合菜
+                                        <img src="{{ asset('images/vegetarian.png') }}">素食合菜
                                     @elseif($eat_data[$k1]==3)
-                                        葷食便當
+                                        <img src="{{ asset('images/meat.png') }}">葷食便當
                                     @elseif($eat_data[$k1]==4)
-                                        素食便當
+                                        <img src="{{ asset('images/vegetarian.png') }}">素食便當
                                     @endif
                                 </td>
                                 @foreach($date_array as $k2=>$v2)

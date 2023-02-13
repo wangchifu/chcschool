@@ -141,13 +141,13 @@
                                 </td>
                                 <td>
                                     @if($eat_data[$k1]==1)
-                                        葷食合菜
+                                        <img src="{{ asset('images/meat.png') }}">葷食合菜
                                     @elseif($eat_data[$k1]==2)
-                                        素食合菜
+                                        <img src="{{ asset('images/vegetarian.png') }}">素食合菜
                                     @elseif($eat_data[$k1]==3)
-                                        葷食便當
+                                        <img src="{{ asset('images/meat.png') }}">葷食便當
                                     @elseif($eat_data[$k1]==4)
-                                        素食便當
+                                        <img src="{{ asset('images/vegetarian.png') }}">素食便當
                                     @endif
                                 </td>
                                 @foreach($date_array as $k2=>$v2)
@@ -256,7 +256,7 @@
                                         $bg="";
                                     }
                                     ?>
-                                    <td style="background-color: {{ $bg }}">
+                                    <td style="background-color: {{ $bg }};border-left:solid black 2px;color:red;">
                                         <?php
                                             $h1 = (isset($v11[1][$k33]))?$v11[1][$k33]:0;
                                             $h3 = (isset($v11[3][$k33]))?$v11[3][$k33]:0;
@@ -267,7 +267,7 @@
                                         ?>
                                         {{ $h }}
                                     </td>
-                                    <td style="background-color: {{ $bg }}">
+                                    <td style="background-color: {{ $bg }};color:green;">
                                         <?php
                                             $s2 = (isset($v11[2][$k33]))?$v11[2][$k33]:0;
                                             $s4 = (isset($v11[4][$k33]))?$v11[4][$k33]:0;
@@ -286,14 +286,14 @@
                                 合計
                             </td>
                             @foreach($date_array as $kk=>$vv)
-                            <th>
+                            <th style="border-left:solid black 2px;color:red;">
                                 <?php 
                                     if(!isset($one_h[$kk])) $one_h[$kk]=0;
                                     if($one_h[$kk]==0) $one_h[$kk]="";
                                 ?>
                                 {{ $one_h[$kk] }}
                             </th> 
-                            <th>
+                            <th style="color:green;">
                                 <?php 
                                     if(!isset($one_s[$kk])) $one_s[$kk]=0;
                                     if($one_s[$kk]==0) $one_s[$kk]="";
@@ -383,7 +383,7 @@
                                 {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
                             </td>                                        
                             @foreach($date_array as $kk=>$vv)
-                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
+                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" style="color:red;">
                                     @if(isset($lunch_class_data[$student_class->id][$kk][1]))
                                     {{ $lunch_class_data[$student_class->id][$kk][1] }}
                                     @else
@@ -394,7 +394,7 @@
                                     <small class="text-primary font-weight-bold">+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk] }}</small>
                                     @endif
                                 </td>
-                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素">
+                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素" style="color:green;">
                                     @if(isset($lunch_class_data[$student_class->id][$kk][4]))
                                     {{ $lunch_class_data[$student_class->id][$kk][4] }}
                                     @else
