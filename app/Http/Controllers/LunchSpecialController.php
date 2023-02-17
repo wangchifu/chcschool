@@ -184,7 +184,7 @@ class LunchSpecialController extends Controller
         $admin = check_power('午餐系統', 'A', auth()->user()->id);
 
         $user_array = User::where('disable', null)
-            ->where('username', '<>', 'admin')
+            //->where('username', '<>', 'admin')
             ->orderBy('order_by')
             ->pluck('name', 'id')
             ->toArray();
