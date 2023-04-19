@@ -56,7 +56,12 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
             $air_data[$v->sitename]['Status'] = $v->status;
             $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
         }
-        $fname = str_replace('/','',$v->publishtime);
+        if(!isset($v->publishtime)){
+            $fname = "no_publishtime";
+            //$air_data = [];
+        }else{
+            $fname = str_replace('/','',$v->publishtime);
+        }        
         $fname = str_replace(' ','',$fname);
         $fname = str_replace(':','',$fname);
         $file = fopen('../../service/chc_air/download/'.$fname.'.txt','w');
