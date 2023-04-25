@@ -58,7 +58,7 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
         }
         if(!isset($v->publishtime)){
             $fname = "no_publishtime";
-            //$air_data = [];
+            $air_data = [];
         }else{
             $fname = str_replace('/','',$v->publishtime);
         }        
