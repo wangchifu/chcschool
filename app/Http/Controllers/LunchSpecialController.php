@@ -54,6 +54,10 @@ class LunchSpecialController extends Controller
             } else {
                 return back()->withErrors(['error' => ['查無該日期資料！']]);
             }
+        } elseif($request->input('action') == "tea_not_eat"){
+            $att3['enable'] = "not_eat";
+            LunchTeaDate::where('order_date', $request->input('order_date'))
+                ->update($att3);
         }
 
         return redirect()->route('lunch_specials.index');

@@ -60,8 +60,9 @@
                             <label>2.變更選項</label>
                             <select name="action" class="form-control" required>
                                 <option value="">--請選擇--</option>
-                                <option value="eat">供餐</option>
-                                <option value="not_eat">不供餐</option>
+                                <option value="eat">供餐，但師生要另行點餐</option>
+                                <option value="not_eat">全校師生都不供餐</option>
+                                <option value="tea_not_eat">全校只有老師不供餐</option>
                             </select>
                         </div>
                         <div class="form-group">
