@@ -23,5 +23,6 @@ class Club extends Model
         'prepare',
         'year_limit',
         'class_id',
+        'no_check',
     ];
 }

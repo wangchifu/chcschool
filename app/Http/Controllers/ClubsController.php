@@ -321,6 +321,7 @@ class ClubsController extends Controller
             $att['taking'] = $club->taking;
             $att['prepare'] = $club->prepare;
             $att['year_limit'] = $club->year_limit;
+            $att['no_check'] = $club->no_check;
 
             Club::create($att);
         }
@@ -345,6 +346,7 @@ class ClubsController extends Controller
     public function club_update(Request $request, Club $club)
     {
         $att = $request->all();
+        $att['no_check'] = ($request->input('no_check'))?1:null;
         $s1 = $att['start1_time1'] . "-" . $att['start1_time2'] . "-" . $att['start1_time3'];
         $s2 = $att['start2_time1'] . "-" . $att['start2_time2'] . "-" . $att['start2_time3'];
         $s3 = $att['start3_time1'] . "-" . $att['start3_time2'] . "-" . $att['start3_time3'];
@@ -830,31 +832,33 @@ class ClubsController extends Controller
             ->count();
 
         //時間重疊就不能報名
-        $tt = explode(';', $club->start_time);
-        $check_registers = ClubRegister::where('semester', $user->semester)
-            ->where('club_student_id', $user->id)
-            ->get();
-        foreach ($check_registers as $check_register) {
-            $ss = explode(';', $check_register->club->start_time);
-            foreach ($ss as $k => $v) {
-                $check_t = explode('-', $v);
-
-                foreach ($tt as $k2 => $v2) {
-                    $want_t = explode('-', $v2);
-                    if ($want_t[0] == $check_t[0]) {
-                        $beginTime1 = strtotime(date('Y-m-d') . ' ' . $want_t[1]);
-                        $endTime1 = strtotime(date('Y-m-d') . ' ' . $want_t[2]);
-                        $beginTime2 = strtotime(date('Y-m-d') . ' ' . $check_t[1]);
-                        $endTime2 = strtotime(date('Y-m-d') . ' ' . $check_t[2]);
-
-                        if ($this->is_time_cross($beginTime1, $endTime1, $beginTime2, $endTime2)) {
-                            return back()->withErrors(['errors' => [$club->name . ' 此社團和已報名的社團時間衝突！']]);
+        if(!$club->no_check){
+            $tt = explode(';', $club->start_time);
+            $check_registers = ClubRegister::where('semester', $user->semester)
+                ->where('club_student_id', $user->id)
+                ->get();
+            foreach ($check_registers as $check_register) {
+                $ss = explode(';', $check_register->club->start_time);
+                foreach ($ss as $k => $v) {
+                    $check_t = explode('-', $v);
+    
+                    foreach ($tt as $k2 => $v2) {
+                        $want_t = explode('-', $v2);
+                        if ($want_t[0] == $check_t[0]) {
+                            $beginTime1 = strtotime(date('Y-m-d') . ' ' . $want_t[1]);
+                            $endTime1 = strtotime(date('Y-m-d') . ' ' . $want_t[2]);
+                            $beginTime2 = strtotime(date('Y-m-d') . ' ' . $check_t[1]);
+                            $endTime2 = strtotime(date('Y-m-d') . ' ' . $check_t[2]);
+    
+                            if ($this->is_time_cross($beginTime1, $endTime1, $beginTime2, $endTime2)) {
+                                return back()->withErrors(['errors' => [$club->name . ' 此社團和已報名的社團時間衝突！']]);
+                            }
                         }
                     }
                 }
             }
         }
-
+        
         //年級不對
         if (!in_array(substr($user->class_num, 0, 1), explode(',', $club->year_limit))) {
             return back()->withErrors(['errors' => [$club->name . ' 此社團有年級限制，與你不符！']]);

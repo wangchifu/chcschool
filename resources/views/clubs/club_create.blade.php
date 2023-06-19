@@ -129,6 +129,11 @@
                                 {{ Form::text('year_limit',null,['id'=>'year_limit','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">
+                                <label for="no_check">此社團不檢查時間衝突</label><small class="text-primary">(如果同一社團不同日期，但同時間上課，只是分梯次讓學生選，可以打勾)</small>
+                                <br>
+                                <input type="checkbox" value="1" name="no_check" id="no_check"> <label for="no_check">不檢查</label>
+                            </div>
+                            <div class="form-group">
                                 <label for="ps">備註</label>
                                 {{ Form::text('ps',null,['id'=>'ps','class' => 'form-control']) }}
                             </div>

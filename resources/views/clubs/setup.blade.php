@@ -123,6 +123,10 @@
                                 </td>
                                 <td>
                                     {{ $club->start_time }}
+                                    @if($club->no_check)
+                                    <br>
+                                    <span class="text-danger">不檢查</span>
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $club->place }}
@@ -221,6 +225,10 @@
                                         </td>
                                         <td>
                                             {{ $club->start_time }}
+                                            @if($club->no_check)
+                                            <br>
+                                            <span class="text-danger">不檢查</span>
+                                            @endif
                                         </td>
                                         <td>
                                             {{ $club->place }}
