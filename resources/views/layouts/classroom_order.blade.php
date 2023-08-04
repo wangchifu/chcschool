@@ -137,7 +137,7 @@
                         data = data+ '<i class="fas fa-user text-danger" onclick="alert(\'被 '+result['has_order'][result['week'][k2]][k1][k]+' 預約了\')"></i>';
                     }
                     if(result['can_not_order'][result['week'][k2]][k1][k] == "1"){
-                        data = data+ '<i class="fas fa-times-circle" onclick="alert(\'無法預約\')"></i>';
+                        data = data+ '<span onclick="alert(\'無法預約\')">-</span>';
                     }
                     //data = data+ result['has_order']['2021-08-10']['10']['6'];
                     data = data + '</td>';
@@ -228,7 +228,7 @@
                             <td>
                                 @if(empty($has_order[$v2][$k1]['id']))
                                     @if(strpos($classroom->close_sections, "'".$k2."-".$k1."'") !== false)
-                                        <i class="fas fa-times-circle" onclick="alert('無法預約');"></i>
+                                        <span onclick="alert('無法預約');">-</span>
                                     @endif
                                 @else
                                     <i class="fas fa-user text-danger" onclick="alert('被 {{ $has_order[$v2][$k1]['user_name'] }} 預約了');"></i>
