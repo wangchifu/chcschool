@@ -33,6 +33,10 @@
                                 {{ Form::select('class_id',$club_classes,null,['id'=>'class_id','class' => 'form-control','required'=>'required']) }}
                             </div>
                             <div class="form-group">
+                                <label for="no"><strong>社團序號</strong><small class="text-primary">(如 A 或 1)</small></label>
+                                {{ Form::text('no',null,['id'=>'no','class' => 'form-control','placeholder'=>'若留空則用ABC序號']) }}
+                            </div>
+                            <div class="form-group">
                                 <label for="name"><strong>社團名稱*</strong></label>
                                 {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required']) }}
                             </div>
@@ -69,7 +73,7 @@
                                 <input type="text" name="start1_time2" required placeholder="16:00(五碼)" maxlength="5">到<input type="text" name="start1_time3" required placeholder="17:30(五碼)" maxlength="5">
                                 <br>
                                 2.週<select name="start2_time1" style="height:30px;">
-                                    <option value="0">無第二次</option>
+                                    <option value="0">沒有了</option>
                                     <option value="一">一</option>
                                     <option value="二">二</option>
                                     <option value="三">三</option>
@@ -79,7 +83,7 @@
 				<input type="text" name="start2_time2" placeholder="16:00(五碼)" maxlength="5">到<input type="text" name="start2_time3" placeholder="17:30(五碼)" maxlength="5">
                                <br>
                                3.週<select name="start3_time1" style="height:30px;">
-                                    <option value="0">無第三次</option>
+                                    <option value="0">沒有了</option>
                                     <option value="一">一</option>
                                     <option value="二">二</option>
                                     <option value="三">三</option>
@@ -89,7 +93,7 @@
 				<input type="text" name="start3_time2" placeholder="16:00(五碼)" maxlength="5">到<input type="text" name="start3_time3" placeholder="17:30(五碼)" maxlength="5">
                                <br>
                                4.週<select name="start4_time1" style="height:30px;">
-                                    <option value="0">無第四次</option>
+                                    <option value="0">沒有了</option>
                                     <option value="一">一</option>
                                     <option value="二">二</option>
                                     <option value="三">三</option>
@@ -99,7 +103,7 @@
 				<input type="text" name="start4_time2" placeholder="16:00(五碼)" maxlength="5">到<input type="text" name="start4_time3" placeholder="17:30(五碼)" maxlength="5">
                                <br>
                                5.週<select name="start5_time1" style="height:30px;">
-                                    <option value="0">無第五次</option>
+                                    <option value="0">沒有了</option>
                                     <option value="一">一</option>
                                     <option value="二">二</option>
                                     <option value="三">三</option>

@@ -48,6 +48,9 @@
                                     最多可報
                                 </th>
                                 <th>
+                                    學生人數
+                                </th>
+                                <th>
                                     動作
                                 </th>
                             </tr>
@@ -72,7 +75,13 @@
                                     {{ $club_semester->club_limit }}
                                 </td>
                                 <td>
+                                    <?php
+                                        $student_num = \App\ClubStudent::where('semester',$club_semester->semester)->count();
+                                    ?>
+                                    {{ $student_num }} 人<br>
                                     <a href="{{ route('clubs.stu_adm',$club_semester->semester) }}" class="btn btn-warning btn-sm">學生管理</a>
+                                </td>
+                                <td>                                    
                                     <a href="{{ route('clubs.semester_edit',$club_semester->id) }}" class="btn btn-primary btn-sm">編輯</a>
                                     <a href="{{ route('clubs.semester_delete',$club_semester->semester) }}" class="btn btn-danger btn-sm" onclick="return confirm('底下所有的資料都會清除喔！')">刪除</a>
                                 </td>
