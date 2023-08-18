@@ -11,6 +11,7 @@ class ClubRegister extends Model
         'club_id',
         'club_student_id',
         'class_id',
+        'second',
     ];
     public function user()
     {

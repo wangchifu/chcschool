@@ -33,6 +33,9 @@
                                     學期
                                 </th>
                                 <th>
+                                    開放
+                                </th>
+                                <th>
                                     特色社團開始
                                 </th>
                                 <th>
@@ -58,6 +61,13 @@
                             <tr>
                                 <td>
                                     {{ $club_semester->semester }}
+                                </td>
+                                <td>
+                                    @if($club_semester->second)
+                                    第2次
+                                    @else
+                                    第1次
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $club_semester->start_date }}

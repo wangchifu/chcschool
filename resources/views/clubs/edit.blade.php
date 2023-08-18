@@ -25,8 +25,19 @@
                     {{ Form::model($club_semester,['route' => ['clubs.semester_update',$club_semester->id], 'method' => 'PATCH']) }}
                     <div class="form-group">
                         <label for="semester"><strong>學期*</strong><small class="text-primary">(如 1091)</small></label>
-                        {{ Form::number('semester',$club_semester->semester,['id'=>'semester','class' => 'form-control', 'maxlength'=>'4','placeholder'=>'4碼數字','required'=>'required','readonly'=>'readonly']) }}
+                        {{ Form::number('semester',$club_semester->semester,['id'=>'semester','class' => 'form-control', 'maxlength'=>'4','placeholder'=>'4碼數字','required'=>'required']) }}
                     </div>
+                    <br>
+                <div class="form-check">
+                    <?php
+                        $checked = ($club_semester->second)?"checked":null;
+                    ?>
+                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault" name="second" {{ $checked }}>
+                    <label class="form-check-label" for="flexCheckDefault">
+                    第二次開放(打勾則第一次開放時有報名者無法取消報名，下方時間記得延後。)
+                    </label>
+                </div>
+                <br>
                     <div class="form-group">
                         <?php
                             $d1_1 = explode('-',$club_semester->start_date);

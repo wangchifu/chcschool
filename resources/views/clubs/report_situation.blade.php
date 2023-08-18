@@ -60,6 +60,9 @@
                                                 社團
                                             </th>
                                             <th>
+                                                報名
+                                            </th>
+                                            <th>
                                                 班級座號
                                             </th>
                                             <th>
@@ -95,6 +98,13 @@
                                             @endif
                                                 <td>
                                                     {{ $club->name }}
+                                                </td>
+                                                <td>
+                                                    @if($club_register->second)
+                                                    第2次
+                                                    @else
+                                                    第1次
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ $club_register->user->class_num }}
@@ -164,6 +174,9 @@
                                                     社團
                                                 </th>
                                                 <th>
+                                                    報名
+                                                </th>
+                                                <th>
                                                     班級座號
                                                 </th>
                                                 <th>
@@ -199,6 +212,13 @@
                                                         @endif
                                                         <td>
                                                             {{ $club->name }}
+                                                        </td>
+                                                        <td>
+                                                            @if($club_register->second)
+                                                            第2次
+                                                            @else
+                                                            第1次
+                                                            @endif
                                                         </td>
                                                         <td>
                                                             {{ $club_register->user->class_num }}

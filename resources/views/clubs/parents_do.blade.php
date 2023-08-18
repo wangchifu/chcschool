@@ -15,6 +15,9 @@
             @if($user->parents_telephone)
                 <div class="card">
                 <div class="card-header">
+                    @if($club_semester->second)
+                    <h4 class="text-danger">目前為第二次報名，屬於第一次報名正取者，無法取消</h4>
+                    @endif     
                     <form name=myform>
                     <div class="form-group">
                         <label>
@@ -138,6 +141,7 @@
                                         ->where('club_id',$club->id)
                                         ->where('club_student_id',$user->id)
                                         ->first();
+                                    $second = (isset($club_register->second))?$club_register->second:null;                                        
                                     ?>
                                     @if(empty($club_register) and $check_num < $club_semester->club_limit and $count_num < ($club->taking+$club->prepare))
                                         <a href="{{ route('clubs.sign_up',$club->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定報名？')"><i class="fas fa-plus-circle"></i> 報名</a>
@@ -165,8 +169,16 @@
                                             if($my_order > $taking and $my_order <= ($taking+$prepare)){
                                                 $order = "候補".($my_order-$taking);
                                             }
-                                        ?>
-                                        <span class="text-success">已報名({{ $order }})</span><a href="{{ route('clubs.sign_down',$club->id) }}" onclick="return confirm('確定取消報名？')"><i class="fas fa-times-circle text-danger"></i></a>
+                                        ?>                                        
+                                        <span class="text-success">已報名({{ $order }})</span>
+                                        @if($second==1)
+                                         第②次
+                                        @else
+                                         第①次
+                                        @endif
+                                        @if($club_semester->second==null or ($club_semester->second==1 and ($second==1 or preg_match("/候補/i",$order))))
+                                        <a href="{{ route('clubs.sign_down',$club->id) }}" onclick="return confirm('確定取消報名？')"><i class="fas fa-times-circle text-danger"></i></a>
+                                        @endif
                                         <br><small>({{ $register_time }})</small>
                                     @else
                                         <span class="text-secondary">---</span>
