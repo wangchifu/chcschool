@@ -147,7 +147,7 @@
                                     $second = (isset($club_register->second))?$club_register->second:null;                                        
                                     ?>
                                     @if(empty($club_register) and $check_num < $club_semester->club_limit and $count_num < ($club->taking+$club->prepare))
-                                        <a href="{{ route('clubs.sign_up',$club->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定報名？')"><i class="fas fa-plus-circle"></i> 報名 {{ $club->no }}</a>
+                                        <a href="{{ route('clubs.sign_up',$club->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定報名？')"><i class="fas fa-plus-circle"></i> 報名 編號{{ $club->no }}社團</a>
                                     @elseif($club_register)
                                         <?php
                                             $register_time = $club_register->created_at;
