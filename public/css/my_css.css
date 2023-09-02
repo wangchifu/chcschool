@@ -32,9 +32,9 @@
 }
 
 .rwd-table td:before {
-    content: attr(data-th) " : ";
+    content: attr(data-th);
     font-weight: bold;
-    width: 4em;
+    width: 6em;
     display: inline-block;
 }
 
@@ -43,11 +43,11 @@
 }
 
 .rwd-table th, .rwd-table td:before {
-    color: #000000;
+    color: #0044ff;
     font-weight: bold;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 850px) {
     .rwd-table td:before {
         display: none;
     }

@@ -4,7 +4,7 @@
 
 @section('title', '社團報名-')
 
-@section('content')
+@section('content') 
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>{{ $user->semester }}學期 社團報名</h1>
@@ -66,76 +66,79 @@
                             </h5>
                         </div>
                     @endif
-                    <table class="table table-hover">
-                        <tr>
-                            <th>
-                                編號
-                            </th>
-                            <th>
-                                名稱
-                            </th>
-                            <th>
-                                收費
-                            </th>
-                            <th>
-                                上課時間
-                            </th>
-                            <th>
-                                年級限制
-                            </th>
-                            <th>
-                                最少人數
-                            </th>
-                            <th>
-                                正取/候補
-                            </th>
-                            <th>
-                                已報
-                            </th>
-                            <th>
-                                動作
-                            </th>
-                        </tr>
+                    <table class="table rwd-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    編號
+                                </th>
+                                <th>
+                                    名稱
+                                </th>
+                                <th>
+                                    收費
+                                </th>
+                                <th>
+                                    上課時間
+                                </th>
+                                <th>
+                                    年級限制
+                                </th>
+                                <th>
+                                    最少人數
+                                </th>
+                                <th>
+                                    正取/候補
+                                </th>
+                                <th>
+                                    已報
+                                </th>
+                                <th>
+                                    動作
+                                </th>
+                            </tr>
+                        </thead>
                         <?php
                         $check_num = \App\ClubRegister::where('semester',$user->semester)
                             ->where('club_student_id',$user->id)
                             ->where('class_id',$class_id)
                             ->count();
                         ?>
+                        <tbody>
                         @foreach($clubs as $club)
                             <tr>
-                                <td>
+                                <td data-th="編號">
                                     {{ $club->no }}
                                 </td>
-                                <td>
+                                <td data-th="名稱">
                                     <a href="{{ route('clubs.show_club',$club->id) }}" class="btn btn-info btn-sm">
                                         {{ $club->name }}
                                     </a>
                                 </td>
-                                <td>
+                                <td data-th="收費">
                                     {{ $club->money }}
                                 </td>
-                                <td>
+                                <td data-th="上課時間">
                                     {{ $club->start_time }}
                                 </td>
-                                <td>
+                                <td data-th="年級限制">
                                     {{ $club->year_limit }}
                                 </td>
-                                <th>
+                                <td data-th="最少人數">
                                     {{ $club->people }}
-                                </th>
-                                <th>
+                                </td>
+                                <td data-th="正取/候補">
                                     {{ $club->taking }} / {{ $club->prepare }}
-                                </th>
-                                <th>
+                                </td>
+                                <td data-th="已報">
                                     <?php
                                         $count_num = \App\ClubRegister::where('semester',$user->semester)
                                             ->where('club_id',$club->id)
                                             ->count();
                                     ?>
                                     <a href="{{ route('clubs.sign_show',['club_id'=>$club->id,'class_id'=>$class_id]) }}" class="badge badge-info">{{ $count_num }}</a>
-                                </th>
-                                <td>
+                                </td>
+                                <td data-th="動作">
                                     <?php
                                     $club_register = \App\ClubRegister::where('semester',$user->semester)
                                         ->where('club_id',$club->id)
@@ -144,7 +147,7 @@
                                     $second = (isset($club_register->second))?$club_register->second:null;                                        
                                     ?>
                                     @if(empty($club_register) and $check_num < $club_semester->club_limit and $count_num < ($club->taking+$club->prepare))
-                                        <a href="{{ route('clubs.sign_up',$club->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定報名？')"><i class="fas fa-plus-circle"></i> 報名</a>
+                                        <a href="{{ route('clubs.sign_up',$club->id) }}" class="btn btn-success btn-sm" onclick="return confirm('確定報名？')"><i class="fas fa-plus-circle"></i> 報名 {{ $club->no }}</a>
                                     @elseif($club_register)
                                         <?php
                                             $register_time = $club_register->created_at;
@@ -186,6 +189,7 @@
                                 </td>
                             </tr>
                         @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
