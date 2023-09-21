@@ -201,7 +201,7 @@ class PostsController extends Controller
                 fclose($wfile);        
             }
             $wfile = fopen($file, "at") or die("Unable to open file!");
-            fputs( $wfile, $att['views']." / ".$ip.PHP_EOL);
+            fputs( $wfile, $att['views']." / ".$ip.' / '.date('Y-m-d H:i:s').PHP_EOL);
             fclose($wfile);
         }
         session([$s_key => '1']);
