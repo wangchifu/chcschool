@@ -188,6 +188,21 @@ class PostsController extends Controller
         if (!session($s_key)) {
             $att['views'] = $post->views + 1;
             $post->update($att);
+
+            $ip = GetIP();
+            $school_code = school_code();
+            $post_folder = storage_path('app/public/'.$school_code.'/posts/'.$post->id); 
+            $file = $post_folder.'/'.$post->id.'.txt';
+            if(!is_dir($post_folder)) {
+                mkdir($post_folder,0777,true);
+            }
+            if(!file_exists($file)) {
+                $wfile = fopen($file, "w") or die("Unable to open file!");
+                fclose($wfile);        
+            }
+            $wfile = fopen($file, "at") or die("Unable to open file!");
+            fputs( $wfile, $att['views']." / ".$ip.PHP_EOL);
+            fclose($wfile);
         }
         session([$s_key => '1']);
 

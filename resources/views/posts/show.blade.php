@@ -77,7 +77,7 @@
             <!-- Date/Time -->
             <p>
                 張貼日期： {{ $post->created_at }}　
-                點閱：{{ $post->views }}
+                點閱：<a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/'.$post->id.'.txt') }}" target="_blank">{{ $post->views }}</a>
             </p>
 
             <hr>
