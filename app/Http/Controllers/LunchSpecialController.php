@@ -8,6 +8,7 @@ use App\LunchOrderDate;
 use App\LunchPlace;
 use App\LunchSetup;
 use App\LunchTeaDate;
+use App\LunchClassDate;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -45,6 +46,12 @@ class LunchSpecialController extends Controller
             $att2['enable'] = "not_eat";
             LunchTeaDate::where('order_date', $request->input('order_date'))
                 ->update($att2);
+            $att3['eat_style1'] = null;
+            $att3['eat_style2'] = null;
+            $att3['eat_style3'] = null;
+            $att3['eat_style4'] = null;
+            LunchClassDate::where('order_date', $request->input('order_date'))
+            ->update($att3);
         } elseif ($request->input('action') == "eat") {
             $lunch_order_date = LunchOrderDate::where('order_date', $request->input('order_date'))
                 ->first();
