@@ -66,6 +66,10 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label>3.備註</label>
+                            <input type="text" name="date_ps" class="form-control">
+                        </div>
+                        <div class="form-group">
                             <button class="btn btn-primary btn-sm" onclick="return confirm('確定送出？')">送出變更</button>
                             @include('layouts.errors')
                         </div>

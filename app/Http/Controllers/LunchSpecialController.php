@@ -32,12 +32,13 @@ class LunchSpecialController extends Controller
         return view('lunch_specials.one_day', $data);
     }
 
-    public function one_day_store(Request $request)
+    public function one_day_store(Request $request) 
     {
         if ($request->input('action') == "not_eat") {
             $lunch_order_date = LunchOrderDate::where('order_date', $request->input('order_date'))
                 ->first();
             $att['enable'] = 0;
+            $att['date_ps'] = $request->input('date_ps');
             if ($lunch_order_date) {
                 $lunch_order_date->update($att);
             } else {
@@ -56,6 +57,7 @@ class LunchSpecialController extends Controller
             $lunch_order_date = LunchOrderDate::where('order_date', $request->input('order_date'))
                 ->first();
             $att['enable'] = 1;
+            $att['date_ps'] = $request->input('date_ps');
             if ($lunch_order_date) {
                 $lunch_order_date->update($att);
             } else {
