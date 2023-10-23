@@ -80,7 +80,7 @@
                             {{ $n }} 個項目
                         </td>
                         <td>
-                            {{ $folder->user->name }}
+                            {{ $folder->user->title }}
                         </td>
                         <td>
                             @if(file_exists(storage_path($f.'/'.$folder->name)))
