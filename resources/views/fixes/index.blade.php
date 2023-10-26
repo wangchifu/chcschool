@@ -5,7 +5,6 @@
 @section('title', '報修系統 | ')
 
 @section('content')
-    <?php $types=['1'=>'1.設備或資訊','2'=>'2.總務']; ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>報修系統</h1>
@@ -17,10 +16,12 @@
             </nav>
             <a href="{{ route('fixes.index') }}" class="btn btn-dark btn-sm"><i class="fas fa-check-square"></i> 全部列表</a>
             @include('fixes.nav',['situation'=>null])
+            <hr>
+            <a href="{{ route('fixes.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增報修</a>
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th>類別 <a href="{{ route('fixes.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增</a></th>
+                    <th>類別 @if($fix_admin)<a href="{{ route('fixes.edit_class') }}" class="btn btn-secondary btn-sm"> <i class="fas fa-edit"></i> 編輯類別</a>@endif</th>
                     <th>處理狀況</th>
                     <th>申報日期</th>
                     <th>申報人</th>

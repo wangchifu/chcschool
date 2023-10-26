@@ -326,6 +326,9 @@ Route::group(['middleware' => 'exec'], function () {
 
     //報修回復
     Route::patch('fixes/{fix}', 'FixController@update')->name('fixes.update');
+    Route::get('fixes/edit_class', 'FixController@edit_class')->name('fixes.edit_class');
+    Route::post('fixes/edit_class/{fix_class}', 'FixController@update_class')->name('fixes.update_class');
+    Route::post('fixes/store_class', 'FixController@store_class')->name('fixes.store_class');
 
 
     //會議文稿

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Fix;
+use App\FixClass;
 use App\Fun;
 use App\Http\Requests\FixRequest;
 use App\Setup;
@@ -30,15 +31,21 @@ class FixController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function index()
     {
         $fixes = Fix::orderBy('id', 'DESC')
             ->paginate(20);
         $fix_admin = check_power('報修系統', 'A', auth()->user()->id);
+        $fix_classes = FixClass::orderBy('order_by')->get();
+        $types = [];
+        foreach($fix_classes as $fix_class){
+            $types[$fix_class->id] = $fix_class->name;
+        } 
         $data = [
             'fixes' => $fixes,
             'fix_admin' => $fix_admin,
+            'types'=>$types,
         ];
         return view('fixes.index', $data);
     }
@@ -47,9 +54,15 @@ class FixController extends Controller
         $fixes = Fix::where('situation', $situation)
             ->orderBy('id', 'DESC')
             ->paginate(20);
+        $fix_classes = FixClass::orderBy('order_by')->get();
+        $types = [];
+        foreach($fix_classes as $fix_class){
+            $types[$fix_class->id] = $fix_class->name;
+        } 
         $data = [
             'situation' => $situation,
             'fixes' => $fixes,
+            'types'=>$types,
         ];
         return view('fixes.search', $data);
     }
@@ -61,7 +74,15 @@ class FixController extends Controller
      */
     public function create()
     {
-        return view('fixes.create');
+        $fix_classes = FixClass::where('disable',null)->orderBy('order_by')->get();
+        $types = [];
+        foreach($fix_classes as $fix_class){
+            $types[$fix_class->id] = $fix_class->name;
+        } 
+        $data = [
+            'types'=>$types,
+        ];
+        return view('fixes.create',$data);
     }
 
     /**
@@ -108,9 +129,15 @@ class FixController extends Controller
     public function show(Fix $fix)
     {
         $fix_admin = check_power('報修系統', 'A', auth()->user()->id);
+        $fix_classes = FixClass::orderBy('order_by')->get();
+        $types = [];
+        foreach($fix_classes as $fix_class){
+            $types[$fix_class->id] = $fix_class->name;
+        } 
         $data = [
             'fix' => $fix,
             'fix_admin' => $fix_admin,
+            'types'=>$types,
         ];
         return view('fixes.show', $data);
     }
@@ -157,6 +184,37 @@ class FixController extends Controller
 
 
         return redirect()->route('fixes.show', $fix->id);
+    }
+
+    public function edit_class()
+    {
+        $fix_classes = FixClass::orderBy('order_by')->get();
+        $types = [];
+        foreach($fix_classes as $fix_class){
+            $types[$fix_class->id] = $fix_class->name;
+        } 
+        $data = [
+            'fix_classes'=>$fix_classes,
+            'types'=>$types,
+        ];
+
+        return view('fixes.edit_class',$data);
+    }
+
+    public function store_class(Request $request)
+    {
+        $att = $request->all();
+        if(!isset($att['disable'])) $att['disable'] = null;
+        FixClass::create($att);
+        return redirect()->route('fixes.edit_class');
+    }
+
+    public function update_class(Request $request,FixClass $fix_class)
+    {
+        $att = $request->all();
+        if(!isset($att['disable'])) $att['disable'] = null;
+        $fix_class->update($att);
+        return redirect()->route('fixes.edit_class');
     }
 
     /**

@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group">
                         <label for="type">類別*</label>
-                        <?php $types=['1'=>'1.設備或資訊','2'=>'2.總務']; ?>
+                        
                         {{ Form::select('type', $types,null, ['id' => 'type', 'class' => 'form-control','placeholder'=>'','required'=>'required']) }}
                     </div>
                     <div class="form-group">
