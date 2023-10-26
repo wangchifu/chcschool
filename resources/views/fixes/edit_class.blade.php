@@ -21,7 +21,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>狀況</th><th>排序</th><th>名稱 <strong class="text-danger">*</strong></th><th>動作</th>
+                                <th>狀況</th><th>排序</th><th>啟用?</th><th>名稱 <strong class="text-danger">*</strong></th><th>動作</th>
                             </tr>
                         </thead>
                         <tbody>
