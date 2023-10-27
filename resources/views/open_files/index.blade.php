@@ -118,7 +118,7 @@
                             @endif
                         </td>
                         <td>
-                            {{ $file->user->name }}
+                            {{ $folder->user->title }}
                         </td>
                         <td>
                             @if(file_exists(storage_path($f.'/'.$file->name)))
