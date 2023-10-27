@@ -236,7 +236,7 @@ $first_w = get_date_w($this_month_date[1]);
                             $q = $qq%6;
                         ?>
                         @if($v1['item_date'] == $v)
-                            <div class="bg-{{ $bg_array[$q] }}" style="font-size:6px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="{{ $v1['item'] }}" onclick="alert('{{ $v }}\r\n{{ $v1['item'] }}')">
+                            <div class="bg-{{ $bg_array[$q] }}" style="font-size:18px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="{{ $v1['item'] }}" onclick="alert('{{ $v }}\r\n{{ $v1['item'] }}')">
                                 {{ str_limit($v1['item'],16) }}
                             </div>
                             @auth
