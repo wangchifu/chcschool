@@ -146,9 +146,9 @@ $first_w = get_date_w($this_month_date[1]);
 
             for(var k1 in result['item_array']){
                 if(result['item_array'][k1]['item_date'] == [result['this_month_date'][k]]){
-                    var cht = cht_str(result['item_array'][k1]['item'],16);
+                    var cht = cht_str(result['item_array'][k1]['item'],20);
                     var q = qq%6;
-                    data = data+'<div class="bg-'+bg_array[q]+'" style="font-size:6px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="'+result['item_array'][k1]['item']+'" onclick="alert(\''+[result['this_month_date'][k]]+'\\r\\n'+result['item_array'][k1]['item']+'\')">';
+                    data = data+'<div class="bg-'+bg_array[q]+'" style="font-size:16px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="'+result['item_array'][k1]['item']+'" onclick="alert(\''+[result['this_month_date'][k]]+'\\r\\n'+result['item_array'][k1]['item']+'\')">';
                     data = data+cht;
                     data = data+'</div>';
                     if(result['user_id'] == result['item_array'][k1]['user_id'] || result['admin'] == "1"){
@@ -236,8 +236,8 @@ $first_w = get_date_w($this_month_date[1]);
                             $q = $qq%6;
                         ?>
                         @if($v1['item_date'] == $v)
-                            <div class="bg-{{ $bg_array[$q] }}" style="font-size:18px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="{{ $v1['item'] }}" onclick="alert('{{ $v }}\r\n{{ $v1['item'] }}')">
-                                {{ str_limit($v1['item'],16) }}
+                            <div class="bg-{{ $bg_array[$q] }}" style="font-size:16px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="{{ $v1['item'] }}" onclick="alert('{{ $v }}\r\n{{ $v1['item'] }}')">
+                                {{ str_limit($v1['item'],20) }}
                             </div>
                             @auth
                                 @if($v1['user_id'] == auth()->user()->id or auth()->user()->admin ==1)
