@@ -16,6 +16,13 @@
             $last_folder = "";
             ?>
             路徑：
+            @auth
+                <?php
+                    $check_exec = \App\UserGroup::where('user_id',auth()->user()->id)
+                    ->where('group_id',1)
+                    ->first();                                                          
+                ?>
+            @endauth            
             @foreach($folder_path as $k=>$v)
                 <?php
                 if($k=="0"){
@@ -69,12 +76,7 @@
                                 $n = \App\Upload::where('folder_id',$folder->id)->count();                                                                
                             ?>
                             <strong>目錄</strong>
-                            @auth
-                            <?php
-                                $check_exec = \App\UserGroup::where('user_id',auth()->user()->id)
-                                ->where('group_id',1)
-                                ->first();
-                            ?>
+                            @auth                            
                             @if(($folder->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
                                     <a href="javascript:open_window('{{ route('open_files.edit',[$folder->id,$folder_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
                                 @if($n == 0)
