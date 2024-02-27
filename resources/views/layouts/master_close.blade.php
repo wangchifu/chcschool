@@ -27,12 +27,12 @@
     <meta name="author" content="">
     <title>@yield('title'){{ $setup->site_name }}</title>
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-        <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.validate.js') }}"></script>
         <script src="{{ asset('js/additional-methods.min.js') }}"></script>
         <script src="{{ asset('js/messages_zh_TW.min.js') }}"></script>
         <!-- icons -->
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('bootstrap-4.1.1/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
 </head>
 
@@ -63,7 +63,7 @@
     <br>
     <br>
 </div>
-<script src="{{ asset('bootstrap-4.1.1/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 </body>
 </html>
