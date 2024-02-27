@@ -19,7 +19,7 @@
     <meta name="author" content="">
 
     <title>@yield('title') | {{ $setup->site_name }}</title>
-    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
     <!-- icons -->
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">

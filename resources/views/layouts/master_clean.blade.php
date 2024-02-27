@@ -19,7 +19,7 @@
     <meta name="author" content="">
 
     <title>@yield('title'){{ $setup->site_name }}</title>
-    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery.validate.js') }}"></script>
     <script src="{{ asset('js/additional-methods.min.js') }}"></script>
     <script src="{{ asset('js/messages_zh_TW.min.js') }}"></script>
