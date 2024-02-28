@@ -8,6 +8,7 @@
     }
 </style>
 <nav class="navbar navbar-expand-lg {{ $nav_color }}" id="mainNav">
+    <div class="table-responsive">
     <div class="container-fluid">
             <a href="#page-top" style="margin-right: 10px;">
                 @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
@@ -196,4 +197,6 @@
             </ul>
         </div>
     </div>
+</div>
 </nav>
+
