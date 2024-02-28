@@ -61,7 +61,9 @@
                                     </a>
                                 @endif
                                 <p class="pp1">
+                                    <div class="table-responsive">
                                     {!! $blog->content !!}
+                                    </div>
                                 </p>
                             </div>
                         </div>
