@@ -131,9 +131,11 @@
     @if(!empty($setup->footer))
         <footer class="font-small bg-light py-4">
             <div class="container-fluid text-center text-md-left">
-                <div class="row justify-content-center">
-                    <div class="col-md-11">
-                        {!! $setup->footer !!}
+                <div class="table-responsive">
+                    <div class="row justify-content-center">
+                        <div class="col-md-11">
+                            {!! $setup->footer !!}
+                        </div>
                     </div>
                 </div>
             </div>
