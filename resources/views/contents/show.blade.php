@@ -17,7 +17,9 @@
                     @endcan
                 </h3>
                 <div class="card-body">
+                    <div class="table-responsive">
                     {!! $content->content !!}
+                    </div>
                 </div>
             </div>
         </div>
