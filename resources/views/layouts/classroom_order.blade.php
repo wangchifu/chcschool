@@ -175,6 +175,7 @@
             }
             ?>
         <div class="tab-pane fade {{ $active }}" id="classroom_profile{{ $i }}" role="tabpanel" aria-labelledby="profile-tab" style="margin: 10px;">
+            <div class="table-responsive">
             <table class="table table-striped table-sm">
                 <thead>
                 <tr>
@@ -240,6 +241,7 @@
                 @endforeach
                 </tbody>
             </table>
+            </div>
             <a href="{{ route('classroom_orders.show',[$classroom->id,date('Y-m-d')]) }}" class="btn btn-success">前往預約 {{ $classroom->name }}</a>
         </div>
         <?php $i++; ?>

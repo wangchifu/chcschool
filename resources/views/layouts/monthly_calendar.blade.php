@@ -109,7 +109,7 @@ $first_w = get_date_w($this_month_date[1]);
         data = '<h2>';
         data = data+'<span style="text-decoration:none;" onclick="go_submit(\''+result['last_month']+'\')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span> '+result['this_month']+' <span style="text-decoration:none;" onclick="go_submit(\''+result['next_month']+'\')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>';
         data = data+'</h2>';
-        data = data+'<table class="table table-bordered table-sm">';
+        data = data+'<div class="table-responsive"><table class="table table-bordered table-sm">';
         data = data+'<thead>';
         data = data+'<tr style="background-color: #888888">';
         data = data+'<th class="text-danger">日</th>';
@@ -172,7 +172,7 @@ $first_w = get_date_w($this_month_date[1]);
         }
         data = data+'</tr>';
         data = data+'</tbody>';
-        data = data+'</table>';
+        data = data+'</table></div>';
 
         return data;
     }
@@ -197,6 +197,7 @@ $first_w = get_date_w($this_month_date[1]);
     <h2>
         <span style="text-decoration:none;" onclick="go_submit('{{ substr($dt->subMonth()->toDateTimeString(),0,7) }}')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span> {{ $this_month }} <span style="text-decoration:none;" onclick="go_submit('{{ $next_month }}')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>
     </h2>
+    <div class="table-responsive">
     <table class="table table-bordered table-sm">
         <thead>
         <tr style="background-color: #888888">
@@ -260,4 +261,5 @@ $first_w = get_date_w($this_month_date[1]);
         </tr>
         </tbody>
     </table>
+    </div>
 </div>

@@ -64,7 +64,9 @@
     <br>
     <br>
 </div>
-    @yield('footer')
+<div class="table-responsive">
+        @yield('footer')
+</div>
 <script src="{{ asset('bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 </body>
