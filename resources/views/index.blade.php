@@ -133,17 +133,17 @@
     @if(!empty($setup->footer))
         <footer class="font-small bg-light py-4">
             <div class="container-fluid text-center text-md-left">
-                <div class="table-responsive">
                     <div class="row justify-content-center">
                         <div class="col-md-11">
+                            <div class="table-responsive">
                             {!! $setup->footer !!}
+                            </div>
                         </div>
                     </div>
-                </div>
             </div>
         </footer>
     @endif
     <div class="footer-copyright text-center text-black-50 py-3" style="background-color: #CCCCCC">
-        2019 Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
+        {{ date('Y') }} Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
     </div>
 @endsection
