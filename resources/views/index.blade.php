@@ -68,8 +68,10 @@
                     ?>
 
                     @if($block->title == "榮譽榜跑馬燈")
-                        <div>
-                            @include('layouts.marquee')
+                        <div class="table-responsive">
+                            <div>
+                                @include('layouts.marquee')
+                            </div>
                         </div>
                     @else
                     <div class="shadow rounded {{ $block_color[0] }}">
