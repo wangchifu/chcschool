@@ -81,6 +81,7 @@
                             <h5>{{ $title }}</h5>
                         </div>
                         <div class="content2">
+                            <div class="table-responsive">
                             @if($block->title == "最新公告(系統區塊)")
                                 @include('layouts.news')
                             @elseif($block->title == "彰化空汙旗(系統區塊)")
@@ -112,6 +113,7 @@
                             @else
                                 {!! $block->content !!}
                             @endif
+                            </div>
                         </div>
                     </div>
                     @endif
