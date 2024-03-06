@@ -15,6 +15,7 @@ class LunchTeaDate extends Model
         'lunch_place_id',
         'lunch_factory_id',
         'eat_style',
+        'eat_style_egg',
     ];
     public function user()
     {

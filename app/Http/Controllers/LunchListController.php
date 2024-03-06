@@ -37,6 +37,7 @@ class LunchListController extends Controller
         $factory_data = [];
         $place_data = [];
         $eat_data = [];
+        $eat_data_egg = [];
         $days_data = [];
         $money_data = [];
         if ($lunch_order_id) {
@@ -60,6 +61,7 @@ class LunchListController extends Controller
                     $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
                 }
                 $eat_data[$tea_date->user->name] = $tea_date->eat_style;
+                $eat_data_egg[$tea_date->user->name] = $tea_date->eat_style_egg;
                 if ($tea_date->enable == "eat") {
                     if (!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name] = 0;
                     $days_data[$tea_date->user->name]++;
@@ -78,6 +80,7 @@ class LunchListController extends Controller
             'factory_data' => $factory_data,
             'place_data' => $place_data,
             'eat_data' => $eat_data,
+            'eat_data_egg' => $eat_data_egg,
             'days_data' => $days_data,
             'money_data' => $money_data,
         ];
@@ -604,6 +607,7 @@ class LunchListController extends Controller
                 $factory_data = [];
                 $place_data = [];
                 $eat_data = [];
+                $eat_data_egg = [];
                 $days_data = [];
                 $money_data = [];
 
@@ -628,6 +632,7 @@ class LunchListController extends Controller
                         $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
                     }
                     $eat_data[$tea_date->user->name] = $tea_date->eat_style;
+                    $eat_data_egg[$tea_date->user->name] = $tea_date->eat_style_egg;
                     if ($tea_date->enable == "eat") {
                         if (!isset($days_data[$tea_date->user->name])) $days_data[$tea_date->user->name] = 0;
                         $days_data[$tea_date->user->name]++;
@@ -648,6 +653,7 @@ class LunchListController extends Controller
                 foreach ($lunch_class_dates as $lunch_class_date) {
                     $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][1] = $lunch_class_date->eat_style1;
                     $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][4] = $lunch_class_date->eat_style4;
+                    $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][41] = $lunch_class_date->eat_style4_egg;
                 }
 
                 $student_classes = StudentClass::where('semester', $lunch_order->semester)
@@ -663,6 +669,7 @@ class LunchListController extends Controller
                     'user_data' => $user_data,
                     'place_data' => $place_data,
                     'eat_data' => $eat_data,
+                    'eat_data_egg' => $eat_data_egg,
                     'days_data' => $days_data,
                     'money_data' => $money_data,
                     'teacher_money' => $teacher_money,

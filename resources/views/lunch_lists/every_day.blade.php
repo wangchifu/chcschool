@@ -88,11 +88,21 @@
                                     @if($eat_data[$k1]==1)
                                         <img src="{{ asset('images/meat.png') }}">葷食合菜
                                     @elseif($eat_data[$k1]==2)
-                                        <img src="{{ asset('images/vegetarian.png') }}">素食合菜
+                                        <img src="{{ asset('images/vegetarian.png') }}">@if($eat_data_egg[$k1]==1)🥚@endif 素食合菜
+                                        @if($eat_data_egg[$k1]==1)
+                                            <br>(蛋奶素) 
+                                        @else
+                                            <br>(奶素)
+                                        @endif
                                     @elseif($eat_data[$k1]==3)
                                         <img src="{{ asset('images/meat.png') }}">葷食便當
                                     @elseif($eat_data[$k1]==4)
-                                        <img src="{{ asset('images/vegetarian.png') }}">素食便當
+                                        <img src="{{ asset('images/vegetarian.png') }}">@if($eat_data_egg[$k1]==1)🥚@endif 素食便當
+                                        @if($eat_data_egg[$k1]==1)
+                                            <br>(蛋奶素)
+                                        @else
+                                            <br>(奶素)
+                                        @endif
                                     @endif
                                 </td>
                                 @foreach($date_array as $k2=>$v2)

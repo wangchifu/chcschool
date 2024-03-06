@@ -83,6 +83,11 @@
                                 </div>
                                 <div class="card-body">
                                     {{ Form::select('eat_style', $eat_array,null, ['id'=>'eat_style','class' => 'form-control','placeholder'=>'--請選擇葷素--','required'=>'required']) }}
+                                    <hr>
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" name="eat_style_egg">
+                                        <label class="form-check-label" for="exampleCheck1">🥚 <span class="text-primary">蛋奶素請打勾</span>(奶素及葷食者不用)</label>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
@@ -172,6 +177,7 @@
                                     ->count();
                                 $factory = $lunch_tea_dates[0]->lunch_factory;
                                 $eat_style = $lunch_tea_dates[0]->eat_style;
+                                $eat_style_egg = $lunch_tea_dates[0]->eat_style_egg;
                             ?>
                             <table class="table table-striped">
                                 <tr>
@@ -198,6 +204,12 @@
                                             <h4 class="text-danger">葷食便當</h4>
                                         @elseif($eat_style==4)
                                             <h4 class="text-success">素食便當</h4>
+                                        @endif
+                                        @if($eat_style_egg==1)
+                                            (蛋奶素)
+                                        @endif
+                                        @if($eat_style_egg==null and ($eat_style==2 or $eat_style==4))
+                                            (奶素)
                                         @endif
                                     </td>
                                     <td>

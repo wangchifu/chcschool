@@ -56,7 +56,7 @@
                             </td>
                             @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
                                 @if($lunch_order_date->enable==1)
-                                <td nowrap colspan="2">
+                                <td nowrap colspan="3">
                                     {{ substr($lunch_order_date->order_date,8,2) }}<br>
                                     <span class="small">({{ get_chinese_weekday2($lunch_order_date->order_date) }})</span>
                                 </td>                                           
@@ -70,8 +70,11 @@
                                     葷
                                 </td> 
                                 <td style="background-color:green">
-                                    素
-                                </td>                                          
+                                    奶素
+                                </td>  
+                                <td style="background-color:green">
+                                    蛋奶素
+                                </td>                                        
                                 @endif
                             @endforeach  
                         </tr>
@@ -94,15 +97,18 @@
                                 <td style="background-color:#FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
                                     {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][1] }}
                                 </td>
-                                <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素">
+                                <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素">
                                     {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][4] }}
+                                </td>
+                                <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素">
+                                    {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][41] }}
                                 </td>
                                 <?php $i++; ?>
                                 @endif
-                            <?php $all = $all+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]; ?>
+                            <?php $all = $all+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][41]; ?>
                             <?php
                                 if(!isset($one_day[$lunch_order_date->order_date])) $one_day[$lunch_order_date->order_date]=0;
-                                $one_day[$lunch_order_date->order_date] = $one_day[$lunch_order_date->order_date]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4];
+                                $one_day[$lunch_order_date->order_date] = $one_day[$lunch_order_date->order_date]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][41];
                             ?>
                             @endforeach
                         </tr>
@@ -144,7 +150,10 @@
                                 葷 
                             </td>
                             <td>
-                                素
+                                奶素
+                            </td>
+                            <td>
+                                蛋奶素
                             </td>
                         </tr>
                     </thead>
@@ -165,13 +174,18 @@
                             <?php 
                                 $e1 = (isset($sample_data[$student_class->id][1]))?$sample_data[$student_class->id][1]:null;
                                 $e4 = (isset($sample_data[$student_class->id][4]))?$sample_data[$student_class->id][4]:null;
+                                $e41 = (isset($sample_data[$student_class->id][41]))?$sample_data[$student_class->id][41]:null;
                             ?>
                             <td>
                                 <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data1[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" required onkeydown="focusNext(event,{{ $n }})" value="{{ $e1 }}">
                             </td>
                             <?php $n++; ?>
                             <td>
-                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4[{{ $student_class->id }}]" style="width:25px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e4 }}">
+                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e4 }}">
+                            </td>
+                            <?php $n++; ?>
+                            <td>
+                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4_egg[{{ $student_class->id }}]" style="width:50px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e41 }}">
                             </td>
                             <?php $n++; ?>
                         </tr>
@@ -226,8 +240,12 @@
                     <input type="num" class="form-control" name="eat_style1" required>
                 </div>
                 <div class="form-group">
-                    <label for="message-client_secret" class="col-form-label">素食人數</label>
+                    <label for="message-client_secret" class="col-form-label">奶素食人數</label>
                     <input type="num" class="form-control" name="eat_style4">
+                </div>
+                <div class="form-group">
+                    <label for="message-client_secret" class="col-form-label">蛋奶素食人數</label>
+                    <input type="num" class="form-control" name="eat_style4_egg">
                 </div>
             </form>
         </div>
@@ -257,13 +275,13 @@
         // arrow down key code = 38 down
       if (e.keyCode === 38 & n >2) {
         // focus next element
-        u = n - 2;
+        u = n - 3;
         document.getElementById('eat_data'+u).focus();
       }
       // arrow down key code = 40 down
       if (e.keyCode === 40) {
         // focus next element
-        d = n + 2;
+        d = n + 3;
         document.getElementById('eat_data'+d).focus();
       }
       // arrow down key code = 37 left

@@ -17,6 +17,7 @@ class LunchClassDate extends Model
         'eat_style2',
         'eat_style3',
         'eat_style4',
+        'eat_style4_egg',
     ];
     public function lunch_class()
     {

@@ -43,6 +43,7 @@ class LunchStuController extends Controller
             foreach ($lunch_class_dates as $lunch_class_date) {
                 $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][1] = $lunch_class_date->eat_style1;
                 $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][4] = $lunch_class_date->eat_style4;
+                $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][41] = $lunch_class_date->eat_style4_egg;
                 $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date]['factory'] = $factory_array[$lunch_class_date->lunch_factory_id];
             }
 
@@ -60,6 +61,7 @@ class LunchStuController extends Controller
             foreach ($sample_lunch_dates as $sample_lunch_date) {
                 $sample_data[$sample_lunch_date->lunch_class_id][1] = $sample_lunch_date->eat_style1;
                 $sample_data[$sample_lunch_date->lunch_class_id][4] = $sample_lunch_date->eat_style4;
+                $sample_data[$sample_lunch_date->lunch_class_id][41] = $sample_lunch_date->eat_style4_egg;
             }
         }
 
@@ -84,6 +86,7 @@ class LunchStuController extends Controller
 
         $eat_data1 = $request->input('eat_data1');
         $eat_data4 = $request->input('eat_data4');
+        $eat_data4_egg = $request->input('eat_data4_egg');
 
         $lunch_factory_id = $request->input('lunch_factory_id');
 
@@ -97,6 +100,7 @@ class LunchStuController extends Controller
             foreach ($eat_data1 as $k => $v) {
                 $eat_style1 = ($lunch_order_date->enable == 1) ? $eat_data1[$k] : null;
                 $eat_style4 = ($lunch_order_date->enable == 1) ? $eat_data4[$k] : null;
+                $eat_style4_egg = ($lunch_order_date->enable == 1) ? $eat_data4_egg[$k] : null;
                 $one = [
                     'lunch_class_id' => $k,
                     'order_date' => $lunch_order_date->order_date,
@@ -107,6 +111,7 @@ class LunchStuController extends Controller
                     'eat_style2' => null,
                     'eat_style3' => null,
                     'eat_style4' => $eat_style4,
+                    'eat_style4_egg' => $eat_style4_egg,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -140,7 +145,8 @@ class LunchStuController extends Controller
         if ($admin) {
             $att['eat_style1'] = $request->input('eat_style1');
             $att['eat_style4'] = (empty($request->input('eat_style4'))) ? null : $request->input('eat_style4');
-            
+            $att['eat_style4_egg'] = (empty($request->input('eat_style4_egg'))) ? null : $request->input('eat_style4_egg');
+
             if($request->input('start_date') == $request->input('end_date')){
                 LunchClassDate::where('lunch_class_id', $request->input('lunch_class_id'))
                 ->where('order_date', '>=', $request->input('start_date'))

@@ -14,6 +14,7 @@ class LunchStuDate extends Model
         'lunch_order_id',
         'lunch_factory_id',
         'eat_style',
+        'eat_style_egg',
     ];
     public function lunch_stu()
     {

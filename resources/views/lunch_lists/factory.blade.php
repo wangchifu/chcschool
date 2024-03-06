@@ -143,11 +143,17 @@
                                     @if($eat_data[$k1]==1)
                                         <img src="{{ asset('images/meat.png') }}">葷食合菜
                                     @elseif($eat_data[$k1]==2)
-                                        <img src="{{ asset('images/vegetarian.png') }}">素食合菜
+                                        <img src="{{ asset('images/vegetarian.png') }}">@if($eat_data_egg[$k1]==1)🥚@endif 素食合菜
                                     @elseif($eat_data[$k1]==3)
                                         <img src="{{ asset('images/meat.png') }}">葷食便當
                                     @elseif($eat_data[$k1]==4)
-                                        <img src="{{ asset('images/vegetarian.png') }}">素食便當
+                                        <img src="{{ asset('images/vegetarian.png') }}">@if($eat_data_egg[$k1]==1)🥚@endif 素食便當
+                                    @endif
+                                    @if($eat_data_egg[$k1]==1)
+                                        (蛋奶素)
+                                    @endif
+                                    @if($eat_data_egg[$k1]==null and($eat_data[$k1]==2 or $eat_data[$k1]==4))
+                                        (奶素)
                                     @endif
                                 </td>
                                 @foreach($date_array as $k2=>$v2)
@@ -205,251 +211,12 @@
                 <hr class="col-md-12">
                 <div class="col-md-12">
                     <h3>二、教師各地點數量</h3>
-                    <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
-                        <tr bgcolor='#005DBE' style='color:white;'>
-                            <th rowspan="2">
-                                地點
-                            </th>
-                            @foreach($date_array as $kk=>$vv)
-                                <?php
-                                    $dd = explode('-',$kk);
-                                    if(get_chinese_weekday2($kk)=="六"){
-                                        $txt_bg="text-success";
-                                    }elseif(get_chinese_weekday2($kk)=="日"){
-                                        $txt_bg="text-danger";
-                                    }else{
-                                        $txt_bg="";
-                                    }
-                                ?>
-                                <th colspan="2">
-                                    {{ $dd[1] }}<br>{{ $dd[2] }}<br><span class="{{ $txt_bg }}">{{ get_chinese_weekday2($kk) }}</span>
-                                </th>
-                            @endforeach
-                        </tr>
-                        <tr>
-                            @foreach($date_array as $kk=>$vv)
-                            <th>
-                                <span class="text-danger">葷</span>
-                            </th> 
-                            <th>
-                                <span class="text-success">素</span>
-                            </th> 
-                            @endforeach
-                        </tr>
-                        <?php
-                            ksort($p_e_data);
-                            $one_h = [];
-                            $one_s = [];
-                        ?>
-                        @foreach($p_e_data as $k11=>$v11)
-                            <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
-                                <td>
-                                    {{ $k11 }}
-                                </td>
-                                @foreach($date_array as $k33=>$v33)
-                                    <?php
-                                    if(get_chinese_weekday2($k33)=="六"){
-                                        $bg="#CCFF99";
-                                    }elseif(get_chinese_weekday2($k33)=="日"){
-                                        $bg="#FFB7DD";
-                                    }else{
-                                        $bg="";
-                                    }
-                                    ?>
-                                    <td style="background-color: {{ $bg }};border-left:solid black 2px;color:red;">
-                                        <?php
-                                            $h1 = (isset($v11[1][$k33]))?$v11[1][$k33]:0;
-                                            $h3 = (isset($v11[3][$k33]))?$v11[3][$k33]:0;
-                                            $h = $h1+$h3;
-                                            if(!isset($one_h[$k33])) $one_h[$k33] = 0;
-                                            $one_h[$k33] = $one_h[$k33]+$h;
-                                            if($h==0) $h = "";
-                                        ?>
-                                        {{ $h }}
-                                    </td>
-                                    <td style="background-color: {{ $bg }};color:green;">
-                                        <?php
-                                            $s2 = (isset($v11[2][$k33]))?$v11[2][$k33]:0;
-                                            $s4 = (isset($v11[4][$k33]))?$v11[4][$k33]:0;
-                                            $s = $s2+$s4;
-                                            if(!isset($one_s[$k33])) $one_s[$k33] = 0;
-                                            $one_s[$k33] = $one_s[$k33]+$s;
-                                            if($s==0) $s = "";
-                                        ?>
-                                        {{ $s }}
-                                    </td>
-                                @endforeach
-                            </tr>
-                        @endforeach
-                        <tr>
-                            <td>
-                                合計
-                            </td>
-                            @foreach($date_array as $kk=>$vv)
-                            <th style="border-left:solid black 2px;color:red;">
-                                <?php 
-                                    if(!isset($one_h[$kk])) $one_h[$kk]=0;
-                                    if($one_h[$kk]==0) $one_h[$kk]="";
-                                ?>
-                                {{ $one_h[$kk] }}
-                            </th> 
-                            <th style="color:green;">
-                                <?php 
-                                    if(!isset($one_s[$kk])) $one_s[$kk]=0;
-                                    if($one_s[$kk]==0) $one_s[$kk]="";
-                                ?>
-                                {{ $one_s[$kk]}}
-                            </th> 
-                            @endforeach
-                        </tr>
-                        <tr>
-                            <th rowspan="2">
-                                
-                            </th>
-                            @foreach($date_array as $kk=>$vv)
-                            <th>
-                                <span class="text-danger">葷</span>
-                            </th> 
-                            <th>
-                                <span class="text-success">素</span>
-                            </th> 
-                            @endforeach
-                        </tr>
-                        <tr style='color:white;'>
-                            @foreach($date_array as $kk=>$vv)
-                                <?php
-                                    $dd = explode('-',$kk);
-                                    if(get_chinese_weekday2($kk)=="六"){
-                                        $txt_bg="text-success";
-                                    }elseif(get_chinese_weekday2($kk)=="日"){
-                                        $txt_bg="text-danger";
-                                    }else{
-                                        $txt_bg="";
-                                    }
-                                ?>
-                                <th colspan="2">
-                                    {{ $dd[1] }}<br>{{ $dd[2] }}<br><span class="{{ $txt_bg }}">{{ get_chinese_weekday2($kk) }}</span>
-                                </th>
-                            @endforeach
-                        </tr>
-                    </table>
+                    
                 </div>
                 <hr class="col-md-12">
                 <div class="col-md-12">
                     <h3>三、班級學生(+老師)數量</h3>
-                    <?php
-                        $lunch_order = \App\LunchOrder::find($lunch_order_id);
-                    ?>
-                    @if(!empty($lunch_order->order_ps_ps))
-                    <span class="text-danger small">備註：<br>
-                    {!! nl2br($lunch_order->order_ps_ps) !!}
-                    </span>
-                    @endif
-                    <table cellspacing='1' cellpadding='0' bgcolor='#C6D7F2' border="1">
-                        <tr bgcolor='#005DBE' style='color:white;'>
-                            <th rowspan="2">
-                                班級
-                            </th>
-                            @foreach($date_array as $kk=>$vv)
-                                <?php
-                                    $dd = explode('-',$kk);
-                                    if(get_chinese_weekday2($kk)=="六"){
-                                        $txt_bg="text-success";
-                                    }elseif(get_chinese_weekday2($kk)=="日"){
-                                        $txt_bg="text-danger";
-                                    }else{
-                                        $txt_bg="";
-                                    }
-                                ?>
-                                <th colspan="2">
-                                    {{ $dd[1] }}<br>{{ $dd[2] }}<br><span class="{{ $txt_bg }}">{{ get_chinese_weekday2($kk) }}</span>
-                                </th>
-                            @endforeach
-                        </tr>
-                        <tr>
-                            @foreach($date_array as $kk=>$vv)
-                                <td>
-                                    <span class="text-danger">葷</span>
-                                </td> 
-                                <td>
-                                    <span class="text-success">素</span>
-                                </td> 
-                            @endforeach  
-                        </tr>
-                        <?php $all = 0;$one_day = [];$one_day1=[];$one_day4=[]; ?>
-                        @foreach($student_classes as $student_class)
-                        <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
-                            <td>
-                                {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
-                            </td>                                        
-                            @foreach($date_array as $kk=>$vv)
-                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" style="color:red;">
-                                    @if(isset($lunch_class_data[$student_class->id][$kk][1]))
-                                    {{ $lunch_class_data[$student_class->id][$kk][1] }}
-                                    @else
-                                    <?php $lunch_class_data[$student_class->id][$kk][1]=0;  ?>
-                                    @endif
-                                    @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk]))
-                                    <br>
-                                    <small class="text-primary font-weight-bold">+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk] }}</small>
-                                    @endif
-                                </td>
-                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 素" style="color:green;">
-                                    @if(isset($lunch_class_data[$student_class->id][$kk][4]))
-                                    {{ $lunch_class_data[$student_class->id][$kk][4] }}
-                                    @else
-                                    <?php $lunch_class_data[$student_class->id][$kk][4]=0;  ?>
-                                    @endif
-                                    @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk]))
-                                    <br>
-                                    <small class="text-primary font-weight-bold">+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk] }}</small>
-                                    @endif
-                                </td>
-                            <?php $all = $all+$lunch_class_data[$student_class->id][$kk][1]+$lunch_class_data[$student_class->id][$kk][4]; ?>
-                            <?php
-                                if(!isset($one_day[$kk])) $one_day[$kk]=0;
-                                if(!isset($one_day1[$kk])) $one_day1[$kk]=0;
-                                if(!isset($one_day4[$kk])) $one_day4[$kk]=0;
-                                $one_day[$kk] = $one_day[$kk]+$lunch_class_data[$student_class->id][$kk][1]+$lunch_class_data[$student_class->id][$kk][4];
-                                $one_day1[$kk] = $one_day1[$kk]+$lunch_class_data[$student_class->id][$kk][1];
-                                $one_day4[$kk] = $one_day4[$kk]+$lunch_class_data[$student_class->id][$kk][4];
-                            ?>
-                            @endforeach
-                        </tr>
-                        @endforeach
-                        <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
-                            <td>
-                                小計
-                            </td>
-                            @foreach($date_array as $kk=>$vv)
-                            <?php 
-                                if(!isset($one_day1[$kk])) $one_day1[$kk] = "";
-                                if(!isset($one_day4[$kk])) $one_day4[$kk] = "";
-                            ?>
-                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} 葷">
-                                    <span class="text-danger">{{ $one_day1[$kk] }}</span>
-                                </td>
-                                <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} 素 ">
-                                    <span class="text-success">{{ $one_day4[$kk] }}</span>
-                                </td>
-                            @endforeach
-                        </tr>
-                        <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
-                            <td>
-                                合計
-                            </td>
-                            @foreach($date_array as $kk=>$vv)
-                            <?php 
-                                if(!isset($one_day[$kk])) $one_day[$kk] = "";
-                            ?>
-                                <td colspan="2" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} 合計">
-                                    {{ $one_day[$kk] }}
-                                </td>
-                            @endforeach
-                        </tr>
-                    </table>
-                    <br>
-                    此餐期總餐數：{{ $all }} (不含老師)            
+                            
                 </div>
 
             @endif
