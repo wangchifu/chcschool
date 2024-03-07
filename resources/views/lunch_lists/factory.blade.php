@@ -420,9 +420,12 @@
                                             if(!isset($one_day1[$kk])) $one_day1[$kk] = 0;
                                             if(!isset($one_day41[$kk])) $one_day41[$kk] = 0;
                                             if(!isset($one_day4[$kk])) $one_day4[$kk] = 0;
-                                                $one_day1[$kk] += $lunch_class_data[$student_class->id][$kk][1];
-                                                $one_day41[$kk] += $lunch_class_data[$student_class->id][$kk][41];
-                                                $one_day4[$kk] += $lunch_class_data[$student_class->id][$kk][4];
+                                            if(!isset($lunch_class_data[$student_class->id][$kk][1])) $lunch_class_data[$student_class->id][$kk][1] = 0;
+                                            if(!isset($lunch_class_data[$student_class->id][$kk][41])) $lunch_class_data[$student_class->id][$kk][41] = 0;
+                                            if(!isset($lunch_class_data[$student_class->id][$kk][4])) $lunch_class_data[$student_class->id][$kk][4] = 0;
+                                            $one_day1[$kk] += $lunch_class_data[$student_class->id][$kk][1];
+                                            $one_day41[$kk] += $lunch_class_data[$student_class->id][$kk][41];
+                                            $one_day4[$kk] += $lunch_class_data[$student_class->id][$kk][4];
                                         ?>
                                     @endforeach
                                 </tr>                                
