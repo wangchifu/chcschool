@@ -268,7 +268,7 @@
                                     @if($v==1)
                                         <td style="background-color: #FFECEC"><span class="text-danger">葷</span></td>
                                         <td><span class="text-success">蛋奶素</span></td>
-                                        <td><span class="text-danger">奶素</span></td>
+                                        <td><span class="text-success">奶素</span></td>
                                     @endif
                                 @endforeach
                             </tr>
