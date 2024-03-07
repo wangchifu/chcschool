@@ -18,6 +18,7 @@
         table, th, td {
             border: 1px solid black;
             border-collapse: collapse;
+            text-align: center;
         }
     </style>
     <div class="row justify-content-center">
@@ -31,7 +32,7 @@
                 @include('layouts.errors')
             @endif
         <form name="myform">
-            <div class="form-control">
+            <div style="margin: 20px">
                 {{ Form::select('lunch_order_id', $lunch_order_array,$lunch_order_id, ['id'=>'lunch_order_id','class' => 'form-control','onchange'=>'jump()']) }}
             </div>
         </form>        
@@ -44,91 +45,93 @@
                     <button class="btn btn-success btn-sm" onclick="return confirm('確定嗎？')">儲存</button>
                 </div>       
                 </form>      
-                <h3>{{ $lunch_order_array[$lunch_order_id] }}</h3>          
-                <table>
-                    <thead style="background-color:dodgerblue;color:white">
-                        <tr>
-                            <td rowspan="2">
-                                班級
-                            </td>
-                            <td rowspan="2">
-                                廠商
-                            </td>
-                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                @if($lunch_order_date->enable==1)
-                                <td nowrap colspan="3">
-                                    {{ substr($lunch_order_date->order_date,8,2) }}<br>
-                                    <span class="small">({{ get_chinese_weekday2($lunch_order_date->order_date) }})</span>
-                                </td>                                           
-                                @endif
-                            @endforeach                                
-                        </tr>
-                        <tr>
-                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                @if($lunch_order_date->enable==1)
-                                <td style="background-color:red">
-                                    葷
-                                </td> 
-                                <td style="background-color:green">
-                                    奶素
-                                </td>  
-                                <td style="background-color:green">
-                                    蛋奶素
-                                </td>                                        
-                                @endif
-                            @endforeach  
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $all = 0; ?>
-                        @foreach($student_classes as $student_class)
-                        <tr>
-                            <td style="background-color:#D2E9FF">
-                                {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
-                            </td>           
-                            <?php $i=1; ?>                           
-                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                @if($lunch_order_date->enable==1)
-                                    @if($i==1)
-                                        <td>
-                                            {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date]['factory'] }}
-                                        </td>  
+                <h3>{{ $lunch_order_array[$lunch_order_id] }}</h3>   
+                <div class="table-responsive">
+                    <table>
+                        <thead style="background-color:dodgerblue;color:white">
+                            <tr>
+                                <td rowspan="2">
+                                    班級
+                                </td>
+                                <td rowspan="2">
+                                    廠商
+                                </td>
+                                @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                    @if($lunch_order_date->enable==1)
+                                    <td nowrap colspan="3">
+                                        {{ substr($lunch_order_date->order_date,8,2) }}<br>
+                                        <span class="small">({{ get_chinese_weekday2($lunch_order_date->order_date) }})</span>
+                                    </td>                                           
                                     @endif
-                                <td style="background-color:#FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
-                                    {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][1] }}
-                                </td>
-                                <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素">
-                                    {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][4] }}
-                                </td>
-                                <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素">
-                                    {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][41] }}
-                                </td>
-                                <?php $i++; ?>
-                                @endif
-                            <?php $all = $all+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][41]; ?>
-                            <?php
-                                if(!isset($one_day[$lunch_order_date->order_date])) $one_day[$lunch_order_date->order_date]=0;
-                                $one_day[$lunch_order_date->order_date] = $one_day[$lunch_order_date->order_date]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][41];
-                            ?>
+                                @endforeach                                
+                            </tr>
+                            <tr>
+                                @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                    @if($lunch_order_date->enable==1)
+                                    <td style="background-color:red">
+                                        葷
+                                    </td> 
+                                    <td style="background-color:green">
+                                        蛋奶素
+                                    </td>
+                                    <td style="background-color:green">
+                                        奶素
+                                    </td>                                                                          
+                                    @endif
+                                @endforeach  
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $all = 0; ?>
+                            @foreach($student_classes as $student_class)
+                            <tr>
+                                <td style="background-color:#D2E9FF">
+                                    {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
+                                </td>           
+                                <?php $i=1; ?>                           
+                                @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                    @if($lunch_order_date->enable==1)
+                                        @if($i==1)
+                                            <td>
+                                                {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date]['factory'] }}
+                                            </td>  
+                                        @endif
+                                    <td style="background-color:#FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷">
+                                        {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][1] }}
+                                    </td>                                
+                                    <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素">
+                                        {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][41] }}
+                                    </td>
+                                    <td style="background-color:#DFFFDF" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $lunch_order_date->order_date }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素">
+                                        {{ $lunch_class_data[$student_class->id][$lunch_order_date->order_date][4] }}
+                                    </td>
+                                    <?php $i++; ?>
+                                    @endif
+                                <?php $all = $all+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][41]; ?>
+                                <?php
+                                    if(!isset($one_day[$lunch_order_date->order_date])) $one_day[$lunch_order_date->order_date]=0;
+                                    $one_day[$lunch_order_date->order_date] = $one_day[$lunch_order_date->order_date]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][1]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][4]+$lunch_class_data[$student_class->id][$lunch_order_date->order_date][41];
+                                ?>
+                                @endforeach
+                            </tr>
                             @endforeach
-                        </tr>
-                        @endforeach
-                        <tr>
-                            <td>
-                                小計
-                            </td>
-                            <td class="text-center">-</td>
-                            @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
-                                @if($lunch_order_date->enable==1)
-                                <td colspan="2">
-                                    {{ $one_day[$lunch_order_date->order_date] }}
+                            <tr>
+                                <td>
+                                    小計
                                 </td>
-                                @endif
-                            @endforeach
-                        </tr>
-                    </tbody>
-                </table>                  
-                總餐次：{{ $all }}   
+                                <td class="text-center">-</td>
+                                @foreach($lunch_order->lunch_order_dates as $lunch_order_date)
+                                    @if($lunch_order_date->enable==1)
+                                    <td colspan="3">
+                                        {{ $one_day[$lunch_order_date->order_date] }}
+                                    </td>
+                                    @endif
+                                @endforeach
+                            </tr>
+                        </tbody>
+                    </table>                                  
+                    總餐次：{{ $all }}   
+                </div>
             @else
             @if(!empty($lunch_orders))
             <form method="post" action="{{ route('lunch_stus.store',$lunch_order_id) }}" id="store_form">
@@ -136,65 +139,67 @@
                 <span class="text-danger small">若底下無班級，請至「午餐設定」下方匯入本學期學生資料。</span>
                 <br>
                 從<input type="date" name="sample_date" id="sample_date" value="{{ date('Y-m-d') }}"><a href="#" class="btn btn-success btn-sm" onclick="copy()">複製</a>
-                <h3>{{ $lunch_order_array[$lunch_order_id] }}</h3>
-                <table>
-                    <thead style="background-color:dodgerblue;color:white">
-                        <tr>
-                            <td>
-                                班級
-                            </td>
-                            <td>
-                                廠商
-                            </td>
-                            <td>
-                                葷 
-                            </td>
-                            <td>
-                                奶素
-                            </td>
-                            <td>
-                                蛋奶素
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $n=1; ?>
-                        @foreach($student_classes as $student_class)
-                        <tr onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
-                            <td>
-                                {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
-                            </td>
-                            <td>
-                                <select name="lunch_factory_id[{{ $student_class->id }}]">
-                                    @foreach($factory_array as $k=>$v)
-                                    <option value="{{ $k }}">{{ $v }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <?php 
-                                $e1 = (isset($sample_data[$student_class->id][1]))?$sample_data[$student_class->id][1]:null;
-                                $e4 = (isset($sample_data[$student_class->id][4]))?$sample_data[$student_class->id][4]:null;
-                                $e41 = (isset($sample_data[$student_class->id][41]))?$sample_data[$student_class->id][41]:null;
-                            ?>
-                            <td>
-                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data1[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" required onkeydown="focusNext(event,{{ $n }})" value="{{ $e1 }}">
-                            </td>
-                            <?php $n++; ?>
-                            <td>
-                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e4 }}">
-                            </td>
-                            <?php $n++; ?>
-                            <td>
-                                <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4_egg[{{ $student_class->id }}]" style="width:50px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e41 }}">
-                            </td>
-                            <?php $n++; ?>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <button type="submit" class="btn btn-primary" onclick="return confirm('確定儲存嗎？資料量大，請等候，不要亂按！')">
-                    <i class="fas fa-save"></i> 儲存設定
-                </button>
+                <h3>{{ $lunch_order_array[$lunch_order_id] }}</h3>    
+                <div class="table-responsive">            
+                    <table>
+                        <thead style="background-color:dodgerblue;color:white">
+                            <tr>
+                                <td>
+                                    班級
+                                </td>
+                                <td>
+                                    廠商
+                                </td>
+                                <td>
+                                    葷 
+                                </td>
+                                <td>
+                                    蛋奶素
+                                </td>
+                                <td>
+                                    奶素
+                                </td>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $n=1; ?>
+                            @foreach($student_classes as $student_class)
+                            <tr onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
+                                <td>
+                                    {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }}
+                                </td>
+                                <td>
+                                    <select name="lunch_factory_id[{{ $student_class->id }}]">
+                                        @foreach($factory_array as $k=>$v)
+                                        <option value="{{ $k }}">{{ $v }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <?php 
+                                    $e1 = (isset($sample_data[$student_class->id][1]))?$sample_data[$student_class->id][1]:null;
+                                    $e4 = (isset($sample_data[$student_class->id][4]))?$sample_data[$student_class->id][4]:null;
+                                    $e41 = (isset($sample_data[$student_class->id][41]))?$sample_data[$student_class->id][41]:null;
+                                ?>
+                                <td>
+                                    <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data1[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" required onkeydown="focusNext(event,{{ $n }})" value="{{ $e1 }}">
+                                </td>
+                                <?php $n++; ?>
+                                <td>
+                                    <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4_egg[{{ $student_class->id }}]" style="width:50px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e41 }}">
+                                </td>
+                                <?php $n++; ?>
+                                <td>
+                                    <input type="text" tabindex="{{ $n }}" id="eat_data{{ $n }}" name="eat_data4[{{ $student_class->id }}]" style="width:40px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素" onkeydown="focusNext(event,{{ $n }})" value="{{ $e4 }}">
+                                </td>
+                                <?php $n++; ?>                            
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>                
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('確定儲存嗎？資料量大，請等候，不要亂按！')">
+                        <i class="fas fa-save"></i> 儲存設定
+                    </button>
+                </div>
             </form>
             @endif  
             @endif            
@@ -240,12 +245,12 @@
                     <input type="num" class="form-control" name="eat_style1" required>
                 </div>
                 <div class="form-group">
-                    <label for="message-client_secret" class="col-form-label">奶素食人數</label>
-                    <input type="num" class="form-control" name="eat_style4">
-                </div>
-                <div class="form-group">
                     <label for="message-client_secret" class="col-form-label">蛋奶素食人數</label>
                     <input type="num" class="form-control" name="eat_style4_egg">
+                </div>
+                <div class="form-group">
+                    <label for="message-client_secret" class="col-form-label">奶素食人數</label>
+                    <input type="num" class="form-control" name="eat_style4">
                 </div>
             </form>
         </div>

@@ -617,6 +617,7 @@ class LunchListController extends Controller
 
                 $date_array = $this->get_order_date($lunch_order_id);
 
+
                 $tea_dates = LunchTeaDate::where('lunch_order_id', $lunch_order_id)
                     ->where('lunch_factory_id', $factory->id)
                     ->where('enable', 'eat')
@@ -628,9 +629,21 @@ class LunchListController extends Controller
                     $user_data[$tea_date->user->name][$tea_date->order_date]['enable'] = $tea_date->enable;
                     if (substr($tea_date->lunch_place_id, 0, 1) == "c") {
                         $place_data[$tea_date->user->name] = substr($tea_date->lunch_place_id, 1, 4) . "教室";
+                        
                     } else {
-                        $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;
+                        $place_data[$tea_date->user->name] = $tea_date->lunch_place->name;                                                
                     }
+
+                    if (!isset($place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][1])) $place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][1] = 0;
+                    if (!isset($place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][4])) $place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][4] = 0;
+                    if (!isset($place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][41])) $place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][41] = 0;
+                    if($tea_date->eat_style==1) $place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][1]++;
+                    if($tea_date->eat_style==4){
+                        if($tea_date->eat_style_egg==null) $place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][4]++;
+                        if($tea_date->eat_style_egg==1) $place_data2[$place_data[$tea_date->user->name]][$tea_date->order_date][41]++;
+                    }
+
+
                     $eat_data[$tea_date->user->name] = $tea_date->eat_style;
                     $eat_data_egg[$tea_date->user->name] = $tea_date->eat_style_egg;
                     if ($tea_date->enable == "eat") {
@@ -640,6 +653,9 @@ class LunchListController extends Controller
                         $money_data[$tea_date->user->name] += $lunch_setup->teacher_money;
                     }
                 }
+
+                //整理順序
+                ksort($place_data2);
 
                 $teacher_money = $lunch_setup->teacher_money;
 
@@ -652,15 +668,14 @@ class LunchListController extends Controller
                 $lunch_class_data = [];
                 foreach ($lunch_class_dates as $lunch_class_date) {
                     $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][1] = $lunch_class_date->eat_style1;
-                    $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][4] = $lunch_class_date->eat_style4;
                     $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][41] = $lunch_class_date->eat_style4_egg;
+                    $lunch_class_data[$lunch_class_date->lunch_class_id][$lunch_class_date->order_date][4] = $lunch_class_date->eat_style4;                    
                 }
 
                 $student_classes = StudentClass::where('semester', $lunch_order->semester)
                     ->orderBy('student_year')
                     ->orderBy('student_class')
-                    ->get();
-
+                    ->get();   
                 $data = [
                     'factory' => $factory,
                     'lunch_order_id' => $lunch_order_id,
@@ -668,6 +683,7 @@ class LunchListController extends Controller
                     'date_array' => $date_array,
                     'user_data' => $user_data,
                     'place_data' => $place_data,
+                    'place_data2' => $place_data2,
                     'eat_data' => $eat_data,
                     'eat_data_egg' => $eat_data_egg,
                     'days_data' => $days_data,

@@ -27,7 +27,7 @@
             </nav>
             @if($admin)
                 <form name=myform>
-                    <div class="form-control">
+                    <div style="margin: 20px">
                         {{ Form::select('lunch_order_id', $lunch_order_array,$lunch_order_id, ['class' => 'form-control','placeholder'=>'--請選擇--','onchange'=>'jump()']) }}
                     </div>
                 </form>
@@ -52,6 +52,7 @@
                             </th>
                             <?php $i=1; ?>
                             @foreach($date_array as $k=>$v)
+                                @if($v=="1")
                                 <th>
                                     <?php
                                         if(get_chinese_weekday2($k)=="六"){
@@ -67,6 +68,7 @@
                                     <br>
                                     <span class="{{ $txt_bg }}">{{ get_chinese_weekday2($k) }}</span>
                                 </th>
+                                @endif
                             @endforeach
                             <th>
                                 天數
@@ -115,6 +117,7 @@
                                         $bg="";
                                     }
                                     ?>
+                                    @if($v2=="1")
                                     <td style="background-color:{{ $bg }}">
                                         @if(isset($v1[$k2]))
                                             @if($v1[$k2]['enable']=="eat")
@@ -126,6 +129,7 @@
                                             @endif
                                         @endif
                                     </td>
+                                    @endif
                                 @endforeach
                                 <td>
                                     @if(isset($days_data[$k1]))
@@ -147,11 +151,13 @@
                             <td></td>
                             <td></td>
                             @foreach($date_array as $k=>$v)
-                                <td>
-                                    @if(isset($count_one_day[$k]))
-                                        {{ $count_one_day[$k] }}
-                                    @endif
-                                </td>
+                                @if($v=="1")
+                                    <td>
+                                        @if(isset($count_one_day[$k]))
+                                            {{ $count_one_day[$k] }}
+                                        @endif
+                                    </td>
+                                @endif
                             @endforeach
                             <td>{{ $total_days }}</td>
                             <td>{{ $total_money }}</td>
