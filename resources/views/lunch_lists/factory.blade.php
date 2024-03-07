@@ -382,39 +382,39 @@
                                     </td>
                                     @foreach($date_array as $kk=>$vv)                                   
                                         @if($vv=="1")
-                                            <td style="background-color: #FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" style="color:red;">
-                                                @if(isset($lunch_class_data[$student_class->id][$kk][1]))
-                                                    {{ $lunch_class_data[$student_class->id][$kk][1] }}
-                                                @else                                                                                                
-                                                    <?php $lunch_class_data[$student_class->id][$kk][1]=0;  ?>
-                                                @endif
-                                                @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk]))
-                                                    <br>
-                                                    <small class="text-primary font-weight-bold">+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][1][$kk] }}</small>
-                                                @endif
-                                            </td>        
-                                            <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素" style="color:green;">
-                                                @if(isset($lunch_class_data[$student_class->id][$kk][41]))
-                                                    {{ $lunch_class_data[$student_class->id][$kk][41] }}
-                                                @else
-                                                    <?php $lunch_class_data[$student_class->id][$kk][41]=0;  ?>
-                                                @endif
-                                                @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][41][$kk]))
-                                                    <br>
-                                                    <small class="text-primary font-weight-bold">+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk] }}</small>
-                                                @endif
-                                            </td>
-                                            <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素" style="color:green;">
-                                                @if(isset($lunch_class_data[$student_class->id][$kk][4]))
-                                                    {{ $lunch_class_data[$student_class->id][$kk][4] }}
-                                                @else
-                                                    <?php $lunch_class_data[$student_class->id][$kk][4]=0;  ?>
-                                                @endif
-                                                @if(isset($p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk]))
-                                                    <br>
-                                                    <small class="text-primary font-weight-bold">+{{ $p_e_data[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][4][$kk] }}</small>
-                                                @endif
-                                            </td>                                            
+                                        <td style="background-color: #FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 葷" style="color:red;">
+                                            @if(isset($lunch_class_data[$student_class->id][$kk][1]))
+                                                {{ $lunch_class_data[$student_class->id][$kk][1] }}
+                                            @else                                                                                                
+                                                <?php $lunch_class_data[$student_class->id][$kk][1]=0;  ?>
+                                            @endif
+                                            @if(isset($place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][1]) and $place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][1] !=0)
+                                                <br>
+                                                <small class="text-primary font-weight-bold">+{{ $place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][1] }}</small>
+                                            @endif
+                                        </td>        
+                                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 蛋奶素" style="color:green;">
+                                            @if(isset($lunch_class_data[$student_class->id][$kk][41]))
+                                                {{ $lunch_class_data[$student_class->id][$kk][41] }}
+                                            @else
+                                                <?php $lunch_class_data[$student_class->id][$kk][41]=0;  ?>
+                                            @endif
+                                            @if(isset($place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][41]) and $place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][41] !=0)
+                                                <br>
+                                                <small class="text-primary font-weight-bold">+{{ $place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][41] }}</small>
+                                            @endif
+                                        </td>
+                                        <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($kk,5,5) }} {{ $student_class->student_year }}{{ sprintf("%02s",$student_class->student_class) }} 奶素" style="color:green;">
+                                            @if(isset($lunch_class_data[$student_class->id][$kk][4]))
+                                                {{ $lunch_class_data[$student_class->id][$kk][4] }}
+                                            @else
+                                                <?php $lunch_class_data[$student_class->id][$kk][4]=0;  ?>
+                                            @endif
+                                            @if(isset($place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][4]) and $place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][4] !=0)
+                                                <br>
+                                                <small class="text-primary font-weight-bold">+{{ $place_data2[$student_class->student_year.sprintf("%02s",$student_class->student_class).'教室'][$kk][4] }}</small>
+                                            @endif
+                                        </td>                                         
                                         @endif
                                         <?php
                                             if(!isset($one_day1[$kk])) $one_day1[$kk] = 0;
