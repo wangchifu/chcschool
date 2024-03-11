@@ -272,6 +272,7 @@
                                     @endif
                                 @endforeach
                             </tr>
+                            <?php $one_day1=[];$one_day41=[];$one_day4=[]; ?>
                             @foreach($place_data2 as $k=>$v)
                                 <tr bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
                                     <td>{{ $k }}</td>
