@@ -279,9 +279,9 @@
                                     @foreach($date_array as $k1=>$v1)
                                         @if($v1==1)
                                             <?php
-                                                if(!isset($v[$k1][1]) or $v[$k1][1]==0) $v[$k1][1] = null;
-                                                if(!isset($v[$k1][41]) or $v[$k1][41]==0) $v[$k1][41] = null;
-                                                if(!isset($v[$k1][4]) or $v[$k1][4]==0) $v[$k1][4] = null;
+                                                if(!isset($v[$k1][1]) or $v[$k1][1]==0) $v[$k1][1] = 0;
+                                                if(!isset($v[$k1][41]) or $v[$k1][41]==0) $v[$k1][41] = 0;
+                                                if(!isset($v[$k1][4]) or $v[$k1][4]==0) $v[$k1][4] = 0;
                                             ?>
                                             <td style="background-color: #FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($k1,5,5).'('.$k.')' }}">{{ $v[$k1][1] }}</td>
                                             <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($k1,5,5).'('.$k.')' }}">{{ $v[$k1][41] }}</td>
@@ -300,13 +300,20 @@
                             @endforeach
                             <tr>
                                 <td>合計</td>
+                                <?php
+                                if(!isset($all)) $all = 0;                                            
+                                ?>
                                 @foreach($date_array as $k=>$v)
                                     @if($v==1)
+                                        <?php
+                                            if(!isset($one_day1[$k])) $one_day1[$k] = 0;
+                                            if(!isset($one_day41[$k])) $one_day41[$k] = 0;
+                                            if(!isset($one_day4[$k])) $one_day4[$k] = 0;
+                                        ?>
                                         <td style="background-color: #FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($k,5,5).'(葷)' }}">{{ $one_day1[$k] }}</td>
                                         <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($k,5,5).'(蛋奶素)' }}">{{ $one_day41[$k] }}</td>
                                         <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($k,5,5).'(奶素)' }}">{{ $one_day4[$k] }}</td>
-                                        <?php 
-                                            if(!isset($all)) $all = 0;
+                                        <?php                                                                                         
                                             $all += $one_day1[$k]+$one_day41[$k]+$one_day4[$k];
                                         ?>
                                     @endif
@@ -437,6 +444,11 @@
                                 </td>
                                 @foreach($date_array as $k=>$v)
                                     @if($v==1)
+                                    <?php
+                                        if(!isset($one_day1[$k])) $one_day1[$k] = 0;
+                                        if(!isset($one_day41[$k])) $one_day41[$k] = 0;
+                                        if(!isset($one_day4[$k])) $one_day4[$k] = 0;
+                                    ?>
                                         <td style="background-color: #FFECEC" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ substr($k,5,5) }} 葷">
                                             {{ $one_day1[$k] }}
                                         </td>                                        
