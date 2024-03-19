@@ -122,6 +122,11 @@ Route::post('tasks/store', 'TaskController@store')->name('tasks.store');
 Route::post('tasks/self_store', 'TaskController@self_store')->name('tasks.self_store');
 Route::post('tasks/user_condition', 'TaskController@user_condition')->name('tasks.user_condition');
 
+Route::get('lends/clean/{lend_class_id?}/{this_date?}', 'LendsController@index')->name('lends.clean');
+Route::get('lends/list_clean', 'LendsController@list_clean')->name('lends.list_clean');
+Route::get('lends/check_order_out_clean/{this_date}/{action}', 'LendsController@check_order_out_clean')->name('lends.check_order_out_clean');
+
+
 //登入的使用者可用
 Route::group(['middleware' => 'auth'], function () {
     //結束模擬
@@ -298,6 +303,26 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('wrench/index/{page?}', 'WrenchController@index')->name('wrench.index');
     Route::post('wrench/store', 'WrenchController@store')->name('wrench.store');
     Route::get('wrench/download/{wrench_id}/{filename}', 'WrenchController@download')->name('wrench.download');
+
+    //借用系統
+    Route::get('lends/index/{lend_class_id?}/{this_date?}', 'LendsController@index')->name('lends.index');
+    Route::get('lends/list', 'LendsController@list')->name('lends.list');
+    Route::get('lends/my_list', 'LendsController@my_list')->name('lends.my_list');
+    Route::get('lends/admin/{lend_class_id?}', 'LendsController@admin')->name('lends.admin');
+    Route::post('lends/store_class', 'LendsController@store_class')->name('lends.store_class');
+    Route::post('lends/update_class/{lend_class}', 'LendsController@update_class')->name('lends.update_class');
+    Route::get('lends/delete_class/{lend_class}', 'LendsController@delete_class')->name('lends.delete_class');
+    Route::post('lends/store_item', 'LendsController@store_item')->name('lends.store_item');
+    Route::get('lends/delete_item/{lend_item}', 'LendsController@delete_item')->name('lends.delete_item');
+    Route::get('lends/admin_edit/{lend_item}', 'LendsController@admin_edit')->name('lends.admin_edit');
+    Route::post('lends/update_item/{lend_item}', 'LendsController@update_item')->name('lends.update_item');
+    Route::get('lends/check_item_num/{lend_item}', 'LendsController@check_item_num')->name('lends.check_item_num');
+    Route::get('lends/check_order_out/{this_date}/{action}', 'LendsController@check_order_out')->name('lends.check_order_out');
+    Route::post('lends/order', 'LendsController@order')->name('lends.order');
+    Route::get('lends/delete_my_order/{lend_order}', 'LendsController@delete_my_order')->name('lends.delete_my_order');
+    Route::get('lends/delete_order/{lend_order}', 'LendsController@delete_order')->name('lends.delete_order');
+    Route::post('lends/update_other_order/{lend_order}', 'LendsController@update_other_order')->name('lends.update_other_order');
+    Route::post('store_line_notify', 'LendsController@store_line_notify')->name('store_line_notify');
 });
 
 //行政人員可用

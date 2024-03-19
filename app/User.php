@@ -28,6 +28,7 @@ class User extends Authenticatable
         'school',
         'kind',
         'title',
+        'line_key',
         'login_type',
         'disable',
     ];

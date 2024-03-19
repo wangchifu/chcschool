@@ -446,3 +446,20 @@ function substr_cut_name($user_name){
 		return $strlen == 2 ? $firstStr . str_repeat('〇', mb_strlen($user_name, 'utf-8') - 1) : $firstStr . str_repeat("〇", $strlen - 2) . $lastStr;
 	}
 }
+
+function line_notify($token,$string){
+    $headers = array(
+        'Content-Type: multipart/form-data',
+        'Authorization:Bearer '.$token
+    );
+    $message = array(
+        'message' => $string
+    );
+    $ch = curl_init();
+    curl_setopt($ch , CURLOPT_URL , "https://notify-api.line.me/api/notify");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
+    $result = curl_exec($ch);
+    curl_close($ch);
+}

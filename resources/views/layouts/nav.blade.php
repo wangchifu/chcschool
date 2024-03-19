@@ -137,6 +137,11 @@
                                         <i class="fas fa-tasks"></i> 行政待辦
                                     </a>
                                 @endif
+                                @if(isset($module_setup['借用系統']))
+                                    <a class="dropdown-item" href="{{ route('lends.index') }}">
+                                        <i class="fas fa-archive"></i> 借用系統
+                                    </a>
+                                @endif
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                             </div>
                         </li>

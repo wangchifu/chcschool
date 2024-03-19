@@ -111,7 +111,9 @@
                             @elseif($block->title == "教室預約(系統區塊)")
                                 @include('layouts.classroom_order')
                             @elseif($block->title == "RSS訊息(系統區塊)")
-                                @include('layouts.rss_feed')
+                                @include('layouts.rss_feed')                           
+                            @elseif($block->title == "借用狀態(系統區塊)")
+                                @include('layouts.lend_list')
                             @else
                                 {!! $block->content !!}
                             @endif
