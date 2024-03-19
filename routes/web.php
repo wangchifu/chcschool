@@ -126,6 +126,7 @@ Route::get('lends/clean/{lend_class_id?}/{this_date?}', 'LendsController@index')
 Route::get('lends/list_clean', 'LendsController@list_clean')->name('lends.list_clean');
 Route::get('lends/check_order_out_clean/{this_date}/{action}', 'LendsController@check_order_out_clean')->name('lends.check_order_out_clean');
 Route::post('lends/download_excel', 'LendsController@download_excel')->name('lends.download_excel');
+Route::post('lends/print_lend', 'LendsController@print_lend')->name('lends.print_lend');
 
 
 //登入的使用者可用

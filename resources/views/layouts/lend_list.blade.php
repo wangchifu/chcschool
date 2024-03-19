@@ -8,6 +8,7 @@ $lend_orders = \App\LendOrder::orderBy('id','DESC')
         $lend_orders3 = \App\LendOrder::where('back_date',date('Y-m-d'))
             ->get();     
         $lend_sections = config('chcschool.lend_sections');
+        $sections_array = config('chcschool.lend_sections');
 ?>
 
 <a href="{{ route('lends.index') }}" class="btn btn-primary btn-sm">我要借用</a><br><br>
