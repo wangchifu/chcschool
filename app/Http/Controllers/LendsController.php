@@ -9,6 +9,9 @@ use App\LendItem;
 use App\LendOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Rap2hpoutre\FastExcel\FastExcel;
+use PHPExcel_IOFactory;
+use PHPExcel;
 
 class LendsController extends Controller
 {
@@ -456,5 +459,51 @@ class LendsController extends Controller
         return redirect()->route('lends.list');
     }
 
+    function download_excel(Request $request){
+        $this_date = $request->input('this_date');
+        $lend_orders1 = LendOrder::where('lend_date',$this_date)
+            ->get();
+
+        $lend_orders2 = LendOrder::where('back_date',$this_date)
+            ->get(); 
+
+            $lend_sections = config('chcschool.lend_sections');
+            $n = 0 ;
+        foreach($lend_orders1 as $lend_order){
+            $data[$n] = [
+                $this_date => "要借出",
+                '第幾節下課' => $lend_sections[$lend_order->lend_section],
+                '借用人' => $lend_order->user->name,
+                '借用物品' =>  $lend_order->lend_item->name,
+                '數量' => $lend_order->num,
+                '借用期間' => $lend_order->lend_date.'~'.$lend_order->back_date,
+            ];
+            $n++;
+        }
+        $data[$n] = [
+            $this_date => '--',
+            '第幾節下課' => '--',
+            '借用人' => '--',
+            '借用物品' =>  '--',
+            '數量' => '--',
+            '借用期間' => '--',
+        ];
+        $n++;
+        foreach($lend_orders2 as $lend_order){
+            $data[$n] = [
+                $this_date => "要歸還",
+                '第第幾節下課幾節' => $lend_sections[$lend_order->back_section],
+                '借用人' => $lend_order->user->name,
+                '借用物品' =>  $lend_order->lend_item->name,
+                '數量' => $lend_order->num,
+                '借用期間' => $lend_order->lend_date.'~'.$lend_order->back_date,
+            ];
+            $n++;
+        }
+        $list = collect($data);
+
+        return (new FastExcel($list))->download($this_date.'_借還單.xlsx');
+            
+    }
     
 }

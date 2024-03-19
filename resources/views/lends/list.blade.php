@@ -47,6 +47,13 @@ $active['list'] ="active";
                     <li class="nav-item">
                       <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">全部借單</a>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" onclick="send_date_form()"><i class="fas fa-download"></i> <span id="ch_date">{{ date('Y-m-d') }}</span> Excel</button>
+                    </li>
+                    <form id="this_form" action="{{ route('lends.download_excel') }}" method="post">
+                        @csrf
+                        <input type="hidden" id="this_date" name="this_date" value="{{ date('Y-m-d') }}">
+                    </form>
                   </ul>
                   <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -296,6 +303,9 @@ $active['list'] ="active";
             if(action == 'back_date'){
                 $('#this_date2').val(date); 
             }
+
+            $('#this_date').val(date);
+            document.getElementById('ch_date').innerHTML = date;
                    
             //alert(date);
             $.ajax({
@@ -340,6 +350,10 @@ $active['list'] ="active";
             data = data+"</table>";
             return data;
         }
+
+        function send_date_form(){
+        $('#this_form').submit();
+    }
     
     </script>    
 @endsection

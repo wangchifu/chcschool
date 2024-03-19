@@ -125,6 +125,7 @@ Route::post('tasks/user_condition', 'TaskController@user_condition')->name('task
 Route::get('lends/clean/{lend_class_id?}/{this_date?}', 'LendsController@index')->name('lends.clean');
 Route::get('lends/list_clean', 'LendsController@list_clean')->name('lends.list_clean');
 Route::get('lends/check_order_out_clean/{this_date}/{action}', 'LendsController@check_order_out_clean')->name('lends.check_order_out_clean');
+Route::post('lends/download_excel', 'LendsController@download_excel')->name('lends.download_excel');
 
 
 //登入的使用者可用
