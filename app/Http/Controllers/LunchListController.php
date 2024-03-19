@@ -238,7 +238,7 @@ class LunchListController extends Controller
 
     public function semester_print(Request $request)
     {
-        if ($request->input('submit') == "印出教師全學期收費通知") {
+        if ($request->input('submit') == "印出教師全學期收費通知1") {
             $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
 
             $order_datas = LunchTeaDate::where('semester', $lunch_setup->semester)
@@ -265,6 +265,53 @@ class LunchListController extends Controller
                 'lunch_setup' => $lunch_setup,
             ];
             return view('lunch_lists.semester_call_money', $data);
+        }
+
+        if ($request->input('submit') == "印出教師全學期收費通知2") {
+            $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
+
+            $order_datas = LunchTeaDate::where('semester', $lunch_setup->semester)
+                ->orderBy('lunch_order_id')
+                ->orderBy('lunch_place_id')
+                ->orderBy('user_id')
+                ->get();
+
+            $user_datas = [];
+            $factory_money = [];
+            foreach ($order_datas as $order_data) {
+                if ($order_data->enable == "eat") {
+                    if (!isset($user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)])) $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)] = null;
+                    $user_datas[$order_data->user->name][substr($order_data->order_date, 0, 7)]++;
+                    if(!isset($user_datas_by_order[$order_data->user->name][$order_data->lunch_order_id])) $user_datas_by_order[$order_data->user->name][$order_data->lunch_order_id]=null;
+                    $user_datas_by_order[$order_data->user->name][$order_data->lunch_order_id]++;
+                    $factory_money[$order_data->user->name][substr($order_data->order_date, 0, 7)] = $lunch_setup->teacher_money;
+                    $ear_user[$order_data->user->id] = $order_data->user->name;
+                }
+            }
+
+            //此學期有的餐期
+            $lunch_orders = LunchOrder::where('semester', $lunch_setup->semester)
+                ->get();     
+            //查每一期有供餐的是幾天
+            $lunch_order_dates = LunchOrderDate::where('semester', $lunch_setup->semester)->get();
+            foreach($lunch_order_dates as $lunch_order_date){
+                if($lunch_order_date->enable==1){
+                    if(!isset($total_order_date[$lunch_order_date->lunch_order_id])) $total_order_date[$lunch_order_date->lunch_order_id]=0;
+                    $total_order_date[$lunch_order_date->lunch_order_id]++;
+                }
+            }
+
+            $data = [
+                'lunch_setup' => $lunch_setup,
+                'user_datas' => $user_datas,
+                'factory_money' => $factory_money,
+                'lunch_setup' => $lunch_setup,
+                'lunch_orders'=>$lunch_orders,
+                'user_datas_by_order'=>$user_datas_by_order,
+                'die_line'=>$request->input('die_line'),
+                'total_order_date'=>$total_order_date,
+            ];
+            return view('lunch_lists.semester_call_money2', $data);
         }
 
         if ($request->input('submit') == "印出教師全學期收據") {
