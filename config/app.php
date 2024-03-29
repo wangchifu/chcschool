@@ -411,7 +411,8 @@ return [
         'www.scses.chc.edu.tw'=>'s074744',
         'www.ydes.chc.edu.tw'=>'s074739',
         'www.sstes.chc.edu.tw'=>'s074740',
-        'www.ydps.chc.edu.tw'=>'s074745',
+        //'www.ydps.chc.edu.tw'=>'s074745',
+        'www.ydps.chc.edu.tw'=>'s074537',//原斗國中小用074537(原國中)，網址用原國小
         'www.sssps.chc.edu.tw'=>'s074743',
         'www.whes.chc.edu.tw'=>'s074746',
         'www.wsps.chc.edu.tw'=>'s074742',
@@ -473,7 +474,7 @@ return [
         'www.ccjh.chc.edu.tw'=>'s074532',
         'www.hyjh.chc.edu.tw'=>'s074533',
         'www.ctjhs.chc.edu.tw'=>'s074514',
-        'www.ydjh.chc.edu.tw'=>'s074537',
+        //'www.ydjh.chc.edu.tw'=>'s074537',//原斗國中小用074537(原國中)，網址用原國小
         'www.whjh.chc.edu.tw'=>'s074512',
         'www.tcjhs.chc.edu.tw'=>'s074515',
         'www.fyjhs.chc.edu.tw'=>'s074517',
