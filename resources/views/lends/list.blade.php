@@ -48,6 +48,9 @@ $active['list'] ="active";
                       <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">全部借單</a>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="month-tab" data-toggle="tab" href="#month" role="tab" aria-controls="month" aria-selected="false">逐月借用</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
                         <button class="nav-link" onclick="send_date_form()"><i class="fas fa-print"></i> <span id="ch_date">{{ date('Y-m-d') }}</span> Table</button>
                     </li>
                     <form id="this_form" action="{{ route('lends.print_lend') }}" method="post" target="_blank">
@@ -282,6 +285,81 @@ $active['list'] ="active";
                             {{  $lend_orders->links() }}
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="month" role="tabpanel" aria-labelledby="month-tab">
+                        <br>
+                        <?php 
+                            //查每個月每日剩餘數量 
+                            $this_month = get_month_date(substr($this_date,0,7));
+                            $lend_items = \App\LendItem::where('enable','1')->get();
+                            $check_num = [];
+                            foreach($this_month as $k=>$v){
+                                foreach($lend_items as $lend_item){
+                                    $check_lend_orders = \App\LendOrder::where('lend_date','<=',$v)
+                                        ->where('back_date','>=',$v)
+                                        ->where('lend_item_id',$lend_item->id)
+                                        ->get();
+                                    foreach($check_lend_orders as $lend_order){
+                                        if(!isset($check_num[$v][$lend_item->id])) $check_num[$v][$lend_item->id]=0;
+                                        $check_num[$v][$lend_item->id] += $lend_order->num;
+                                    }
+                                }                                  
+                            }
+                                                                      
+                        ?>
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="change_month(-1,'month_data')">
+                                    <i class="fas fa-angle-left"></i>往前
+                                    </a>
+                                </td>
+                                <td>
+                                    <input type="date" value="{{ $this_date }}" class="form-control" id="this_date3" readonly style="font-size:20px;font-weight:bold;color:black">
+                                </td>
+                                <td>
+                                    <a href="#" onclick="change_month(1,'month_data')">
+                                    往後<i class="fas fa-angle-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+        
+                        <div class="table-responsive" id="month_data">
+                            <table class="table table-bordered table-striped">
+                                <tr style="background-color:#E0E0E0">
+                                    <th>
+                                        日期
+                                    </th>
+                                    @foreach($lend_items as $lend_item)
+                                        <th>
+                                            {{ $lend_item->name }}
+                                        </th>
+                                    @endforeach
+                                </tr>                                    
+                                @foreach($this_month as $k=>$v)
+                                <tr>
+                                    <td>
+                                        {{ $v }} ({{ get_chinese_weekday($v) }})
+                                    </td>
+                                    @foreach($lend_items as $lend_item)
+                                        <?php 
+                                            if(!isset($check_num[$v][$lend_item->id])) $check_num[$v][$lend_item->id] = 0;                                                                                                                                             
+                                        ?>
+                                    @if($check_num[$v][$lend_item->id] > 0)
+                                    <td class="text-danger">
+                                        {{ $lend_item->num - $check_num[$v][$lend_item->id] }}/{{ $lend_item->num }}
+                                    </td>
+                                    @else
+                                    <td>
+                                        {{ $lend_item->num - $check_num[$v][$lend_item->id] }}/{{ $lend_item->num }}
+                                    </td>
+                                    @endif
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                            </table>
+                        </div>
+                    </div>
                   </div>
             </div>
         </div>
@@ -323,6 +401,28 @@ $active['list'] ="active";
                 }
             })
         }
+
+        function change_month(n,id){
+        var this_date = $('#this_date3').val();
+        var date = new Date(this_date);
+        date.setMonth(date.getMonth() + n);
+        date = formatDate(date); 
+        $('#this_date3').val(date);
+        $.ajax({
+            url: 'https://{{ $_SERVER['HTTP_HOST'] }}'+'/lends/check_order_month/'+date,
+            type : 'get',
+            dataType : 'json',
+            //data : $('#sunday_form').serialize(),
+            success : function(result) {
+                if(result != 'failed') {
+                    document.getElementById(id).innerHTML = get_month_table(result);
+                }
+            },
+            error: function(result) {
+                alert('失敗');
+            }
+        })
+    }
     
         function formatDate(date) {
             var d = new Date(date),
@@ -350,6 +450,29 @@ $active['list'] ="active";
             data = data+"</table>";
             return data;
         }
+
+        function get_month_table(result){
+        data = "<table class='table table-bordered table-striped'>";
+        data = data+"<tr style='background-color:#E0E0E0'>";
+        data = data+"<th>日期</th>";
+        for(var k in result['item']){
+            data = data+"<th>"+result['item'][k]+"</th>";
+        }
+        data = data+"</tr><tr>"
+        for(var k in result['data']){
+            data = data+"<td>"+k+"</td>";
+            for(var k1 in result['item']){
+                if(result['data'][k][k1]['all'] > result['data'][k][k1]['left']){
+                    data = data+"<td class='text-danger'>"+result['data'][k][k1]['left']+"/"+result['data'][k][k1]['all']+"</td>";
+                }else{
+                    data = data+"<td>"+result['data'][k][k1]['left']+"/"+result['data'][k][k1]['all']+"</td>";
+                }
+                
+            }
+            data = data +"</tr>";
+        }
+        return data;
+    }
 
         function send_date_form(){
         $('#this_form').submit();

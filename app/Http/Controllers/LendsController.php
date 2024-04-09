@@ -289,6 +289,41 @@ class LendsController extends Controller
 
     }
 
+    public function check_order_month($this_date = null)
+    {
+
+        $this_month = get_month_date(substr($this_date,0,7));
+        $lend_items = LendItem::where('enable','1')->get();
+        $check_num = [];
+        foreach($this_month as $k=>$v){
+            foreach($lend_items as $lend_item){
+                $check_lend_orders = LendOrder::where('lend_date','<=',$v)
+                    ->where('back_date','>=',$v)
+                    ->where('lend_item_id',$lend_item->id)
+                    ->get();
+                foreach($check_lend_orders as $lend_order){
+                    if(!isset($check_num[$v][$lend_item->id])) $check_num[$v][$lend_item->id]=0;
+                    $check_num[$v][$lend_item->id] += $lend_order->num;
+                }
+            }                                  
+        }
+
+        $result = [];
+
+        foreach($this_month as $k=>$v){
+            foreach($lend_items as $lend_item){
+                if(!isset($check_num[$v][$lend_item->id])) $check_num[$v][$lend_item->id] = 0;
+                $result['item'][$lend_item->id] = $lend_item->name;
+                $result['data'][$v." (".get_chinese_weekday($v).")"][$lend_item->id]['all'] = $lend_item->num;
+                $result['data'][$v." (".get_chinese_weekday($v).")"][$lend_item->id]['left'] = $lend_item->num - $check_num[$v][$lend_item->id];
+            }
+        }
+
+        echo json_encode($result);
+        return;
+
+    }
+
     public function check_order_out_clean($this_date = null,$action=null)
     {
 
@@ -415,8 +450,10 @@ class LendsController extends Controller
 
         $lend_orders3 = LendOrder::where('owner_user_id',auth()->user()->id)
             ->where('back_date',date('Y-m-d'))
-            ->get();        
+            ->get();       
+        $this_date = date('Y-m')."-01"; 
         $data = [
+            'this_date'=>$this_date,
             'admin'=>$admin,
             'lend_orders'=>$lend_orders,
             'lend_orders2'=>$lend_orders2,
