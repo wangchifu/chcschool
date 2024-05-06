@@ -194,7 +194,7 @@ class LendsController extends Controller
         $admin = check_power('借用系統', 'A', auth()->user()->id);
         if(!$admin) return back();
         if($lend_item->user_id != auth()->user()->id) return back();
-
+        LendOrder::where('lend_item_id',$lend_item->id)->delete();
         $lend_item->delete();
         return back();
     }
@@ -247,6 +247,7 @@ class LendsController extends Controller
           ]);
 
         $att = $request->all();
+        $att['enable'] = ($request->input('enable'))?"1":null;
         $att['lend_sections'] =serialize($att['lend_sections']);
 
         $lend_item->update($att);
