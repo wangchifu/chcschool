@@ -136,11 +136,11 @@ class HomeController extends Controller
         rsort($files);
         if ($files) {
             foreach ($files as $k => $v) {
-                $photos[$k] = $v;
+                $photos[$k] = asset('storage/' . $school_code . '/title_image/random/' . $v);
             }
         } else {
             $photos = [
-                '0' => asset('images/top0.svg'),
+                '0' => asset('images/top0.svg'),  
                 '1' => asset('images/top1.svg'),
                 '2' => asset('images/top2.svg'),
             ];

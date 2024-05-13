@@ -17,10 +17,10 @@
                 <div class="carousel-item {{ $active }}">
                     @if(isset($photo_desc[$v]['link']) and !empty($photo_desc[$v]['link']))
                         <a href="{{ $photo_desc[$v]['link'] }}" target="_blank">
-                            <img class="d-block w-100" src="{{ asset('storage/' . $school_code . '/title_image/random/' . $v) }}">
+                            <img class="d-block w-100" src="{{ $v }}">
                         </a>
                     @else
-                        <img class="d-block w-100" src="{{ asset('storage/' . $school_code . '/title_image/random/' . $v) }}">
+                        <img class="d-block w-100" src="{{ $v }}">
                     @endif
                     <div class="carousel-caption d-none d-md-block">
                         @if(isset($photo_desc[$v]['title']))
