@@ -149,9 +149,9 @@ class HomeController extends Controller
         $title_image_desc = TitleImageDesc::all();
         $photo_desc = [];
         foreach ($title_image_desc as $desc) {
-            $photo_desc[$desc->image_name]['link'] = $desc->link;
-            $photo_desc[$desc->image_name]['title'] = $desc->title;
-            $photo_desc[$desc->image_name]['desc'] = $desc->desc;
+            $photo_desc[asset('storage/' . $school_code . '/title_image/random/' . $desc->image_name)]['link'] = $desc->link;
+            $photo_desc[asset('storage/' . $school_code . '/title_image/random/' . $desc->image_name)]['title'] = $desc->title;
+            $photo_desc[asset('storage/' . $school_code . '/title_image/random/' . $desc->image_name)]['desc'] = $desc->desc;
         }
 
 
