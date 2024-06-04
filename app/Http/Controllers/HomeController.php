@@ -132,26 +132,28 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $school_code = school_code();
-        $files = get_files(storage_path('app/public/' . $school_code . '/title_image/random'));
-        rsort($files);
-        if ($files) {
-            foreach ($files as $k => $v) {
-                $photos[$k] = asset('storage/' . $school_code . '/title_image/random/' . $v);
-            }
-        } else {
-            $photos = [
-                '0' => asset('images/top0.svg'),  
-                '1' => asset('images/top1.svg'),
-                '2' => asset('images/top2.svg'),
-            ];
-        }
-
-        $title_image_desc = TitleImageDesc::all();
+        $photos = get_files(storage_path('app/public/' . $school_code . '/title_image/random'));
+        $title_image_desc = TitleImageDesc::orderBy('order_by')->get();
         $photo_desc = [];
         foreach ($title_image_desc as $desc) {
-            $photo_desc[asset('storage/' . $school_code . '/title_image/random/' . $desc->image_name)]['link'] = $desc->link;
-            $photo_desc[asset('storage/' . $school_code . '/title_image/random/' . $desc->image_name)]['title'] = $desc->title;
-            $photo_desc[asset('storage/' . $school_code . '/title_image/random/' . $desc->image_name)]['desc'] = $desc->desc;
+            $photo_desc[$desc->image_name]['order_by'] = $desc->order_by;
+            $photo_desc[$desc->image_name]['link'] = $desc->link;
+            $photo_desc[$desc->image_name]['title'] = $desc->title;
+            $photo_desc[$desc->image_name]['desc'] = $desc->desc;
+        }
+
+        foreach($photos as $k=>$v){
+            if(!isset($photo_desc[$v]['order_by'])) $photo_desc[$v]['order_by'] = 0;
+            if(!isset($photo_desc[$v]['link'])) $photo_desc[$v]['link'] = null;
+            if(!isset($photo_desc[$v]['title'])) $photo_desc[$v]['title'] = null;
+            if(!isset($photo_desc[$v]['desc'])) $photo_desc[$v]['desc'] = null;
+        }
+        $photo_data = [];
+        foreach($photo_desc as $k=>$v){
+            $photo_data[$v['order_by']]['image_name'] = $k;
+            $photo_data[$v['order_by']]['link'] = $v['link'];
+            $photo_data[$v['order_by']]['title'] = $v['title'];
+            $photo_data[$v['order_by']]['desc'] = $v['desc'];
         }
 
 
@@ -199,8 +201,8 @@ class HomeController extends Controller
 
         $data = [
             'school_code' => $school_code,
-            'photos' => $photos,
-            'photo_desc' => $photo_desc,
+            //'photos' => $photos,
+            'photo_data' => $photo_data,
             'setup' => $setup,
             'setup_cols' => $setup_cols,
             'blocks' => $blocks,

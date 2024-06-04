@@ -4,51 +4,50 @@
 
 @section('top_image')
     @if($setup->title_image)
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-            @foreach($photos as $k=>$v)
-                <?php $active = ($k==0)?"active":""; ?>
-                <li data-target="#carouselExampleIndicators" data-slide-to="{{ $k }}" class="{{ $active }}"></li>
-            @endforeach
-        </ol>
-        <div class="carousel-inner">
-            @foreach($photos as $k=>$v)
-                <?php $active = ($k==0)?"active":""; ?>
-                <div class="carousel-item {{ $active }}">
-                    @if(isset($photo_desc[$v]['link']) and !empty($photo_desc[$v]['link']))
-                        <a href="{{ $photo_desc[$v]['link'] }}" target="_blank">
-                            <img class="d-block w-100" src="{{ $v }}">
-                        </a>
-                    @else
-                        <img class="d-block w-100" src="{{ $v }}">
-                    @endif
-                    <div class="carousel-caption d-none d-md-block">
-                        @if(isset($photo_desc[$v]['title']))
-                        <h1>{{ $photo_desc[$v]['title'] }}</h1>
-                        @endif
-                        <p>
-                            @if(isset($photo_desc[$v]['desc']))
-                            <strong>{{ $photo_desc[$v]['desc'] }}</strong> 
+        @if(!empty($photo_data))
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <?php $n=0; ?>
+                    @foreach($photo_data as $k=>$v)
+                        <?php $active = ($n==0)?"active":""; ?>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $k }}" class="{{ $active }}"></li>
+                        <?php $n++; ?>
+                    @endforeach
+                </ol>
+                <div class="carousel-inner">
+                    <?php $n=0; ?>
+                    @foreach($photo_data as $k=>$v)
+                        <?php $active = ($n==0)?"active":""; ?>
+                        <div class="carousel-item {{ $active }}">
+                            @if($v['link'] != null)
+                                <a href="{{ $v['link'] }}" target="_blank">
+                                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v['image_name']) }}">
+                                </a>
+                            @else
+                                <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v['image_name']) }}">
                             @endif
-                            @if(isset($photo_desc[$v]['link']) and !empty($photo_desc[$v]['link']))
-                            <!--
-                                <a href="{{ $photo_desc[$v]['link'] }}" target="_blank" class="btn btn-info btn-sm">詳情</a>
-                            -->
-                            @endif
-                        </p>
-                    </div>
+                            <div class="carousel-caption d-none d-md-block">
+                                @if($v['title'] != null)
+                                    <h1>{{ $v['title'] }}</h1>
+                                @endif
+                                @if($v['desc'] != null)
+                                    <p><strong>{{ $v['desc'] }}</strong></p>
+                                @endif
+                            </div>
+                        </div>
+                        <?php $n++; ?>
+                    @endforeach
                 </div>
-            @endforeach
-        </div>
-        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        @endif
     @endif
 @endsection
 
