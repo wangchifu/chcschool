@@ -8,34 +8,38 @@
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <?php $n=0; ?>
-                    @foreach($photo_data as $k=>$v)
+                    @foreach($photo_data as $k1=>$v1)
+                        @foreach($v1 as $k2=>$v2)
                         <?php $active = ($n==0)?"active":""; ?>
-                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $k }}" class="{{ $active }}"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $n }}" class="{{ $active }}"></li>
                         <?php $n++; ?>
+                        @endforeach
                     @endforeach
                 </ol>
                 <div class="carousel-inner">
                     <?php $n=0; ?>
-                    @foreach($photo_data as $k=>$v)
-                        <?php $active = ($n==0)?"active":""; ?>
-                        <div class="carousel-item {{ $active }}">
-                            @if($v['link'] != null)
-                                <a href="{{ $v['link'] }}" target="_blank">
-                                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v['image_name']) }}">
-                                </a>
-                            @else
-                                <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v['image_name']) }}">
-                            @endif
-                            <div class="carousel-caption d-none d-md-block">
-                                @if($v['title'] != null)
-                                    <h1>{{ $v['title'] }}</h1>
+                    @foreach($photo_data as $k1=>$v1)
+                        @foreach($v1 as $k2=>$v2)
+                            <?php $active = ($n==0)?"active":""; ?>
+                            <div class="carousel-item {{ $active }}">
+                                @if($v2['link'] != null)
+                                    <a href="{{ $v2['link'] }}" target="_blank">
+                                        <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}">
+                                    </a>
+                                @else
+                                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}">
                                 @endif
-                                @if($v['desc'] != null)
-                                    <p><strong>{{ $v['desc'] }}</strong></p>
-                                @endif
+                                <div class="carousel-caption d-none d-md-block">
+                                    @if($v2['title'] != null)
+                                        <h1>{{ $v2['title'] }}</h1>
+                                    @endif
+                                    @if($v2['desc'] != null)
+                                        <p><strong>{{ $v2['desc'] }}</strong></p>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-                        <?php $n++; ?>
+                            <?php $n++; ?>
+                        @endforeach
                     @endforeach
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

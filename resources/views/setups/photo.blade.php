@@ -82,62 +82,64 @@
                         </button>
                     </div>
                     {{ Form::close() }}
-                    @foreach($photo_data as $k=>$v)
-                        <form method="post" action="{{ route('setups.photo_desc') }}">
-                            @csrf
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            排序
-                                        </th>
-                                        <th>
-                                            圖片
-                                        </th>
-                                        <th>
-                                            連結
-                                        </th>
-                                        <th>
-                                            標題
-                                        </th>
-                                        <th>
-                                            說明
-                                        </th>
-                                        <th>
-                                            動作
-                                        </th>
-                                    </tr>
-        
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type="number" class="form-control" name="order_by" value="{{ $k }}">
-                                        </td>
-                                        <td>
-                                            <img src="{{ asset('storage/'.$school_code.'/title_image/random/'.$v['image_name']) }}" width="200">
-                                            <br>
-                                            {{ $v['image_name'] }}
-                                            <a href="{{ route('setups.del_img',['folder'=>'title_image&random','filename'=>$v['image_name']]) }}" onclick="return confirm('確定移除輪播圖片嗎')">
-                                                <i class="fas fa-times-circle text-danger"></i></a>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" name="link" value="{{ $v['link'] }}">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" name="title" value="{{ $v['title'] }}">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" name="desc" value="{{ $v['desc'] }}">
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm">儲存</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <input type="hidden" name="image_name" value="{{ $v['image_name'] }}">
-                        </form>
+                    @foreach($photo_data as $k1=>$v1)
+                        @foreach($v1 as $k2=>$v2)
+                            <form method="post" action="{{ route('setups.photo_desc') }}">
+                                @csrf
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                排序
+                                            </th>
+                                            <th>
+                                                圖片
+                                            </th>
+                                            <th>
+                                                連結
+                                            </th>
+                                            <th>
+                                                標題
+                                            </th>
+                                            <th>
+                                                說明
+                                            </th>
+                                            <th>
+                                                動作
+                                            </th>
+                                        </tr>
+            
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="number" class="form-control" name="order_by" value="{{ $k1 }}">
+                                            </td>
+                                            <td>
+                                                <img src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" width="200">
+                                                <br>
+                                                {{ $k2 }}
+                                                <a href="{{ route('setups.del_img',['folder'=>'title_image&random','filename'=>$k2]) }}" onclick="return confirm('確定移除輪播圖片嗎')">
+                                                    <i class="fas fa-times-circle text-danger"></i></a>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="link" value="{{ $v2['link'] }}">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="title" value="{{ $v2['title'] }}">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="desc" value="{{ $v2['desc'] }}">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm">儲存</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <input type="hidden" name="image_name" value="{{ $k2 }}">
+                            </form>
+                        @endforeach
                     @endforeach
                 </div>
             </div>

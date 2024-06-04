@@ -149,12 +149,13 @@ class HomeController extends Controller
             if(!isset($photo_desc[$v]['desc'])) $photo_desc[$v]['desc'] = null;
         }
         $photo_data = [];
-        foreach($photo_desc as $k=>$v){
-            $photo_data[$v['order_by']]['image_name'] = $k;
-            $photo_data[$v['order_by']]['link'] = $v['link'];
-            $photo_data[$v['order_by']]['title'] = $v['title'];
-            $photo_data[$v['order_by']]['desc'] = $v['desc'];
+        foreach($photo_desc as $k=>$v){ 
+            $photo_data[$v['order_by']][$k]['link'] = $v['link'];
+            $photo_data[$v['order_by']][$k]['title'] = $v['title'];
+            $photo_data[$v['order_by']][$k]['desc'] = $v['desc'];
         }
+
+        ksort($photo_data);
 
 
         $setup = \App\Setup::find(1);
