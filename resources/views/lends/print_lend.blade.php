@@ -44,6 +44,9 @@ table th{
     <th>
         借用期間
     </th>
+    <th>
+        備註
+    </th>
 </tr>
 @foreach($lend_data as $k=>$v)
     <tr>
@@ -64,6 +67,9 @@ table th{
         </th>
         <th>
             {{ $v['借用期間'] }}
+        </th>
+        <th>
+            {{ $v['備註'] }}
         </th>
     </tr>
 @endforeach
