@@ -54,7 +54,7 @@ class SetupController extends Controller
             $photo_data[$v['order_by']][$k]['desc'] = $v['desc'];
         }
 
-        ksort($photo_data);
+        krsort($photo_data);
 
         $data = [
             'school_code' => $school_code,
@@ -67,9 +67,20 @@ class SetupController extends Controller
 
     public function photo_desc(Request $request)
     {
-        TitleImageDesc::where('image_name', $request->input('image_name'))->delete();
         $att = $request->all();
-        TitleImageDesc::create($att);
+        foreach($att['order_by'] as $k=>$v){
+            $image = TitleImageDesc::where('image_name', $k)->first();
+            $att2['order_by'] = $att['order_by'][$k];
+            $att2['link'] = $att['link'][$k];
+            $att2['title'] = $att['title'][$k];
+            $att2['desc'] = $att['desc'][$k];
+            $att2['image_name'] = $att['image_name'][$k];
+            if(!empty($image)){
+                $image->update($att2);
+            }else{
+                TitleImageDesc::create($att2);
+            }
+        }
         return redirect()->route('setups.photo');
     }
 
@@ -107,7 +118,9 @@ class SetupController extends Controller
     {
         $school_code = school_code();
         $folder = str_replace('&', '/', $folder);
-        unlink(storage_path('app/public/' . $school_code . '/' . $folder . '/' . $filename));
+        if(file_exists(storage_path('app/public/' . $school_code . '/' . $folder . '/' . $filename))){
+            unlink(storage_path('app/public/' . $school_code . '/' . $folder . '/' . $filename));
+        }
         TitleImageDesc::where('image_name', $filename)->delete();
         return redirect()->route('setups.photo');
     }

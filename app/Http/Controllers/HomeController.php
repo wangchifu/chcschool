@@ -155,7 +155,7 @@ class HomeController extends Controller
             $photo_data[$v['order_by']][$k]['desc'] = $v['desc'];
         }
 
-        ksort($photo_data);
+        krsort($photo_data);
 
 
         $setup = \App\Setup::find(1);
