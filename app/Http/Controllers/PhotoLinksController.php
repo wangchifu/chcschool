@@ -164,7 +164,10 @@ class PhotoLinksController extends Controller
     {
         $school_code = school_code();
         $folder = 'public/'. $school_code .'/photo_links';
-        unlink(storage_path('app/'.$folder.'/'.$photo_link->image));
+        if(file_exists(storage_path('app/'.$folder.'/'.$photo_link->image))){
+            unlink(storage_path('app/'.$folder.'/'.$photo_link->image));
+        }
+        
         $photo_link->delete();
         return redirect()->route('photo_links.index');
     }

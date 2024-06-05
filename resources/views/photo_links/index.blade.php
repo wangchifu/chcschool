@@ -52,7 +52,7 @@
                             {{ $photo_link->order_by }}
                         </td>
                         <td>
-                            {{ $photo_link->name }}
+                            <a href="{{ $photo_link->url }}" target="_blank">{{ $photo_link->name }}</a>
                         </td>
                         <td>
                             <?php

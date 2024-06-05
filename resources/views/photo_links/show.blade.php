@@ -20,7 +20,6 @@
                     <th>排序</th>
                     <th>名稱</th>
                     <th>代表圖片</th>
-                    <th>網址</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,7 +29,7 @@
                             {{ $photo_link->order_by }}
                         </td>
                         <td>
-                            {{ $photo_link->name }}
+                            <a href="{{ $photo_link->url }}" target="_blank">{{ $photo_link->name }}</a>
                         </td>
                         <td>
                             <?php
@@ -38,9 +37,6 @@
                                 $img = "storage/".$school_code.'/photo_links/'.$photo_link->image;
                             ?>
                             <img src="{{ asset($img) }}" height="50">
-                        </td>
-                        <td>
-                            <a href="{{ $photo_link->url }}" target="_blank"><i class="fas fa-globe"></i> 立即前往</a>
                         </td>
                     </tr>
                 @endforeach
