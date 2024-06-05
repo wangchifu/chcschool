@@ -133,7 +133,10 @@ class PhotoLinksController extends Controller
         //處理檔案上傳
         if ($request->hasFile('image')) {
             //先刪之前的
-            unlink(storage_path('app/'.$folder.'/'.$photo_link->image));
+            if(file_exists(storage_path('app/'.$folder.'/'.$photo_link->image))){
+                unlink(storage_path('app/'.$folder.'/'.$photo_link->image));
+            }
+            
 
             $image = $request->file('image');
             $info = [
