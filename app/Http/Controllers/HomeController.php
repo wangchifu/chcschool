@@ -196,7 +196,7 @@ class HomeController extends Controller
         //分類公告
         $post_types = PostType::orderBy('order_by')->get();
 
-        $photo_links = PhotoLink::orderBy('order_by', 'DESC')->paginate(24);
+        $photo_links = PhotoLink::orderBy('order_by', 'DESC')->paginate(18);
 
         $post_type_array = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
 
