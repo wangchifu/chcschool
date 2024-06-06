@@ -74,5 +74,18 @@
         @endforeach
         </tbody>
     </table>
+    <?php 
+        $setup = \App\Setup::first();
+        $checked = ($setup->all_post)?"checked":null;
+    ?>
+    <form action="{{ route('setups.all_post') }}" method="post">
+        @csrf
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" name="all_post" class="custom-control-input" id="customCheck1" {{ $checked }}>
+            <label class="custom-control-label" for="customCheck1">分類公告區塊中，預設「全部公告」</label>
+            <button class="btn btn-primary btn-sm">確定</button>
+          </div>
+          
+    </form>
     @include('layouts.errors')
 @endsection

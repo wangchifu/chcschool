@@ -225,6 +225,8 @@ class PostsController extends Controller
             ->where('created_at', '>', $next_month)
             ->paginate(20);
 
+        $post_type_array = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
+
         $data = [
             'school_code' => $school_code,
             'post' => $post,
@@ -232,6 +234,7 @@ class PostsController extends Controller
             'last_id' => $last_id,
             'next_id' => $next_id,
             'files' => $files,
+            'post_type_array'=>$post_type_array,
         ];
 
         return view('posts.show', $data);

@@ -52,7 +52,10 @@
             @if($post->insite==1)
                 <p class="badge badge-danger">內部公告</p>
             @endif
-                張貼者
+                <?php
+                    $insite = ($post->insite != null)?$post->insite:0;
+                ?>
+                <a href="{{ route('posts.type',$insite) }}">{{ $post_type_array[$insite] }}</a> / 張貼者
                 <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>　　　
                 @auth
                     @if(auth()->user()->admin)

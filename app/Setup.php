@@ -15,6 +15,7 @@ class Setup extends Model
         'ip1',
         'ip2',
         'ipv6',
+        'all_post',
         'close_website',
     ];
 }

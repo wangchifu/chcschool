@@ -445,6 +445,15 @@ class SetupController extends Controller
 
         echo "<body onload='opener.location.reload();window.close();'>";
     }
+
+    public function all_post(Request $request)
+    {
+        $setup = Setup::first();
+        $att['all_post'] = ($request->input('all_post'))?1:null;
+        $setup->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
     public function close()
     {
         $setup = Setup::first();

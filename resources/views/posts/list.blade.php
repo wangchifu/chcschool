@@ -10,7 +10,7 @@
                 @auth
                     @if(auth()->user()->admin==1)
                         <td>
-                            <a href="javascript:open_window('{{ route('posts.show_type') }}','新視窗')" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增類別</a>
+                            <a href="javascript:open_window('{{ route('posts.show_type') }}','新視窗')" class="btn btn-success btn-sm"><i class="fas fa-cog"></i> 類別管理</a>
                         </td>
                     @endif
                 @endauth
