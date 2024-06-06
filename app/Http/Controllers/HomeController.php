@@ -194,7 +194,7 @@ class HomeController extends Controller
 
 
         //分類公告
-        $post_types = PostType::orderBy('order_by')->get();
+        $post_types = PostType::where('disable',null)->orderBy('order_by')->get();
 
         $photo_links = PhotoLink::orderBy('order_by', 'DESC')->paginate(18);
 

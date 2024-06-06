@@ -110,8 +110,7 @@ class PostsController extends Controller
         $size = round($dir_size / 1024, 2);
         $per = round($size * 100 / 5120, 2);
 
-        $all_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
-        $types[0] = "一般公告";
+        $all_types = PostType::where('disable',null)->orderBy('order_by')->pluck('name', 'id')->toArray();        
         foreach ($all_types as $k => $v) {
             $types[$k] = $v;
         }
@@ -270,8 +269,7 @@ class PostsController extends Controller
         $size = round($dir_size / 1024, 2);
         $per = round($size * 100 / 5120, 2);
 
-        $all_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
-        $types[0] = "一般公告";
+        $all_types = PostType::where('disable',null)->orderBy('order_by')->pluck('name', 'id')->toArray();        
         foreach ($all_types as $k => $v) {
             $types[$k] = $v;
         }
@@ -510,6 +508,13 @@ class PostsController extends Controller
             $post->update($att);
         }
         $post_type->delete();
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
+    public function disable_type(PostType $post_type)
+    {
+        $att['disable'] = ($post_type->disable==1)?null:1;              
+        $d = $post_type->update($att);        
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 

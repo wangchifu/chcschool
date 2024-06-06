@@ -9,6 +9,7 @@ class PostType extends Model
     protected $fillable = [
         'name',
         'order_by',
+        'disable',
     ];
 
     public function posts()
