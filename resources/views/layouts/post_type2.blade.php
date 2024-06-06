@@ -44,7 +44,7 @@ $posts = \App\Post::where('insite',null)
         <?php $p++; ?>
     @endforeach
 </ul>
-<div class="tab-content" id="myTabContent">
+<div class="tab-content" id="myTabContent2">
     @if($setup->all_post==1)
     <div class="tab-pane fade show active" id="post_type2_all_post" role="tabpanel" aria-labelledby="post_type2_all_post-tab" style="margin: 10px;">
         <?php
@@ -133,7 +133,7 @@ $posts = \App\Post::where('insite',null)
     ?>
     @foreach($post_types as $post_type)
     <?php 
-        $active = ($p==1)?"show active":null;
+        $active = ($p==1 and $setup->all_post==null)?"show active":null;
     ?>
         <div class="tab-pane fade {{ $active }}" id="post_type2_profile{{ $p }}" role="tabpanel" aria-labelledby="post_type2_profile{{ $p }}-tab" style="margin: 10px;">
             <?php
