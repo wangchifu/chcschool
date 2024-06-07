@@ -46,6 +46,7 @@
                     </td>
                 </tr>
                 {{ Form::close() }}
+                @include('layouts.errors')
                 @foreach($photo_links as $photo_link)
                     <tr>
                         <td>
