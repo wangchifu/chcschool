@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '顯示會議 | ')
+@section('title', $meeting->open_date.$meeting->name.' | ')
 
 @section('content')
     <div class="row justify-content-center">

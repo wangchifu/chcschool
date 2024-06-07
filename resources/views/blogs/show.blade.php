@@ -2,7 +2,7 @@
 
 @section('nav_school_active', 'active')
 
-@section('title', '校園部落格 | ')
+@section('title', $blog->title.' | ')
 
 @section('content')
     <style>
