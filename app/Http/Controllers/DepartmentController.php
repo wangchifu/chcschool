@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use App\Setup;
+use App\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -71,6 +72,19 @@ class DepartmentController extends Controller
         return view('departments.show', compact('department'));
     }
 
+    public function show_log($id)
+    {
+        $logs = Log::where('module','department')
+            ->where('this_id',$id)
+            ->orderBy('id','DESC')
+            ->get();
+        $data = [
+            'id'=>$id,
+            'logs'=>$logs,
+        ];
+        return view('logs.department_log', $data);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -101,6 +115,13 @@ class DepartmentController extends Controller
             'content' => 'required',
         ]);
         $department->update($request->all());
+
+        $att['module'] = "department";
+        $att['this_id'] = $department->id;
+        $att['title'] = $request->input('title');
+        $att['content'] = $request->input('content');
+        $att['user_id'] = auth()->user()->id;
+        Log::create($att);
         return redirect()->route('departments.index');
     }
 
@@ -111,6 +132,13 @@ class DepartmentController extends Controller
             'content' => 'required',
         ]);
         $department->update($request->all());
+
+        $att['module'] = "department";
+        $att['this_id'] = $department->id;
+        $att['title'] = $request->input('title');
+        $att['content'] = $request->input('content');
+        $att['user_id'] = auth()->user()->id;
+        Log::create($att);
         return redirect()->route('departments.show', $department->id);
     }
 

@@ -510,6 +510,7 @@ Route::group(['middleware' => 'admin'], function () {
     //處室管理
     Route::get('departments', 'DepartmentController@index')->name('departments.index');
     Route::get('departments/create', 'DepartmentController@create')->name('departments.create');
+    Route::get('departments/show_log/{id}', 'DepartmentController@show_log')->name('departments.show_log');
     Route::post('departments', 'DepartmentController@store')->name('departments.store');
     Route::delete('departments/{department}', 'DepartmentController@destroy')->name('departments.destroy');
     Route::get('departments/{department}/edit', 'DepartmentController@edit')->name('departments.edit');
@@ -518,6 +519,7 @@ Route::group(['middleware' => 'admin'], function () {
     //內容管理
     Route::get('contents', 'ContentsController@index')->name('contents.index');
     Route::get('contents/create', 'ContentsController@create')->name('contents.create');
+    Route::get('contents/show_log/{id}', 'ContentsController@show_log')->name('contents.show_log');
     Route::post('contents/store', 'ContentsController@store')->name('contents.store');
     Route::delete('contents/{content}', 'ContentsController@destroy')->name('contents.destroy');
     Route::get('contents/{content}/edit', 'ContentsController@edit')->name('contents.edit');

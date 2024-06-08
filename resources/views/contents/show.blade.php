@@ -15,6 +15,11 @@
                     @can('create',\App\Post::class)
                         <a href="{{ route('contents.exec_edit',$content->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 行政人員編輯</a>
                     @endcan
+                    @auth
+                        @if(auth()->user()->admin)
+                            <a href="{{ route('contents.show_log',$content->id) }}" class="btn btn-info btn-sm" target="_blank">查看 log</a>
+                        @endif
+                    @endauth
                 </h3>
                 <div class="card-body">
                     <div class="table-responsive">

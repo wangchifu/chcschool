@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Content;
 use App\Setup;
+use App\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -65,6 +66,19 @@ class ContentsController extends Controller
         return view('contents.show', compact('content'));
     }
 
+    public function show_log($id)
+    {
+        $logs = Log::where('module','content')
+            ->where('this_id',$id)
+            ->orderBy('id','DESC')
+            ->get();
+        $data = [
+            'id'=>$id,
+            'logs'=>$logs,
+        ];
+        return view('logs.content_log', $data);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -95,6 +109,15 @@ class ContentsController extends Controller
             'content' => 'required',
         ]);
         $content->update($request->all());
+
+        $att['module'] = "content";
+        $att['this_id'] = $content->id;
+        $att['title'] = $request->input('title');
+        $att['content'] = $request->input('content');
+        $att['power'] = $request->input('power');
+        $att['user_id'] = auth()->user()->id;
+        Log::create($att);
+        
         return redirect()->route('contents.index');
     }
 
@@ -105,6 +128,15 @@ class ContentsController extends Controller
             'content' => 'required',
         ]);
         $content->update($request->all());
+
+        $att['module'] = "content";
+        $att['this_id'] = $content->id;
+        $att['title'] = $request->input('title');
+        $att['content'] = $request->input('content');
+        $att['power'] = $request->input('power');
+        $att['user_id'] = auth()->user()->id;
+        Log::create($att);
+
         return redirect()->route('contents.show', $content->id);
     }
 
