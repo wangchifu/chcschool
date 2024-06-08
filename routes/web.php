@@ -530,6 +530,7 @@ Route::group(['middleware' => 'admin'], function () {
 
     //連結管理
     Route::get('links', 'LinksController@index')->name('links.index');
+    Route::get('links/browser/{select_type}', 'LinksController@browser')->name('links.browser');
     Route::get('links/create', 'LinksController@create')->name('links.create');
     Route::post('links', 'LinksController@store')->name('links.store');
     Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');

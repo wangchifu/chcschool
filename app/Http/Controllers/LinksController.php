@@ -27,6 +27,21 @@ class LinksController extends Controller
         return view('links.index',$data);
     }
 
+    public function browser(Type $select_type)
+    {
+        $types= Type::orderBy('order_by')
+            ->get();
+        $links = Link::where('type_id',$select_type->id)
+            ->orderBy('order_by')
+            ->get();
+        $data = [
+            'select_type'=>$select_type,
+            'types'=>$types,
+            'links'=>$links,
+        ];
+        return view('links.browser',$data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -63,8 +78,8 @@ class LinksController extends Controller
             'url'=>'required',
             'order_by'=>['nullable','numeric'],
         ]);
-        Link::create($request->all());
-        return redirect()->route('links.index');
+        $link = Link::create($request->all());
+        return redirect()->route('links.browser',$link->type_id);
     }
 
     /**
@@ -109,7 +124,7 @@ class LinksController extends Controller
             'order_by'=>['nullable','numeric'],
         ]);
         $link->update($request->all());
-        return redirect()->route('links.index');
+        return redirect()->route('links.browser',$link->type_id);
     }
 
     public function update_type(Request $request, Type $type)

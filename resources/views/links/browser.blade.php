@@ -11,7 +11,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">選單連結</li>
+                    <li class="breadcrumb-item"><a href="{{ route('links.index') }}">選單連結</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ $select_type->name }}</li>
                 </ol>
             </nav>
         </div>
