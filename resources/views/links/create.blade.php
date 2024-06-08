@@ -4,6 +4,12 @@
 
 @section('title', '新增連結 | ')
 
+@section('in_head')
+    <script src="{{ asset('js/jquery.slim.min.js') }}"></script>
+    <link href="{{ asset('fontawesome-icon-browser-picker/fontawesome-browser.css') }}" rel='stylesheet' type='text/css' />
+    <script src="{{ asset('fontawesome-icon-browser-picker/fontawesome-browser.js') }}" type='text/javascript'></script> 
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">

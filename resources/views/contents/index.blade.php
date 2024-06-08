@@ -21,6 +21,7 @@
                 <thead class="thead-light">
                 <tr>
                     <th>id</th>
+                    <th>權限</th>
                     <th>標題</th>
                     <th>動作</th>
                 </tr>
@@ -29,6 +30,15 @@
                 @foreach($contents as $content)
                     <tr>
                         <td>{{ $content->id }}</td>
+                        <td>
+                            @if($content->power==null)
+                                公開
+                            @elseif($content->power==2)
+                                校內 | 登入
+                            @elseif($content->power==3)
+                                登入
+                            @endif
+                        </td>
                         <td><a href="{{ route('contents.show',$content->id) }}" target="_blank">{{ $content->title }}</a></td>
                         <td>
                             <a href="{{ route('contents.edit',$content->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>

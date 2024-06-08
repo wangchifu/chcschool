@@ -152,6 +152,9 @@ class SetupController extends Controller
     public function nav_color(Request $request, Setup $setup)
     {
         $nav_color = $request->input('color');
+        $att['fixed_nav'] = ($request->input('fixed_nav'))?1:null;
+
+
         $att['nav_color'] = "";
         foreach ($nav_color as $v) {
             $att['nav_color'] .= $v . ",";

@@ -18,7 +18,29 @@
                 </h3>
                 <div class="card-body">
                     <div class="table-responsive">
-                    {!! $content->content !!}
+                    @if($content->power==null)
+                        {!! $content->content !!}
+                    @elseif($content->power==2)
+                        <?php
+                            if(auth()->check() or check_ip()){
+                            $can_see = 1;
+                            }else{
+                                $can_see = 0;
+                            }
+                        ?>
+                        @if($can_see)
+                            {!! $content->content !!}
+                        @else
+                            <h2 class="text-danger">請登入，或在校網內才可觀看</h2>
+                        @endif
+                    @elseif($content->power==3)
+                        @auth
+                            {!! $content->content !!}
+                        @endauth
+                        @guest
+                            <h2 class="text-danger">請登入後觀看</h2>
+                        @endguest
+                    @endif
                     </div>
                 </div>
             </div>

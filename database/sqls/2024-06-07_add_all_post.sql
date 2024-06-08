@@ -1,1 +1,0 @@
-ALTER TABLE `setups` ADD `all_post` tinyint NULL AFTER `ipv6`; 

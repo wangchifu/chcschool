@@ -8,6 +8,7 @@ class Setup extends Model
 {
     protected $fillable = [
         'site_name',
+        'fixed_nav',
         'nav_color',
         'title_image',
         'views',

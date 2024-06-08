@@ -56,7 +56,7 @@ class LinksController extends Controller
         Type::create($request->all());
         return redirect()->route('links.index');
     }
-    public function store(Request $request)
+    public function store(Request $request) 
     {
         $request->validate([
             'name'=>'required',

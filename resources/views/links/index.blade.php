@@ -78,8 +78,8 @@
                 <thead class="thead-light">
                 <tr>
                     <th>類別</th>
-                    <th>名稱</th>
-                    <th>網址</th>
+                    <th>圖示+名稱</th>
+                    <th>目標</th>
                     <th>排序</th>
                     <th>動作</th>
                 </tr>
@@ -92,11 +92,22 @@
                             {{ $link->type->name }}
                         </td>
                         <td>
-                            {{ $link->name }}
+                            @if($link->icon==null)
+                            <i class="fas fa-globe"></i>
+                            @else
+                            <i class="{{ $link->icon }}"></i>
+                            @endif
+                            <a href="{{ $link->url }}" target="_blank">{{ $link->name }}</a>
+                            @if($link->target == null)
+                                <i class="fas fa-level-up-alt"></i>
+                            @endif
                         </td>
                         <td>
-                            <a href="{{ $link->url }}" target="_blank"><i class="fas fa-globe"></i> 立即前往</a>
-
+                            @if($link->target==null)
+                                開新視窗 <i class="fas fa-level-up-alt"></i>
+                            @elseif($link->target=="_self")
+                                本視窗
+                            @endif
                         </td>
                         <td>
                             {{ $link->order_by }}

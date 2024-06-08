@@ -10,6 +10,7 @@
     <style type="text/css">
         .colorpicker-component{margin-top: 10px;}
     </style>
+    
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>
@@ -121,8 +122,15 @@
             ?>
             {{ Form::open(['route' => ['setups.nav_color',$setup->id], 'method' => 'patch','id'=>'this_form2']) }}
             <div class="card my-4">
-                <h3 class="card-header">顏色設定</h3>
+                <h3 class="card-header">導覽列設定</h3>
                 <div class="card-body">
+                    <?php 
+                        $checked = ($setup->fixed_nav)?"checked":null;
+                    ?>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" name="fixed_nav" class="custom-control-input" id="customCheck1" {{ $checked }}>
+                        <label class="custom-control-label" for="customCheck1">固定導覽列？</label>                        
+                      </div>
                     <div id="cp1" class="input-group mb-3 colorpicker-component">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">導覽列顏色</span>
@@ -134,7 +142,7 @@
                     </div>
                     <div id="cp2" class="input-group mb-3 colorpicker-component">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon2">文字顏色</span>
+                            <span class="input-group-text" id="basic-addon2">網站名稱文字顏色</span>
                         </div>
                         <input type="text" class="form-control input-lg" value="{{ $c2 }}" id="nav_color2" name="color[]">
                         <div class="input-group-append">

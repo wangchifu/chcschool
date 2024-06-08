@@ -7,7 +7,12 @@
         background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
     }
 </style>
-<nav class="navbar navbar-expand-lg {{ $nav_color }}" id="mainNav">
+<?php
+    $setup = \App\Setup::first();
+    $fixed_top = ($setup->fixed_nav)?"fixed-top":null;
+?>
+
+<nav class="navbar navbar-expand-lg {{ $nav_color }} {{ $fixed_top }}" id="mainNav">
     <div class="container-fluid">
         <a href="#page-top" style="margin-right: 10px;">
             @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
@@ -63,8 +68,20 @@
                             ?>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 @foreach($links as $link)
-                                    <a class="dropdown-item" href="{{ $link->url }}" target="_blank">
-                                        <i class="fas fa-globe"></i> {{ $link->name }}
+                                    <?php
+                                        if($link->target == null) $target = "_blank";
+                                        if($link->target == "_self") $target = "_self";
+                                    ?>
+                                    <a class="dropdown-item" href="{{ $link->url }}" target="{{ $target }}">
+                                        @if($link->icon==null)
+                                        <i class="fas fa-globe"></i>
+                                        @else
+                                        <i class="{{ $link->icon }}"></i>
+                                        @endif
+                                        {{ $link->name }}
+                                        @if($link->target == null)
+                                        <i class="fas fa-level-up-alt"></i>
+                                        @endif
                                     </a>
                                 @endforeach
                             </div>

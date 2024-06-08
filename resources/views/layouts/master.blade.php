@@ -4,7 +4,7 @@
 <head>
     <?php
         $school_code = school_code();
-        $setup = \App\Setup::find(1);
+        $setup = \App\Setup::first();
 
         $setup_key = "setup".$school_code;
         if(!session($setup_key)){
@@ -33,7 +33,8 @@
         <!-- icons -->
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
-    <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
+    <link href="{{ asset('fontawesome-5.15.4/css/all.css') }}" rel="stylesheet">
+    @yield('in_head')
 </head>
 
 <body id="page-top" style="background-color:#f0f1f6;font-family:'Arial','Microsoft YaHei','黑體','宋體',sans-serif;">
@@ -69,5 +70,9 @@
 </div>
 <script src="{{ asset('bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
+
+@if($setup->fixed_nav)
+<link href="{{ asset('css/navbar-top-fixed.css') }}" rel="stylesheet">
+@endif
 </body>
 </html>
