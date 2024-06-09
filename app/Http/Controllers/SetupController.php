@@ -47,6 +47,7 @@ class SetupController extends Controller
             $photo_desc[$desc->image_name]['link'] = $desc->link;
             $photo_desc[$desc->image_name]['title'] = $desc->title;
             $photo_desc[$desc->image_name]['desc'] = $desc->desc;
+            $photo_desc[$desc->image_name]['disable'] = $desc->disable;
         }
 
         foreach($photos as $k=>$v){
@@ -54,12 +55,14 @@ class SetupController extends Controller
             if(!isset($photo_desc[$v]['link'])) $photo_desc[$v]['link'] = null;
             if(!isset($photo_desc[$v]['title'])) $photo_desc[$v]['title'] = null;
             if(!isset($photo_desc[$v]['desc'])) $photo_desc[$v]['desc'] = null;
+            if(!isset($photo_desc[$v]['disable'])) $photo_desc[$v]['disable'] = null;
         }
         $photo_data = [];
         foreach($photo_desc as $k=>$v){ 
             $photo_data[$v['order_by']][$k]['link'] = $v['link'];
             $photo_data[$v['order_by']][$k]['title'] = $v['title'];
             $photo_data[$v['order_by']][$k]['desc'] = $v['desc'];
+            $photo_data[$v['order_by']][$k]['disable'] = $v['disable'];
         }
 
         krsort($photo_data);
@@ -82,6 +85,7 @@ class SetupController extends Controller
             $att2['link'] = $att['link'][$k];
             $att2['title'] = $att['title'][$k];
             $att2['desc'] = $att['desc'][$k];
+            $att2['disable'] = $att['disable'][$k];
             $att2['image_name'] = $att['image_name'][$k];
             if(!empty($image)){
                 $image->update($att2);

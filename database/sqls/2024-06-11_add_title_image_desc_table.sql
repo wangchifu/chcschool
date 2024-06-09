@@ -1,0 +1,1 @@
+ALTER TABLE `title_image_descs` ADD `disable` tinyint NULL AFTER `desc`; 

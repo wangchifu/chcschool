@@ -141,6 +141,7 @@ class HomeController extends Controller
             $photo_desc[$desc->image_name]['link'] = $desc->link;
             $photo_desc[$desc->image_name]['title'] = $desc->title;
             $photo_desc[$desc->image_name]['desc'] = $desc->desc;
+            $photo_desc[$desc->image_name]['disable'] = $desc->disable;
         }
 
         foreach($photos as $k=>$v){
@@ -148,7 +149,12 @@ class HomeController extends Controller
             if(!isset($photo_desc[$v]['link'])) $photo_desc[$v]['link'] = null;
             if(!isset($photo_desc[$v]['title'])) $photo_desc[$v]['title'] = null;
             if(!isset($photo_desc[$v]['desc'])) $photo_desc[$v]['desc'] = null;
+            if(!isset($photo_desc[$v]['disable'])) $photo_desc[$v]['disable'] = null;
+            if($photo_desc[$v]['disable']==1){
+                unset($photo_desc[$v]);
+            }
         }
+        
         $photo_data = [];
         foreach($photo_desc as $k=>$v){ 
             $photo_data[$v['order_by']][$k]['link'] = $v['link'];

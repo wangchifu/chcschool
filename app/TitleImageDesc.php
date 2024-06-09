@@ -12,5 +12,6 @@ class TitleImageDesc extends Model
         'link',
         'title',
         'desc',
+        'disable',
     ];
 }

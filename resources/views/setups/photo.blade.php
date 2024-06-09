@@ -91,6 +91,9 @@
                                     出現比重(數字大，出現早)
                                 </th>
                                 <th>
+                                    啟用？
+                                </th>
+                                <th>
                                     圖片
                                 </th>
                                 <th>
@@ -110,6 +113,17 @@
                                     <tr>
                                         <td>
                                             <input type="number" class="form-control" name="order_by[{{ $k2 }}]" value="{{ $k1 }}">
+                                        </td>
+                                        <td>
+                                            <?php
+                                             $checked1 = ($v2['disable']==null)?"checked":null;
+                                             $checked2 = ($v2['disable'])?"checked":null;
+                                            ?>
+                                            <input type="radio" name="disable[{{ $k2 }}]" value="" id="enable{{ $k2 }}" {{ $checked1 }}>
+                                            <label for="enable{{ $k2 }}">啟用</label>
+                                            <span>　</span>
+                                            <input type="radio" name="disable[{{ $k2 }}]" value="1" id="disable{{ $k2 }}" {{ $checked2 }}>
+                                            <label for="disable{{ $k2 }}">停用</label>
                                         </td>
                                         <td>
                                             <img src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" width="200">
@@ -134,7 +148,7 @@
                             
                         </tbody>
                     </table> 
-                        <button class="btn btn-primary">全部儲存</button>
+                        <button class="btn btn-primary" onclick="return confirm('確定？')">全部儲存</button>
                     </form>
                 </div>
             </div>
