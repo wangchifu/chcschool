@@ -10,6 +10,7 @@ class Setup extends Model
         'site_name',
         'fixed_nav',
         'nav_color',
+        'photo_link_number',
         'title_image',
         'views',
         'footer',

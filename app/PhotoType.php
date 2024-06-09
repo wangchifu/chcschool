@@ -4,13 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PhotoLink extends Model
+class PhotoType extends Model
 {
     protected $fillable = [
         'name',
-        'url',
-        'image',
         'order_by',
-        'photo_type_id'
     ];
 }

@@ -76,7 +76,7 @@ Route::get('open_files/{path?}', 'OpenFileController@index')->name('open_files.i
 Route::get('open_files_download/{path}', 'OpenFileController@download')->name('open_files.download');
 
 //圖片連結
-Route::get('photo_links/show', 'PhotoLinksController@show')->name('photo_links.show');
+Route::get('photo_links/show/{photo_type_id?}', 'PhotoLinksController@show')->name('photo_links.show');
 
 //內容頁面
 Route::get('contents/{content}/show', 'ContentsController@show')->where('content', '[0-9]+')->name('contents.show');
@@ -429,6 +429,8 @@ Route::group(['middleware' => 'admin_exec'], function () {
     //圖片連結管理
     Route::get('photo_links', 'PhotoLinksController@index')->name('photo_links.index');
     Route::post('photo_links', 'PhotoLinksController@store')->name('photo_links.store');
+    Route::post('photo_links/type_store', 'PhotoLinksController@type_store')->name('photo_links.type_store');
+    Route::get('photo_links/type_delete/{photo_type}', 'PhotoLinksController@type_delete')->name('photo_links.type_delete');
     Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');
     Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');
     Route::patch('photo_links/{photo_link}', 'PhotoLinksController@update')->name('photo_links.update');
@@ -445,6 +447,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('sims/{user}/impersonate', 'SimulationController@impersonate')->name('sims.impersonate');
     //網站管理
     Route::get('setups', 'SetupController@index')->name('setups.index');
+    Route::post('setups/photo_link_number', 'SetupController@photo_link_number')->name('setups.photo_link_number');
+
     Route::post('setups/add_logo', 'SetupController@add_logo')->name('setups.add_logo');
     //Route::post('setups/add_img', 'SetupController@add_img')->name('setups.add_img');
     Route::post('setups/add_imgs', 'SetupController@add_imgs')->name('setups.add_imgs');

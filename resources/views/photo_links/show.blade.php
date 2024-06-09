@@ -18,8 +18,8 @@
                 <thead class="thead-light">
                 <tr>
                     <th>排序</th>
-                    <th>名稱</th>
                     <th>代表圖片</th>
+                    <th>名稱</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,14 +29,19 @@
                             {{ $photo_link->order_by }}
                         </td>
                         <td>
-                            <a href="{{ $photo_link->url }}" target="_blank">{{ $photo_link->name }}</a>
-                        </td>
-                        <td>
                             <?php
                                 $school_code = school_code();
                                 $img = "storage/".$school_code.'/photo_links/'.$photo_link->image;
                             ?>
-                            <img src="{{ asset($img) }}" height="50">
+                            <style>
+                                a:hover img{filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;}
+                            </style>
+                            <a href="{{ $photo_link->url }}" target="_blank">
+                                <img src="{{ asset($img) }}" height="50">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ $photo_link->url }}" target="_blank">{{ $photo_link->name }}</a>
                         </td>
                     </tr>
                 @endforeach

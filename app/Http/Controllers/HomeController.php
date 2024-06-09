@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Block;
 use App\PhotoLink;
+use App\PhotoType;
 use App\Post;
 use App\PostType;
 use App\Setup;
@@ -158,7 +159,7 @@ class HomeController extends Controller
         krsort($photo_data);
 
 
-        $setup = \App\Setup::find(1);
+        $setup = \App\Setup::first();
         $setup_cols = SetupCol::orderBy('order_by')->get();
         foreach ($setup_cols as $setup_col) {
             $bs = Block::where('setup_col_id', $setup_col->id)
@@ -196,7 +197,9 @@ class HomeController extends Controller
         //分類公告
         $post_types = PostType::where('disable',null)->orderBy('order_by')->get();
 
-        $photo_links = PhotoLink::orderBy('order_by', 'DESC')->paginate(18);
+        $photo_link_number = ($setup->photo_link_number)?$setup->photo_link_number:"24";
+        $photo_links = PhotoLink::orderBy('order_by', 'DESC')->paginate($photo_link_number);
+        $photo_types = PhotoType::orderBy('order_by')->get();
 
         $post_type_array = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
 
@@ -212,6 +215,7 @@ class HomeController extends Controller
             'marquee' => $marquee,
             'marquee_css' => $marquee_css,
             'photo_links' => $photo_links,
+            'photo_types'=>$photo_types,
             'post_types' => $post_types,
             'post_type_array' => $post_type_array,
         ];

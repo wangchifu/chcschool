@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PhotoLink;
+use App\PhotoType;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -17,7 +18,17 @@ class PhotoLinksController extends Controller
     {
         $photo_links = PhotoLink::orderBy('order_by','DESC')
             ->get();
-        return view('photo_links.index',compact('photo_links'));
+        $photo_types = PhotoType::orderBy('order_by')->get();
+        foreach($photo_types as $photo_type){
+            $photo_type_array[$photo_type->id] = $photo_type->name;
+        }
+        $photo_type_array[0] = "不分類";
+        $data = [
+            'photo_links'=>$photo_links,
+            'photo_type_array'=>$photo_type_array,
+            'photo_types'=>$photo_types,
+        ];
+        return view('photo_links.index',$data);
     }
 
     /**
@@ -49,6 +60,7 @@ class PhotoLinksController extends Controller
         $att['url'] = $request->input('url');
         $att['image'] = "image";
         $att['order_by'] = $request->input('order_by');
+        $att['photo_type_id'] = $request->input('photo_type_id');
 
         $photo_link = PhotoLink::create($att);
 
@@ -78,16 +90,40 @@ class PhotoLinksController extends Controller
         return redirect()->route('photo_links.index');
     }
 
+    public function type_store(Request $request)
+    {
+        $att = $request->all();
+        
+        PhotoType::create($att);
+
+        return back();
+    }
+
+    public function type_delete(PhotoType $photo_type)
+    {
+        $att['photo_type_id'] = null;
+        PhotoLink::where('photo_type_id',$photo_type->id)->update($att);
+        $photo_type->delete();
+
+        return back();
+    }
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($photo_type_id=null)
     {
-        $photo_links = PhotoLink::orderBy('order_by')
+        if($photo_type_id==null){
+            $photo_links = PhotoLink::orderBy('order_by','DESC')
             ->paginate(24);
+        }else{
+            $photo_links = PhotoLink::where('photo_type_id',$photo_type_id)->orderBy('order_by','DESC')
+            ->paginate(24);
+        }
+        
         return view('photo_links.show',compact('photo_links'));
     }
 
@@ -99,7 +135,10 @@ class PhotoLinksController extends Controller
      */
     public function edit(PhotoLink $photo_link)
     {
+        $photo_types = PhotoType::orderBy('order_by')->get();
+
         $data = [
+            'photo_types'=>$photo_types,
             'photo_link'=>$photo_link,
         ];
         return view('photo_links.edit',$data);
@@ -124,6 +163,7 @@ class PhotoLinksController extends Controller
         $att['name'] = $request->input('name');
         $att['url'] = $request->input('url');
         $att['order_by'] = $request->input('order_by');
+        $att['photo_type_id'] = $request->input('photo_type_id');
 
         $photo_link->update($att);
 

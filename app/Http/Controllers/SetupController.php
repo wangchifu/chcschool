@@ -27,6 +27,14 @@ class SetupController extends Controller
         return view('setups.index', $data);
     }
 
+    public function photo_link_number(Request $request)
+    {
+        $att['photo_link_number'] = $request->input('photo_link_number');
+        $setup = Setup::first();
+        $setup->update($att);
+        return back();
+    }
+
     public function photo()
     {
         $school_code = school_code();

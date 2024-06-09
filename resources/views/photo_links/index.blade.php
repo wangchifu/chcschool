@@ -15,12 +15,51 @@
                 </ol>
             </nav>
             <div class="table-responsive">
+                <h2>基本設定</h2>
+                <table class="table table-striped" style="word-break:break-all;">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>顯示圖片的數目</th>
+                            <th>已建類別</th>
+                            <th>新建類別</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $setup = \App\Setup::first(); ?>
+                        <tr>
+                            <td>
+                                <form action="{{ route('setups.photo_link_number') }}" method="post">
+                                    @csrf
+                                {{ Form::number('photo_link_number',$setup->photo_link_number,['id'=>'photo_link_number','class' => 'form-control', 'placeholder' => '6的倍數為佳']) }}
+                                <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">修改</button>    
+                            </form>
+                            </td>
+                            <td>
+                                @foreach($photo_types as $photo_type)
+                                <span class="badge badge-primary">{{ $photo_type->order_by }}.{{ $photo_type->name }}</span> <a href="{{ route('photo_links.type_delete',$photo_type->id) }}" onclick="return confirm('確定刪除？底下這個分類的連結，將改為「不分類」喔！')"><i class="fas fa-times-circle text-danger"></i></a><br>
+                                @endforeach
+                            </td>
+                            <td>
+                                <form action="{{ route('photo_links.type_store') }}" method="post">
+                                @csrf
+                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                                {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control','required'=>'required', 'placeholder' => '排序']) }}
+                                <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">新增</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </form>
+                    </tbody>
+                </table>
+                <hr>
+                <h2>連結設定</h2>
                 <table class="table table-striped" style="word-break:break-all;">
                     <thead class="thead-light">
                     <tr>
                         <th>排序</th>
-                        <th>名稱<br>網址</th>
                         <th>代表圖片</th>
+                        <th>類別</th>
+                        <th>名稱+網址</th>
                         <th>動作</th>
                     </tr>
                     </thead>
@@ -31,12 +70,20 @@
                             {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
                         </td>
                         <td>
+                            <input type="file" name="image" id="image" required>
+                        </td>
+                        <td>
+                            <select name="photo_type_id" class="form-control">
+                                <option value="">不分類</option>
+                                @foreach($photo_types as $photo_type)
+                                    <option value="{{ $photo_type->id }}">{{ $photo_type->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
                             {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                             <br>
                             {{ Form::text('url',null,['id'=>'url','class' => 'form-control','required'=>'required', 'placeholder' => 'https://']) }}
-                        </td>
-                        <td>
-                            <input type="file" name="image" id="image" required>
                         </td>
                         <td>
                             <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定新增嗎？')">
@@ -52,14 +99,18 @@
                                 {{ $photo_link->order_by }}
                             </td>
                             <td>
-                                <a href="{{ $photo_link->url }}" target="_blank">{{ $photo_link->name }}</a>
-                            </td>
-                            <td>
                                 <?php
                                     $school_code = school_code();
                                     $img = "storage/".$school_code.'/photo_links/'.$photo_link->image;
                                 ?>
                                 <img src="{{ asset($img) }}" height="50">
+                            </td>
+                            <td>
+                                <?php $photo_type_id = ($photo_link->photo_type_id)?$photo_link->photo_type_id:0; ?>
+                                {{ $photo_type_array[$photo_type_id] }}
+                            </td>
+                            <td>
+                                <a href="{{ $photo_link->url }}" target="_blank">{{ $photo_link->name }}</a>
                             </td>
                             <td>
                                 <a href="javascript:open_window('{{ route('photo_links.edit',$photo_link->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
