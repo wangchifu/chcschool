@@ -68,7 +68,9 @@
                 @endforeach
                 </tbody>
             </table>
+            <div class="table-responsive">
             {{ $fixes->links() }}
+            </div>
         </div>
     </div>
 @endsection
