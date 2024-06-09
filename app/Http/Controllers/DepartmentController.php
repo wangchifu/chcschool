@@ -150,6 +150,9 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
+        $logs = Log::where('module','department')
+            ->where('this_id',$department->id)
+            ->delete();
         $department->delete();
         return redirect()->route('departments.index');
     }

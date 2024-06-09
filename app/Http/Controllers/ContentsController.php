@@ -148,6 +148,10 @@ class ContentsController extends Controller
      */
     public function destroy(Content $content)
     {
+        $logs = Log::where('module','content')
+        ->where('this_id',$content->id)
+        ->delete();
+
         $content->delete();
         return redirect()->route('contents.index');
     }

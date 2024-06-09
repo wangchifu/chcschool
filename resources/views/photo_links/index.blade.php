@@ -103,7 +103,7 @@
                                     $school_code = school_code();
                                     $img = "storage/".$school_code.'/photo_links/'.$photo_link->image;
                                 ?>
-                                <img src="{{ asset($img) }}" height="50">
+                                <a href="{{ $photo_link->url }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
                             </td>
                             <td>
                                 <?php $photo_type_id = ($photo_link->photo_type_id)?$photo_link->photo_type_id:0; ?>
