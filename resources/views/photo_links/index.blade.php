@@ -100,7 +100,7 @@
                                 <th>排序</th>
                                 <th>代表圖片</th>
                                 <th>類別</th>
-                                <th>名稱+網址</th>
+                                <th>名稱</th>
                                 <th>動作</th>
                             </tr>
                             </thead>
