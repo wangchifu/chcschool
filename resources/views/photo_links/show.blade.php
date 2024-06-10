@@ -19,7 +19,7 @@
             ?>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                  <a class="nav-link {{ $active0 }}" href="{{ route('photo_links.show') }}">不分類</a>
+                  <a class="nav-link {{ $active0 }}" href="{{ route('photo_links.show') }}">全部</a>
                 </li>
                 @foreach($photo_types as $photo_type)
                 <?php $active[$photo_type->id] = ($photo_type->id==$photo_type_id)?"active":null; ?>
