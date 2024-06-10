@@ -428,8 +428,10 @@ Route::group(['middleware' => 'admin_exec'], function () {
 
     //圖片連結管理
     Route::get('photo_links', 'PhotoLinksController@index')->name('photo_links.index');
+    Route::get('photo_links/create', 'PhotoLinksController@create')->name('photo_links.create');
     Route::post('photo_links', 'PhotoLinksController@store')->name('photo_links.store');
     Route::post('photo_links/type_store', 'PhotoLinksController@type_store')->name('photo_links.type_store');
+    Route::patch('photo_links/type_update/{photo_type}', 'PhotoLinksController@type_update')->name('photo_links.type_update');
     Route::get('photo_links/type_delete/{photo_type}', 'PhotoLinksController@type_delete')->name('photo_links.type_delete');
     Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');
     Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');

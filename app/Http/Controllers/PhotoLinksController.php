@@ -48,7 +48,11 @@ class PhotoLinksController extends Controller
      */
     public function create()
     {
-        //
+        $photo_types = PhotoType::orderBy('order_by')->get();
+        $data = [
+            'photo_types'=>$photo_types,
+        ];
+        return view('photo_links.create',$data);
     }
 
     /**
@@ -105,6 +109,15 @@ class PhotoLinksController extends Controller
         $att = $request->all();
         
         PhotoType::create($att);
+
+        return back();
+    }
+
+    public function type_update(Request $request, PhotoType $photo_type)
+    {
+        $att = $request->all();
+        
+        $photo_type->update($att);
 
         return back();
     }

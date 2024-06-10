@@ -21,7 +21,6 @@
                     <thead class="thead-light">
                         <tr>
                             <th>顯示圖片的數目</th>
-                            <th>已建類別</th>
                             <th>新建類別</th>
                         </tr>
                     </thead>
@@ -36,15 +35,10 @@
                             </form>
                             </td>
                             <td>
-                                @foreach($photo_types as $photo_type)
-                                <span class="badge badge-primary">{{ $photo_type->order_by }}.{{ $photo_type->name }}</span> <a href="{{ route('photo_links.type_delete',$photo_type->id) }}" onclick="return confirm('確定刪除？底下這個分類的連結，將改為「不分類」喔！')"><i class="fas fa-times-circle text-danger"></i></a><br>
-                                @endforeach
-                            </td>
-                            <td>
                                 <form action="{{ route('photo_links.type_store') }}" method="post">
                                 @csrf
-                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                                 {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control','required'=>'required', 'placeholder' => '排序']) }}
+                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                                 <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">新增</button>
                                 </form>
                             </td>
@@ -52,51 +46,40 @@
                         </form>
                     </tbody>
                 </table>
+
+                <table class="table table-striped" style="word-break:break-all;">
+                    <thead class="thead-light">
+                    <tr>
+                        <th nowrap>名稱</th>
+                        <th nowrap>排序</th>
+                        <th nowrap>動作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($photo_types as $photo_type)
+                        {{ Form::open(['route' => ['photo_links.type_update',$photo_type->id], 'method' => 'patch','id'=>'update'.$photo_type->id]) }}
+                            @csrf
+                            @method('patch')
+                        <tr>
+                            <td>
+                                {{ Form::text('name',$photo_type->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                            </td>
+                            <td>
+                                {{ Form::number('order_by',$photo_type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                            </td>
+                            <td nowrap>
+                                <button onclick="return confirm('儲存修改？')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i></button>
+                                <a href="{{ route('photo_links.type_delete',$photo_type->id) }}" onclick="return confirm('確定刪除？底下這個分類的連結，將改為「不分類」喔！')"><i class="fas fa-times-circle text-danger"></i></a>
+                            </td>
+                        </tr>
+                        {{ Form::close() }}
+                    @endforeach
+                    </tbody>
+                </table>
         </div>
         <div class="col-md-7">
             <h2>連結設定</h2>
-            <table class="table table-striped" style="word-break:break-all;">
-                <thead class="thead-light">
-                <tr>
-                    <th>排序</th>
-                    <th>代表圖片</th>
-                    <th>類別</th>
-                    <th>名稱+網址</th>
-                    <th>動作</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{ Form::open(['route' => 'photo_links.store', 'method' => 'POST','files'=>true,'id'=>'this_form']) }}
-                <tr>
-                    <td>
-                        {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
-                    </td>
-                    <td>
-                        <input type="file" name="image" id="image" required>
-                    </td>
-                    <td>
-                        <select name="photo_type_id" class="form-control">
-                            <option value="">不分類</option>
-                            @foreach($photo_types as $photo_type)
-                                <option value="{{ $photo_type->id }}">{{ $photo_type->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
-                        <br>
-                        {{ Form::text('url',null,['id'=>'url','class' => 'form-control','required'=>'required', 'placeholder' => 'https://']) }}
-                    </td>
-                    <td>
-                        <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定新增嗎？')">
-                            <i class="fas fa-save"></i> 新增連結
-                        </button>
-                    </td>
-                </tr>
-                {{ Form::close() }}
-                </tbody>
-            </table>
-            @include('layouts.errors')
+            <a href="{{ route('photo_links.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增連結</a><br><br>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">不分類</button>
@@ -112,6 +95,15 @@
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <table class="table table-striped" style="word-break:break-all;">   
+                        <thead class="thead-light">
+                            <tr>
+                                <th>排序</th>
+                                <th>代表圖片</th>
+                                <th>類別</th>
+                                <th>名稱+網址</th>
+                                <th>動作</th>
+                            </tr>
+                            </thead>
                         @if(isset($photo_link_data[0]))
                             @foreach($photo_link_data[0] as $k=>$v)
                                 <tr>
@@ -147,6 +139,15 @@
                 @foreach($photo_types as $photo_type)
                     <div class="tab-pane fade" id="photo_link{{ $p }}" role="tabpanel" aria-labelledby="photo_link{{ $p }}-tab">
                         <table class="table table-striped" style="word-break:break-all;">   
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>排序</th>
+                                    <th>代表圖片</th>
+                                    <th>類別</th>
+                                    <th>名稱+網址</th>
+                                    <th>動作</th>
+                                </tr>
+                                </thead>
                             <tbody>
                             @if(isset($photo_link_data[$photo_type->id]))
                                 @foreach($photo_link_data[$photo_type->id] as $k=>$v)
@@ -162,7 +163,7 @@
                                             <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
                                         </td>
                                         <td>
-                                            {{ $photo_type_array[0] }}
+                                            {{ $photo_type_array[$photo_type->id] }}
                                         </td>
                                         <td>
                                             <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>

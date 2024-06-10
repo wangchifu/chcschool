@@ -73,7 +73,7 @@
             </div>
         </div>
         <div class="col-md-7">
-            <a href="{{ route('links.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增連結</a>
+            <a href="{{ route('links.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增連結</a><br><br>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <?php $p=1; ?>
                 @foreach($types as $type)
