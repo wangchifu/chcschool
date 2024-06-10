@@ -65,6 +65,12 @@
                             $select3 = null;
                             $select4 = "selected";
                         }
+                        if($block->block_position==null){
+                            $select1 = "selected";
+                            $select2 = null;
+                            $select3 = null;
+                            $select4 = null;
+                        }
                     ?>
                     <select name="block_position" id="block_position" class="form-control">
                         <option value="text-left" {{ $select1 }}>置左</option>
