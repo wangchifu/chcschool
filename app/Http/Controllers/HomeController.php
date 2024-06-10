@@ -165,7 +165,7 @@ class HomeController extends Controller
         krsort($photo_data);
 
 
-        $setup = \App\Setup::first();
+        $setup = Setup::first();
         $setup_cols = SetupCol::orderBy('order_by')->get();
         foreach ($setup_cols as $setup_col) {
             $bs = Block::where('setup_col_id', $setup_col->id)

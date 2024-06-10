@@ -8,7 +8,7 @@
     }
 </style>
 <?php
-    $setup = \App\Setup::first();
+    //$setup = \App\Setup::first();
     $fixed_top = ($setup->fixed_nav)?"fixed-top":null;
 ?>
 
@@ -56,7 +56,15 @@
                     </li>
                 @endif
                 @if(isset($module_setup['選單連結']))
-                    <?php $types = \App\Type::orderBy('order_by')->get();
+                    <?php 
+                        $types = \App\Type::orderBy('order_by')->get();
+                        $links = \App\Link::orderBy('order_by')->get();
+                        foreach($links as $link){
+                            $link_data[$link->type_id][$link->id]['target'] = $link->target;
+                            $link_data[$link->type_id][$link->id]['url'] = $link->url;
+                            $link_data[$link->type_id][$link->id]['icon'] = $link->icon;
+                            $link_data[$link->type_id][$link->id]['name'] = $link->name;
+                        }
                     ?>
                     @foreach($types as $type)
                         <li class="nav-item dropdown">
@@ -64,22 +72,22 @@
                                 {{ $type->name }}
                             </a>
                             <?php
-                            $links = \App\Link::where('type_id',$type->id)->orderBy('order_by')->get();
+                            //$links = \App\Link::where('type_id',$type->id)->orderBy('order_by')->get();
                             ?>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                @foreach($links as $link)
+                                @foreach($link_data[$type->id] as $k=>$v)
                                     <?php
-                                        if($link->target == null) $target = "_blank";
-                                        if($link->target == "_self") $target = "_self";
+                                        if($v['target'] == null) $target = "_blank";
+                                        if($v['target'] == "_self") $target = "_self";
                                     ?>
-                                    <a class="dropdown-item" href="{{ $link->url }}" target="{{ $target }}">
-                                        @if($link->icon==null)
+                                    <a class="dropdown-item" href="{{ $v['url'] }}" target="{{ $target }}">
+                                        @if($v['icon']==null)
                                         <i class="fas fa-globe"></i>
                                         @else
-                                        <i class="{{ $link->icon }}"></i>
+                                        <i class="{{ $v['icon'] }}"></i>
                                         @endif
-                                        {{ $link->name }}
-                                        @if($link->target == null)
+                                        {{ $v['name'] }}
+                                        @if($v['target'] == null)
                                         <i class="fas fa-level-up-alt"></i>
                                         @endif
                                     </a>
