@@ -14,6 +14,20 @@
                     <li class="breadcrumb-item active" aria-current="page">圖片連結</li>
                 </ol>
             </nav>
+            <?php
+                $active0 = ($photo_type_id==null)?"active":null;
+            ?>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link {{ $active0 }}" href="{{ route('photo_links.show') }}">不分類</a>
+                </li>
+                @foreach($photo_types as $photo_type)
+                <?php $active[$photo_type->id] = ($photo_type->id==$photo_type_id)?"active":null; ?>
+                    <li class="nav-item">
+                    <a class="nav-link {{ $active[$photo_type->id] }}" href="{{ route('photo_links.show',$photo_type->id) }}">{{ $photo_type->name }}</a>
+                    </li>
+                @endforeach
+              </ul>
             <table class="table table-striped" style="word-break:break-all;">
                 <thead class="thead-light">
                 <tr>

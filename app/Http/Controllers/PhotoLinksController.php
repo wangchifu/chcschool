@@ -133,8 +133,13 @@ class PhotoLinksController extends Controller
             $photo_links = PhotoLink::where('photo_type_id',$photo_type_id)->orderBy('order_by','DESC')
             ->paginate(24);
         }
-        
-        return view('photo_links.show',compact('photo_links'));
+        $photo_types = PhotoType::orderBy('order_by')->get();
+        $data = [
+            'photo_types'=>$photo_types,
+            'photo_type_id'=>$photo_type_id,
+            'photo_links'=>$photo_links,
+        ];
+        return view('photo_links.show',$data);
     }
 
     /**
