@@ -20,26 +20,19 @@ class LinksController extends Controller
         $links = Link::orderBy('type_id')
             ->orderBy('order_by')
             ->get();
+        foreach($links as $link){
+            $link_data[$link->type_id][$link->id]['id'] = $link->id;
+            $link_data[$link->type_id][$link->id]['icon'] = $link->icon;
+            $link_data[$link->type_id][$link->id]['name'] = $link->name;
+            $link_data[$link->type_id][$link->id]['url'] = $link->url;
+            $link_data[$link->type_id][$link->id]['target'] = $link->target;
+            $link_data[$link->type_id][$link->id]['order_by'] = $link->order_by;
+        }
         $data = [
             'types'=>$types,
-            'links'=>$links,
+            'link_data'=>$link_data,
         ];
         return view('links.index',$data);
-    }
-
-    public function browser(Type $select_type)
-    {
-        $types= Type::orderBy('order_by')
-            ->get();
-        $links = Link::where('type_id',$select_type->id)
-            ->orderBy('order_by')
-            ->get();
-        $data = [
-            'select_type'=>$select_type,
-            'types'=>$types,
-            'links'=>$links,
-        ];
-        return view('links.browser',$data);
     }
 
     /**
@@ -79,7 +72,7 @@ class LinksController extends Controller
             'order_by'=>['nullable','numeric'],
         ]);
         $link = Link::create($request->all());
-        return redirect()->route('links.browser',$link->type_id);
+        return redirect()->route('links.index');
     }
 
     /**
@@ -124,7 +117,7 @@ class LinksController extends Controller
             'order_by'=>['nullable','numeric'],
         ]);
         $link->update($request->all());
-        return redirect()->route('links.browser',$link->type_id);
+        return redirect()->route('links.index');
     }
 
     public function update_type(Request $request, Type $type)

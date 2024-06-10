@@ -7,15 +7,16 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>圖片連結</h1>
+        <h1>圖片連結</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
                     <li class="breadcrumb-item active" aria-current="page">圖片連結</li>
                 </ol>
             </nav>
-            <div class="table-responsive">
-                <h2>基本設定</h2>
+        </div>
+        <div class="col-md-4">
+            <h2>基本設定</h2>
                 <table class="table table-striped" style="word-break:break-all;">
                     <thead class="thead-light">
                         <tr>
@@ -51,8 +52,9 @@
                         </form>
                     </tbody>
                 </table>
-                <hr>
-                <h2>連結設定</h2>
+        </div>
+        <div class="col-md-7">
+            <h2>連結設定</h2>
                 <table class="table table-striped" style="word-break:break-all;">
                     <thead class="thead-light">
                     <tr>
@@ -122,7 +124,6 @@
                     @endforeach
                     </tbody>
                 </table>
-            </div>
         </div>
     </div>
     <script>
