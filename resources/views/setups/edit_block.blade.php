@@ -21,7 +21,7 @@
             </td>
             <td>
                 <div class="form-group">
-                    <label for="site_name">3.名稱</label>
+                    <label for="site_name">3.標題名稱</label>
                     @if(strpos($block->title,'系統區塊') or strpos($block->title,'跑馬燈'))
                         {{ Form::text('title',$block->title,['class' => 'form-control','readonly'=>'readonly']) }}
                     @else
@@ -29,18 +29,60 @@
                     @endif
                 </div>
             </td>
+        </tr>
+        <tr>
             <td>
                 <div class="form-group">
-                    <label for="site_name">4.<a href="{{ route('setups.block_color') }}">顏色</a></label>
+                    <label for="site_name">4.<a href="{{ route('setups.block_color') }}">標題顏色</a></label>
                     {{ Form::select('block_color', $block_colors,$block->block_color, ['class' => 'form-control','placeholder'=>'']) }}
                 </div>
             </td>
+            <td>
+                <div class="form-group">
+                    <label for="block_position">5.標題位置</a></label>
+                    <?php
+                        if($block->block_position=="text-left"){
+                            $select1 = "selected";
+                            $select2 = null;
+                            $select3 = null;
+                            $select4 = null;
+                        }
+                        if($block->block_position=="text-center"){
+                            $select1 = null;
+                            $select2 = "selected";
+                            $select3 = null;
+                            $select4 = null;
+                        }
+                        if($block->block_position=="text-right"){
+                            $select1 = null;
+                            $select2 = null;
+                            $select3 = "selected";
+                            $select4 = null;
+                        }
+                        if($block->block_position=="disable"){
+                            $select1 = null;
+                            $select2 = null;
+                            $select3 = null;
+                            $select4 = "selected";
+                        }
+                    ?>
+                    <select name="block_position" id="block_position" class="form-control">
+                        <option value="text-left" {{ $select1 }}>置左</option>
+                        <option value="text-center" {{ $select2 }}>置中</option>
+                        <option value="text-right" {{ $select3 }}>置右</option>
+                        <option value="disable" {{ $select4 }}>不顯示標題</option>
+                    </select>
+                </div>
+            </td>
+            <td>
+
+            </td>
         </tr>
         <tr>
-            <td colspan="4">
+            <td colspan="3">
                 @if(strpos($block->title,"跑馬燈"))
                     <div class="form-group">
-                        <label for="content">4.跑馬燈設定*</label>
+                        <label for="content">6.跑馬燈設定*</label>
                         {{ Form::textarea('content',$block->content,['id'=>'marquee-editor','class'=>'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
@@ -55,7 +97,7 @@
                     </div>
                 @elseif(!strpos($block->title,'系統區塊'))
                 <div class="form-group">
-                    <label for="content">4.內文*</label>
+                    <label for="content">6.內文*</label>
                     {{ Form::textarea('content',$block->content,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
                 </div>
                 @endif

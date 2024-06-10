@@ -12,6 +12,7 @@ class Block extends Model
         'order_by',
         'setup_col_id',
         'block_color',
+        'block_position',
     ];
 
     public function setup_col()

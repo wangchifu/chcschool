@@ -82,8 +82,16 @@
                             <?php
                                 $title = str_replace_last("(系統區塊)","",$block->title);
                                 $title = str_replace_last("_圖文版","",$title);
+                                $block_position = ($block->block_position==null)?"text-left":$block->block_position;
+                                if($block->block_position=="disable") $block_position = null;
                             ?>
-                            <h5>{{ $title }}</h5>
+                            <h5 class="{{ $block_position }}">
+                                @if($block_position) 
+                                    {{ $title }}
+                                @else
+                                　
+                                @endif
+                            </h5>
                         </div>
                         <div class="content2">
                             <div class="table-responsive">

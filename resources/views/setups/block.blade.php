@@ -73,7 +73,7 @@
         <!--
         function open_window(url,name)
         {
-            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=700');
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=800');
         }
         // -->
 
