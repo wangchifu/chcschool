@@ -23,8 +23,18 @@ class PhotoLinksController extends Controller
             $photo_type_array[$photo_type->id] = $photo_type->name;
         }
         $photo_type_array[0] = "不分類";
+
+        foreach($photo_links as $photo_link){
+            $type = ($photo_link->photo_type_id==null)?0:$photo_link->photo_type_id;
+            $photo_link_data[$type][$photo_link->id]['id'] = $photo_link->id;
+            $photo_link_data[$type][$photo_link->id]['name'] = $photo_link->name;
+            $photo_link_data[$type][$photo_link->id]['url'] = $photo_link->url;
+            $photo_link_data[$type][$photo_link->id]['image'] = $photo_link->image;
+            $photo_link_data[$type][$photo_link->id]['order_by'] = $photo_link->order_by;
+        }
+
         $data = [
-            'photo_links'=>$photo_links,
+            'photo_link_data'=>$photo_link_data,
             'photo_type_array'=>$photo_type_array,
             'photo_types'=>$photo_types,
         ];

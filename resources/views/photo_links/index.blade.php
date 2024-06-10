@@ -55,75 +55,131 @@
         </div>
         <div class="col-md-7">
             <h2>連結設定</h2>
-                <table class="table table-striped" style="word-break:break-all;">
-                    <thead class="thead-light">
-                    <tr>
-                        <th>排序</th>
-                        <th>代表圖片</th>
-                        <th>類別</th>
-                        <th>名稱+網址</th>
-                        <th>動作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{ Form::open(['route' => 'photo_links.store', 'method' => 'POST','files'=>true,'id'=>'this_form']) }}
-                    <tr>
-                        <td>
-                            {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
-                        </td>
-                        <td>
-                            <input type="file" name="image" id="image" required>
-                        </td>
-                        <td>
-                            <select name="photo_type_id" class="form-control">
-                                <option value="">不分類</option>
-                                @foreach($photo_types as $photo_type)
-                                    <option value="{{ $photo_type->id }}">{{ $photo_type->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
-                            <br>
-                            {{ Form::text('url',null,['id'=>'url','class' => 'form-control','required'=>'required', 'placeholder' => 'https://']) }}
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定新增嗎？')">
-                                <i class="fas fa-save"></i> 新增連結
-                            </button>
-                        </td>
-                    </tr>
-                    {{ Form::close() }}
-                    @include('layouts.errors')
-                    @foreach($photo_links as $photo_link)
-                        <tr>
-                            <td>
-                                {{ $photo_link->order_by }}
-                            </td>
-                            <td>
-                                <?php
-                                    $school_code = school_code();
-                                    $img = "storage/".$school_code.'/photo_links/'.$photo_link->image;
-                                ?>
-                                <a href="{{ $photo_link->url }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
-                            </td>
-                            <td>
-                                <?php $photo_type_id = ($photo_link->photo_type_id)?$photo_link->photo_type_id:0; ?>
-                                {{ $photo_type_array[$photo_type_id] }}
-                            </td>
-                            <td>
-                                <a href="{{ $photo_link->url }}" target="_blank">{{ $photo_link->name }}</a>
-                            </td>
-                            <td>
-                                <a href="javascript:open_window('{{ route('photo_links.edit',$photo_link->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $photo_link->id }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
-                            </td>
-                        </tr>
-                        {{ Form::open(['route' => ['photo_links.destroy',$photo_link->id], 'method' => 'DELETE','id'=>'delete'.$photo_link->id,'onsubmit'=>'return false;']) }}
-                        {{ Form::close() }}
-                    @endforeach
-                    </tbody>
-                </table>
+            <table class="table table-striped" style="word-break:break-all;">
+                <thead class="thead-light">
+                <tr>
+                    <th>排序</th>
+                    <th>代表圖片</th>
+                    <th>類別</th>
+                    <th>名稱+網址</th>
+                    <th>動作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{ Form::open(['route' => 'photo_links.store', 'method' => 'POST','files'=>true,'id'=>'this_form']) }}
+                <tr>
+                    <td>
+                        {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                    </td>
+                    <td>
+                        <input type="file" name="image" id="image" required>
+                    </td>
+                    <td>
+                        <select name="photo_type_id" class="form-control">
+                            <option value="">不分類</option>
+                            @foreach($photo_types as $photo_type)
+                                <option value="{{ $photo_type->id }}">{{ $photo_type->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                        <br>
+                        {{ Form::text('url',null,['id'=>'url','class' => 'form-control','required'=>'required', 'placeholder' => 'https://']) }}
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定新增嗎？')">
+                            <i class="fas fa-save"></i> 新增連結
+                        </button>
+                    </td>
+                </tr>
+                {{ Form::close() }}
+                </tbody>
+            </table>
+            @include('layouts.errors')
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">不分類</button>
+                </li>
+                <?php $p=1; ?>
+                @foreach($photo_types as $photo_type)
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="photo_link{{ $p }}-tab" data-toggle="tab" data-target="#photo_link{{ $p }}" type="button" role="tab" aria-controls="photo_link{{ $p }}" aria-selected="false">{{  $photo_type->name }}</button>
+                    </li>
+                <?php $p++; ?>
+                @endforeach
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <table class="table table-striped" style="word-break:break-all;">   
+                        @foreach($photo_link_data[0] as $k=>$v)
+                            <tr>
+                                <td>
+                                    {{ $v['order_by'] }}
+                                </td>
+                                <td>
+                                    <?php
+                                        $school_code = school_code();
+                                        $img = "storage/".$school_code.'/photo_links/'.$v['image'];
+                                    ?>
+                                    <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
+                                </td>
+                                <td>
+                                    {{ $photo_type_array[0] }}
+                                </td>
+                                <td>
+                                    <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
+                                </td>
+                                <td>
+                                    <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                                    <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                </td>
+                            </tr>
+                            {{ Form::open(['route' => ['photo_links.destroy',$k], 'method' => 'DELETE','id'=>'delete'.$k,'onsubmit'=>'return false;']) }}
+                            {{ Form::close() }}
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <?php $p=1; ?>
+                @foreach($photo_types as $photo_type)
+                    <div class="tab-pane fade" id="photo_link{{ $p }}" role="tabpanel" aria-labelledby="photo_link{{ $p }}-tab">
+                        <table class="table table-striped" style="word-break:break-all;">   
+                            @foreach($photo_link_data[$photo_type->id] as $k=>$v)
+                                <tr>
+                                    <td>
+                                        {{ $v['order_by'] }}
+                                    </td>
+                                    <td>
+                                        <?php
+                                            $school_code = school_code();
+                                            $img = "storage/".$school_code.'/photo_links/'.$v['image'];
+                                        ?>
+                                        <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
+                                    </td>
+                                    <td>
+                                        {{ $photo_type_array[0] }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                                        <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                    </td>
+                                </tr>
+                                {{ Form::open(['route' => ['photo_links.destroy',$k], 'method' => 'DELETE','id'=>'delete'.$k,'onsubmit'=>'return false;']) }}
+                                {{ Form::close() }}
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                <?php $p++; ?>
+                @endforeach
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+                </div>
+              </div>
         </div>
     </div>
     <script>
