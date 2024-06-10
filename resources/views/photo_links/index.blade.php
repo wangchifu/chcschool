@@ -112,32 +112,34 @@
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <table class="table table-striped" style="word-break:break-all;">   
-                        @foreach($photo_link_data[0] as $k=>$v)
-                            <tr>
-                                <td>
-                                    {{ $v['order_by'] }}
-                                </td>
-                                <td>
-                                    <?php
-                                        $school_code = school_code();
-                                        $img = "storage/".$school_code.'/photo_links/'.$v['image'];
-                                    ?>
-                                    <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
-                                </td>
-                                <td>
-                                    {{ $photo_type_array[0] }}
-                                </td>
-                                <td>
-                                    <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
-                                </td>
-                                <td>
-                                    <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                    <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
-                                </td>
-                            </tr>
-                            {{ Form::open(['route' => ['photo_links.destroy',$k], 'method' => 'DELETE','id'=>'delete'.$k,'onsubmit'=>'return false;']) }}
-                            {{ Form::close() }}
-                        @endforeach
+                        @if(isset($photo_link_data[0]))
+                            @foreach($photo_link_data[0] as $k=>$v)
+                                <tr>
+                                    <td>
+                                        {{ $v['order_by'] }}
+                                    </td>
+                                    <td>
+                                        <?php
+                                            $school_code = school_code();
+                                            $img = "storage/".$school_code.'/photo_links/'.$v['image'];
+                                        ?>
+                                        <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
+                                    </td>
+                                    <td>
+                                        {{ $photo_type_array[0] }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                                        <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                    </td>
+                                </tr>
+                                {{ Form::open(['route' => ['photo_links.destroy',$k], 'method' => 'DELETE','id'=>'delete'.$k,'onsubmit'=>'return false;']) }}
+                                {{ Form::close() }}
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>
