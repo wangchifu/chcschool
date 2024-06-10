@@ -62,8 +62,6 @@
 <br>
 <div class="container-fluid">
     @yield('content')
-    <br>
-    <br>
 </div>
 <div class="table-responsive">
         @yield('footer')

@@ -78,6 +78,7 @@
                         </div>
                     @else
                     <div class="shadow rounded {{ $block_color[0] }}">
+                        @if($block->block_position != "disable")
                         <div class="{{ $block_color[1] }}">
                             <?php
                                 $title = str_replace_last("(系統區塊)","",$block->title);
@@ -88,11 +89,10 @@
                             <h5 class="{{ $block_position }}">
                                 @if($block_position) 
                                     {{ $title }}
-                                @else
-                                　
                                 @endif
                             </h5>
                         </div>
+                        @endif
                         <div class="content2">
                             <div class="table-responsive">
                             @if($block->title == "最新公告(系統區塊)")
@@ -141,8 +141,6 @@
 @endsection
 
 @section('footer')
-    <br>
-    <br>
     @if(!empty($setup->footer))
         <footer class="font-small bg-light py-4">
             <div class="container-fluid text-center text-md-left">
