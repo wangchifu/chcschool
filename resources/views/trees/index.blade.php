@@ -14,6 +14,9 @@
                 <table class="table table-striped" style="word-break:break-all;">
                     <tr>
                         <th>
+                            排序
+                        </th>
+                        <th>
                             名稱
                         </th>
                         <th>
@@ -28,6 +31,9 @@
                         <th></th>
                     </tr>
                     <tr>
+                        <td>
+                            {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序']) }}
+                        </td>
                         <td>
                             {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                         </td>

@@ -9,6 +9,7 @@ class TreesController extends Controller
 {
     public function index(){
         $fs = Tree::where('type','1')
+            ->orderBy('order_by')
             ->orderBy('name')
             ->get();
         $folders[0] = "根目錄";
@@ -18,6 +19,7 @@ class TreesController extends Controller
 
         $trees = Tree::where('folder_id','0')
             ->orderBy('type')
+            ->orderBy('order_by')
             ->orderBy('name')
             ->get();
         $data = [
