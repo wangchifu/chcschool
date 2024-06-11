@@ -51,7 +51,7 @@
                 <div class="row justify-content-start">
                     <?php 
                     $photo_links = []; 
-                    $photo_links = \App\PhotoLink::where('photo_type_id',$photo_type->id)->orderBy('order_by')->get();
+                    $photo_links = \App\PhotoLink::where('photo_type_id',$photo_type->id)->orderBy('order_by','DESC')->get();
                     ?>       
                     @foreach($photo_links as $photo_link)
                         <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">
