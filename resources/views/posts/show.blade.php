@@ -29,12 +29,15 @@
                     <li class="breadcrumb-item active" aria-current="page">公告內容</li>
                 </ol>
             </nav>
-            @if($can_see)
-                <h1>{{ $post->title }}</h1>
+            @if($post->die_date >= date('Y-m-d'))
+                @if($can_see)
+                    <h1>{{ $post->title }}</h1>
+                @else
+                    <h1 class="text-danger"><i class="fas fa-ban"></i> [ 內部公告 ]{{ $post->title  }}</h1>
+                @endif
             @else
-                <h1 class="text-danger"><i class="fas fa-ban"></i> [ 內部公告 ]{{ $post->title  }}</h1>
-		@endif
-
+                <h1>本公告已下架</h1>
+            @endif
 
             @if($last_id)
                 <a href="{{ route('posts.show',$last_id) }}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-alt-circle-left"></i> 上一則公告</a>
@@ -56,7 +59,12 @@
                     $insite = ($post->insite != null)?$post->insite:0;
                 ?>
                 <a href="{{ route('posts.type',$insite) }}">{{ $post_type_array[$insite] }}</a> / 張貼者
-                <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>　　　
+                <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                @if($post->die_date)
+                    張貼至 {{ $post->die_date }}止　　　
+                @else
+                　　　
+                @endif
                 @auth
                     @if(auth()->user()->admin)
                         @if($post->top)
@@ -93,26 +101,28 @@
             @endif
 
             <!-- Post Content -->
-            <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
-                <p style="font-size: 1.2rem;">
-                    @if($can_see)
-                        <?php //$content = str_replace(chr(13) . chr(10), '<br>', $post->content);?>
-                        {!! $post->content !!}
-                    @else
-                    <p class="text-danger">[ 內部公告 ] 請登入後瀏覽！</p>
-                    @endif
-                </p>
-            </div>
-            @if(!empty($files) and $can_see)
-            <hr>
-            <div class="card my-4">
-                <h5 class="card-header">附件下載</h5>
-                <div class="card-body">
-                @foreach($files as $k=>$v)
-                    <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" class="btn btn-primary btn-sm" style="margin:3px" target="_blank"><i class="fas fa-download"></i> {{ $v }}</a>
-                @endforeach
+            @if($post->die_date >= date('Y-m-d'))
+                <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
+                    <p style="font-size: 1.2rem;">
+                        @if($can_see)
+                            <?php //$content = str_replace(chr(13) . chr(10), '<br>', $post->content);?>
+                            {!! $post->content !!}
+                        @else
+                        <p class="text-danger">[ 內部公告 ] 請登入後瀏覽！</p>
+                        @endif
+                    </p>
                 </div>
-            </div>
+                @if(!empty($files) and $can_see)
+                <hr>
+                <div class="card my-4">
+                    <h5 class="card-header">附件下載</h5>
+                    <div class="card-body">
+                    @foreach($files as $k=>$v)
+                        <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" class="btn btn-primary btn-sm" style="margin:3px" target="_blank"><i class="fas fa-download"></i> {{ $v }}</a>
+                    @endforeach
+                    </div>
+                </div>
+                @endif
             @endif
         </div>
 

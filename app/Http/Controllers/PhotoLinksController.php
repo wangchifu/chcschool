@@ -127,6 +127,9 @@ class PhotoLinksController extends Controller
 
     public function type_delete(PhotoType $photo_type)
     {
+        if(auth()->user()->admin !=1 and $photo_type->user_id != auth()->user()->id){
+            return back();
+        }
         $att['photo_type_id'] = null;
         PhotoLink::where('photo_type_id',$photo_type->id)->update($att);
         $photo_type->delete();

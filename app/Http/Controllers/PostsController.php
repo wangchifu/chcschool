@@ -51,7 +51,9 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('top', 'DESC')
+        $posts = Post::where(function ($query) {
+            $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+            })->orderBy('top', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->paginate(20);
         $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
@@ -140,6 +142,7 @@ class PostsController extends Controller
         $att['title'] = $request->input('title');
         $att['content'] = $request->input('content');
         $att['job_title'] = auth()->user()->title;
+        $att['die_date'] = $request->input('die_date');
         $att['user_id'] = auth()->user()->id;
         $att['views'] = 0;
         $att['insite'] = ($request->input('insite')) ? $request->input('insite') : null;
@@ -306,6 +309,7 @@ class PostsController extends Controller
         }
 
         $att['title'] = $request->input('title');
+        $att['die_date'] = $request->input('die_date');
         $att['content'] = $request->input('content');
         $att['insite'] = ($request->input('insite')) ? $request->input('insite') : null;
 

@@ -1,14 +1,5 @@
-<?php
-$posts = \App\Post::where('insite',null)
-    ->orderBy('top','DESC')
-    ->orderBy('created_at','DESC')
-    ->paginate(10);
-?>
-
 <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <?php
-    $setup = \App\Setup::first();
-    ?>
+    
     @if($setup->all_post)
     <li class="nav-item">
         <a class="nav-link active" id="post_type_all_post-tab" data-toggle="tab" href="#post_type_all_post" role="tab" aria-controls="post_type_all_post" aria-selected="true">全部公告</a>
@@ -31,11 +22,6 @@ $posts = \App\Post::where('insite',null)
 <div class="tab-content" id="myTabContent">
     @if ($setup->all_post==1)
         <div class="tab-pane fade show active" id="post_type_all_post" role="tabpanel" aria-labelledby="post_type_all_post-tab" style="margin: 10px;">
-            <?php
-            $posts = \App\Post::orderBy('top','DESC')
-                ->orderBy('created_at','DESC')
-                ->paginate(10);
-            ?>
             @auth
                 @can('create',\App\Post::class)
                     <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
@@ -126,7 +112,9 @@ $posts = \App\Post::where('insite',null)
             $p++;
             $insite = ($post_type->id == 0)?null:$post_type->id;
             $posts = \App\Post::where('insite',$insite)
-                ->orderBy('top','DESC')
+                ->where(function ($query) {
+                    $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+                })->orderBy('top','DESC')
                 ->orderBy('created_at','DESC')
                 ->paginate(10);
             ?>

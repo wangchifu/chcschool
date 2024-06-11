@@ -1,9 +1,3 @@
-<?php
-$posts = \App\Post::where('insite',null)
-    ->orderBy('top','DESC')
-    ->orderBy('created_at','DESC')
-    ->paginate(10);
-?>
 <style>
     .image-container{
         max-width: 90%;
@@ -47,11 +41,6 @@ $posts = \App\Post::where('insite',null)
 <div class="tab-content" id="myTabContent2">
     @if($setup->all_post==1)
     <div class="tab-pane fade show active" id="post_type2_all_post" role="tabpanel" aria-labelledby="post_type2_all_post-tab" style="margin: 10px;">
-        <?php
-        $posts = \App\Post::orderBy('top','DESC')
-            ->orderBy('created_at','DESC')
-            ->paginate(10);
-        ?>
         @auth
             @can('create',\App\Post::class)
                 <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
@@ -140,7 +129,9 @@ $posts = \App\Post::where('insite',null)
             $p++;
             $insite = ($post_type->id == 0)?null:$post_type->id;
             $posts = \App\Post::where('insite',$insite)
-                ->orderBy('top','DESC')
+                ->where(function ($query) {
+                    $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+                })->orderBy('top','DESC')
                 ->orderBy('created_at','DESC')
                 ->paginate(10);
             ?>

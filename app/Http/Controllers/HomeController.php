@@ -181,7 +181,9 @@ class HomeController extends Controller
             $marquee_css = "direction='left' height='30' scrollamount='5' align='midden'";
         }
 
-        $posts = Post::orderBy('top', 'DESC')
+        $posts = Post::where(function ($query) {
+            $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+            })->orderBy('top', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->paginate(10);
 

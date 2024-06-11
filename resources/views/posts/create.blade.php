@@ -38,7 +38,11 @@
                         {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required','placeholder' => '請輸入標題']) }}
                     </div>
                     <div class="form-group">
-                        <label for="content"><strong>5.內文*</strong></label>
+                        <label for="die_date">5.下架時間(若空白則不下架)</label>
+                        {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','placeholder' => '請選擇日期']) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="content"><strong>6.內文*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10,'required'=>'required', 'placeholder' => '請輸入內容']) }}
                     </div>
                     <script src="{{ asset('mycke/ckeditor.js') }}"></script>
@@ -56,7 +60,7 @@
                     </script>
                     @include('layouts.hd')
                     <div class="form-group">
-                        <label for="files[]">6.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )
+                        <label for="files[]">7.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )
                         <small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small>
                         </label>
                         @if($per < 100)
