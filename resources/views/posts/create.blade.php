@@ -38,7 +38,7 @@
                         {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required','placeholder' => '請輸入標題']) }}
                     </div>
                     <div class="form-group">
-                        <label for="die_date">5.下架時間(若空白則不下架)</label>
+                        <label for="die_date">5.上架至哪一天最後一天？(若空白則不下架)</label>
                         {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','placeholder' => '請選擇日期']) }}
                     </div>
                     <div class="form-group">
