@@ -31,6 +31,7 @@ class PhotoLinksController extends Controller
             $photo_link_data[$type][$photo_link->id]['url'] = $photo_link->url;
             $photo_link_data[$type][$photo_link->id]['image'] = $photo_link->image;
             $photo_link_data[$type][$photo_link->id]['order_by'] = $photo_link->order_by;
+            $photo_link_data[$type][$photo_link->id]['user_id'] = $photo_link->user_id;
         }
 
         $data = [
@@ -75,6 +76,7 @@ class PhotoLinksController extends Controller
         $att['image'] = "image";
         $att['order_by'] = $request->input('order_by');
         $att['photo_type_id'] = $request->input('photo_type_id');
+        $att['user_id'] = auth()->user()->id;
 
         $photo_link = PhotoLink::create($att);
 
@@ -107,6 +109,7 @@ class PhotoLinksController extends Controller
     public function type_store(Request $request)
     {
         $att = $request->all();
+        $att['user_id'] = auth()->user()->id;
         
         PhotoType::create($att);
 

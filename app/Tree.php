@@ -11,5 +11,6 @@ class Tree extends Model
         'type',
         'name',
         'url',
+        'order_by',
     ];
 }

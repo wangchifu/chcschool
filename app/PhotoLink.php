@@ -11,6 +11,7 @@ class PhotoLink extends Model
         'url',
         'image',
         'order_by',
+        'user_id',
         'photo_type_id'
     ];
 }

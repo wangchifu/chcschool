@@ -9,5 +9,6 @@ class PhotoType extends Model
     protected $fillable = [
         'name',
         'order_by',
+        'user_id',
     ];
 }

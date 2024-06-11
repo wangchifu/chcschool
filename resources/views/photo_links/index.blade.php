@@ -20,20 +20,24 @@
                 <table class="table table-striped" style="word-break:break-all;">
                     <thead class="thead-light">
                         <tr>
-                            <th>顯示圖片的數目</th>
+                            @if(auth()->user()->admin)
+                                <th>顯示圖片的數目</th>
+                            @endif
                             <th>新建類別</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $setup = \App\Setup::first(); ?>
                         <tr>
-                            <td>
-                                <form action="{{ route('setups.photo_link_number') }}" method="post">
-                                    @csrf
-                                {{ Form::number('photo_link_number',$setup->photo_link_number,['id'=>'photo_link_number','class' => 'form-control', 'placeholder' => '6的倍數為佳']) }}
-                                <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">修改</button>    
-                            </form>
-                            </td>
+                            @if(auth()->user()->admin)
+                                <td>                               
+                                    <form action="{{ route('setups.photo_link_number') }}" method="post">
+                                        @csrf
+                                    {{ Form::number('photo_link_number',$setup->photo_link_number,['id'=>'photo_link_number','class' => 'form-control', 'placeholder' => '6的倍數為佳']) }}
+                                    <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">修改</button>    
+                                    </form>                                
+                                </td>
+                            @endif
                             <td>
                                 <form action="{{ route('photo_links.type_store') }}" method="post">
                                 @csrf
@@ -50,8 +54,8 @@
                 <table class="table table-striped" style="word-break:break-all;">
                     <thead class="thead-light">
                     <tr>
-                        <th nowrap>名稱</th>
                         <th nowrap>排序</th>
+                        <th nowrap>名稱</th>                        
                         <th nowrap>動作</th>
                     </tr>
                     </thead>
@@ -61,15 +65,18 @@
                             @csrf
                             @method('patch')
                         <tr>
+                            <?php $readonly=(auth()->user()->admin !=1 and $photo_type->user_id != auth()->user()->id)?"readonly":null; ?>                                                              
                             <td>
-                                {{ Form::text('name',$photo_type->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                                {{ Form::number('order_by',$photo_type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字','readonly'=>$readonly]) }}
                             </td>
                             <td>
-                                {{ Form::number('order_by',$photo_type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
-                            </td>
+                                {{ Form::text('name',$photo_type->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱','readonly'=>$readonly]) }}
+                            </td>                            
                             <td nowrap>
-                                <button onclick="return confirm('儲存修改？')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i></button>
+                                @if(auth()->user()->admin or $photo_type->user_id == auth()->user()->id)
+                                <button onclick="return confirm('儲存修改？')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i></button>                                
                                 <a href="{{ route('photo_links.type_delete',$photo_type->id) }}" onclick="return confirm('確定刪除？底下這個分類的連結，將改為「不分類」喔！')"><i class="fas fa-times-circle text-danger"></i></a>
+                                @endif
                             </td>
                         </tr>
                         {{ Form::close() }}
@@ -124,8 +131,10 @@
                                         <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
                                     </td>
                                     <td>
-                                        <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                        <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                        @if(auth()->user()->admin or $v['user_id'] == auth()->user()->id)
+                                            <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>                                        
+                                            <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？不能刪別人建的喔！')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>                                        
+                                        @endif
                                     </td>
                                 </tr>
                                 {{ Form::open(['route' => ['photo_links.destroy',$k], 'method' => 'DELETE','id'=>'delete'.$k,'onsubmit'=>'return false;']) }}
@@ -144,7 +153,7 @@
                                     <th>排序</th>
                                     <th>代表圖片</th>
                                     <th>類別</th>
-                                    <th>名稱+網址</th>
+                                    <th>名稱</th>
                                     <th>動作</th>
                                 </tr>
                                 </thead>
@@ -169,8 +178,10 @@
                                             <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
                                         </td>
                                         <td>
-                                            <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                            <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                            @if(auth()->user()->admin or $v['user_id'] == auth()->user()->id)
+                                                <a href="javascript:open_window('{{ route('photo_links.edit',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>                                            
+                                                <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？不能刪別人建的喔！')) document.getElementById('delete{{ $k}}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>                                            
+                                            @endif
                                         </td>
                                     </tr>
                                     {{ Form::open(['route' => ['photo_links.destroy',$k], 'method' => 'DELETE','id'=>'delete'.$k,'onsubmit'=>'return false;']) }}
