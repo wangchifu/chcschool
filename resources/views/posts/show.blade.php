@@ -29,7 +29,7 @@
                     <li class="breadcrumb-item active" aria-current="page">公告內容</li>
                 </ol>
             </nav>
-            @if($post->die_date >= date('Y-m-d'))
+            @if($post->die_date==null or  $post->die_date >= date('Y-m-d'))
                 @if($can_see)
                     <h1>{{ $post->title }}</h1>
                 @else
@@ -92,16 +92,17 @@
             </p>
 
             <hr>
+            @if($post->die_date==null or  $post->die_date >= date('Y-m-d'))
+                <!-- Preview Image -->
+                @if(!empty($post->title_image) and $can_see)
+                    <img class="img-fluid rounded" src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" alt="標題圖片">
 
-            <!-- Preview Image -->
-            @if(!empty($post->title_image) and $can_see)
-                <img class="img-fluid rounded" src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" alt="標題圖片">
-
-                <hr>
+                    <hr>
+                @endif
             @endif
 
             <!-- Post Content -->
-            @if($post->die_date >= date('Y-m-d'))
+            @if($post->die_date==null or  $post->die_date >= date('Y-m-d'))
                 <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
                     <p style="font-size: 1.2rem;">
                         @if($can_see)
