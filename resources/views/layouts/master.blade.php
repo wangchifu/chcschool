@@ -63,6 +63,8 @@
 <div class="container-fluid">
     @yield('content')
 </div>
+<br>
+<br>
 <div class="table-responsive">
         @yield('footer')
 </div>
