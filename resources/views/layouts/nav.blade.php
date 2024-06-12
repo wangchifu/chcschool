@@ -59,6 +59,7 @@
                     <?php 
                         $types = \App\Type::orderBy('order_by')->get();
                         $links = \App\Link::orderBy('order_by')->get();
+                        $link_data = [];
                         foreach($links as $link){
                             $link_data[$link->type_id][$link->id]['target'] = $link->target;
                             $link_data[$link->type_id][$link->id]['url'] = $link->url;
