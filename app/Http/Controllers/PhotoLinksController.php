@@ -24,6 +24,7 @@ class PhotoLinksController extends Controller
         }
         $photo_type_array[0] = "不分類";
 
+        $photo_link_data = [];
         foreach($photo_links as $photo_link){
             $type = ($photo_link->photo_type_id==null)?0:$photo_link->photo_type_id;
             $photo_link_data[$type][$photo_link->id]['id'] = $photo_link->id;

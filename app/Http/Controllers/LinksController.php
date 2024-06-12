@@ -20,6 +20,7 @@ class LinksController extends Controller
         $links = Link::orderBy('type_id')
             ->orderBy('order_by')
             ->get();
+        $link_data = [];
         foreach($links as $link){
             $link_data[$link->type_id][$link->id]['id'] = $link->id;
             $link_data[$link->type_id][$link->id]['icon'] = $link->icon;
