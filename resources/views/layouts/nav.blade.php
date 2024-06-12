@@ -76,7 +76,7 @@
                             //$links = \App\Link::where('type_id',$type->id)->orderBy('order_by')->get();
                             ?>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                @if(isset($link_data))
+                                @if(isset($link_data[$type->id]))
                                     @foreach($link_data[$type->id] as $k=>$v)
                                         <?php
                                             if($v['target'] == null) $target = "_blank";
