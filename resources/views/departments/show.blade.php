@@ -23,7 +23,9 @@
                             <a href="{{ route('departments.show_log',$department->id) }}" class="btn btn-info btn-sm" target="_blank">查看 log ({{ $logs_count }})</a>
                         @endif
                     @endauth
-                    點閱：{{ $department->views }}
+                    <button type="button" class="btn btn-dark btn-sm" disabled>
+                        點閱 <span class="badge badge-light">{{ $department->views }}</span>
+                      </button>                    
                 </h3>
                 <div class="card-body">
                     <div class="table-responsive">
