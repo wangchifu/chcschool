@@ -450,12 +450,17 @@ class PostsController extends Controller
 
     public function type($type)
     {
-        if ($type == null) $type = 0;
+        if ($type == null){
+            $type = 0;
 
-        $posts = Post::where(function ($query) use ($type) {
+            $posts = Post::where(function ($query) use ($type) {
             $query->where('insite',null)->orWhere('insite',$type);
             })->orderBy('top', 'DESC')
             ->orderBy('id', 'DESC')->paginate(20);
+        }else{
+            $posts = Post::where('insite',$type)->orderBy('top', 'DESC')
+                ->orderBy('id', 'DESC')->paginate(20);
+        }
 
         if ($type == null) {
             $type_name = "一般公告";
