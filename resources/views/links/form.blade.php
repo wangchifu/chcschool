@@ -8,6 +8,10 @@
             {{ Form::select('type_id', $types,null, ['id' => 'type_id', 'class' => 'form-control','required'=>'required']) }}
         </div>       
         <div class="form-group">
+            <label for="order_by">排序</label>
+            {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+        </div>
+        <div class="form-group">
             <label for="name">圖示*</label> <i class="" id="show_icon"></i>
             <input type="text" class="form-control" name="icon" placeholder="請選圖示" data-fa-browser id="this_input">
             <script>
@@ -28,10 +32,6 @@
         <div class="form-group">
             <label for="url">網址*</label>
             {{ Form::text('url',null,['id'=>'url','class' => 'form-control','required'=>'required', 'placeholder' => 'https://']) }}
-        </div>
-        <div class="form-group">
-            <label for="order_by">排序</label>
-            {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
         </div>
         <hr>
         <div class="form-check">

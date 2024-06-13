@@ -297,7 +297,7 @@ function get_tree($trees, $i)
             for ($k = 0; $k < $i; $k++) {
                 echo "　";
             }
-            echo "<i class=\"fas fa-folder-open text-warning\"></i>" . $tree->name ."(排序：".$tree->order_by.")". " <a href=\"javascript:open_window('" . route('trees.edit', $tree->id) . "','新視窗')\"><i class='fas fa-edit'></i></a> <a href=\"" . route('trees.delete', $tree->id) . "\" onclick=\"return confirm('連同底下連結一起刪喔！？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
+            echo "<i class=\"fas fa-folder-open text-warning\"></i>" . $tree->name ." <small>(排序：".$tree->order_by.")</small>". " <a href=\"javascript:open_window('" . route('trees.edit', $tree->id) . "','新視窗')\"><i class='fas fa-edit'></i></a> <a href=\"" . route('trees.delete', $tree->id) . "\" onclick=\"return confirm('連同底下連結一起刪喔！？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
             $links = \App\Tree::where('folder_id', $tree->id)
                 ->orderBy('type')
                 ->orderBy('order_by')
@@ -310,7 +310,7 @@ function get_tree($trees, $i)
             for ($k = 0; $k < $i; $k++) {
                 echo "　";
             }
-            echo "<i class=\"fas fa-file\"></i> <a href=\"" . $tree->url . "\" target=\"_blank\">" . $tree->name . "(排序：".$tree->order_by.")</a> <a href=\"javascript:open_window('" . route('trees.edit', $tree->id) . "','新視窗')\"><i class='fas fa-edit'></i></a> <a href=\"" . route('trees.delete', $tree->id) . "\" onclick=\"return confirm('確定刪除嗎？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
+            echo "<i class=\"fas fa-file\"></i> <a href=\"" . $tree->url . "\" target=\"_blank\">" . $tree->name . " <small>(排序：".$tree->order_by.")</small></a> <a href=\"javascript:open_window('" . route('trees.edit', $tree->id) . "','新視窗')\"><i class='fas fa-edit'></i></a> <a href=\"" . route('trees.delete', $tree->id) . "\" onclick=\"return confirm('確定刪除嗎？')\"><i class=\"fas fa-times-circle text-danger\"></i></a><br>";
         }
     }
 }

@@ -13,7 +13,7 @@
                 @csrf
                 <table class="table table-striped" style="word-break:break-all;">
                     <tr>
-                        <th>
+                        <th width="100">
                             排序
                         </th>
                         <th>

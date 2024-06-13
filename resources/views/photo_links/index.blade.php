@@ -54,7 +54,7 @@
                 <table class="table table-striped" style="word-break:break-all;">
                     <thead class="thead-light">
                     <tr>
-                        <th nowrap>排序</th>
+                        <th width="100">排序</th>
                         <th nowrap>名稱</th>                        
                         <th nowrap>動作</th>
                     </tr>
@@ -104,9 +104,9 @@
                     <table class="table table-striped" style="word-break:break-all;">   
                         <thead class="thead-light">
                             <tr>
-                                <th>排序</th>
-                                <th>代表圖片</th>
-                                <th>類別</th>
+                                <th width="120">類別</th>
+                                <th width="100">排序</th>
+                                <th>代表圖片</th>                                
                                 <th>名稱</th>
                                 <th>動作</th>
                             </tr>
@@ -114,6 +114,9 @@
                         @if(isset($photo_link_data[0]))
                             @foreach($photo_link_data[0] as $k=>$v)
                                 <tr>
+                                    <td>
+                                        {{ $photo_type_array[0] }}
+                                    </td>
                                     <td>
                                         {{ $v['order_by'] }}
                                     </td>
@@ -123,10 +126,7 @@
                                             $img = "storage/".$school_code.'/photo_links/'.$v['image'];
                                         ?>
                                         <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
-                                    </td>
-                                    <td>
-                                        {{ $photo_type_array[0] }}
-                                    </td>
+                                    </td>                                    
                                     <td>
                                         <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
                                     </td>
@@ -150,9 +150,9 @@
                         <table class="table table-striped" style="word-break:break-all;">   
                             <thead class="thead-light">
                                 <tr>
-                                    <th>排序</th>
-                                    <th>代表圖片</th>
-                                    <th>類別</th>
+                                    <th width="120">類別</th>
+                                    <th width="100">排序</th>
+                                    <th>代表圖片</th>                                    
                                     <th>名稱</th>
                                     <th>動作</th>
                                 </tr>
@@ -162,6 +162,9 @@
                                 @foreach($photo_link_data[$photo_type->id] as $k=>$v)
                                     <tr>
                                         <td>
+                                            {{ $photo_type_array[$photo_type->id] }}
+                                        </td>
+                                        <td>
                                             {{ $v['order_by'] }}
                                         </td>
                                         <td>
@@ -170,10 +173,7 @@
                                                 $img = "storage/".$school_code.'/photo_links/'.$v['image'];
                                             ?>
                                             <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
-                                        </td>
-                                        <td>
-                                            {{ $photo_type_array[$photo_type->id] }}
-                                        </td>
+                                        </td>                                        
                                         <td>
                                             <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
                                         </td>

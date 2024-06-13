@@ -26,11 +26,11 @@
                             @csrf
                         <table class="table table-striped" style="word-break:break-all;">
                         <tr>
-                            <td>
-                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                            <td width="120">
+                                {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序']) }}
                             </td>
                             <td>
-                                {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                             </td>
                             <td>
                                 <button class="btn btn-success btn-sm" onclick="return confirm('確定？')"><i class="fas fa-plus"></i> 新增</button>
@@ -41,8 +41,8 @@
                     <table class="table table-striped" style="word-break:break-all;">
                         <thead class="thead-light">
                         <tr>
-                            <th nowrap>名稱</th>
-                            <th nowrap>排序</th>
+                            <th nowrap width="120">排序</th>
+                            <th nowrap>名稱</th>                            
                             <th nowrap>動作</th>
                         </tr>
                         </thead>
@@ -53,11 +53,11 @@
                                 @method('patch')
                             <tr>
                                 <td>
-                                    {{ Form::text('name',$type->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                                    {{ Form::number('order_by',$type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
                                 </td>
                                 <td>
-                                    {{ Form::text('order_by',$type->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
-                                </td>
+                                    {{ Form::text('name',$type->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                                </td>                                
                                 <td nowrap>
                                     <button onclick="return confirm('儲存修改？')" class="btn btn-primary btn-sm"><i class="fas fa-save"></i></button>
                                     <a href="#" class="text-danger" onclick="if(confirm('確定刪除？會一併刪除所屬連結喔！')) document.getElementById('delete{{ $type->id }}').submit();else return false;"><i class="fas fa-times-circle"></i></a>
@@ -98,10 +98,10 @@
                                 <table class="table table-striped" style="word-break:break-all;">
                                     <thead class="thead-light">
                                     <tr>
-                                        <th>類別</th>
+                                        <th width="120">類別</th>
+                                        <th width="100">排序</th>
                                         <th>圖示+名稱</th>
-                                        <th>目標</th>
-                                        <th>排序</th>
+                                        <th>目標</th>                                        
                                         <th>動作</th>
                                     </tr>
                                     </thead>
@@ -110,6 +110,9 @@
                                         <tr>
                                             <td>
                                                 {{ $type->name }}
+                                            </td>
+                                            <td>
+                                                {{ $v['order_by'] }}
                                             </td>
                                             <td>
                                                 @if($v['icon']==null)
@@ -128,10 +131,7 @@
                                                 @elseif($v['target']=="_self")
                                                     本視窗
                                                 @endif
-                                            </td>
-                                            <td>
-                                                {{ $v['order_by'] }}
-                                            </td>
+                                            </td>                                            
                                             <td>
                                                 <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                                                 <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
@@ -150,10 +150,10 @@
                                 <table class="table table-striped" style="word-break:break-all;">
                                     <thead class="thead-light">
                                     <tr>
-                                        <th>類別</th>
+                                        <th width="120">類別</th>
+                                        <th width="100">排序</th>
                                         <th>圖示+名稱</th>
-                                        <th>目標</th>
-                                        <th>排序</th>
+                                        <th>目標</th>                                        
                                         <th>動作</th>
                                     </tr>
                                     </thead>
@@ -162,6 +162,9 @@
                                         <tr>
                                             <td>
                                                 {{ $type->name }}
+                                            </td>
+                                            <td>
+                                                {{ $v['order_by'] }}
                                             </td>
                                             <td>
                                                 @if($v['icon']==null)
@@ -180,10 +183,7 @@
                                                 @elseif($v['target']=="_self")
                                                     本視窗
                                                 @endif
-                                            </td>
-                                            <td>
-                                                {{ $v['order_by'] }}
-                                            </td>
+                                            </td>                                            
                                             <td>
                                                 <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                                                 <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>

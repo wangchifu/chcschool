@@ -20,14 +20,6 @@
                 <h3 class="card-header">連結資料</h3>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="order_by">排序*</label>
-                        {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="image">代表圖片*</label>
-                        <input type="file" name="image" id="image" required class="form-control">
-                    </div>
-                    <div class="form-group">
                         <label for="photo_type_id">類別</label>
                         <select name="photo_type_id" class="form-control" id="photo_type_id">
                             <option value="">不分類</option>
@@ -36,6 +28,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="order_by">排序*</label>
+                        {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="image">代表圖片*</label>
+                        <input type="file" name="image" id="image" required class="form-control">
+                    </div>                    
                     <div class="form-group">
                         <label for="name">名稱*</label>
                         {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}

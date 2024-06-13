@@ -10,14 +10,6 @@
             <tbody>
             <tr>
                 <td>
-                    排序
-                    {{ Form::text('order_by',$photo_link->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序數字']) }}
-                </td>
-                <td>
-                    代表圖片
-                    <input type="file" name="image" id="image" class="form-control"><small class="text-secondary">(不改照片則免填，圖片有暫存的問題)</small>
-                </td>
-                <td>
                     類別
                     <?php 
                         $selected0 = ($photo_link->photo_type_id==null)?"selected":null;
@@ -32,13 +24,21 @@
                         @endforeach
                     </select>
                 </td>
+                <td>
+                    排序
+                    {{ Form::text('order_by',$photo_link->order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序數字']) }}
+                </td>
+                <td>
+                    代表圖片
+                    <input type="file" name="image" id="image" class="form-control"><small class="text-secondary">(不改照片則免填，圖片有暫存的問題)</small>
+                </td>                
             </tr>
             <tr>
                 <td>
                     名稱
                     {{ Form::text('name',$photo_link->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                 </td>
-                <td>
+                <td colspan="2">
                     網址
                     {{ Form::text('url',$photo_link->url,['id'=>'url','class' => 'form-control','required'=>'required', 'placeholder' => 'https://']) }}
                 </td>

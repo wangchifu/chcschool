@@ -21,17 +21,17 @@
                 <thead class="thead-light">
                 <tr>
                     <th>id</th>
+                    <th width="100">排序</th>
                     <th>標題</th>
-                    <th>排序</th>
                     <th>動作</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($departments as $department)
                     <tr>
-                        <td>{{ $department->id }}</td>
-                        <td><a href="{{ route('departments.show',$department->id) }}" target="_blank">{{ $department->title }}</a></td>
                         <td>{{ $department->order_by }}</td>
+                        <td>{{ $department->id }}</td>
+                        <td><a href="{{ route('departments.show',$department->id) }}" target="_blank">{{ $department->title }}</a></td>                        
                         <td>
                             <a href="{{ route('departments.edit',$department->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                             <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $department->id }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
