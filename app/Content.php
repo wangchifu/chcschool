@@ -10,5 +10,6 @@ class Content extends Model
         'title',
         'content',
         'power',
+        'views',
     ];
 }

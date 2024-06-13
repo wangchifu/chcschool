@@ -13,13 +13,28 @@
             <div class="card my-4">
                 <h3 class="card-header">
                     @can('create',\App\Post::class)
-                        <a href="{{ route('contents.exec_edit',$content->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 行政人員編輯</a>
-                    @endcan
+                        <a href="{{ route('contents.exec_edit',$content->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
+                    @endcan                                        
                     @auth
+                        @if(auth()->user()->admin)                        
+                            <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $content->id }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                            {{ Form::open(['route' => ['contents.destroy',$content->id], 'method' => 'DELETE','id'=>'delete'.$content->id]) }}
+                            {{ Form::close() }}
+                        @endif
                         @if(auth()->user()->admin)
-                            <a href="{{ route('contents.show_log',$content->id) }}" class="btn btn-info btn-sm" target="_blank">查看 log</a>
+                            <a href="{{ route('contents.show_log',$content->id) }}" class="btn btn-info btn-sm" target="_blank">查看 log ({{ $logs_count }})</a>
                         @endif
                     @endauth
+                    <button type="button" class="btn btn-dark btn-sm" disabled>
+                        點閱 <span class="badge badge-light">{{ $content->views }}</span>
+                      </button>                
+                    @if($content->power==null)
+                    <span class="badge badge-success">公開</span>
+                    @elseif($content->power==2)
+                    <span class="badge badge-success">須登入</span> <span class="badge badge-warning">在網內</span>
+                    @elseif($content->power==3)
+                    <span class="badge badge-success">須登入</span>
+                    @endif
                 </h3>
                 <div class="card-body">
                     <div class="table-responsive">

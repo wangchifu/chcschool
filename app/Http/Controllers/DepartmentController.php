@@ -69,7 +69,21 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        return view('departments.show', compact('department'));
+        $s_key = "dv" . $department->id;
+        if (!session($s_key)) {
+            $att['views'] = $department->views + 1;
+            $department->update($att);            
+        }
+        session([$s_key => '1']);
+
+        $logs_count = Log::where('module','department')->where('this_id',$department->id)->count();
+        session([$s_key => '1']);
+
+        $data = [
+            'logs_count'=>$logs_count,
+            'department'=>$department,
+        ];
+        return view('departments.show',$data);
     }
 
     public function show_log($id)

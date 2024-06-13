@@ -63,7 +63,19 @@ class ContentsController extends Controller
      */
     public function show(Content $content)
     {
-        return view('contents.show', compact('content'));
+        $s_key = "cv" . $content->id;
+        if (!session($s_key)) {
+            $att['views'] = $content->views + 1;
+            $content->update($att);            
+        }
+        $logs_count = Log::where('module','content')->where('this_id',$content->id)->count();
+        session([$s_key => '1']);
+
+        $data = [
+            'logs_count'=>$logs_count,
+            'content'=>$content,
+        ];
+        return view('contents.show',$data);
     }
 
     public function show_log($id)
