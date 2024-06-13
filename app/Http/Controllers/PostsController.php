@@ -450,7 +450,7 @@ class PostsController extends Controller
 
     public function type($type)
     {
-        if ($type == "0") $type = null;
+        if ($type == null) $type = 0;
 
         $posts = Post::where(function ($query) use ($type) {
             $query->where('insite',null)->orWhere('insite',$type);
