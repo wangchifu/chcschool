@@ -10,7 +10,8 @@
                 <div class="card my-4">
                     <h3 class="card-header text-danger">
                         {{ $log->created_at }} 由 {{ $log->user->name }} 送出
-                    </h3>
+                        <a href="{{  route('departments.delete_log',$log->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定？')">刪除此 log</a>                    
+                    </h3>                    
                     <div class="card-body">
                         <div class="table-responsive">
                         {!! $log->content !!}

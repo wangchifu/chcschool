@@ -91,6 +91,12 @@ class ContentsController extends Controller
         return view('logs.content_log', $data);
     }
 
+    public function delete_log(Log $log)
+    {        
+        $log->delete();        
+        return back();
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -99,6 +99,12 @@ class DepartmentController extends Controller
         return view('logs.department_log', $data);
     }
 
+    public function delete_log(Log $log)
+    {        
+        $log->delete();        
+        return back();
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

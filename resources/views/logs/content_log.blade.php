@@ -4,13 +4,14 @@
 
 @section('content')
     @foreach($logs as $log)
-    <hr>
-        <h1 class="text-danger">{{ $log->created_at }} 由 {{ $log->user->name }} 送出</h1>
+    <hr>        
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <h1>{{ $log->title }}</h1>
                 <div class="card my-4">
-                    <h3 class="card-header">
+                    <h3 class="card-header text-danger">
+                        {{ $log->created_at }} 由 {{ $log->user->name }} 送出
+                        <a href="{{  route('contents.delete_log',$log->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定？')">刪除此 log</a>
                     </h3>
                     <div class="card-body">
                         <div class="table-responsive">
