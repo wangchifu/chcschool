@@ -13,7 +13,7 @@
             <div class="card my-4">
                 <h3 class="card-header">
                     @can('create',\App\Post::class)
-                        <a href="{{ route('contents.exec_edit',$content->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
+                        <a href="{{ route('contents.exec_edit',$content->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 行政人員編輯</a>
                     @endcan                                        
                     @auth
                         @if(auth()->user()->admin)                        
