@@ -35,10 +35,18 @@ class PhotoLinksController extends Controller
             $photo_link_data[$type][$photo_link->id]['user_id'] = $photo_link->user_id;
         }
 
+        $photo_type = PhotoType::orderBy('order_by','DESC')->first();
+        if(!empty($photo_type)){
+            $new_order_by = $photo_type->order_by+1;
+        }else{
+            $new_order_by = 1;
+        }
+
         $data = [
             'photo_link_data'=>$photo_link_data,
             'photo_type_array'=>$photo_type_array,
             'photo_types'=>$photo_types,
+            'new_order_by'=>$new_order_by,
         ];
         return view('photo_links.index',$data);
     }
@@ -51,8 +59,31 @@ class PhotoLinksController extends Controller
     public function create()
     {
         $photo_types = PhotoType::orderBy('order_by')->get();
+        
+        $new_type_order_by = [];
+
+        $photo_link = PhotoLink::where(function ($query) {
+            $query->where('photo_type_id',null)->orWhere('photo_type_id','0');
+            })->orderBy('order_by','DESC')->first();
+        if(!empty($photo_link)){
+            $new_link_order_by[0] = $photo_link->order_by+1;
+        }else{
+            $new_link_order_by[0] = 1;
+        }    
+
+        foreach($photo_types as $photo_type){
+            $photo_link = PhotoLink::where('photo_type_id',$photo_type->id)->orderBy('order_by','DESC')->first();
+            if(!empty($photo_link)){
+                $new_link_order_by[$photo_type->id] = $photo_link->order_by+1;
+            }else{
+                $new_link_order_by[$photo_type->id] = 1;
+            }
+        }
+    
+
         $data = [
             'photo_types'=>$photo_types,
+            'new_link_order_by'=>$new_link_order_by,
         ];
         return view('photo_links.create',$data);
     }

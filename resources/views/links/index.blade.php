@@ -27,7 +27,7 @@
                         <table class="table table-striped" style="word-break:break-all;">
                         <tr>
                             <td width="120">
-                                {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序']) }}
+                                {{ Form::number('order_by',$new_type_order_by,['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序']) }}
                             </td>
                             <td>
                                 {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}

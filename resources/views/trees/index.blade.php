@@ -31,8 +31,20 @@
                         <th></th>
                     </tr>
                     <tr>
+                        <script>            
+                            function change_order_by(){
+                                var id = $('#folder_id').find(":selected").val();
+                                let arr = new Array()
+                                @foreach($new_tree_order_by as $k=>$v)
+                                    arr[{{ $k }}] = {{ $v }};
+                                @endforeach
+                                
+                                $('#order_by').val(arr[id]) ;
+                            }
+                                
+                        </script>
                         <td>
-                            {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序']) }}
+                            {{ Form::number('order_by',reset($new_tree_order_by),['id'=>'order_by','class' => 'form-control', 'placeholder' => '排序']) }}
                         </td>
                         <td>
                             {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
@@ -43,7 +55,7 @@
                             <input type="radio" name="type" value="2" id="radio2"><label for="radio2"><i class="fas fa-file"></i> 連結</label>
                         </td>
                         <td>
-                            {{ Form::select('folder_id', $folders,null, ['class' => 'form-control']) }}
+                            {{ Form::select('folder_id', $folders,null, ['id'=>'folder_id','class' => 'form-control','onchange'=>'change_order_by()']) }}
                         </td>
                         <td>
                             {{ Form::text('url',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => 'http://...(選目錄免填)']) }}

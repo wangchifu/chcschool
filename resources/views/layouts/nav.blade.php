@@ -101,6 +101,31 @@
                 @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <!--子選單
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="https://bootstrapthemes.co" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown link
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item dropdown-toggle" href="#">Submenu</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Submenu action</a></li>
+                                <li><a class="dropdown-item" href="#">Another submenu action</a></li>
+    
+    
+                                <li><a class="dropdown-item dropdown-toggle" href="#">Subsubmenu</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Subsubmenu action aa</a></li>
+                                        <li><a class="dropdown-item" href="#">Another subsubmenu action</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                子選單 -->
                 @auth
                     @if(isset($module_setup['校務行政']))
                         <li class="nav-item dropdown @yield('nav_school_active')">

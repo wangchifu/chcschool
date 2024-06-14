@@ -33,6 +33,7 @@
         <!-- icons -->
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
+    <link href="{{ asset('css/bootstrap-4-navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome-5.15.4/css/all.css') }}" rel="stylesheet">
     @yield('in_head')
 </head>
@@ -69,6 +70,7 @@
         @yield('footer')
 </div>
 <script src="{{ asset('bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-4-navbar.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 
 @if($setup->fixed_nav)

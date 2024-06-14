@@ -42,7 +42,17 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return view('departments.create');
+        $department = Department::orderBy('order_by','DESC')->first();
+        if(!empty($department)){
+            $new_order_by = $department->order_by+1;
+        }else{
+            $new_order_by = 1;
+        }
+        
+        $data = [
+            'new_order_by'=>$new_order_by,
+        ];
+        return view('departments.create',$data);
     }
 
     /**

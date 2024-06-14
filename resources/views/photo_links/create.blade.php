@@ -21,16 +21,28 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="photo_type_id">類別</label>
-                        <select name="photo_type_id" class="form-control" id="photo_type_id">
-                            <option value="">不分類</option>
+                        <select name="photo_type_id" class="form-control" id="photo_type_id" onclick="change_order_by()"">
+                            <option value="0">不分類</option>
                             @foreach($photo_types as $photo_type)
                                 <option value="{{ $photo_type->id }}">{{ $photo_type->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
+                        <script>            
+                            function change_order_by(){
+                                var id = $('#photo_type_id').find(":selected").val();
+                                let arr = new Array()
+                                @foreach($new_link_order_by as $k=>$v)
+                                    arr[{{ $k }}] = {{ $v }};
+                                @endforeach
+                                
+                                $('#order_by').val(arr[id]) ;
+                            }
+                                
+                        </script>
                         <label for="order_by">排序*</label>
-                        {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+                        {{ Form::number('order_by',reset($new_link_order_by),['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
                     </div>
                     <div class="form-group">
                         <label for="image">代表圖片*</label>

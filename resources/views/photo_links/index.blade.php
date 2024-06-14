@@ -41,7 +41,9 @@
                             <td>
                                 <form action="{{ route('photo_links.type_store') }}" method="post">
                                 @csrf
-                                {{ Form::number('order_by',null,['id'=>'order_by','class' => 'form-control','required'=>'required', 'placeholder' => '排序']) }}
+                                排序：
+                                {{ Form::number('order_by',$new_order_by,['id'=>'order_by','class' => 'form-control','required'=>'required', 'placeholder' => '排序']) }}
+                                名稱：
                                 {{ Form::text('name',null,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
                                 <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">新增</button>
                                 </form>

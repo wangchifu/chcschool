@@ -5,11 +5,24 @@
     <div class="card-body">
         <div class="form-group">
             <label for="name">類別*</label>
-            {{ Form::select('type_id', $types,null, ['id' => 'type_id', 'class' => 'form-control','required'=>'required']) }}
+            {{ Form::select('type_id', $types,null, ['id' => 'type_id', 'class' => 'form-control','required'=>'required','onchange'=>'change_order_by()']) }}
         </div>       
         <div class="form-group">
             <label for="order_by">排序</label>
-            {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
+            <script>
+            
+                function change_order_by(){
+                    var id = $('#type_id').find(":selected").val();
+                    let arr = new Array()
+                    @foreach($new_link_order_by as $k=>$v)
+                        arr[{{ $k }}] = {{ $v }};
+                    @endforeach
+                    
+                    $('#order_by').val(arr[id]) ;
+                }
+                    
+            </script>
+            {{ Form::text('order_by',reset($new_link_order_by),['id'=>'order_by','class' => 'form-control', 'placeholder' => '數字']) }}
         </div>
         <div class="form-group">
             <label for="name">圖示*</label> <i class="" id="show_icon"></i>

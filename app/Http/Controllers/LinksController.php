@@ -29,8 +29,18 @@ class LinksController extends Controller
             $link_data[$link->type_id][$link->id]['target'] = $link->target;
             $link_data[$link->type_id][$link->id]['order_by'] = $link->order_by;
         }
+
+        $type = Type::orderBy('order_by','DESC')->first();
+        if(!empty($type)){
+            $new_type_order_by = $type->order_by+1;
+        }else{
+            $new_type_order_by = 1;
+        }
+        
+
         $data = [
             'types'=>$types,
+            'new_type_order_by'=>$new_type_order_by,
             'link_data'=>$link_data,
         ];
         return view('links.index',$data);
@@ -44,8 +54,20 @@ class LinksController extends Controller
     public function create()
     {
         $types = Type::orderBy('order_by')->pluck('name', 'id')->toArray();
+        
+        $new_link_order_by = [];
+        foreach($types as $k=>$v){
+            $link = Link::where('type_id',$k)->orderBy('order_by','DESC')->first();
+            if(!empty($link)){
+                $new_link_order_by[$k] = $link->order_by+1;
+            }else{
+                $new_link_order_by[$k] = 1;
+            }
+        }
+        
         $data = [
             'types'=>$types,
+            'new_link_order_by'=>$new_link_order_by,
         ];
         return view('links.create',$data);
     }
