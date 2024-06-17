@@ -81,7 +81,23 @@
                 </div>
             </td>
             <td>
-
+                <?php 
+                    if($block->disable_block_line==null){
+                            $select1 = "selected";
+                            $select2 = null;
+                        }
+                    if($block->disable_block_line=="1"){
+                            $select1 = null;
+                            $select2 = "selected";
+                        }
+                ?>
+                <div class="form-group">
+                    <label for="site_name">6.框線</label>
+                    <select class="form-control" name="disable_block_line">
+                        <option value="" {{ $select1 }}>*有*框線</option>
+                        <option value="1" {{ $select2 }}>*無*框線</option>
+                    </select>
+                </div>
             </td>
         </tr>
         <tr>

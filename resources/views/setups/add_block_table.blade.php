@@ -25,17 +25,39 @@
                     {{ Form::text('title',null,['class' => 'form-control','required'=>'required']) }}
                 </div>
             </td>
+        </tr>
+        <tr>
             <td>
                 <div class="form-group">
                     <label for="site_name">4.<a href="{{ route('setups.block_color') }}">顏色</a></label>
                     {{ Form::select('block_color', $block_colors,null, ['class' => 'form-control','placeholder'=>'']) }}
                 </div>
             </td>
+            <td>
+                <div class="form-group">
+                    <label for="block_position">5.標題位置</a></label>
+                    <select name="block_position" id="block_position" class="form-control">
+                        <option value="text-left">置左</option>
+                        <option value="text-center">置中</option>
+                        <option value="text-right">置右</option>
+                        <option value="disable">不顯示標題</option>
+                    </select>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <label for="site_name">6.框線</label>
+                    <select class="form-control" name="disable_block_line">
+                        <option value="">*有*框線</option>
+                        <option value="1">*無*框線</option>
+                    </select>
+                </div>
+            </td>
         </tr>
         <tr>
-            <td colspan="4">
+            <td colspan="3">
                 <div class="form-group">
-                    <label for="content">4.內文*</label>
+                    <label for="content">7.內文*</label>
                     {{ Form::textarea('content',null,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
                 </div>
             </td>

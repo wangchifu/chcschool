@@ -13,6 +13,7 @@ class Block extends Model
         'setup_col_id',
         'block_color',
         'block_position',
+        'disable_block_line',
     ];
 
     public function setup_col()

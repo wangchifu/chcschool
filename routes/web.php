@@ -525,6 +525,7 @@ Route::group(['middleware' => 'admin'], function () {
 
     //內容管理
     Route::get('contents', 'ContentsController@index')->name('contents.index');
+    Route::get('contents/search/{tag}', 'ContentsController@search')->name('contents.search');
     Route::get('contents/create', 'ContentsController@create')->name('contents.create');
     Route::get('contents/show_log/{id}', 'ContentsController@show_log')->name('contents.show_log');
     Route::get('contents/delete_log/{log}', 'ContentsController@delete_log')->name('contents.delete_log');

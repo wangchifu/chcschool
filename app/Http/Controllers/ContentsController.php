@@ -26,7 +26,22 @@ class ContentsController extends Controller
     public function index()
     {
         $contents = Content::all();
-        return view('contents.index', compact('contents'));
+        $tag = null;
+        $data = [
+            'contents'=>$contents,
+            'tag'=>$tag,
+        ];
+        return view('contents.index',$data);
+    }
+
+    public function search($tag=null)
+    {
+        $contents = Content::where('tags','like','%'.$tag.'%')->get();
+        $data = [
+            'contents'=>$contents,
+            'tag'=>$tag,
+        ];
+        return view('contents.index', $data);
     }
 
     /**
@@ -51,8 +66,10 @@ class ContentsController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
-        Content::create($request->all());
-        return redirect()->route('contents.index');
+        $att= $request->all();
+        $att['tags'] = str_replace(" ","",$att['tags']);
+        Content::create($att);
+        return back();
     }
 
     /**
@@ -126,7 +143,9 @@ class ContentsController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
-        $content->update($request->all());
+        $att= $request->all();
+        $att['tags'] = str_replace(" ","",$att['tags']);
+        $content->update($att);
 
         $att['module'] = "content";
         $att['this_id'] = $content->id;
@@ -171,6 +190,6 @@ class ContentsController extends Controller
         ->delete();
 
         $content->delete();
-        return redirect()->route('contents.index');
+        return back();
     }
 }

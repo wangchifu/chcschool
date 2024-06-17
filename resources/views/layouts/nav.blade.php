@@ -57,8 +57,14 @@
                 @endif
                 @if(isset($module_setup['選單連結']))
                     <?php 
-                        $types = \App\Type::orderBy('order_by')->get();
+                        $types = \App\Type::where('type_id',null)->orderBy('order_by')->get();
+                        $type2s = \App\Type::where('type_id','<>',null)->orderBy('order_by')->get();
                         $links = \App\Link::orderBy('order_by')->get();
+                        $type2_data = [];
+                        foreach($type2s as $type2){
+                            $type2_data[$type2->type_id][$type2->id]['name'] = $type2->name;
+                        }
+                        
                         $link_data = [];
                         foreach($links as $link){
                             $link_data[$link->type_id][$link->id]['target'] = $link->target;
@@ -68,21 +74,49 @@
                         }
                     ?>
                     @foreach($types as $type)
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://bootstrapthemes.co" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ $type->name }}
                             </a>
-                            <?php
-                            //$links = \App\Link::where('type_id',$type->id)->orderBy('order_by')->get();
-                            ?>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @if(isset($type2_data[$type->id]))
+                                    @foreach($type2_data[$type->id] as $k=>$v)
+                                    <li>
+                                        <a class="dropdown-item dropdown-toggle" href="#">
+                                            <i class="fas fa-folder"></i> {{ $v['name'] }}
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            @if(isset($link_data[$k]))
+                                                @foreach($link_data[$k] as $k2=>$v2)
+                                                <?php
+                                                    if($v2['target'] == null) $target = "_blank";
+                                                    if($v2['target'] == "_self") $target = "_self";
+                                                ?>
+                                                    <li><a class="dropdown-item" href="{{ $v2['url'] }}" target="{{ $target }}">
+                                                        @if($v2['icon']==null)
+                                                        <i class="fas fa-globe"></i>
+                                                        @else
+                                                        <i class="{{ $v2['icon'] }}"></i>
+                                                        @endif
+                                                        {{ $v2['name'] }}
+                                                        @if($v2['target'] == null)
+                                                        <i class="fas fa-level-up-alt"></i>
+                                                        @endif
+                                                    </a></li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </li>
+                                    @endforeach
+                                @endif
                                 @if(isset($link_data[$type->id]))
                                     @foreach($link_data[$type->id] as $k=>$v)
                                         <?php
                                             if($v['target'] == null) $target = "_blank";
                                             if($v['target'] == "_self") $target = "_self";
                                         ?>
-                                        <a class="dropdown-item" href="{{ $v['url'] }}" target="{{ $target }}">
+                                        
+                                        <li><a class="dropdown-item" href="{{ $v['url'] }}" target="{{ $target }}">
                                             @if($v['icon']==null)
                                             <i class="fas fa-globe"></i>
                                             @else
@@ -92,10 +126,10 @@
                                             @if($v['target'] == null)
                                             <i class="fas fa-level-up-alt"></i>
                                             @endif
-                                        </a>
+                                        </a></li>
                                     @endforeach
                                 @endif
-                            </div>
+                            </ul>
                         </li>
                     @endforeach
                 @endif

@@ -7,6 +7,10 @@
             {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required', 'placeholder' => '標題']) }}
         </div>
         <div class="form-group">
+          <label for="tags">標籤</label><small class="text-secondary"> (請用,分隔多個標籤)</small>
+          {{ Form::text('tags',null,['id'=>'tags','class' => 'form-control', 'placeholder' => '標籤']) }}
+      </div>
+        <div class="form-group">
             <label for="content">內文*</label>
             {{ Form::textarea('content',null,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
         </div>

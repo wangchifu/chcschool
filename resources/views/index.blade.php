@@ -68,6 +68,7 @@
                             $block_color[0] = "original-block";
                             $block_color[1] = "original-title";
                         }
+                        $rounded = ($block->disable_block_line == 1)?"rounded":null;
                     ?>
 
                     @if($block->title == "榮譽榜跑馬燈")
@@ -77,9 +78,11 @@
                             </div>
                         </div>
                     @else
+                    @if($block->disable_block_line != 1)
                     <div class="shadow rounded {{ $block_color[0] }}">
+                    @endif
                         @if($block->block_position != "disable")
-                        <div class="{{ $block_color[1] }}">
+                        <div class="{{ $block_color[1] }} {{ $rounded }}">
                             <?php
                                 $title = str_replace_last("(系統區塊)","",$block->title);
                                 $title = str_replace_last("_圖文版","",$title);
@@ -128,9 +131,11 @@
                             @else
                                 {!! $block->content !!}
                             @endif
-                            </div>
                         </div>
+                        </div>
+                    @if($block->disable_block_line != 1)
                     </div>
+                    @endif
                     @endif
                 @endforeach
             </div>

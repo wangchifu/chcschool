@@ -15,8 +15,15 @@ class LinksController extends Controller
      */
     public function index()
     {
-        $types= Type::orderBy('order_by')
+        $types= Type::where('type_id',null)->orderBy('order_by')
             ->get();
+        $type_array = [];
+        foreach($types as $type){
+            $type_array[$type->id] = $type->name;
+        }
+        $type2s= Type::where('type_id',"<>",null)->orderBy('type_id')->orderBy('order_by')
+            ->get();
+        
         $links = Link::orderBy('type_id')
             ->orderBy('order_by')
             ->get();
@@ -40,6 +47,8 @@ class LinksController extends Controller
 
         $data = [
             'types'=>$types,
+            'type2s'=>$type2s,
+            'type_array'=>$type_array,
             'new_type_order_by'=>$new_type_order_by,
             'link_data'=>$link_data,
         ];
@@ -53,7 +62,14 @@ class LinksController extends Controller
      */
     public function create()
     {
-        $types = Type::orderBy('order_by')->pluck('name', 'id')->toArray();
+        $types = Type::where('type_id',null)->orderBy('order_by')->get();
+        foreach($types as $type){
+            $type_array[$type->id] = $type->name;
+            $type2s = Type::where('type_id',$type->id)->orderBy('order_by')->get();
+            foreach($type2s aS $type2){
+                $type_array[$type2->id] = "---->".$type2->name;
+            }
+        }
         
         $new_link_order_by = [];
         foreach($types as $k=>$v){
@@ -66,7 +82,7 @@ class LinksController extends Controller
         }
         
         $data = [
-            'types'=>$types,
+            'type_array'=>$type_array,
             'new_link_order_by'=>$new_link_order_by,
         ];
         return view('links.create',$data);
@@ -117,10 +133,17 @@ class LinksController extends Controller
      */
     public function edit(Link $link)
     {
-        $types = Type::orderBy('order_by')->pluck('name', 'id')->toArray();
+        $types = Type::where('type_id',null)->orderBy('order_by')->get();
+        foreach($types as $type){
+            $type_array[$type->id] = $type->name;
+            $type2s = Type::where('type_id',$type->id)->orderBy('order_by')->get();
+            foreach($type2s aS $type2){
+                $type_array[$type2->id] = "---->".$type2->name;
+            }
+        }
         $data = [
             'link'=>$link,
-            'types'=>$types,
+            'type_array'=>$type_array,
         ];
         return view('links.edit',$data);
     }

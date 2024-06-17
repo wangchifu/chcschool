@@ -69,9 +69,9 @@
 <div class="table-responsive">
         @yield('footer')
 </div>
+<script src="{{ asset('js/popper2.min.js') }}"></script>
 <script src="{{ asset('bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-4-navbar.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
 
 @if($setup->fixed_nav)
 <link href="{{ asset('css/navbar-top-fixed.css') }}" rel="stylesheet">

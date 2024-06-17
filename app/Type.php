@@ -8,7 +8,8 @@ class Type extends Model
 {
     protected $fillable = [
         'name',
-        'order_by'
+        'order_by',
+        'type_id',
     ];
 
     public function links()

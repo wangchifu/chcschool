@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="name">類別*</label>
-                        {{ Form::select('type_id', $types,null, ['id' => 'type_id', 'class' => 'form-control','required'=>'required']) }}
+                        {{ Form::select('type_id', $type_array,null, ['id' => 'type_id', 'class' => 'form-control','required'=>'required']) }}
                     </div>
                     <div class="form-group">
                         <label for="order_by">排序</label>
