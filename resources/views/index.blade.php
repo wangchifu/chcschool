@@ -147,7 +147,11 @@
 
 @section('footer')
     @if(!empty($setup->footer))
-        <footer class="font-small bg-light py-4">
+        <style>
+            #footer{background-color:#f8f9fa;}
+            #footer_bottom{background-color: #CCCCCC;}
+        </style>
+        <footer class="font-small py-4" id="footer">
             <div class="container-fluid text-center text-md-left">
                     <div class="row justify-content-center">
                         <div class="col-md-11">
@@ -159,7 +163,7 @@
             </div>
         </footer>
     @endif
-    <div class="footer-copyright text-center text-black-50 py-3" style="background-color: #CCCCCC">
+    <div class="footer-copyright text-center text-black-50 py-3" id="footer_bottom">
         {{ date('Y') }} Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
     </div>
 @endsection
