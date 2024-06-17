@@ -154,72 +154,73 @@
                 @foreach($types as $type)
                     @if($p==1)
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            @if(isset($link_data[$type->id]))
-                                <table class="table table-striped" style="word-break:break-all;">
-                                    <thead class="thead-light">
+                            
+                            <table class="table table-striped" style="word-break:break-all;">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th width="100">類別</th>
+                                    <th width="60">排序</th>
+                                    <th>圖示+名稱</th>
+                                    <th>目標</th>                                        
+                                    <th>動作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                    $folders = \App\Type::where('type_id',$type->id)->orderBy('order_by')->get();
+                                ?>
+                                @foreach($folders as $folder)
                                     <tr>
-                                        <th width="100">類別</th>
-                                        <th width="60">排序</th>
-                                        <th>圖示+名稱</th>
-                                        <th>目標</th>                                        
-                                        <th>動作</th>
+                                        <td>
+                                            {{  $type->name }}
+                                        </td>
+                                        <td>
+                                            {{ $folder->order_by }}
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-folder"></i> {{ $folder->name }}
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            1
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                        $folders = \App\Type::where('type_id',$type->id)->orderBy('order_by')->get();
-                                    ?>
-                                    @foreach($folders as $folder)
+                                    @if(isset($link_data[$folder->id]))
+                                        @foreach($link_data[$folder->id] as $k=>$v)
                                         <tr>
                                             <td>
-                                                {{  $type->name }}
+                                                
                                             </td>
                                             <td>
-                                                {{ $folder->order_by }}
+                                                {{ $v['order_by'] }}
                                             </td>
                                             <td>
-                                                <i class="fas fa-folder"></i> {{ $folder->name }}
+                                                ---->
+                                                @if($v['icon']==null)
+                                                <i class="fas fa-globe"></i>
+                                                @else
+                                                <i class="{{ $v['icon'] }}"></i>
+                                                @endif
+                                                <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
                                             </td>
                                             <td>
-
-                                            </td>
+                                                @if($v['target']==null)
+                                                    開新視窗 <i class="fas fa-level-up-alt"></i>
+                                                @elseif($v['target']=="_self")
+                                                    本視窗
+                                                @endif
+                                            </td>                                            
                                             <td>
-                                                1
+                                                <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                                                <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
                                             </td>
                                         </tr>
-                                        @if(isset($link_data[$folder->id]))
-                                            @foreach($link_data[$folder->id] as $k=>$v)
-                                            <tr>
-                                                <td>
-                                                    
-                                                </td>
-                                                <td>
-                                                    {{ $v['order_by'] }}
-                                                </td>
-                                                <td>
-                                                    ---->
-                                                    @if($v['icon']==null)
-                                                    <i class="fas fa-globe"></i>
-                                                    @else
-                                                    <i class="{{ $v['icon'] }}"></i>
-                                                    @endif
-                                                    <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
-                                                </td>
-                                                <td>
-                                                    @if($v['target']==null)
-                                                        開新視窗 <i class="fas fa-level-up-alt"></i>
-                                                    @elseif($v['target']=="_self")
-                                                        本視窗
-                                                    @endif
-                                                </td>                                            
-                                                <td>
-                                                    <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                                    <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        @endif
-                                    @endforeach
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                                @if(isset($link_data[$type->id]))
                                     @foreach($link_data[$type->id] as $k=>$v)
                                         <tr>
                                             <td>
@@ -251,13 +252,13 @@
                                         {{ Form::open(['route' => ['links.destroy',$v['id']], 'method' => 'DELETE','id'=>'delete'.$v['id'],'onsubmit'=>'return false;']) }}
                                         {{ Form::close() }}
                                     @endforeach
-                                    </tbody>
-                                </table>
-                            @endif
+                                @endif
+                                </tbody>
+                            </table>                            
                         </div>
                     @else
                         <div class="tab-pane fade" id="link{{ $p }}" role="tabpanel" aria-labelledby="link{{ $p }}-tab">
-                            @if(isset($link_data[$type->id]))
+                            
                                 <table class="table table-striped" style="word-break:break-all;">
                                     <thead class="thead-light">
                                     <tr>
@@ -323,40 +324,42 @@
                                             @endforeach
                                         @endif
                                     @endforeach
-                                    @foreach($link_data[$type->id] as $k=>$v)
-                                        <tr>
-                                            <td>
-                                                {{ $type->name }}
-                                            </td>
-                                            <td>
-                                                {{ $v['order_by'] }}
-                                            </td>
-                                            <td>
-                                                @if($v['icon']==null)
-                                                <i class="fas fa-globe"></i>
-                                                @else
-                                                <i class="{{ $v['icon'] }}"></i>
-                                                @endif
-                                                <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
-                                            </td>
-                                            <td>
-                                                @if($v['target']==null)
-                                                    開新視窗 <i class="fas fa-level-up-alt"></i>
-                                                @elseif($v['target']=="_self")
-                                                    本視窗
-                                                @endif
-                                            </td>                                            
-                                            <td>
-                                                <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                                <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
-                                            </td>
-                                        </tr>
-                                        {{ Form::open(['route' => ['links.destroy',$v['id']], 'method' => 'DELETE','id'=>'delete'.$v['id'],'onsubmit'=>'return false;']) }}
-                                        {{ Form::close() }}
-                                    @endforeach
+                                    @if(isset($link_data[$type->id]))
+                                        @foreach($link_data[$type->id] as $k=>$v)
+                                            <tr>
+                                                <td>
+                                                    {{ $type->name }}
+                                                </td>
+                                                <td>
+                                                    {{ $v['order_by'] }}
+                                                </td>
+                                                <td>
+                                                    @if($v['icon']==null)
+                                                    <i class="fas fa-globe"></i>
+                                                    @else
+                                                    <i class="{{ $v['icon'] }}"></i>
+                                                    @endif
+                                                    <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
+                                                </td>
+                                                <td>
+                                                    @if($v['target']==null)
+                                                        開新視窗 <i class="fas fa-level-up-alt"></i>
+                                                    @elseif($v['target']=="_self")
+                                                        本視窗
+                                                    @endif
+                                                </td>                                            
+                                                <td>
+                                                    <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
+                                                    <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                                </td>
+                                            </tr>
+                                            {{ Form::open(['route' => ['links.destroy',$v['id']], 'method' => 'DELETE','id'=>'delete'.$v['id'],'onsubmit'=>'return false;']) }}
+                                            {{ Form::close() }}
+                                        @endforeach
+                                    @endif
                                     </tbody>
                                 </table>
-                            @endif
+                          
                         </div>
                     @endif
                 <?php $p++; ?>
