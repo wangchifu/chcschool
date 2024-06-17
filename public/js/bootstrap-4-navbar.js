@@ -25,7 +25,7 @@ $( document ).ready( function () {
         } );
         
          if ( !$parent.parent().hasClass( 'navbar-nav' ) ) {
-            $el.next().css( { "top": $el[0].offsetTop, "left": $parent.outerWidth() - 4 } );
+            $el.next().css( { "top": $el[0].offsetTop, "right": $parent.outerWidth() - 4 } );
         }
 
         return false;
