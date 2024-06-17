@@ -78,14 +78,14 @@
                             <a class="nav-link dropdown-toggle" href="https://bootstrapthemes.co" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ $type->name }}
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 @if(isset($type2_data[$type->id]))
                                     @foreach($type2_data[$type->id] as $k=>$v)
                                     <li>
                                         <a class="dropdown-item dropdown-toggle" href="#">
                                             <i class="fas fa-folder"></i> {{ $v['name'] }}
                                         </a>
-                                        <ul class="dropdown-menu">
+                                        <ul class="dropdown-menu dropdown-menu-right">
                                             @if(isset($link_data[$k]))
                                                 @foreach($link_data[$k] as $k2=>$v2)
                                                 <?php

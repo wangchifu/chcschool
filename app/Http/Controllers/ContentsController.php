@@ -69,7 +69,7 @@ class ContentsController extends Controller
         $att= $request->all();
         $att['tags'] = str_replace(" ","",$att['tags']);
         Content::create($att);
-        return back();
+        return redirect()->route('contents.index');
     }
 
     /**
