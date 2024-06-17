@@ -14,6 +14,7 @@
         session([$setup_key => '1']);
 
         $nav_color = (empty($setup->nav_color))?"navbar-dark bg-dark":"navbar-custom";
+        $bg_color = (empty($setup->bg_color))?"#f0f1f6":$setup->bg_color;
         $navbar_custom = (empty($setup->nav_color))?['0'=>'','1'=>'','2'=>'','3'=>'']:explode(",",$setup->nav_color);
     ?>
     @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
@@ -36,7 +37,7 @@
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
 </head>
 
-<body id="page-top" style="background-color:#f0f1f6;font-family:'Arial','Microsoft YaHei','黑體','宋體',sans-serif;">
+<body id="page-top" style="background-color:{{ $bg_color }};font-family:'Arial','Microsoft YaHei','黑體','宋體',sans-serif;">
 <style>
     .navbar-custom {
         background-color: {{ $navbar_custom[0] }};

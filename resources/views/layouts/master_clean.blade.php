@@ -6,6 +6,7 @@
         $school_code = school_code();
         $setup = \App\Setup::find(1);
         $nav_color = (empty($setup->nav_color))?"navbar-dark bg-dark":"navbar-custom";
+        $bg_color = (empty($setup->bg_color))?"#f0f1f6":$setup->bg_color;
         $navbar_custom = (empty($setup->nav_color))?['0'=>'','1'=>'','2'=>'','3'=>'']:explode(",",$setup->nav_color);
     ?>
     @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))

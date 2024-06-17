@@ -19,5 +19,6 @@ class Setup extends Model
         'ipv6',
         'all_post',
         'close_website',
+        'bg_color',
     ];
 }

@@ -195,6 +195,7 @@ class SetupController extends Controller
         $att['ip1'] = $request->input('ip1');
         $att['ip2'] = $request->input('ip2');
         $att['ipv6'] = $request->input('ipv6');
+        $att['bg_color'] = $request->input('bg_color');
         if ($request->input('set_close_website') == "off") {
             $att['close_website'] = (empty($request->input('close_website'))) ? "網站關閉" : $request->input('close_website');
         }

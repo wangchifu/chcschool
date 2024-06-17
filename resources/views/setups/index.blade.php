@@ -23,6 +23,12 @@
             $active[4] = "";
             $active[5] = "";
             $active[6] = "";
+            $nav_color = explode(',',$setup->nav_color);
+            $c1 = (empty($nav_color[0]))?"#DD0F20":$nav_color[0];
+            $c2 = (empty($nav_color[1]))?"#F18A31":$nav_color[1];
+            $c3 = (empty($nav_color[2]))?"#F8EB48":$nav_color[2];
+            $c4 = (empty($nav_color[3]))?"#16813D":$nav_color[3];
+            $c5 = (empty($setup->bg_color))?"#f0f1f6":$setup->bg_color;            
             ?>
             @include('setups.nav',$active)
             <div class="card my-4">
@@ -65,6 +71,18 @@
                     <div class="form-group">
                         <label for="views">瀏覽人數</label>
                         {{ Form::text('views',$setup->views,['class' => 'form-control','required'=>'required']) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="basic-addon5">網頁背景色</label>[<a href="https://www.toolskk.com/color" target="_blank">色碼表</a>]
+                        <div id="cp5" class="input-group mb-3 colorpicker-component">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon5">網頁背景色</span>
+                            </div>
+                            <input type="text" class="form-control input-lg" value="{{ $c5 }}" id="nav_color4" name="bg_color">
+                            <div class="input-group-append">
+                                <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="footer">置底</label>
@@ -113,17 +131,10 @@
                     {{ Form::close() }}
                 </div>
             </div>
-            <?php
-                $nav_color = explode(',',$setup->nav_color);
-                $c1 = (empty($nav_color[0]))?"#DD0F20":$nav_color[0];
-                $c2 = (empty($nav_color[1]))?"#F18A31":$nav_color[1];
-                $c3 = (empty($nav_color[2]))?"#F8EB48":$nav_color[2];
-                $c4 = (empty($nav_color[3]))?"#16813D":$nav_color[3];
-            ?>
             {{ Form::open(['route' => ['setups.nav_color',$setup->id], 'method' => 'patch','id'=>'this_form2']) }}
             <div class="card my-4">
                 <h3 class="card-header">導覽列設定</h3>
-                <div class="card-body">
+                <div class="card-body">                    
                     <?php 
                         $checked = ($setup->fixed_nav)?"checked":null;
                     ?>
@@ -131,6 +142,7 @@
                         <input type="checkbox" name="fixed_nav" class="custom-control-input" id="customCheck1" {{ $checked }}>
                         <label class="custom-control-label" for="customCheck1">固定導覽列？</label>                        
                       </div>
+                      [<a href="https://www.toolskk.com/color" target="_blank">色碼表</a>]
                     <div id="cp1" class="input-group mb-3 colorpicker-component">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">導覽列顏色</span>
@@ -189,7 +201,7 @@
             $('#mycp').colorpicker();
         });
         $(function () {
-            $('#cp1,#cp2,#cp3,#cp4').colorpicker();
+            $('#cp1,#cp2,#cp3,#cp4,#cp5').colorpicker();
         });
 
 
