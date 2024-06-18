@@ -181,11 +181,12 @@ class HomeController extends Controller
             $marquee_css = "direction='left' height='30' scrollamount='5' align='midden'";
         }
 
+        $post_show_number = ($setup->post_show_number)?$setup->post_show_number:10;
         $posts = Post::where(function ($query) {
             $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
             })->orderBy('top', 'DESC')
             ->orderBy('created_at', 'DESC')
-            ->paginate(10);
+            ->paginate($post_show_number);
 
         //榮譽榜資料庫資料
         $honors = Post::where('insite', '2')
@@ -228,6 +229,7 @@ class HomeController extends Controller
             'photo_types'=>$photo_types,
             'post_types' => $post_types,
             'post_type_array' => $post_type_array,
+            'post_show_number'=>$post_show_number,
         ];
         return view('index', $data);
     }

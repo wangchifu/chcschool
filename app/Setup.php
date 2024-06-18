@@ -11,6 +11,7 @@ class Setup extends Model
         'fixed_nav',
         'nav_color',
         'photo_link_number',
+        'post_show_number',
         'title_image',
         'views',
         'footer',

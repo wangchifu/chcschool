@@ -116,7 +116,7 @@
                     $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
                 })->orderBy('top','DESC')
                 ->orderBy('created_at','DESC')
-                ->paginate(10);
+                ->paginate($post_show_number);
             ?>
             @auth
                 @can('create',\App\Post::class)

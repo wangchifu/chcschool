@@ -469,6 +469,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::patch('setups/{setup_col}/update_col', 'SetupController@update_col')->name('setups.update_col');
     Route::delete('setups/{setup_col}/delete_col', 'SetupController@delete_col')->name('setups.delete_col');
     Route::post('setups/all_post', 'SetupController@all_post')->name('setups.all_post');
+    Route::post('setups/post_show_number', 'SetupController@post_show_number')->name('setups.post_show_number');
 
     //區塊管理
     Route::get('setups/block', 'SetupController@block')->name('setups.block');
