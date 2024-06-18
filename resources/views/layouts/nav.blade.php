@@ -7,10 +7,22 @@
         background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
     }
 
+    /* 解決手機狀態下固定 Navbar 時下拉選單無法滾動的問題 */
+    @media (max-width: 767.98px) {
+    .navbar.fixed-top {
+        overflow-y: auto !important; /* 允許 Navbar 滾動 */
+        -webkit-overflow-scrolling: touch; /* 改善滾動效果 */
+    }
+    .navbar-collapse {
+        max-height: calc(100vh - 56px); /* 調整 Navbar 折疊時的最大高度 */
+        overflow-y: auto; /* 允許 Navbar 折疊內容滾動 */
+    }
+}
+
 </style>
 <?php
     //$setup = \App\Setup::first();
-    $fixed_top = ($setup->fixed_nav)?"fixed-top":null;
+    $fixed_top = ($setup->fixed_nav)?"fixed-top ":null;
 ?>
 
 <nav class="navbar navbar-expand-lg {{ $nav_color }} {{ $fixed_top }}" id="mainNav">
