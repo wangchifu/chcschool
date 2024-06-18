@@ -60,7 +60,17 @@
                     </script>
                     @include('layouts.hd')
                     <div class="form-group">
-                        <label for="files[]">7.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )
+                        <label for="photos[]">7.相關照片( 單檔不大於5MB的圖檔 )</label>
+                        <small class="text-danger">(注意！請勿將公告當成圖庫相簿使用，單次也不要超過十張以上的照片，若造成伺服器負擔，經查證將取消貴校此功能。)</small>
+                        @if($per < 100)
+                        {{ Form::file('photos[]', ['class' => 'form-control','multiple'=>'multiple', 'accept'=>'image/*']) }}
+                        @else
+                        <br>
+                        <span class="text-danger">容量已滿！無法上傳照片了！</span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <label for="files[]">8.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )
                         <small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small>
                         </label>
                         @if($per < 100)

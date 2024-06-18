@@ -338,6 +338,7 @@ Route::group(['middleware' => 'exec'], function () {
     Route::get('posts/{post}/delete_title_image', 'PostsController@delete_title_image')->name('posts.delete_title_image');
     //刪檔案
     Route::get('posts/{post}/delete_file/{filename}', 'PostsController@delete_file')->name('posts.delete_file');
+    Route::get('posts/{post}/delete_photo/{filename}', 'PostsController@delete_photo')->name('posts.delete_photo');
 
     //公開文件
     Route::get('open_files_create', 'OpenFileController@create')->name('open_files.create');

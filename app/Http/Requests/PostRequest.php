@@ -29,6 +29,7 @@ class PostRequest extends FormRequest
             'content' => 'required',
             'job_title' => 'required',
             'files.*' => 'nullable|mimes:csv,txt,zip,jpeg,png,pdf,odt,ods|max:10240',
+            'photos.*' => 'nullable|mimes:jpeg,png|max:600000',
         ];
     }
 
@@ -44,6 +45,11 @@ class PostRequest extends FormRequest
         for($i=0;$i<20;$i++){
             $j = $i+1;
             $att['files.'.$i] = "附件".$j;
+        }
+
+        for($i=0;$i<20;$i++){
+            $j = $i+1;
+            $att['photos.'.$i] = "照片".$j;
         }
         return $att;
     }

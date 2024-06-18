@@ -21,6 +21,7 @@
         $title = str_limit($post->title,80);
         //有無附件
         $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
+        $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
         $n=2;
         ?>
         <tr>
@@ -53,9 +54,12 @@
                         $content = str_replace('&nbsp;','',$content);
                     ?>
                     {{ $content }}
-                    @if(!empty($files))
+                    @if(!empty($photos))
                         <br>
-                        <span class="text-info"><i class="fas fa-file"></i> [附件]</span>
+                        <span class="text-success"><i class="fas fa-images"></i></span>
+                    @endif
+                    @if(!empty($files))
+                        <span class="text-info"><i class="fas fa-download"></i></span>
                     @endif
                     <div class="text-secondary">
                         @if($post->insite==null)

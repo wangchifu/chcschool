@@ -4,6 +4,11 @@
 
 @section('title', '顯示公告 | ')
 
+@section('in_head')
+    <link rel="stylesheet" href="{{ asset('venobox/venobox.min.css') }}" type="text/css" media="screen">
+    <script src="{{ asset('venobox/venobox.min.js') }}"></script>
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
 
@@ -113,6 +118,19 @@
                         @endif
                     </p>
                 </div>
+                @if(!empty($photos) and $can_see)
+                <hr>
+                <div class="card my-4">
+                    <h5 class="card-header">相關照片</h5>
+                    <div class="card-body">
+                    @foreach($photos as $k=>$v)
+                    <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="venobox" data-gall="gall1">
+                        <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="..." class="img-thumbnail col-2">
+                    </a>
+                    @endforeach
+                    </div>
+                </div>
+                @endif
                 @if(!empty($files) and $can_see)
                 <hr>
                 <div class="card my-4">
@@ -143,4 +161,18 @@
         </div>
 
     </div>
+    <script>
+        var vb = new VenoBox({
+            selector: '.venobox',
+            numeration: true,
+            infinigall: true,
+            //share: ['facebook', 'twitter', 'linkedin', 'pinterest', 'download'],
+            spinner: 'rotating-plane'
+        });
+    
+        $(document).on('click', '.vbox-close', function() {
+            vb.close();
+        });
+    
+    </script>
 @endsection

@@ -66,7 +66,26 @@
                     </script>
                     @include('layouts.hd')
                     <div class="form-group">
-                        <label for="files[]">7.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ 詳細公文 ] [ 轉檔教學 ] )</label>
+                        <label for="photos[]">7.相關照片( 單檔不大於5MB的圖檔 )</label>
+                        <small class="text-danger">(注意！請勿將公告當成圖庫相簿使用，單次也不要超過十張以上的照片，若造成伺服器負擔，經查證將取消貴校此功能。)</small>
+                        <br>
+                        @if(!empty($photos))
+                            @foreach($photos as $k=>$v)
+                            <figure class="figure col-2">
+                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+                                <figcaption class="figure-caption"><a href="{{ route('posts.delete_photo',['post'=>$post->id,'filename'=>$v]) }}" class="badge badge-danger" onclick="return confirm('確定刪除？')" style="margin: 5px;"><i class="fas fa-times-circle"></i> {{ $v }}</a></figcaption>
+                              </figure>
+                            @endforeach
+                        @endif
+                        @if($per < 100)
+                        {{ Form::file('photos[]', ['class' => 'form-control','multiple'=>'multiple', 'accept'=>'image/*']) }}
+                        @else
+                        <br>
+                        <span class="text-danger">容量已滿！無法上傳照片了！</span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <label for="files[]">8.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ 詳細公文 ] [ 轉檔教學 ] )</label>
                         <br>
                         @if(!empty($files))
                             @foreach($files as $k=>$v)

@@ -9,6 +9,7 @@ use App\Setup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Intervention\Image\Facades\Image;
 
 class PostsController extends Controller
 {
@@ -170,6 +171,27 @@ class PostsController extends Controller
             }
         }
 
+        //處理照片上傳
+        if ($request->hasFile('photos')) {
+            $photos = $request->file('photos');
+            foreach ($photos as $photo) {
+                $info2 = [
+                    'mime-type' => $photo->getMimeType(),
+                    'original_filename' => $photo->getClientOriginalName(),
+                    'extension' => $photo->getClientOriginalExtension(),
+                    'size' => $photo->getClientSize(),
+                ];
+
+                $photo->storeAs($folder.'/photos', $info2['original_filename']);
+
+                //縮圖
+                $img = Image::make($photo->getRealPath());
+                $img->resize(1024, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save(storage_path('app/public/'. $school_code.'/posts/'.$post->id.'/photos/'.$info2['original_filename']));
+            }
+        }
+
         if ($att['insite'] == null) {
             return redirect()->route('posts.type', 0);
         } else {
@@ -221,6 +243,7 @@ class PostsController extends Controller
 
         //有無附件
         $files = get_files(storage_path('app/public/' . $school_code . '/posts/' . $post->id . '/files'));
+        $photos = get_files(storage_path('app/public/' . $school_code . '/posts/' . $post->id . '/photos'));
 
         $today = Carbon::today();
         $next_month = $today->subMonth(1);
@@ -237,6 +260,7 @@ class PostsController extends Controller
             'last_id' => $last_id,
             'next_id' => $next_id,
             'files' => $files,
+            'photos'=>$photos,
             'post_type_array'=>$post_type_array,
         ];
 
@@ -262,6 +286,7 @@ class PostsController extends Controller
 
         //有無附件
         $files = get_files(storage_path('app/public/' . $school_code . '/posts/' . $post->id . '/files'));
+        $photos = get_files(storage_path('app/public/' . $school_code . '/posts/' . $post->id . '/photos'));
 
         $school_code = school_code();
         //學校目錄
@@ -283,6 +308,7 @@ class PostsController extends Controller
         $data = [
             'post' => $post,
             'files' => $files,
+            'photos' => $photos,
             'title_image' => $title_image,
             'school_code' => $school_code,
             'types' => $types,
@@ -398,10 +424,29 @@ class PostsController extends Controller
             unlink($file);
         }
 
-        $att['title_image'] = null;
-        $post->update($att);
+        //$att['title_image'] = null;
+        //$post->update($att);
 
-        return redirect()->route('posts.edit', $post->id);
+        return back();
+    }
+
+    public function delete_photo(Post $post, $filename)
+    {
+        if ($post->user_id != auth()->user()->id and auth()->user()->admin != 1) {
+            return back();
+        }
+
+        $school_code = school_code();
+        $file = storage_path('app/public/' . $school_code . '/posts/' . $post->id . '/photos/' . $filename);
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //$att['title_image'] = null;
+        //$post->update($att);
+
+        return back();
     }
 
     public function search(Request $request, $search = null)

@@ -93,6 +93,7 @@
                 $title = str_limit($post->title,80);
                 //有無附件
                 $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
+                $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
                 ?>
                 @if($can_see)
                     @if($post->insite==1)
@@ -103,8 +104,11 @@
 		    <span class='text-danger'>[ 內部公告 ]</span>
                     {{ $title  }}
                 @endif
+                @if(!empty($photos))
+                    <span class="text-success"><i class="fas fa-image"></i></span>
+                @endif
                 @if(!empty($files))
-                    <span class="text-info"><i class="fas fa-file"></i> [附件]</span>
+                    <span class="text-info"> <i class="fas fa-download"></i></span>
                 @endif
             </td>
             <td data-th="發佈者">
