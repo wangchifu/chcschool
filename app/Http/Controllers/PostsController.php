@@ -362,6 +362,27 @@ class PostsController extends Controller
             }
         }
 
+        //處理照片上傳
+        if ($request->hasFile('photos')) {
+            $photos = $request->file('photos');
+            foreach ($photos as $photo) {
+                $info2 = [
+                    'mime-type' => $photo->getMimeType(),
+                    'original_filename' => $photo->getClientOriginalName(),
+                    'extension' => $photo->getClientOriginalExtension(),
+                    'size' => $photo->getClientSize(),
+                ];
+
+                $photo->storeAs($folder.'/photos', $info2['original_filename']);
+
+                //縮圖
+                $img = Image::make($photo->getRealPath());
+                $img->resize(1024, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save(storage_path('app/public/'. $school_code.'/posts/'.$post->id.'/photos/'.$info2['original_filename']));
+            }
+        }
+
 
         if ($att['insite'] == null) {
             return redirect()->route('posts.type', 0);
