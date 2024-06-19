@@ -209,7 +209,7 @@ class HomeController extends Controller
         $post_types = PostType::where('disable',null)->orderBy('order_by')->get();
 
         $photo_link_number = ($setup->photo_link_number)?$setup->photo_link_number:"24";
-        $photo_links = PhotoLink::orderBy('id', 'DESC')->paginate($photo_link_number);
+        $photo_links = PhotoLink::orderBy('order_by', 'DESC')->paginate($photo_link_number);
         $photo_types = PhotoType::orderBy('order_by')->get();
 
         $post_type_array = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
