@@ -244,9 +244,17 @@
                     @endif
                     <li class="nav-item dropdown @yield('nav_user_active')">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user"></i> {{ auth()->user()->title }} {{ auth()->user()->name }}
+                            <i class="fas fa-user"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#" onclick="click_count()"><i class="fas fa-user"></i> {{ auth()->user()->title }} {{ auth()->user()->name }}</a>
+                            <script>
+                                var n=0;
+                                function click_count(){
+                                    n = n+1;
+                                    alert('點了'+n+'下!');
+                                }
+                            </script>
                             @if(auth()->user()->login_type=="local")
                                 <a class="dropdown-item" href="{{ route('edit_password') }}"><i class="fas fa-key"></i> 更改密碼</a>
                             @endif
