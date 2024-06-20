@@ -109,8 +109,8 @@
                     <tr>
                         <td>
                             @if(file_exists(storage_path($f.'/'.$file->name)))
-                                <?php $f = str_replace('app/public','',$f); ?>
-                                <i class="fas fa-file text-info"></i> <a href="{{ asset('storage'.$f.'/'.$file->name) }}" target="_blank">{{ $file->name }}</a>
+                                <?php $f2 = str_replace('app/public','',$f); ?>
+                                <i class="fas fa-file text-info"></i> <a href="{{ asset('storage'.$f2.'/'.$file->name) }}" target="_blank">{{ $file->name }}</a>
                                 <!--
                                 <i class="fas fa-file text-info"></i> <a href="{{ route('open_files.download',$file_p) }}">{{ $file->name }}</a>
                                 -->
