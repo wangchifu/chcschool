@@ -212,7 +212,7 @@ class PostsController extends Controller
         }
 
 
-            return redirect()->route('posts.index');
+            return redirect()->route('posts.index_my');
     }
 
     /**
@@ -408,7 +408,7 @@ class PostsController extends Controller
             }
         }
 
-            return redirect()->route('posts.index');
+            return redirect()->route('posts.index_my');
     }
 
     /**
