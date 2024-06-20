@@ -163,8 +163,11 @@ class PostsController extends Controller
         $att['insite'] = ($request->input('insite')) ? $request->input('insite') : null;
 
         $post = Post::create($att);
-        $att2['created_at'] = $live_date." 00:00:00";
-        $post->update($att2);
+        if($live_date != null){
+            $att2['created_at'] = $live_date." 00:00:00";
+            $post->update($att2);
+        }
+        
 
         $school_code = school_code();
         $folder = 'public/' . $school_code . '/posts/' . $post->id;
@@ -355,7 +358,9 @@ class PostsController extends Controller
 
         $att['title'] = $request->input('title');
         $live_date = $request->input('live_date');
-        $att2['created_at'] = $live_date." 00:00:00";
+        if($live_date != null){
+            $att['created_at'] = $live_date." 00:00:00";
+        }        
         $att['die_date'] = $request->input('die_date');
         $att['content'] = $request->input('content');
         $att['insite'] = ($request->input('insite')) ? $request->input('insite') : null;
