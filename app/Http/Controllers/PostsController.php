@@ -167,8 +167,9 @@ class PostsController extends Controller
         if($live_date != null){
             $live_time = ($request->input('live_time')==null)?"00:00":$request->input('live_time');
             $live_date_time = $live_date." ".$live_time.":00";
-            $att2['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s',$live_date_time)->timestamp;
+            //$att2['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s',$live_date_time)->timestamp;
             //dd($att2);
+            $att2['created_at'] = date('Y-m-d H:i:s',strtotime($live_date_time));
             $post->update($att2);
         }
         
@@ -366,8 +367,8 @@ class PostsController extends Controller
             $live_time = ($request->input('live_time')==null)?"00:00":$request->input('live_time');
 
             $live_date_time = $live_date." ".$live_time;
-            $att['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s',$live_date_time)->timestamp;
-
+            //$att['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s',$live_date_time)->timestamp;
+            $att['created_at'] = date('Y-m-d H:i:s',strtotime($live_date_time));
         }        
         $att['die_date'] = $request->input('die_date');
         $att['content'] = $request->input('content');
