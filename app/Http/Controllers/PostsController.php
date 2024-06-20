@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\Facades\Image;
 
+
 class PostsController extends Controller
 {
 
@@ -165,7 +166,9 @@ class PostsController extends Controller
         $post = Post::create($att);
         if($live_date != null){
             $live_time = ($request->input('live_time')==null)?"00:00":$request->input('live_time');
-            $att2['created_at'] = $live_date." ".$live_time.":00";
+            $live_date_time = $live_date." ".$live_time.":00";
+            $att2['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s',$live_date_time)->timestamp;
+            //dd($att2);
             $post->update($att2);
         }
         
@@ -361,7 +364,10 @@ class PostsController extends Controller
         $live_date = $request->input('live_date');
         if($live_date != null){
             $live_time = ($request->input('live_time')==null)?"00:00":$request->input('live_time');
-            $att['created_at'] = $live_date." ".$live_time;
+
+            $live_date_time = $live_date." ".$live_time;
+            $att['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s',$live_date_time)->timestamp;
+
         }        
         $att['die_date'] = $request->input('die_date');
         $att['content'] = $request->input('content');
