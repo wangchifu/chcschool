@@ -164,7 +164,8 @@ class PostsController extends Controller
 
         $post = Post::create($att);
         if($live_date != null){
-            $att2['created_at'] = $live_date." 00:00:00";
+            $live_time = ($request->input('live_time')==null)?"00:00":$request->input('live_time');
+            $att2['created_at'] = $live_date." ".$live_time.":00";
             $post->update($att2);
         }
         
@@ -359,7 +360,8 @@ class PostsController extends Controller
         $att['title'] = $request->input('title');
         $live_date = $request->input('live_date');
         if($live_date != null){
-            $att['created_at'] = $live_date." 00:00:00";
+            $live_time = ($request->input('live_time')==null)?"00:00":$request->input('live_time');
+            $att['created_at'] = $live_date." ".$live_time;
         }        
         $att['die_date'] = $request->input('die_date');
         $att['content'] = $request->input('content');

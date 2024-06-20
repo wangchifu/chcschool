@@ -40,21 +40,22 @@
                     <table>
                         <tr>
                             <td colspan="2">
-                                5.上架起迄日期 ( 可不填 )
+                                5.上架起迄日期 ( 可不填 ) [<a href="{{ asset('live_date.png') }}" target="_blank">教學</a>]
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="form-group">
                                     <label for="live_date">起</label>
-                                    {{ Form::date('live_date',null,['id'=>'live_date','class' => 'form-control','placeholder' => '請選擇日期','onchange'=>'check_today()']) }}
+                                    {{ Form::date('live_date',null,['id'=>'live_date','class' => 'form-control','onchange'=>'check_today()']) }}
+                                    {{ Form::time('live_time',null,['id'=>'live_time','class' => 'form-control']) }}
                                     <small>(不填代表即刻貼出)</small>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
                                     <label for="die_date">迄(含)</label>
-                                    {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','placeholder' => '請選擇日期','onchange'=>'check_date()']) }}
+                                    {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','onchange'=>'check_date()']) }}
                                     <small>(不填代表不下架)</small>
                                 </div>
                             </td>

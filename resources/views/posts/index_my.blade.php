@@ -45,7 +45,7 @@
                             @endif
                             {{ substr($post->created_at,0,10) }}
                             @if($post->created_at > date('Y-m-d H:i:s'))
-                            <h5><span class="badge badge-danger">尚未上架<br>{{ substr($post->created_at,0,10) }}</span></h5>
+                            <h5><span class="badge badge-danger">尚未上架<br>{{ $post->created_at }}</span></h5>
                             @endif
                             @if($post->die_date < date('Y-m-d') and $post->die_date != null)
                             <h5><span class="badge badge-dark">已經下架<br>{{ $post->die_date  }}</span></h5>
