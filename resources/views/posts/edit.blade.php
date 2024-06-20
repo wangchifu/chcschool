@@ -21,11 +21,11 @@
                 <div class="card-body">
                     @include('layouts.errors')
                     <div class="form-group">
-                        <label for="job_title"><strong>1.職稱*</strong></label>
+                        <label for="job_title"><strong class="text-danger">1.職稱*</strong></label>
                         {{ Form::text('job_title',auth()->user()->title,['id'=>'title','class' => 'form-control', 'readonly' => 'readonly']) }}
                     </div>
                     <div class="form-group">
-                        <label for="insite">2.公告類別</label>
+                        <label for="insite"><strong class="text-danger">2.公告類別*</strong></label>
                         {{ Form::select('insite', $types,$post->insite, ['id' => 'insite', 'class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
@@ -40,7 +40,7 @@
                         {{ Form::file('title_image', ['class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
-                        <label for="title"><strong>4.標題*</strong></label>
+                        <label for="title"><strong class="text-danger">4.標題*</strong></label>
                         {{ Form::text('title',null,['id'=>'title','class' => 'form-control', 'placeholder' => '請輸入標題','required'=>'required']) }}
                     </div>
                     <table>
@@ -75,7 +75,7 @@
                         </script>
                     </table> 
                     <div class="form-group">
-                        <label for="content"><strong>6.內文*</strong></label>
+                        <label for="content"><strong class="text-danger">6.內文*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容','required'=>'required']) }}
                     </div>
                     <script src="{{ asset('mycke/ckeditor.js') }}"></script>
