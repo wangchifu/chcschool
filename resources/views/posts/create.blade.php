@@ -61,7 +61,7 @@
                         </tr>
                         <script>
                             function check_date(){                                        
-                                if($('#die_date').val() < $('#live_date').val()){
+                                if($('#die_date').val() < $('#live_date').val() & document.getElementById("die_date").value !== ""){
                                     $('#die_date').val("");
                                     alert('迄日，不得小於起日！');
                                 }
