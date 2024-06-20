@@ -26,6 +26,20 @@
             }else{
                 $can_see = 1;
             };
+            //下架日比今天早(小)，不能看
+            if($post->die_date != null and $post->die_date < date('Y-m-d')){
+                $can_see = 0;
+            }
+            //上架日比今天晚(大)，不能看
+            if(substr($post->created_at,0,10) > date('Y-m-d')){
+                $can_see = 0;
+            }
+            //作者可以看
+            if(auth()->check()){
+                if($post->user_id == auth()->user()->id){
+                $can_see = 1;
+            }
+            }            
             ?>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -34,15 +48,18 @@
                     <li class="breadcrumb-item active" aria-current="page">公告內容</li>
                 </ol>
             </nav>
-            @if($post->die_date==null or  $post->die_date >= date('Y-m-d'))
-                @if($can_see)
-                    <h1>{{ $post->title }}</h1>
-                @else
-                    <h1 class="text-danger"><i class="fas fa-ban"></i> [ 內部公告 ]{{ $post->title  }}</h1>
-                @endif
+            @if($can_see)
+                <h1>{{ $post->title }}</h1>                             
             @else
-                <h1>本公告已下架</h1>
-            @endif
+                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and substr($post->created_at,0,10) < date('Y-m-d'))
+                    <h1 class="text-danger"><i class="fas fa-ban"></i> [ 內部公告 ]{{ $post->title  }}</h1>                                           
+                @endif
+                @if($post->die_date < date('Y-m-d') and $post->die_date != null)
+                    <h1>本公告已下架</h1>                
+                @elseif(substr($post->created_at,0,10) > date('Y-m-d'))
+                    <h1>本公告尚未上架</h1>
+                @endif
+            @endif            
 
             @if($last_id)
                 <a href="{{ route('posts.show',$last_id) }}" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-alt-circle-left"></i> 上一則公告</a>
@@ -56,10 +73,7 @@
             @endif
 
             <br><br>
-            <p class="lead">
-            @if($post->insite==1)
-                <p class="badge badge-danger">內部公告</p>
-            @endif
+            <p class="lead">            
                 <?php
                     $insite = ($post->insite != null)?$post->insite:0;
                 ?>
@@ -97,52 +111,54 @@
             </p>
 
             <hr>
-            @if($post->die_date==null or  $post->die_date >= date('Y-m-d'))
-                <!-- Preview Image -->
-                @if(!empty($post->title_image) and $can_see)
+            @if($can_see)
+                @if(!empty($post->title_image))                    
                     <img class="img-fluid rounded" src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" alt="標題圖片">
-
-                    <hr>
-                @endif
-            @endif
+                    <hr>                    
+                @endif                     
+            @endif            
 
             <!-- Post Content -->
-            @if($post->die_date==null or  $post->die_date >= date('Y-m-d'))
+            @if($can_see)
                 <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
-                    <p style="font-size: 1.2rem;">
-                        @if($can_see)
-                            <?php //$content = str_replace(chr(13) . chr(10), '<br>', $post->content);?>
-                            {!! $post->content !!}
-                        @else
-                        <p class="text-danger">[ 內部公告 ] 請登入後瀏覽！</p>
-                        @endif
+                    <p style="font-size: 1.2rem;">                                                    
+                        {!! $post->content !!}                                                                                                    
                     </p>
                 </div>
-                @if(!empty($photos) and $can_see)
-                <hr>
-                <div class="card my-4">
-                    <h5 class="card-header">相關照片</h5>
-                    <div class="card-body">
-                    @foreach($photos as $k=>$v)
-                    <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="venobox" data-gall="gall1">
-                        <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="..." class="img-thumbnail col-2">
-                    </a>
-                    @endforeach
+            @else
+                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and substr($post->created_at,0,10) < date('Y-m-d'))
+                    <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
+                        <p style="font-size: 1.2rem;">                                                    
+                            <p class="text-danger">[ 內部公告 ] 請登入後瀏覽！</p>                                                                                              
+                        </p>
                     </div>
-                </div>
-                @endif
-                @if(!empty($files) and $can_see)
-                <hr>
-                <div class="card my-4">
-                    <h5 class="card-header">附件下載</h5>
-                    <div class="card-body">
-                    @foreach($files as $k=>$v)
-                        <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" class="btn btn-primary btn-sm" style="margin:3px" target="_blank"><i class="fas fa-download"></i> {{ $v }}</a>
-                    @endforeach
-                    </div>
-                </div>
                 @endif
             @endif
+
+                @if(!empty($photos) and $can_see)
+                    <hr>
+                    <div class="card my-4">
+                        <h5 class="card-header">相關照片</h5>
+                        <div class="card-body">
+                        @foreach($photos as $k=>$v)
+                        <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="venobox" data-gall="gall1">
+                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="..." class="img-thumbnail col-2">
+                        </a>
+                        @endforeach
+                        </div>
+                    </div>
+                @endif
+                @if(!empty($files) and $can_see)                    
+                    <hr>
+                    <div class="card my-4">
+                        <h5 class="card-header">附件下載</h5>
+                        <div class="card-body">
+                        @foreach($files as $k=>$v)
+                            <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" class="btn btn-primary btn-sm" style="margin:3px" target="_blank"><i class="fas fa-download"></i> {{ $v }}</a>
+                        @endforeach
+                        </div>
+                    </div>                    
+                @endif            
         </div>
 
         <div class="col-lg-3">

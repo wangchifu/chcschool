@@ -20,11 +20,11 @@
                 <h3 class="card-header">公告資料</h3>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="job_title"><strong>1.職稱*</strong></label>
+                        <label for="job_title"><strong class="text-danger">1.職稱*</strong></label>
                         {{ Form::text('job_title',auth()->user()->title,['id'=>'job_title','class' => 'form-control', 'readonly' => 'readonly']) }}
                     </div>
                     <div class="form-group">
-                        <label for="insite">2.公告類別</label>
+                        <label for="insite"><strong class="text-danger">2.公告類別*</strong></label>
                         {{ Form::select('insite', $types,null, ['id' => 'insite', 'class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
@@ -34,15 +34,42 @@
                         {{ Form::file('title_image', ['class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
-                        <label for="title"><strong>4.標題*</strong></label>
+                        <label for="title"><strong class="text-danger">4.標題*</strong></label>
                         {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required','placeholder' => '請輸入標題']) }}
                     </div>
+                    <table>
+                        <tr>
+                            <td colspan="2">
+                                5.上架起迄日期 ( 可不填 )
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="live_date">起</label>
+                                    {{ Form::date('live_date',null,['id'=>'live_date','class' => 'form-control','placeholder' => '請選擇日期']) }}
+                                    <small>(不填代表即刻貼出)</small>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="die_date">迄(含)</label>
+                                    {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','placeholder' => '請選擇日期','onchange'=>'check_date()']) }}
+                                    <small>(不填代表不下架)</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <script>
+                            function check_date(){                                        
+                                if($('#die_date').val() < $('#live_date').val()){
+                                    $('#die_date').val("");
+                                    alert('迄日，不得小於起日！');
+                                }
+                            }
+                        </script>
+                    </table>                                    
                     <div class="form-group">
-                        <label for="die_date">5.上架至哪一天最後一天？(若空白則不下架)</label>
-                        {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','placeholder' => '請選擇日期']) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="content"><strong>6.內文*</strong></label>
+                        <label for="content"><strong class="text-danger">6.內文*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10,'required'=>'required', 'placeholder' => '請輸入內容']) }}
                     </div>
                     <script src="{{ asset('mycke/ckeditor.js') }}"></script>

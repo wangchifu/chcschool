@@ -43,10 +43,37 @@
                         <label for="title"><strong>4.標題*</strong></label>
                         {{ Form::text('title',null,['id'=>'title','class' => 'form-control', 'placeholder' => '請輸入標題','required'=>'required']) }}
                     </div>
-                    <div class="form-group">
-                        <label for="die_date">5.上架至哪一天最後一天？(若空白則不下架)</label>
-                        {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','placeholder' => '請選擇日期']) }}
-                    </div>
+                    <table>
+                        <tr>
+                            <td colspan="2">
+                                5.上架起迄日期 ( 可不填 )
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="live_date">起</label>
+                                    {{ Form::date('live_date',substr($post->created_at,0,10),['id'=>'live_date','class' => 'form-control','placeholder' => '請選擇日期']) }}
+                                    <small>(不填代表即刻貼出)</small>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="die_date">迄(含)</label>
+                                    {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','placeholder' => '請選擇日期','onchange'=>'check_date()']) }}
+                                    <small>(不填代表不下架)</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <script>
+                            function check_date(){                                        
+                                if($('#die_date').val() < $('#live_date').val()){
+                                    $('#die_date').val("");
+                                    alert('迄日，不得小於起日！');
+                                }
+                            }
+                        </script>
+                    </table> 
                     <div class="form-group">
                         <label for="content"><strong>6.內文*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10, 'placeholder' => '請輸入內容','required'=>'required']) }}

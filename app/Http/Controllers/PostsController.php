@@ -54,7 +54,7 @@ class PostsController extends Controller
     {
         $posts = Post::where(function ($query) {
             $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
-            })->orderBy('top', 'DESC')
+            })->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->paginate(20);
         $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
@@ -64,6 +64,19 @@ class PostsController extends Controller
             'post_types' => $post_types,
         ];
         return view('posts.index', $data);
+    }
+
+    public function index_my()
+    {
+        $posts = Post::where('user_id',auth()->user()->id)->orderBy('created_at', 'DESC')
+            ->paginate(20);
+        $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
+
+        $data = [
+            'posts' => $posts,
+            'post_types' => $post_types,
+        ];
+        return view('posts.index_my', $data);
     }
 
     /**
@@ -143,12 +156,15 @@ class PostsController extends Controller
         $att['title'] = $request->input('title');
         $att['content'] = $request->input('content');
         $att['job_title'] = auth()->user()->title;
+        $live_date = $request->input('live_date');
         $att['die_date'] = $request->input('die_date');
         $att['user_id'] = auth()->user()->id;
         $att['views'] = 0;
         $att['insite'] = ($request->input('insite')) ? $request->input('insite') : null;
 
         $post = Post::create($att);
+        $att2['created_at'] = $live_date." 00:00:00";
+        $post->update($att2);
 
         $school_code = school_code();
         $folder = 'public/' . $school_code . '/posts/' . $post->id;
@@ -192,11 +208,8 @@ class PostsController extends Controller
             }
         }
 
-        if ($att['insite'] == null) {
-            return redirect()->route('posts.type', 0);
-        } else {
-            return redirect()->route('posts.type', $post->insite);
-        }
+
+            return redirect()->route('posts.index');
     }
 
     /**
@@ -231,11 +244,17 @@ class PostsController extends Controller
         session([$s_key => '1']);
 
 
-        $next_post = Post::where('id', '>', $post->id)->first();
-        $last_post = Post::where('id', '<', $post->id)
-            ->orderBy('id', 'DESC')
+        $next_post =Post::where(function ($query) {
+            $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+            })->where('created_at', '>', $post->created_at)->where('created_at','<',date('Y-m-d H:i:s'))
+            ->orderBy('created_at',)
             ->first();
-
+        $last_post =Post::where(function ($query) {
+            $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+            })->where('created_at', '<', $post->created_at)->where('created_at','<',date('Y-m-d H:i:s'))
+            ->orderBy('created_at','DESC')
+            ->first();
+        
         $last_id = (empty($last_post)) ? null : $last_post->id;
         $next_id = (empty($next_post)) ? null : $next_post->id;
 
@@ -335,10 +354,11 @@ class PostsController extends Controller
         }
 
         $att['title'] = $request->input('title');
+        $live_date = $request->input('live_date');
+        $att2['created_at'] = $live_date." 00:00:00";
         $att['die_date'] = $request->input('die_date');
         $att['content'] = $request->input('content');
         $att['insite'] = ($request->input('insite')) ? $request->input('insite') : null;
-
         $post->update($att);
 
         $school_code = school_code();
@@ -383,12 +403,7 @@ class PostsController extends Controller
             }
         }
 
-
-        if ($att['insite'] == null) {
-            return redirect()->route('posts.type', 0);
-        } else {
-            return redirect()->route('posts.type', $post->insite);
-        }
+            return redirect()->route('posts.index');
     }
 
     /**

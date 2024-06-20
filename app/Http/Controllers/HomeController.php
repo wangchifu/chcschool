@@ -184,7 +184,7 @@ class HomeController extends Controller
         $post_show_number = ($setup->post_show_number)?$setup->post_show_number:10;
         $posts = Post::where(function ($query) {
             $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
-            })->orderBy('top', 'DESC')
+            })->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->paginate($post_show_number);
 

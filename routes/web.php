@@ -131,6 +131,7 @@ Route::post('lends/print_lend', 'LendsController@print_lend')->name('lends.print
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('posts/index_my', 'PostsController@index_my')->name('posts.index_my');
     //結束模擬
     Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
 
