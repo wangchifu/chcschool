@@ -53,7 +53,7 @@
                             <td>
                                 <div class="form-group">
                                     <label for="live_date">起</label>
-                                    {{ Form::date('live_date',substr($post->created_at,0,10),['id'=>'live_date','class' => 'form-control','placeholder' => '請選擇日期']) }}
+                                    {{ Form::date('live_date',substr($post->created_at,0,10),['id'=>'live_date','class' => 'form-control','placeholder' => '請選擇日期','onchange'=>'check_today()']) }}
                                     <small>(不填代表即刻貼出)</small>
                                 </div>
                             </td>
@@ -67,9 +67,16 @@
                         </tr>
                         <script>
                             function check_date(){                                        
-                                if($('#die_date').val() < $('#live_date').val()){
+                                if($('#die_date').val() < $('#live_date').val() & document.getElementById("die_date").value !== ""){
                                     $('#die_date').val("");
                                     alert('迄日，不得小於起日！');
+                                }
+                            }
+                            function check_today(){                               
+                                check_date();         
+                                if('{{ date('Y-m-d') }}'>= $('#live_date').val()){
+                                    $('#live_date').val("");
+                                    alert('不能選今天以前的日子！');
                                 }
                             }
                         </script>
