@@ -435,7 +435,7 @@ Route::group(['middleware' => 'admin_exec'], function () {
     Route::post('photo_links/type_store', 'PhotoLinksController@type_store')->name('photo_links.type_store');
     Route::patch('photo_links/type_update/{photo_type}', 'PhotoLinksController@type_update')->name('photo_links.type_update');
     Route::get('photo_links/type_delete/{photo_type}', 'PhotoLinksController@type_delete')->name('photo_links.type_delete');
-    Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');
+    Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');    
     Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');
     Route::patch('photo_links/{photo_link}', 'PhotoLinksController@update')->name('photo_links.update');
 
@@ -548,6 +548,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('links/create', 'LinksController@create')->name('links.create');
     Route::post('links', 'LinksController@store')->name('links.store');
     Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');
+    Route::get('links/{link}/delete', 'LinksController@delete')->name('links.delete');
     Route::get('links/{link}/edit', 'LinksController@edit')->name('links.edit');
     Route::patch('links/{link}', 'LinksController@update')->name('links.update');
 

@@ -187,6 +187,12 @@ class LinksController extends Controller
         return redirect()->route('links.index');
     }
 
+    public function delete(Link $link)
+    {
+        $link->delete();
+        return back();
+    }
+
     public function destroy_type(Type $type)
     {
         $type->links()->delete();

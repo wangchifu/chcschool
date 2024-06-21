@@ -214,7 +214,7 @@
                                             </td>                                            
                                             <td>
                                                 <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                                <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                                <a href="{{ route('links.delete',$v['id']) }}" class="btn btn-danger btn-sm" onclick="confirm('確定刪除？')"><i class="fas fa-trash"></i> 刪除</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -246,11 +246,9 @@
                                             </td>                                            
                                             <td>
                                                 <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                                <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                                <a href="{{ route('links.delete',$v['id']) }}" class="btn btn-danger btn-sm" onclick="confirm('確定刪除？')"><i class="fas fa-trash"></i> 刪除</a>
                                             </td>
-                                        </tr>
-                                        {{ Form::open(['route' => ['links.destroy',$v['id']], 'method' => 'DELETE','id'=>'delete'.$v['id'],'onsubmit'=>'return false;']) }}
-                                        {{ Form::close() }}
+                                        </tr>                                        
                                     @endforeach
                                 @endif
                                 </tbody>
@@ -318,9 +316,9 @@
                                                 </td>                                            
                                                 <td>
                                                     <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                                    <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                                    <a href="{{ route('links.delete',$v['id']) }}" class="btn btn-danger btn-sm" onclick="confirm('確定刪除？')"><i class="fas fa-trash"></i> 刪除</a>
                                                 </td>
-                                            </tr>
+                                            </tr>                                            
                                             @endforeach
                                         @endif
                                     @endforeach
@@ -350,11 +348,9 @@
                                                 </td>                                            
                                                 <td>
                                                     <a href="{{ route('links.edit',$v['id']) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
-                                                    <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $v['id'] }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
+                                                    <a href="{{ route('links.delete',$v['id']) }}" class="btn btn-danger btn-sm" onclick="confirm('確定刪除？')"><i class="fas fa-trash"></i> 刪除</a>
                                                 </td>
-                                            </tr>
-                                            {{ Form::open(['route' => ['links.destroy',$v['id']], 'method' => 'DELETE','id'=>'delete'.$v['id'],'onsubmit'=>'return false;']) }}
-                                            {{ Form::close() }}
+                                            </tr>                                            
                                         @endforeach
                                     @endif
                                     </tbody>
