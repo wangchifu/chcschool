@@ -40,10 +40,14 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
     }else{
         $count = 0;
     }
-    $file_count = fopen('../../service/chc_air/download/'.date('Ymd').'.txt','w');
-    $count++;
-    fwrite($file_count,$count);
-    fclose($file_count);
+    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
+        $file_count = fopen('../../service/chc_air/download/'.date('Ymd').'.txt','w');    
+        $count++;
+        fwrite($file_count,$count);
+        fclose($file_count);
+    }
+    
+    
 
     if(!isset($data->records)){
         $data = [];

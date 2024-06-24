@@ -93,6 +93,13 @@
                                 @if($block_position) 
                                     {{ $title }}
                                 @endif
+                                @auth
+                                    @if(auth()->user()->admin==1)
+                                        @if(!stripos($block->title,"(系統區塊)"))
+                                            <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')"><i class="fas fa-edit"></i></a>
+                                        @endif
+                                    @endif
+                                @endauth
                             </h5>
                         </div>
                         @endif
@@ -142,7 +149,12 @@
         @endforeach
 
     </div>
-
+    <script>
+        function open_window(url,name)
+        {
+            window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=800');
+        }
+    </script>
 @endsection
 
 @section('footer')
