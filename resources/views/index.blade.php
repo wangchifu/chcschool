@@ -96,7 +96,7 @@
                                 @auth
                                     @if(auth()->user()->admin==1)
                                         @if(!stripos($block->title,"(系統區塊)"))
-                                        <div style="float: right;">
+                                        <div style="float: right;padding-right:10px">
                                             <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')">📝</a>
                                         </div>
                                         @endif
