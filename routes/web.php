@@ -451,6 +451,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('sims/{user}/impersonate', 'SimulationController@impersonate')->name('sims.impersonate');
     //網站管理
     Route::get('setups', 'SetupController@index')->name('setups.index');
+    Route::get('setups/edit_footer', 'SetupController@edit_footer')->name('setups.edit_footer');
+    Route::patch('setups/update_footer', 'SetupController@update_footer')->name('setups.update_footer');
     Route::post('setups/photo_link_number', 'SetupController@photo_link_number')->name('setups.photo_link_number');
 
     Route::post('setups/add_logo', 'SetupController@add_logo')->name('setups.add_logo');

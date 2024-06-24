@@ -96,7 +96,9 @@
                                 @auth
                                     @if(auth()->user()->admin==1)
                                         @if(!stripos($block->title,"(系統區塊)"))
-                                            <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')"><i class="fas fa-edit"></i></a>
+                                        <div style="float: right;">
+                                            <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')">📝</a>
+                                        </div>
                                         @endif
                                     @endif
                                 @endauth
@@ -168,6 +170,13 @@
                     <div class="row justify-content-center">
                         <div class="col-md-11">
                             <div class="table-responsive">
+                            @auth
+                                @if(auth()->user()->admin==1)  
+                                    <div style="float: right;">
+                                        <a href="javascript:open_window('{{ route('setups.edit_footer') }}','新視窗')">📝</a>
+                                    </div>
+                                @endif
+                            @endauth
                             {!! $setup->footer !!}
                             </div>
                         </div>

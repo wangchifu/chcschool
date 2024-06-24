@@ -256,6 +256,23 @@ class SetupController extends Controller
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 
+    public function edit_footer()
+    {
+        $setup = Setup::first();
+        $data = [
+          'setup'=>$setup,
+        ];
+        return view('setups.edit_footer', $data);
+    }
+
+    public function update_footer(Request $request)
+    {
+        $att['footer'] = $request->input('footer');
+        $setup = Setup::first();
+        $setup->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
     public function delete_col(SetupCol $setup_col)
     {
         $att['setup_col_id'] = null;
