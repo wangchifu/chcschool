@@ -270,6 +270,8 @@ return [
         'www38.hdes.chc.edu.tw'=>'s074038',
         'www39.hdes.chc.edu.tw'=>'s074039',
         'www40.hdes.chc.edu.tw'=>'s074040',
+        'www41.hdes.chc.edu.tw'=>'s074041',//暫給花壇國中用
+        'www42.hdes.chc.edu.tw'=>'s074042',//暫給彰興國中用
         'www.chash.chc.edu.tw'=>'s074308',
         'www.smes.chc.edu.tw'=>'s074608',
         'www.dches.chc.edu.tw'=>'s074775',
