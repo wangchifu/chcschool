@@ -284,6 +284,7 @@ class SetupController extends Controller
     public function block()
     {
         $setup_cols = SetupCol::orderBy('order_by')->get();
+        $setup_array = [];
         foreach ($setup_cols as $setup_col) {
             $setup_array[$setup_col->id] = $setup_col->title . '(' . $setup_col->id . ')';
         }
@@ -327,6 +328,7 @@ class SetupController extends Controller
     public function edit_block(Block $block)
     {
         $setup_cols = SetupCol::orderBy('order_by')->get();
+        $setup_array = [];
         foreach ($setup_cols as $setup_col) {
             $setup_array[$setup_col->id] = $setup_col->title . '(' . $setup_col->id . ')';
         }

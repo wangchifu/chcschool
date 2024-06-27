@@ -55,7 +55,10 @@
                                 <td>
                                     {{ $block->order_by }}
                                 </td>
-                                <td>
+                                <?php
+                                    $text_color = (stripos($block->title,"(系統區塊)"))?"text-info":"text-dark";
+                                ?>
+                                <td class="{{ $text_color }}">                                    
                                     {{ $block->title }}
                                 </td>
                                 <td>

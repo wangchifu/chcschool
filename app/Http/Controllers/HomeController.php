@@ -167,6 +167,7 @@ class HomeController extends Controller
 
         $setup = Setup::first();
         $setup_cols = SetupCol::orderBy('order_by')->get();
+        $blocks = [];
         foreach ($setup_cols as $setup_col) {
             $bs = Block::where('setup_col_id', $setup_col->id)
                 ->orderBy('order_by')

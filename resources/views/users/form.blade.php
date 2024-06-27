@@ -50,7 +50,9 @@
                         @if($user->login_type=="local")
                             <a href="{{ route('users.back_pwd',$user->id) }}" class="btn btn-warning" onclick="return confirm('確定？')">還原密碼</a>
                         @endif
-                        <a href="{{ route('sims.impersonate',$user->id) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定模擬？')"><i class="fas fa-user-ninja"></i> 模擬登入</a>
+                        @if($user->id != auth()->user()->id)
+                            <a href="{{ route('sims.impersonate',$user->id) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定模擬？')"><i class="fas fa-user-ninja"></i> 模擬登入</a>
+                        @endif
                     </td>
                 </tr>
             @endforeach

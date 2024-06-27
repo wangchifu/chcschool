@@ -33,7 +33,7 @@
         <tr>
             <td>
                 <div class="form-group">
-                    <label for="site_name">4.<a href="{{ route('setups.block_color') }}">標題顏色</a></label>
+                    <label for="site_name">4.<a href="{{ route('setups.block_color') }}">標題底色</a></label>
                     {{ Form::select('block_color', $block_colors,$block->block_color, ['class' => 'form-control','placeholder'=>'']) }}
                 </div>
             </td>
@@ -153,4 +153,7 @@
         </form>
     </div>
     @endif
+    <hr>
+    標題底色參考：<br>
+    <a href="{{ route('setups.block_color') }}"><img src="{{ asset('color.png') }}" class="img-thumbnail" alt="..."></a>
 @endsection

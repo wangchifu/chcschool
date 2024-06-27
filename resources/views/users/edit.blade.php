@@ -34,10 +34,13 @@
                     $check1 = ($user->disable)?"":"checked";
                     $check2 = ($user->disable)?"checked":"";
                     $admin = ($user->admin)?"checked":"";
+                    $disabled = ($user->username=="admin")?"disabled":null;
                 ?>
-                <input type="radio" name="disable" value="" id="enable" {{ $check1 }}> <label for="enable">在職</label>　<input type="radio" name="disable" value="1" id="disable" {{ $check2 }}> <label for="disable" class="text-danger">離職</label>
+                @if(auth()->user()->id != $user->id)
+                    <input type="radio" name="disable" value="" id="enable" {{ $check1 }}> <label for="enable">在職</label>　<input type="radio" name="disable" value="1" id="disable" {{ $check2 }}> <label for="disable" class="text-danger">離職</label>
+                @endif
                 <br>
-                <input type="checkbox" name="admin" value="1" id="admin" {{ $admin }}> <label for="admin">網站管理者</label>
+                <input type="checkbox" name="admin" value="1" id="admin" {{ $admin }} {{ $disabled }}> <label for="admin">網站管理者</label>
             </td>
         </tr>
         </tbody>

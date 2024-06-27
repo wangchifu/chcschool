@@ -17,7 +17,6 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::where('disable',null)
-            ->where('username','<>','admin')
             ->orderBy('order_by')
             ->paginate('20');
 
@@ -159,6 +158,7 @@ class UsersController extends Controller
         $att['group_id'] = $request->input('group_id');
         $att['disable'] = $request->input('disable');
         $att['admin'] = $request->input('admin');
+        if($user->username=="admin") $att['admin']=1;//系統管理員永遠是1
         $user->update($att);
 
 

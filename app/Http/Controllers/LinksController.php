@@ -63,6 +63,7 @@ class LinksController extends Controller
     public function create()
     {
         $types = Type::where('type_id',null)->orderBy('order_by')->get();
+        $type_array = [];
         foreach($types as $type){
             $type_array[$type->id] = $type->name;
             $type2s = Type::where('type_id',$type->id)->orderBy('order_by')->get();
