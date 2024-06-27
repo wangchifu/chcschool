@@ -25,7 +25,13 @@
                             <label for="open_date">
                                 請輸入第一週的週日
                             </label>
-                            <input type="date" name="open_date" id="open_date" class="form-control col-lg-2 col-md-3 col-5" maxlength="10" placeholder="如：2018-08-30" required>
+                            <input type="date" name="open_date" id="open_date" class="form-control col-lg-2 col-md-3 col-5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="open_date">
+                                請輸入要設定的週次
+                            </label>
+                            <input type="number" name="set_week" id="set_week" value="22" class="form-control col-lg-2 col-md-3 col-5" placeholder="請輸入週數" required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success btn-sm">

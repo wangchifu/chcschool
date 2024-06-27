@@ -56,6 +56,7 @@ class CalendarWeekController extends Controller
     public function create(Request $request)
     {
         $semester = get_date_semester($request->input('open_date'));
+        $set_week = $request->input('set_week');
         $open_date = explode('-',$request->input('open_date'));
         $dt = Carbon::create($open_date[0], $open_date[1], $open_date[2], 00);
 
@@ -72,7 +73,7 @@ class CalendarWeekController extends Controller
             $dt->addDay();
             $w++;
             $d = 0;
-        }while($w < 31);
+        }while($w < $set_week+1);
 
         $data = [
             'start_end'=>$start_end,
