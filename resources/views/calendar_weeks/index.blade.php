@@ -25,7 +25,7 @@
                             <label for="open_date">
                                 請輸入第一週的週日
                             </label>
-                            <input type="text" name="open_date" id="open_date" class="form-control" maxlength="10" placeholder="如：2018-08-30" required>
+                            <input type="date" name="open_date" id="open_date" class="form-control col-lg-2 col-md-3 col-5" maxlength="10" placeholder="如：2018-08-30" required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success btn-sm">

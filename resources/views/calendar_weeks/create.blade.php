@@ -23,6 +23,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th></th>
                             <th>
                                 週次
                             </th>
@@ -34,6 +35,9 @@
                         <tbody>
                         <tr>
                             <td>
+
+                            </td>
+                            <td>
                                 {{ Form::text('week[d]',null,['class' => 'form-control']) }}
                             </td>
                             <td>
@@ -43,15 +47,24 @@
                         @foreach($start_end as $k=>$v)
                             <tr>
                                 <td>
-                                    {{ Form::text('week['.$k.']',$k,['class' => 'form-control']) }}
+                                    <span class="btn btn-danger btn-sm" onclick="clean_this({{ $k }})" href="#">清除此列</span>
                                 </td>
                                 <td>
-                                    {{ Form::text('start_end['.$k.']',substr($v[0],5,5).'~'.substr($v[6],5,5),['class' => 'form-control']) }}
+                                    {{ Form::text('week['.$k.']',$k,['class' => 'form-control','id'=>'week1'.$k]) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('start_end['.$k.']',substr($v[0],5,5).'~'.substr($v[6],5,5),['class' => 'form-control','id'=>'week2'.$k]) }}
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                    <script>
+                        function clean_this(k){
+                            $('#week1'+k).val('');
+                            $('#week2'+k).val('');
+                        }
+                    </script>
                     <input type="hidden" name="semester" value="{{ $semester }}">
                     <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定嗎？')">
                         <i class="fas fa-save"></i> 儲存設定

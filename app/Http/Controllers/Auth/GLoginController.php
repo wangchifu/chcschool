@@ -81,11 +81,32 @@ class GLoginController extends Controller
                 $d = env('DB_DATABASE');
             }
 
-            $code = $obj['code'];
+            $code = $obj['code']; 
             $school = $obj['school'];
 
             if ($obj['code'] != substr($d, 1, 6)) {
                 $check_code = 0;
+                //民權國小 國中互登
+                if(substr($d, 1, 6) == "074760" and $obj['code']=="074543"){
+                    $check_code = 1;
+                    $code = $obj['code'];
+                }
+                //信義國小 國中互登
+                if(substr($d, 1, 6) == "074541" and $obj['code']=="074774"){
+                    $check_code = 1;
+                    $code = $obj['code'];
+                }
+                //鹿江國小 國中互登
+                if(substr($d, 1, 6) == "074542" and $obj['code']=="074778"){
+                    $check_code = 1;
+                    $code = $obj['code'];
+                }
+                //原斗國小 國中互登
+                if(substr($d, 1, 6) == "074537" and $obj['code']=="074745"){
+                    $check_code = 1;
+                    $code = $obj['code'];
+                }                
+                
                 foreach ($obj['schools'] as $v) {
                     if ($v['code'] == substr($d, 1, 6)) {
                         $check_code = 1;
@@ -93,6 +114,8 @@ class GLoginController extends Controller
                         $school = $v['name'];
                     }
                 }
+                //民權
+
                 if ($check_code == 0) {
                     return back()->withErrors(['gsuite_error' => ['非本校教職員 GSuite 帳號']]);
                 }

@@ -49,14 +49,18 @@
                                     @if($block->setup_col_id)
                                     {{ $block->setup_col->title }} ({{ $block->setup_col_id }})
                                     @else
-                                        x
+                                        <small class="text-secondary">(下架中)</small>
                                     @endif
                                 </td>
                                 <td>
                                     {{ $block->order_by }}
                                 </td>
                                 <?php
-                                    $text_color = (stripos($block->title,"(系統區塊)"))?"text-info":"text-dark";
+                                    if(str_contains($block->title,"(系統區塊)")==true or str_contains($block->title,"榮譽榜跑馬燈")==true){
+                                        $text_color = "text-info";
+                                    }else{
+                                        $text_color = "text-dark";
+                                    };
                                 ?>
                                 <td class="{{ $text_color }}">                                    
                                     {{ $block->title }}
