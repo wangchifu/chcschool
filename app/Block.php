@@ -8,6 +8,7 @@ class Block extends Model
 {
     protected $fillable = [
         'title',
+        'new_title',
         'content',
         'order_by',
         'setup_col_id',

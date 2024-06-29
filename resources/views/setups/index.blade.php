@@ -179,7 +179,51 @@
                             <span class="input-group-addon btn btn-outline-secondary"><i></i></span>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        系統功能按鈕改名
+                        <table class="col-lg-6 col-sm-12">
+                            <tr>
+                                <td>
+                                    首頁
+                                </td>
+                                <td>
+                                    公告系統
+                                </td>
+                                <td>
+                                    檔案庫
+                                </td>
+                                <td>
+                                    學校介紹
+                                </td>
+                                <td>
+                                    校務行政
+                                </td>
+                                <td>
+                                    系統設定
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{ Form::text('homepage_name',$setup->homepage_name,['class' => 'form-control','placeholder'=>'首頁']) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('post_name',$setup->post_name,['class' => 'form-control','placeholder'=>'公告系統']) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('openfile_name',$setup->openfile_name,['class' => 'form-control','placeholder'=>'檔案庫']) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('department_name',$setup->department_name,['class' => 'form-control','placeholder'=>'學校介紹']) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('schoolexec_name',$setup->department_name,['class' => 'form-control','placeholder'=>'校務行政']) }}
+                                </td>
+                                <td>
+                                    {{ Form::text('setup_name',$setup->department_name,['class' => 'form-control','placeholder'=>'系統設定']) }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
                             <i class="fas fa-save"></i> 儲存設定

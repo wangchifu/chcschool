@@ -84,8 +84,10 @@
                         @if($block->block_position != "disable")
                         <div class="{{ $block_color[1] }} {{ $rounded }}">
                             <?php
-                                $title = str_replace_last("(系統區塊)","",$block->title);
+                                $title = (empty($block->new_title))?$block->title:$block->new_title;
+                                $title=str_replace('(系統區塊)','',$title); 
                                 $title = str_replace_last("_圖文版","",$title);
+                                
                                 $block_position = ($block->block_position==null)?"text-left":$block->block_position;
                                 if($block->block_position=="disable") $block_position = null;
                             ?>
@@ -95,11 +97,9 @@
                                 @endif
                                 @auth
                                     @if(auth()->user()->admin==1)
-                                        @if(!stripos($block->title,"(系統區塊)"))
                                         <div style="float: right;padding-right:10px">
                                             <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')">📝</a>
                                         </div>
-                                        @endif
                                     @endif
                                 @endauth
                             </h5>

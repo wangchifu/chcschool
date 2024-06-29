@@ -64,6 +64,9 @@
                                 ?>
                                 <td class="{{ $text_color }}">                                    
                                     {{ $block->title }}
+                                    @if(!empty($block->new_title))
+                                        -->{{ $block->new_title }}
+                                    @endif
                                 </td>
                                 <td>
                                     <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>

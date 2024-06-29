@@ -22,8 +22,13 @@
             <td>
                 <div class="form-group">
                     <label for="site_name">3.標題名稱</label>
-                    @if(strpos($block->title,'系統區塊') or strpos($block->title,'跑馬燈'))
-                        {{ Form::text('title',$block->title,['class' => 'form-control','readonly'=>'readonly']) }}
+                    @if(strpos($block->title,'系統區塊') or strpos($block->title,'榮譽榜跑馬燈'))
+                        <?php 
+                            $new_title = (empty($block->new_title))?$block->title:$block->new_title;
+                            $new_title=str_replace('(系統區塊)','',$new_title); 
+                        ?>
+                        {{ Form::text('new_title',$new_title,['class' => 'form-control','required'=>'required']) }}
+                        <input type="hidden" name="title" value="{{ $block->title }}">
                     @else
                         {{ Form::text('title',$block->title,['class' => 'form-control','required'=>'required']) }}
                     @endif

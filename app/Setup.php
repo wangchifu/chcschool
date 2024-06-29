@@ -10,6 +10,7 @@ class Setup extends Model
         'site_name',
         'fixed_nav',
         'nav_color',
+        'bg_color',
         'photo_link_number',
         'post_show_number',
         'title_image',
@@ -20,6 +21,11 @@ class Setup extends Model
         'ipv6',
         'all_post',
         'close_website',
-        'bg_color',
+        'homepage_name',
+        'post_name',
+        'openfile_name',
+        'department_name',
+        'schoolexec_name',
+        'setup_name',
     ];
 }

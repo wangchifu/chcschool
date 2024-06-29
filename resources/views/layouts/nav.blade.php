@@ -41,22 +41,26 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item @yield('nav_home_active')">
-                    <a class="nav-link" href="{{ route('index') }}">首頁 <span class="sr-only">(current)</span></a>
+                    <?php $homepage_name = ($setup->homepage_name)?$setup->homepage_name:"首頁"; ?>
+                    <a class="nav-link" href="{{ route('index') }}">{{ $homepage_name }} <span class="sr-only">(current)</span></a>
                 </li>
                 @if(isset($module_setup['公告系統']))
                     <li class="nav-item @yield('nav_post_active')">
-                        <a class="nav-link" href="{{ route('posts.index') }}">公告系統</a>
+                        <?php $post_name = ($setup->post_name)?$setup->post_name:"公告系統"; ?>
+                        <a class="nav-link" href="{{ route('posts.index') }}">{{ $post_name }}</a>
                     </li>
                 @endif
                 @if(isset($module_setup['檔案庫']))
                     <li class="nav-item @yield('nav_open_files_active')">
-                        <a class="nav-link" href="{{ route('open_files.index') }}">檔案庫</a>
+                        <?php $openfile_name = ($setup->openfile_name)?$setup->openfile_name:"檔案庫"; ?>
+                        <a class="nav-link" href="{{ route('open_files.index') }}">{{ $openfile_name }}</a>
                     </li>
                 @endif
                 @if(isset($module_setup['學校介紹']))
                     <li class="nav-item dropdown @yield('nav_departments_active')">
+                        <?php $department_name = ($setup->department_name)?$setup->department_name:"學校介紹"; ?>
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            學校介紹
+                            {{ $department_name }}
                         </a>
                         <?php $departments = \App\Department::orderBy('order_by')->get(); ?>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
@@ -151,8 +155,9 @@
                 @auth
                     @if(isset($module_setup['校務行政']))
                         <li class="nav-item dropdown @yield('nav_school_active')">
+                            <?php $schoolexec_name = ($setup->schoolexec_name)?$setup->schoolexec_name:"校務行政"; ?>
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                校務行政
+                                {{ $schoolexec_name }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 @if(isset($module_setup['校務行事曆']))
@@ -223,8 +228,9 @@
                     @endif
                     @if(auth()->user()->admin)
                         <li class="nav-item dropdown @yield('nav_setup_active')">
+                            <?php $setup_name = ($setup->setup_name)?$setup->setup_name:"系統設定"; ?>
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                系統設定
+                                {{ $setup_name }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-user"></i> 帳號管理</a>
