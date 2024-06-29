@@ -58,6 +58,15 @@ class PostsController extends Controller
             })->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->paginate(20);
+
+        //檢查置頂日期
+        foreach($posts as $post){
+            if($post->top_date < date('Y-m-d')){
+                $att['top'] = null;
+                $att['top_date'] = null;
+                $post->update($att);
+            }
+        }
         $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
 
         $data = [
@@ -228,7 +237,11 @@ class PostsController extends Controller
      */
     public function show(Post $post)
     {
-
+        if($post->top_date < date('Y-m-d')){
+            $att['top'] = null;
+            $att['top_date'] = null;
+            $post->update($att);
+        }
         $s_key = "pv" . $post->id;
         if (!session($s_key)) {
             $att['views'] = $post->views + 1;
@@ -631,9 +644,18 @@ class PostsController extends Controller
         return redirect()->route('posts.index');
     }
 
+    public function top_up2(Request $request,Post $post)
+    {
+        $att['top'] = 1;
+        $att['top_date'] = $request->input('top_date');
+        $post->update($att);
+        return redirect()->route('posts.index');
+    }
+
     public function top_down(Post $post)
     {
         $att['top'] = null;
+        $att['top_date'] = null;
         $post->update($att);
         return redirect()->route('posts.index');
     }

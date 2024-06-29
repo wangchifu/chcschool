@@ -87,9 +87,17 @@
                 @auth
                     @if(auth()->user()->admin)
                         @if($post->top)
+                            @if(!empty($post->top_date))
+                                <span class="badge badge-secondary">置頂至{{ $post->top_date }}</span>
+                            @endif
                             <a href="{{ route('posts.top_down',$post->id) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定要取消置頂？')"><i class="fas fa-sort-amount-down"></i> 取消置頂</a>
                         @else
+                            <!--
                             <a href="{{ route('posts.top_up',$post->id) }}" class="btn btn-outline-success btn-sm" onclick="return confirm('確定要置頂？')"><i class="fas fa-sort-amount-up"></i> 置頂</a>
+                            -->
+                            <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal">
+                                <i class="fas fa-sort-amount-up"></i> 置頂
+                              </button>
                         @endif
                     @endif
 
@@ -177,7 +185,38 @@
         </div>
 
     </div>
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">置頂至哪一天？</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="top_up_form" action="{{ route('posts.top_up2',$post->id) }}" method="post">
+            @csrf
+        <div class="modal-body">
+          <input type="date" name="top_date" id="top_date" class="form-control" required="required">
+        </div>
+        <div class="modal-footer">
+          <span class="btn btn-secondary" data-dismiss="modal">取消</span>
+          <button type="button" class="btn btn-primary" onclick="send_form()">送出</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
     <script>
+        function send_form(){
+            if($('#top_date').val().length === 0){
+                alert('請選日期！')
+            }else{
+                $('#top_up_form').submit();
+            }
+            
+        }
         var vb = new VenoBox({
             selector: '.venobox',
             numeration: true,

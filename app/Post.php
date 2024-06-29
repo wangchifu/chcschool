@@ -15,6 +15,7 @@ class Post extends Model
         'views',
         'insite',
         'top',
+        'top_date',
         'die_date',
         'created_at',
     ];

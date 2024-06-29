@@ -188,7 +188,15 @@ class HomeController extends Controller
             })->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
             ->orderBy('created_at', 'DESC')
             ->paginate($post_show_number);
-
+        
+        //檢查置頂日期
+        foreach($posts as $post){
+            if($post->top_date < date('Y-m-d')){
+                $att['top'] = null;
+                $att['top_date'] = null;
+                $post->update($att);
+            }
+        }
         //榮譽榜資料庫資料
         $honors = Post::where('insite', '2')
                 ->where(function ($query) {

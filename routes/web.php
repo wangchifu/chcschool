@@ -564,6 +564,7 @@ Route::group(['middleware' => 'admin'], function () {
 
     //置頂公告
     Route::get('posts/{post}/top_up', 'PostsController@top_up')->name('posts.top_up');
+    Route::post('posts/{post}/top_up2', 'PostsController@top_up2')->name('posts.top_up2');
     Route::get('posts/{post}/top_down', 'PostsController@top_down')->name('posts.top_down');
     Route::get('posts/show_type', 'PostsController@show_type')->name('posts.show_type');
     Route::post('posts/store_type', 'PostsController@store_type')->name('posts.store_type');
