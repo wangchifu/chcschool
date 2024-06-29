@@ -137,14 +137,13 @@ class GroupController extends Controller
         }
 
         $users = User::where('disable',null)
-            ->where('username','<>','admin')
             ->orderBy('order_by')
             ->get();
 
         //列出尚未加入此群組的使用者名單
         foreach($users as $user){
             if(!in_array($user->id,$user_in)){
-                $user_menu[$user->id] = $user->job_title."-".$user->name;
+                $user_menu[$user->id] = $user->job_title."-".$user->name."(".$user->username.")";
             }
         }
 
