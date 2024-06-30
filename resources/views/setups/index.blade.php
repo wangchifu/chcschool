@@ -216,10 +216,10 @@
                                     {{ Form::text('department_name',$setup->department_name,['class' => 'form-control','placeholder'=>'學校介紹']) }}
                                 </td>
                                 <td>
-                                    {{ Form::text('schoolexec_name',$setup->department_name,['class' => 'form-control','placeholder'=>'校務行政']) }}
+                                    {{ Form::text('schoolexec_name',$setup->schoolexec_name,['class' => 'form-control','placeholder'=>'校務行政']) }}
                                 </td>
                                 <td>
-                                    {{ Form::text('setup_name',$setup->department_name,['class' => 'form-control','placeholder'=>'系統設定']) }}
+                                    {{ Form::text('setup_name',$setup->setup_name,['class' => 'form-control','placeholder'=>'系統設定']) }}
                                 </td>
                             </tr>
                         </table>
