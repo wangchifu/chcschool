@@ -8,6 +8,7 @@ class Content extends Model
 {
     protected $fillable = [
         'title',
+        'group_id',
         'content',
         'power',
         'views',

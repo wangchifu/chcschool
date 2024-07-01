@@ -27,6 +27,7 @@
                 <tr>
                     <th>id</th>
                     <th>權限</th>
+                    <th>共編群組</th>
                     <th>標題</th>
                     <th>標籤</th>
                     <th>動作</th>
@@ -44,6 +45,10 @@
                             @elseif($content->power==3)
                                 登入
                             @endif
+                        </td>
+                        <td>
+                            <?php $group_id = (empty($content->group_id))?"1":$content->group_id; ?>
+                            {{ $group_array[$group_id] }}
                         </td>
                         <td><a href="{{ route('contents.show',$content->id) }}" target="_blank">{{ $content->title }}</a></td>
                         <td>

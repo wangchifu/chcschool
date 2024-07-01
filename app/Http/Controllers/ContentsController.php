@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Content;
 use App\Setup;
 use App\Log;
+use App\Group;
+use App\UserGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -27,9 +29,15 @@ class ContentsController extends Controller
     {
         $contents = Content::all();
         $tag = null;
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
         $data = [
             'contents'=>$contents,
             'tag'=>$tag,
+            'group_array'=>$group_array,
         ];
         return view('contents.index',$data);
     }
@@ -51,7 +59,15 @@ class ContentsController extends Controller
      */
     public function create()
     {
-        return view('contents.create');
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [
+            'group_array'=>$group_array,
+        ];
+        return view('contents.create',$data);
     }
 
     /**
@@ -122,13 +138,52 @@ class ContentsController extends Controller
      */
     public function edit(Content $content)
     {
-        return view('contents.edit', compact('content'));
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [
+            'content'=>$content,
+            'group_array'=>$group_array,
+        ];
+        return view('contents.edit',$data);
     }
 
-    public function exec_edit(Content $content)
+    public function together_edit(Content $content)
     {
-        return view('contents.exec_edit', compact('content'));
+        if($content->group_id != null){
+            $check_edit = UserGroup::where('user_id',auth()->user()->id)->where('group_id',$content->group_id)->first();
+            if(empty($check_edit)){
+                dd('別想亂來！');
+            }
+        }else{
+            //行政人員預設可以編
+            $check_edit = UserGroup::where('user_id',auth()->user()->id)->where('group_id',1)->first();
+            if(empty($check_edit)){
+                dd('別想亂來！');
+            }
+        }
+
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [
+            'content'=>$content,
+            'group_array'=>$group_array,
+        ];
+        return view('contents.together_edit', $data);
     }
+
+    /**
+    *public function exec_edit(Content $content)
+    *{
+    *    return view('contents.exec_edit', compact('content'));
+    *}
+    *
+    */
 
     /**
      * Update the specified resource in storage.
@@ -158,13 +213,15 @@ class ContentsController extends Controller
         return redirect()->route('contents.index');
     }
 
-    public function exec_update(Request $request, Content $content)
+    public function together_update(Request $request, Content $content)
     {
         $request->validate([
             'title' => 'required',
             'content' => 'required',
         ]);
-        $content->update($request->all());
+        $att= $request->all();
+        $att['tags'] = str_replace(" ","",$att['tags']);
+        $content->update($att);
 
         $att['module'] = "content";
         $att['this_id'] = $content->id;
@@ -173,10 +230,30 @@ class ContentsController extends Controller
         $att['power'] = $request->input('power');
         $att['user_id'] = auth()->user()->id;
         Log::create($att);
-
-        return redirect()->route('contents.show', $content->id);
+        
+        return redirect()->route('contents.show',$content->id);
     }
 
+    /**
+    *public function exec_update(Request $request, Content $content)
+    *{
+    *    $request->validate([
+    *        'title' => 'required',
+    *        'content' => 'required',
+    *    ]);
+    *    $content->update($request->all());
+    *
+    *    $att['module'] = "content";
+    *    $att['this_id'] = $content->id;
+    *    $att['title'] = $request->input('title');
+    *    $att['content'] = $request->input('content');
+    *    $att['power'] = $request->input('power');
+    *    $att['user_id'] = auth()->user()->id;
+    *    Log::create($att);
+    *
+    *    return redirect()->route('contents.show', $content->id);
+    *}
+    */
     /**
      * Remove the specified resource from storage.
      *

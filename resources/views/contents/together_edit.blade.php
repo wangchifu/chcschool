@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item active" aria-current="page">修改內容</li>
                 </ol>
             </nav>
-            {{ Form::model($content,['route' => ['contents.update',$content->id], 'method' => 'PATCH','id'=>'this_form']) }}
+            {{ Form::model($content,['route' => ['contents.together_update',$content->id], 'method' => 'PATCH','id'=>'this_form']) }}
             <div class="card my-4">
                 <h3 class="card-header">內容資料</h3>
                 <div class="card-body">
@@ -26,11 +26,11 @@
                     </div>
                     <div class="form-group">
                         <label for="title">共編群組*</label>
-                        {{ Form::select('group_id', $group_array,null, ['id' => 'group_id', 'class' => 'form-control']) }}
+                        {{ Form::select('group_id', $group_array,null, ['id' => 'group_id', 'class' => 'form-control','disabled'=>'disabled']) }}
                     </div>
                     <div class="form-group">
                         <label for="tags">標籤</label><small class="text-secondary"> (請用,分隔多個標籤)</small>
-                        {{ Form::text('tags',null,['id'=>'tags','class' => 'form-control', 'placeholder' => '標籤']) }}
+                        {{ Form::text('tags',null,['id'=>'tags','class' => 'form-control', 'placeholder' => '標籤','readonly'=>'readonly']) }}
                     </div>
                     <div class="form-group">
                         <label for="content">內文*</label>

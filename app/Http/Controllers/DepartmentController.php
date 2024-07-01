@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Department;
 use App\Setup;
 use App\Log;
+use App\Group;
+use App\UserGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -32,7 +34,16 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::orderBy('order_by')->get();
-        return view('departments.index', compact('departments'));
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [
+            'departments'=>$departments,
+            'group_array'=>$group_array,
+        ];
+        return view('departments.index', $data);
     }
 
     /**
@@ -48,9 +59,16 @@ class DepartmentController extends Controller
         }else{
             $new_order_by = 1;
         }
+
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
         
         $data = [
             'new_order_by'=>$new_order_by,
+            'group_array'=>$group_array,
         ];
         return view('departments.create',$data);
     }
@@ -67,7 +85,8 @@ class DepartmentController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
-        Department::create($request->all());
+        $att = $request->all();
+        Department::create($att);
         return redirect()->route('departments.index');
     }
 
@@ -123,13 +142,51 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        return view('departments.edit', compact('department'));
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [
+            'department'=>$department,
+            'group_array'=>$group_array,
+        ];
+        return view('departments.edit', $data);
     }
 
-    public function exec_edit(Department $department)
+    public function together_edit(Department $department)
     {
-        return view('departments.exec_edit', compact('department'));
+        if($department->group_id != null){
+            $check_edit = UserGroup::where('user_id',auth()->user()->id)->where('group_id',$department->group_id)->first();
+            if(empty($check_edit)){
+                dd('別想亂來！');
+            }
+        }else{
+            //行政人員預設可以編
+            $check_edit = UserGroup::where('user_id',auth()->user()->id)->where('group_id',1)->first();
+            if(empty($check_edit)){
+                dd('別想亂來！');
+            }
+        }
+
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [
+            'department'=>$department,
+            'group_array'=>$group_array,
+        ];
+        return view('departments.together_edit', $data);
     }
+
+    /**
+    *public function exec_edit(Department $department)
+    *{
+    *    return view('departments.exec_edit', compact('department'));
+    *}
+    */
 
     /**
      * Update the specified resource in storage.
@@ -155,7 +212,7 @@ class DepartmentController extends Controller
         return redirect()->route('departments.index');
     }
 
-    public function exec_update(Request $request, Department $department)
+    public function together_update(Request $request, Department $department)
     {
         $request->validate([
             'title' => 'required',
@@ -169,8 +226,27 @@ class DepartmentController extends Controller
         $att['content'] = $request->input('content');
         $att['user_id'] = auth()->user()->id;
         Log::create($att);
-        return redirect()->route('departments.show', $department->id);
+        return redirect()->route('departments.show',$department->id);
     }
+
+    /**
+    *public function exec_update(Request $request, Department $department)
+    *{
+    *    $request->validate([
+    *        'title' => 'required',
+    *        'content' => 'required',
+    *    ]);
+    *    $department->update($request->all());
+    *
+    *    $att['module'] = "department";
+    *    $att['this_id'] = $department->id;
+    *    $att['title'] = $request->input('title');
+    *    $att['content'] = $request->input('content');
+    *    $att['user_id'] = auth()->user()->id;
+    *    Log::create($att);
+    *    return redirect()->route('departments.show', $department->id);
+    *}
+    */
 
     /**
      * Remove the specified resource from storage.

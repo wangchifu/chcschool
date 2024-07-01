@@ -22,6 +22,7 @@
                 <tr>
                     <th>id</th>
                     <th width="100">排序</th>
+                    <th>共編群組</th>
                     <th>標題</th>
                     <th>動作</th>
                 </tr>
@@ -29,8 +30,12 @@
                 <tbody>
                 @foreach($departments as $department)
                     <tr>
-                        <td>{{ $department->order_by }}</td>
                         <td>{{ $department->id }}</td>
+                        <td>{{ $department->order_by }}</td>
+                        <td>
+                            <?php $group_id = (empty($department->group_id))?"1":$department->group_id; ?>
+                            {{ $group_array[$group_id] }}
+                        </td>
                         <td><a href="{{ route('departments.show',$department->id) }}" target="_blank">{{ $department->title }}</a></td>                        
                         <td>
                             <a href="{{ route('departments.edit',$department->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>

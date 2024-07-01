@@ -7,6 +7,10 @@
             {{ Form::text('order_by',null,['id'=>'order_by','class' => 'form-control','maxlength'=>'3']) }}
         </div>
         <div class="form-group">
+            <label for="title">共編群組*</label>
+            {{ Form::select('group_id', $group_array,null, ['id' => 'group_id', 'class' => 'form-control','required'=>'required']) }}
+        </div>
+        <div class="form-group">
             <label for="title">標題*</label>
             {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required', 'placeholder' => '標題']) }}
         </div>        

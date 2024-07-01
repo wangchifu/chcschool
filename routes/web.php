@@ -131,6 +131,14 @@ Route::post('lends/print_lend', 'LendsController@print_lend')->name('lends.print
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'], function () {
+    //共同編輯
+    Route::get('contents_together/{content}/edit', 'ContentsController@together_edit')->name('contents.together_edit');
+    Route::patch('contents_together/{content}', 'ContentsController@together_update')->name('contents.together_update');
+
+    //共同編輯學校介紹
+    Route::get('departments_together/{department}/edit', 'DepartmentController@together_edit')->name('departments.together_edit');
+    Route::patch('departments_together/{department}', 'DepartmentController@together_update')->name('departments.together_update');
+
     Route::get('posts/index_my', 'PostsController@index_my')->name('posts.index_my');
     //結束模擬
     Route::get('sims/impersonate_leave', 'SimulationController@impersonate_leave')->name('sims.impersonate_leave');
@@ -394,12 +402,12 @@ Route::group(['middleware' => 'exec'], function () {
 
 
     //行政人員編輯
-    Route::get('contents_exec/{content}/edit', 'ContentsController@exec_edit')->name('contents.exec_edit');
-    Route::patch('contents_exec/{content}', 'ContentsController@exec_update')->name('contents.exec_update');
+    //Route::get('contents_exec/{content}/edit', 'ContentsController@exec_edit')->name('contents.exec_edit');
+    //Route::patch('contents_exec/{content}', 'ContentsController@exec_update')->name('contents.exec_update');
 
     //行政人員編輯學校介紹
-    Route::get('departments_exec/{department}/edit', 'DepartmentController@exec_edit')->name('departments.exec_edit');
-    Route::patch('departments_exec/{department}', 'DepartmentController@exec_update')->name('departments.exec_update');
+    //Route::get('departments_exec/{department}/edit', 'DepartmentController@exec_edit')->name('departments.exec_edit');
+    //Route::patch('departments_exec/{department}', 'DepartmentController@exec_update')->name('departments.exec_update');
 
     //行政人員編輯校園部落格
     Route::get('blogs/create', 'BlogsController@create')->name('blogs.create');
