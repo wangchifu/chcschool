@@ -123,10 +123,12 @@
                 ->paginate($post_show_number);
             //檢查置頂日期
             foreach($posts as $post){
-                if($post->top_date < date('Y-m-d')){
-                    $att['top'] = null;
-                    $att['top_date'] = null;
-                    $post->update($att);
+                if($post->top ==1){
+                    if($post->top_date < date('Y-m-d')){
+                        $att['top'] = null;
+                        $att['top_date'] = null;
+                        $post->update($att);
+                    }    
                 }
             }
             ?>

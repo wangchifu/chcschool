@@ -61,10 +61,12 @@ class PostsController extends Controller
 
         //檢查置頂日期
         foreach($posts as $post){
-            if($post->top_date < date('Y-m-d')){
-                $att['top'] = null;
-                $att['top_date'] = null;
-                $post->update($att);
+            if($post->top ==1){
+                if($post->top_date < date('Y-m-d')){
+                    $att['top'] = null;
+                    $att['top_date'] = null;
+                    $post->update($att);
+                }    
             }
         }
         $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
@@ -237,11 +239,14 @@ class PostsController extends Controller
      */
     public function show(Post $post)
     {
-        if($post->top_date < date('Y-m-d')){
-            $att['top'] = null;
-            $att['top_date'] = null;
-            $post->update($att);
+        if($post->top == 1){
+            if($post->top_date < date('Y-m-d')){
+                $att['top'] = null;
+                $att['top_date'] = null;
+                $post->update($att);
+            }
         }
+
         $s_key = "pv" . $post->id;
         if (!session($s_key)) {
             $att['views'] = $post->views + 1;
