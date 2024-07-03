@@ -78,5 +78,8 @@
             <i class="fas fa-plus"></i> 新增區塊
         </button>
     </div>
+    <hr>
+    標題底色參考：<br>
+    <a href="{{ route('setups.block_color') }}"><img src="{{ asset('color.png') }}" class="img-thumbnail" alt="..."></a>
     {{ Form::close() }}
 @endsection

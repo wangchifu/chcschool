@@ -299,6 +299,7 @@ class SetupController extends Controller
         $blocks = Block::orderBy('setup_col_id')
             ->orderBy('order_by')
             ->get();
+            
         $data = [
             'setup_array' => $setup_array,
             'blocks' => $blocks,

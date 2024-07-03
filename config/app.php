@@ -483,6 +483,7 @@ return [
         'www.tcjh.chc.edu.tw'=>'s074328',
         'www.ptjhs.chc.edu.tw'=>'s074501',
         'www.twjh.chc.edu.tw'=>'s074531',
+        'dream.twjh.chc.edu.tw'=>'s074531_2',//田尾自造教育及科技中心
         'www.ptjh.chc.edu.tw'=>'s074534',
         'www.ccjh.chc.edu.tw'=>'s074532',
         'www.hyjh.chc.edu.tw'=>'s074533',
