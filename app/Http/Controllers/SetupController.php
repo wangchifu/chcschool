@@ -290,19 +290,40 @@ class SetupController extends Controller
 
     public function block()
     {
+        /**
         $setup_cols = SetupCol::orderBy('order_by')->get();
         $setup_array = [];
         foreach ($setup_cols as $setup_col) {
             $setup_array[$setup_col->id] = $setup_col->title . '(' . $setup_col->id . ')';
         }
-
+        */
         $blocks = Block::orderBy('setup_col_id')
             ->orderBy('order_by')
             ->get();
+        $down_blocks = [];
+        $up_blocks = [];
+        foreach($blocks as $block){
+            if($block->setup_col_id==null){
+                $down_blocks[$block->id]['col'] = "(下架中)";
+                $title = (!empty($block->new_title))?$block->title."-->".$block->new_title:$block->title;
+                $down_blocks[$block->id]['title'] = $title;
+                $down_blocks[$block->id]['order_by'] = $block->order_by;
+            }else{
+                $setup_col_order = (empty($block->setup_col->order_by))?0:$block->setup_col->order_by;
+                $up_blocks[$setup_col_order][$block->id]['col'] = $block->setup_col->title."(".$setup_col_order.")";
+                $title = (!empty($block->new_title))?$block->title."-->".$block->new_title:$block->title;
+                $up_blocks[$setup_col_order][$block->id]['title'] = $title;
+                $up_blocks[$setup_col_order][$block->id]['order_by'] = $block->order_by;
+            }
+        }
+        ksort($up_blocks);
+
+        //dd($up_block);
             
         $data = [
-            'setup_array' => $setup_array,
-            'blocks' => $blocks,
+            //'setup_array' => $setup_array,
+            'down_blocks' => $down_blocks,
+            'up_blocks' => $up_blocks,
         ];
         return view('setups.block', $data);
     }

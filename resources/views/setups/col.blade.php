@@ -32,7 +32,7 @@
                                 排序
                             </th>
                             <th>
-                                名稱 (id)
+                                名稱
                             </th>
                             <th>
                                 所佔比例 ( bootstrap 網頁一行佔 12 )
@@ -49,7 +49,7 @@
                                     {{ $setup_col->order_by }}
                                 </td>
                                 <td>
-                                    {{ $setup_col->title }} ({{ $setup_col->id }})
+                                    {{ $setup_col->title }}
                                 </td>
                                 <td>
                                     {{ $setup_col->num }}

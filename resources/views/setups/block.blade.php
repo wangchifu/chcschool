@@ -43,35 +43,53 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($blocks as $block)
+                        @foreach($down_blocks as $k=>$v)
                             <tr>
                                 <td>
-                                    @if($block->setup_col_id)
-                                    {{ $block->setup_col->title }} ({{ $block->setup_col_id }})
-                                    @else
-                                        <small class="text-secondary">(下架中)</small>
-                                    @endif
+                                    <small class="text-secondary">{{ $v['col'] }}</small>
                                 </td>
                                 <td>
-                                    {{ $block->order_by }}
+                                    {{ $v['order_by'] }}
                                 </td>
                                 <?php
-                                    if(str_contains($block->title,"(系統區塊)")==true or str_contains($block->title,"榮譽榜跑馬燈")==true){
+                                    if(str_contains($v['title'],"(系統區塊)")==true or str_contains($v['title'],"榮譽榜跑馬燈")==true){
                                         $text_color = "text-info";
                                     }else{
                                         $text_color = "text-dark";
                                     };
                                 ?>
                                 <td class="{{ $text_color }}">                                    
-                                    {{ $block->title }}
-                                    @if(!empty($block->new_title))
-                                        -->{{ $block->new_title }}
-                                    @endif
+                                    {{ $v['title'] }}
                                 </td>
                                 <td>
-                                    <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
+                                    <a href="javascript:open_window('{{ route('setups.edit_block',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
                                 </td>
                             </tr>
+                        @endforeach
+                        @foreach($up_blocks as $k=>$v)
+                            @foreach($v as $k1=>$v1)
+                            <tr>
+                                <td>
+                                    {{ $v1['col'] }}
+                                </td>
+                                <td>
+                                    {{ $v1['order_by'] }}
+                                </td>
+                                <?php
+                                    if(str_contains($v1['title'],"(系統區塊)")==true or str_contains($v1['title'],"榮譽榜跑馬燈")==true){
+                                        $text_color = "text-info";
+                                    }else{
+                                        $text_color = "text-dark";
+                                    };
+                                ?>
+                                <td class="{{ $text_color }}">                                    
+                                    {{ $v1['title'] }}
+                                </td>
+                                <td>
+                                    <a href="javascript:open_window('{{ route('setups.edit_block',$k1) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
+                                </td>
+                            </tr>
+                            @endforeach
                         @endforeach
                         </tbody>
                     </table>

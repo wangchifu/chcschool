@@ -228,7 +228,8 @@ return [
         'chcschool.localhost'=>'s074999',
         //'web.chc.edu.tw'=>'s079998',
         //'www.chc.edu.tw'=>'s079998',
-        //'www.chsport.chc.edu.tw'=>'s079999',        
+        //'www.chsport.chc.edu.tw'=>'s079999',
+        'dream.twjh.chc.edu.tw'=>'s073001',//田尾自造教育及科技中心        
         'wwwtest.hdes.chc.edu.tw'=>'s074000',
         'www1.hdes.chc.edu.tw'=>'s074001',
         'www2.hdes.chc.edu.tw'=>'s074002',
@@ -483,7 +484,6 @@ return [
         'www.tcjh.chc.edu.tw'=>'s074328',
         'www.ptjhs.chc.edu.tw'=>'s074501',
         'www.twjh.chc.edu.tw'=>'s074531',
-        'dream.twjh.chc.edu.tw'=>'s074531_2',//田尾自造教育及科技中心
         'www.ptjh.chc.edu.tw'=>'s074534',
         'www.ccjh.chc.edu.tw'=>'s074532',
         'www.hyjh.chc.edu.tw'=>'s074533',
