@@ -107,7 +107,7 @@
         </tr>
         <tr>
             <td colspan="3">
-                @if(strpos($block->title,"跑馬燈"))
+                @if(str_contains($block->title,'榮譽榜跑馬燈'))
                     <div class="form-group">
                         <label for="content">6.跑馬燈設定*</label>
                         {{ Form::textarea('content',$block->content,['id'=>'marquee-editor','class'=>'form-control','required'=>'required']) }}
@@ -122,7 +122,7 @@
                             背景顏色：bgcolor="參數值"；可設定為顏色的色碼，不設定則沒有顏色<br>
                         </div>
                     </div>
-                @elseif(!strpos($block->title,'系統區塊'))
+                @elseif(!str_contains($block->title,'系統區塊'))
                 <div class="form-group">
                     <label for="content">6.內文*</label>
                     {{ Form::textarea('content',$block->content,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
