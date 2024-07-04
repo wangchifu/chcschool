@@ -38,7 +38,7 @@
             if(auth()->check()){
                 if($post->user_id == auth()->user()->id){
                 $can_see = 1;
-            }
+                }
             }            
             ?>
             <nav aria-label="breadcrumb">
@@ -51,7 +51,7 @@
             @if($can_see)
                 <h1>{{ $post->title }}</h1>                             
             @else
-                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and substr($post->created_at,0,10) < date('Y-m-d'))
+                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and substr($post->created_at,0,10) < date('Y-m-d H:i:s'))
                     <h1 class="text-danger"><i class="fas fa-ban"></i> [ 內部公告 ]{{ $post->title  }}</h1>                                           
                 @endif
                 @if($post->die_date < date('Y-m-d') and $post->die_date != null)
