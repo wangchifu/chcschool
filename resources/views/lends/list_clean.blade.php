@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master_clean')
 
 @section('nav_school_active', 'active')
 
@@ -15,28 +15,8 @@ $active['list'] ="active";
 ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>借用清單<a href="{{ route('lends.list_clean') }}" target="_blank"><i class="fas fa-share-square"></i></a></h1>
-            @include('lends.nav')
+            <h1>借用清單</h1>
             <br>
-            <form id="line_form" action="{{ route('store_line_notify') }}" method="post">
-                @csrf 
-                <table>
-                    <tr>
-                        <td>
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label"><i class="fab fa-line"></i> LINE權杖</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="line_key" value="{{ auth()->user()->line_key }}" required>
-                                <div id="emailHelp" class="form-text">有借用單時，會發LINE通知給你.</div>
-                              </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-success" onclick="return confirm('確定嗎？')">儲存</button>
-                        </td>
-                    </tr>
-                </table>
-                </form>
-
-
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                       <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">今日要借出</a>
