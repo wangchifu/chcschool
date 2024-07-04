@@ -43,6 +43,9 @@
                             @if($post->top)
                                 <p class="badge badge-danger">置頂</p>
                             @endif
+                            @if($post->inbox)
+                                <p class="badge badge-warning">常駐</p>
+                            @endif
                             {{ substr($post->created_at,0,10) }}
                             @if($post->created_at > date('Y-m-d H:i:s'))
                             <h5><span class="badge badge-danger">尚未上架<br>{{ $post->created_at }}</span></h5>

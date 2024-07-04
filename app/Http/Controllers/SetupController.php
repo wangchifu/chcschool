@@ -209,6 +209,7 @@ class SetupController extends Controller
         if ($request->input('set_close_website') == "on") {
             $att['close_website'] = null;
         }
+        $att['disable_right'] = $request->input('disable_right');
         $setup->update($att);
         return redirect()->route('setups.index');
     }

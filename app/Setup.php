@@ -13,6 +13,7 @@ class Setup extends Model
         'bg_color',
         'photo_link_number',
         'post_show_number',
+        'disable_right',
         'title_image',
         'views',
         'footer',

@@ -92,12 +92,18 @@
                             @endif
                             <a href="{{ route('posts.top_down',$post->id) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定要取消置頂？')"><i class="fas fa-sort-amount-down"></i> 取消置頂</a>
                         @else
-                            <!--
-                            <a href="{{ route('posts.top_up',$post->id) }}" class="btn btn-outline-success btn-sm" onclick="return confirm('確定要置頂？')"><i class="fas fa-sort-amount-up"></i> 置頂</a>
-                            -->
                             <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal">
                                 <i class="fas fa-sort-amount-up"></i> 置頂
                               </button>
+                        @endif
+                        @if($post->inbox)
+                            <a href="{{ route('posts.inbox',$post->id) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定取消常駐公告？')">
+                                <i class="fas fa-inbox"></i> 取消常駐
+                            </a>
+                        @else
+                            <a href="{{ route('posts.inbox',$post->id) }}" class="btn btn-outline-warning btn-sm" onclick="return confirm('確定放進常駐公告區塊？')">
+                                <i class="fas fa-inbox"></i> 常駐
+                            </a>
                         @endif
                     @endif
 

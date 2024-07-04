@@ -579,6 +579,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::patch('posts/{post_type}/update_type', 'PostsController@update_type')->name('posts.update_type');
     Route::get('posts/{post_type}/delete_type', 'PostsController@delete_type')->name('posts.delete_type');
     Route::get('posts/{post_type}/disable_type', 'PostsController@disable_type')->name('posts.disable_type');
+    //常駐
+    Route::get('posts/{post}/inbox', 'PostsController@inbox')->name('posts.inbox');
 
     //會議文稿
     Route::get('meetings/{meeting}/edit', 'MeetingController@edit')->name('meetings.edit');

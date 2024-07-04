@@ -642,11 +642,18 @@ class PostsController extends Controller
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 
+    public function inbox(Post $post)
+    {
+        $att['inbox'] = ($post->inbox)?null:1;
+        $post->update($att);
+        return redirect()->route('posts.show',$post->id);
+    }
+
     public function top_up(Post $post)
     {
         $att['top'] = 1;
         $post->update($att);
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.show',$post->id);
     }
 
     public function top_up2(Request $request,Post $post)
@@ -654,7 +661,7 @@ class PostsController extends Controller
         $att['top'] = 1;
         $att['top_date'] = $request->input('top_date');
         $post->update($att);
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.show',$post->id);
     }
 
     public function top_down(Post $post)
@@ -662,6 +669,6 @@ class PostsController extends Controller
         $att['top'] = null;
         $att['top_date'] = null;
         $post->update($att);
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.show',$post->id);
     }
 }

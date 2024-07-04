@@ -50,6 +50,9 @@
                                 @if($post->top)
                                     <p class="badge badge-danger">置頂</p>
                                 @endif
+                                @if($post->inbox)
+                                    <p class="badge badge-warning">常駐</p>
+                                @endif
                                 {{ substr($post->created_at,0,10) }}
                             </td>
                             <td data-th="類別">
@@ -159,6 +162,9 @@
                             <td data-th="日期">
                                 @if($post->top)
                                     <p class="badge badge-danger">置頂</p>
+                                @endif
+                                @if($post->inbox)
+                                    <p class="badge badge-warning">常駐</p>
                                 @endif
                                 {{ substr($post->created_at,0,10) }}
                             </td>

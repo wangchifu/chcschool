@@ -44,6 +44,9 @@
                         @if($post->top)
                             <p class="badge badge-danger">置頂</p>
                         @endif
+                        @if($post->inbox)
+                            <p class="badge badge-warning">常駐</p>
+                        @endif
                         @if($post->insite==1)
                             <p class="badge badge-danger">內部公告</p>
                         @endif

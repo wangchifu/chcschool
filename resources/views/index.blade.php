@@ -137,6 +137,8 @@
                                 @include('layouts.rss_feed')                           
                             @elseif($block->title == "借用狀態(系統區塊)")
                                 @include('layouts.lend_list')
+                            @elseif($block->title == "常駐公告(系統區塊)")
+                                @include('layouts.inbox_posts')
                             @else
                                 {!! $block->content !!}
                             @endif
@@ -184,7 +186,9 @@
             </div>
         </footer>
     @endif
-    <div class="footer-copyright text-center text-black-50 py-3" id="footer_bottom">
-        {{ date('Y') }} Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
-    </div>
+    @if($setup->disable_right==null)
+        <div class="footer-copyright text-center text-black-50 py-3" id="footer_bottom">
+            {{ date('Y') }} Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
+        </div>
+    @endif
 @endsection

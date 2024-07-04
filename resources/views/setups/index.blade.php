@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="footer">置底</label>
+                        <label for="footer">置底 (id="footer")</label>
                         {{ Form::textarea('footer',$setup->footer,['id'=>'footer','class'=>'form-control']) }}
                     </div>
                     <script src="{{ asset('mycke/ckeditor.js') }}"></script>
@@ -99,9 +99,17 @@
                             });
                     </script>
                     <?php 
+                        $disable_right = ($setup->disable_right)?"checked":"";
                         $r1 = (empty($setup->close_website))?"checked":"";
                         $r2 = (empty($setup->close_website))?"":"checked";
                     ?>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="disable_right" name="disable_right" {{ $disable_right }} value="1">
+                        <label class="form-check-label" for="disable_right">隱藏版權列 (id="footer_bottom")</label>
+                        <div class="footer-copyright text-center text-black-50 py-3" id="footer_bottom" style="background-color: #CCCCCC;">
+                            {{ date('Y') }} Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>
+                        </div>
+                      </div>
                     <div class="form-group">
                         <label for="footer">關閉網站</label>
                         <div class="card">

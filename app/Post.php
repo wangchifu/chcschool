@@ -14,6 +14,7 @@ class Post extends Model
         'user_id',
         'views',
         'insite',
+        'inbox',
         'top',
         'top_date',
         'die_date',
