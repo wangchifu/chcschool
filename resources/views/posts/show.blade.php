@@ -51,7 +51,7 @@
             @if($can_see)
                 <h1>{{ $post->title }}</h1>                             
             @else
-                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and substr($post->created_at,0,10) < date('Y-m-d H:i:s'))
+                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and $post->created_at < date('Y-m-d H:i:s'))
                     <h1 class="text-danger"><i class="fas fa-ban"></i> [ 內部公告 ]{{ $post->title  }}</h1>                                           
                 @endif
                 @if($post->die_date < date('Y-m-d') and $post->die_date != null)
@@ -134,7 +134,7 @@
                     </p>
                 </div>
             @else
-                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and substr($post->created_at,0,10) < date('Y-m-d'))
+                @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and $post->created_at < date('Y-m-d H:i:s'))
                     <div style="border-width:1px;border-color:#939699;border-style: dotted;background-color:#FFFFFF;padding: 10px">
                         <p style="font-size: 1.2rem;">                                                    
                             <p class="text-danger">[ 內部公告 ] 請登入後瀏覽！</p>                                                                                              
