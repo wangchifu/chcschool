@@ -20,8 +20,9 @@
                 <h3 class="card-header">公告資料</h3>
                 <div class="card-body">
                     <div class="form-group">
+                        <?php $job_title = (auth()->user()->username=="admin")?"系統管理":auth()->user()->title; ?>
                         <label for="job_title"><strong class="text-danger">1.職稱*</strong></label>
-                        {{ Form::text('job_title',auth()->user()->title,['id'=>'job_title','class' => 'form-control', 'readonly' => 'readonly']) }}
+                        {{ Form::text('job_title',$job_title,['id'=>'job_title','class' => 'form-control', 'readonly' => 'readonly']) }}
                     </div>
                     <div class="form-group">
                         <label for="insite"><strong class="text-danger">2.公告類別*</strong></label>

@@ -22,7 +22,7 @@
                     @include('layouts.errors')
                     <div class="form-group">
                         <label for="job_title"><strong class="text-danger">1.職稱*</strong></label>
-                        {{ Form::text('job_title',auth()->user()->title,['id'=>'title','class' => 'form-control', 'readonly' => 'readonly']) }}
+                        {{ Form::text('job_title',null,['id'=>'title','class' => 'form-control', 'readonly' => 'readonly']) }}
                     </div>
                     <div class="form-group">
                         <label for="insite"><strong class="text-danger">2.公告類別*</strong></label>

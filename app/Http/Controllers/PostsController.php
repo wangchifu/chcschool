@@ -167,7 +167,7 @@ class PostsController extends Controller
 
         $att['title'] = $request->input('title');
         $att['content'] = $request->input('content');
-        $att['job_title'] = auth()->user()->title;
+        $att['job_title'] = $request->input('job_title');
         $live_date = $request->input('live_date');
         $att['die_date'] = $request->input('die_date');
         $att['user_id'] = auth()->user()->id;

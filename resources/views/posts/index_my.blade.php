@@ -26,8 +26,9 @@
                         @can('create',\App\Post::class)
                             <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
                         @endauth
-              </th>
-              <th>
+                    </th>
+                    <th>
+                        類別
                     </th>
                     <th nowrap>
                         標題
