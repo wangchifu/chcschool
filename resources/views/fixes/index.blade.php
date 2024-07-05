@@ -17,6 +17,32 @@
             <a href="{{ route('fixes.index') }}" class="btn btn-dark btn-sm"><i class="fas fa-check-square"></i> 全部列表</a>
             @include('fixes.nav',['situation'=>null])
             <hr>
+            @if($fix_admin)
+                <form id="line_form" action="{{ route('fixes.store_notify') }}" method="post">
+                    @csrf
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label"><i class="fab fa-line"></i> LINE權杖</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="line_key" value="{{ auth()->user()->line_key }}" required>
+                                    <div id="emailHelp" class="form-text">新張貼會發LINE通知給你.</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label"><i class="fas fa-envelope-square"></i> email通知</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value="{{ auth()->user()->email }}" required>
+                                    <div id="emailHelp" class="form-text">新張貼會發email通知給你.</div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="return confirm('確定嗎？')">儲存</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            @endif
             <a href="{{ route('fixes.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增報修</a>
             <table class="table table-striped">
                 <thead class="thead-light">

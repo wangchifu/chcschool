@@ -117,6 +117,15 @@ class FixController extends Controller
                 send_mail($user_power->user->email, $subject, $body);
             }
         }
+
+        foreach ($user_powers as $user_power) {
+            if (!empty($user_power->user->line_key)) {
+                $subject = '學校網站中「' . auth()->user()->name . '」在「報修設備」寫了：' . $att['title'];
+                $body = $att['content'];
+                $string = $subject."\n\n".$body;
+                line_notify($user_power->user->line_key,$string);
+            }
+        }
         return redirect()->route('fixes.index');
     }
 
@@ -226,6 +235,14 @@ class FixController extends Controller
     public function destroy(Fix $fix)
     {
         $fix->delete();
+        return redirect()->route('fixes.index');
+    }
+
+    function store_notify(Request $request){
+        $att['line_key'] =  $request->input('line_key');
+        $att['email'] =  $request->input('email');
+        $user = User::where('id',auth()->user()->id)->first();
+        $user->update($att);
         return redirect()->route('fixes.index');
     }
 }

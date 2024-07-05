@@ -160,6 +160,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('fixes/{fix}', 'FixController@show')->where('fix', '[0-9]+')->name('fixes.show');
     Route::get('fixes/create', 'FixController@create')->name('fixes.create');
     Route::post('fixes', 'FixController@store')->name('fixes.store');
+    Route::post('fixes/store_notify', 'FixController@store_notify')->name('fixes.store_notify');
     Route::match(['delete', 'get'], 'fixes/{fix}/delete', 'FixController@destroy')->name('fixes.destroy');
 
     //教室預約
