@@ -466,24 +466,17 @@ class LendsController extends Controller
 
     function list_clean(){
 
-        $admin = check_power('借用系統', 'A', auth()->user()->id);
-        if(!$admin) return back();
-
-        $lend_orders = LendOrder::where('owner_user_id',auth()->user()->id)
-            ->orderBy('id','DESC')
+        $lend_orders = LendOrder::orderBy('lend_item_id')->orderBy('id','DESC')
             ->paginate(20);
         
-        $lend_orders2 = LendOrder::where('owner_user_id',auth()->user()->id)
-            ->where('lend_date',date('Y-m-d'))
+        $lend_orders2 = LendOrder::where('lend_date',date('Y-m-d'))
             ->get();
 
-        $lend_orders3 = LendOrder::where('owner_user_id',auth()->user()->id)
-            ->where('back_date',date('Y-m-d'))
+        $lend_orders3 = LendOrder::where('back_date',date('Y-m-d'))
             ->get();       
         $this_date = date('Y-m')."-01"; 
         $data = [
             'this_date'=>$this_date,
-            'admin'=>$admin,
             'lend_orders'=>$lend_orders,
             'lend_orders2'=>$lend_orders2,
             'lend_orders3'=>$lend_orders3,
