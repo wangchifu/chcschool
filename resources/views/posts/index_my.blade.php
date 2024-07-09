@@ -7,7 +7,13 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>公告系統</h1>
+            <h1>
+                @if(empty($setup->post_name))
+                  公告系統
+                @else
+                  {{ $setup->post_name }}
+                @endif
+            </h1>
             @can('create',\App\Post::class)
             <ul class="nav nav-tabs">
                 <li class="nav-item">

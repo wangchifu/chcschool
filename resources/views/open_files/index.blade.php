@@ -1,13 +1,19 @@
 @extends('layouts.master')
 
 @section('nav_open_files_active', 'active')
-
-@section('title', '檔案庫 | ')
+<?php $openfile_name = (empty($setup->openfile_name))?"檔案庫":$setup->openfile_name; ?>
+@section('title', $openfile_name.' | ')
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>檔案庫</h1>
+            <h1>
+                @if(empty($setup->openfile_name))
+                    檔案庫
+                @else
+                    {{ $setup->openfile_name }}
+                @endif
+            </h1>
             <?php
             $final = end($folder_path);
             $final_key = key($folder_path);

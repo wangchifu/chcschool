@@ -67,7 +67,7 @@ class OpenFileController extends Controller
 
         $size = round($dir_size / 1024, 2);
         $per = round($size * 100 / 5120, 2);
-
+        $setup = Setup::first();
         $data = [
             'school_code' => $school_code,
             'path' => $path,
@@ -77,6 +77,7 @@ class OpenFileController extends Controller
             'files' => $files,
             'per' => $per,
             'size' => $size,
+            'setup'=>$setup,
         ];
         return view('open_files.index', $data);
     }
@@ -143,9 +144,11 @@ class OpenFileController extends Controller
 
     public function edit(Upload $upload, $path)
     {
+        $setup = Setup::first();
         $data = [
             'upload' => $upload,
             'path' => $path,
+            'setup'=>$setup,
         ];
         return view('open_files.edit', $data);
     }

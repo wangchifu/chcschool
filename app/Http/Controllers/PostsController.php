@@ -70,10 +70,11 @@ class PostsController extends Controller
             }
         }
         $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
-
+        $setup = Setup::first();
         $data = [
             'posts' => $posts,
             'post_types' => $post_types,
+            'setup'=>$setup,
         ];
         return view('posts.index', $data);
     }
@@ -83,10 +84,11 @@ class PostsController extends Controller
         $posts = Post::where('user_id',auth()->user()->id)->orderBy('created_at', 'DESC')
             ->paginate(20);
         $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
-
+        $setup = Setup::first();
         $data = [
             'posts' => $posts,
             'post_types' => $post_types,
+            'setup'=>$setup,
         ];
         return view('posts.index_my', $data);
     }
@@ -142,11 +144,12 @@ class PostsController extends Controller
         foreach ($all_types as $k => $v) {
             $types[$k] = $v;
         }
-
+        $setup = Setup::first();
         $data = [
             'types' => $types,
             'size' => $size,
             'per' => $per,
+            'setup'=>$setup,
         ];
         return view('posts.create', $data);
     }

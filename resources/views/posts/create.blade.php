@@ -14,7 +14,13 @@
                     <li class="breadcrumb-item active" aria-current="page">新增公告</li>
                 </ol>
             </nav>
-            <h1>公告系統</h1>
+            <h1>
+                @if(empty($setup->post_name))
+                  公告系統
+                @else
+                  {{ $setup->post_name }}
+                @endif
+            </h1>
             {{ Form::open(['route' => 'posts.store', 'method' => 'POST', 'files' => true,'id'=>'this_form','onsubmit'=>"return submitOnce(this)"]) }}
             <div class="card my-4">
                 <h3 class="card-header">公告資料</h3>

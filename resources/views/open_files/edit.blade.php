@@ -1,6 +1,6 @@
 @extends('layouts.master_clean')
-
-@section('title', '編輯檔案庫 | ')
+<?php $openfile_name = (empty($setup->openfile_name))?"檔案庫":$setup->openfile_name; ?>
+@section('title', '編輯'.$openfile_name.' | ')
 
 @section('content')
     @include('layouts.errors')
