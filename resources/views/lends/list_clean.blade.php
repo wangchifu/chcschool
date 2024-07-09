@@ -200,26 +200,20 @@ $active['list'] ="active";
                                     <th>
                                         備註
                                     </th>
-                                    <th>
-                                        動作
-                                    </th>
                                 </tr>
                                 @foreach($lend_orders as $lend_order)
                                 <?php
                                     $lend_items = \App\LendItem::where('lend_class_id',$lend_order->lend_item->lend_class_id)->get();
                                 ?>
-                                <form id="update_form{{ $lend_order->id }}" action="{{ route('lends.update_other_order',$lend_order->id) }}" method="post">
-                                    @csrf
                                 <tr>
                                     <td>
-                                        <a href="{{ route('lends.delete_order',$lend_order->id) }}" onclick="if(confirm('您確定要刪除嗎?')) return true;else return false"><i class="fas fa-times-circle text-danger"></i></a> 
-                                        {{ $lend_order->created_at }}
+                                       {{ $lend_order->created_at }}
                                     </td>
                                     <td>
                                         {{ $lend_order->user->name }}
                                     </td>
                                     <td>                              
-                                        <select class="form-control" name="lend_item_id">
+                                        <select class="form-control" name="lend_item_id" disabled>
                                             @foreach ($lend_items as $lend_item)
                                                 <?php
                                                     $lend_sections = config('chcschool.lend_sections');
@@ -228,11 +222,11 @@ $active['list'] ="active";
                                                 <option value="{{ $lend_item->id }}" {{ $selected }}>{{ $lend_item->name }}</option>
                                             @endforeach
                                         </select>                                                                                          
-                                        <input type="number" class="form-control" name="num" value="{{ $lend_order->num }}">                                                                              
+                                        <input type="number" class="form-control" name="num" value="{{ $lend_order->num }}" readonly>                                                                              
                                     </td>
                                     <td>
-                                        <input type="date" class="form-control" name="lend_date" value="{{ $lend_order->lend_date }}">
-                                        <select class="form-control" name="lend_section">
+                                        <input type="date" class="form-control" name="lend_date" value="{{ $lend_order->lend_date }}" readonly>
+                                        <select class="form-control" name="lend_section" disabled>
                                             @foreach($lend_sections as $k=>$v)
                                                 <?php  
                                                     $selected = ($k == $lend_order->lend_section)?"selected":null;
@@ -242,8 +236,8 @@ $active['list'] ="active";
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="date" class="form-control" name="back_date" value="{{ $lend_order->back_date }}">
-                                        <select class="form-control" name="back_section">
+                                        <input type="date" class="form-control" name="back_date" value="{{ $lend_order->back_date }}" readonly>
+                                        <select class="form-control" name="back_section" disabled>
                                             @foreach($lend_sections as $k=>$v)
                                                 <?php  
                                                     $selected = ($k == $lend_order->back_section)?"selected":null;
@@ -255,11 +249,7 @@ $active['list'] ="active";
                                     <td>
                                         {{ $lend_order->ps }}
                                     </td>
-                                    <td>
-                                        <button class="btn btn-success btn-sm" onclick="return confirm('確定修改別人的借用單？')">更新</button>
-                                    </td>
                                 </tr>
-                                </form>
                                 @endforeach
                             </table>
                             {{  $lend_orders->links() }}
