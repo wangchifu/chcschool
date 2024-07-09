@@ -22,7 +22,7 @@ class PhotoLinksController extends Controller
         foreach($photo_types as $photo_type){
             $photo_type_array[$photo_type->id] = $photo_type->name;
         }
-        $photo_type_array[0] = "不分類";
+        $photo_type_array[0] = "不分類"; 
 
         $photo_link_data = [];
         foreach($photo_links as $photo_link){
@@ -178,7 +178,7 @@ class PhotoLinksController extends Controller
     public function show($photo_type_id=null)
     {
         if($photo_type_id==null){
-            $photo_links = PhotoLink::orderBy('order_by','DESC')
+            $photo_links = PhotoLink::orderBy('created_at','DESC')->orderBy('order_by','DESC')
             ->paginate(24);
         }else{
             $photo_links = PhotoLink::where('photo_type_id',$photo_type_id)->orderBy('order_by','DESC')
