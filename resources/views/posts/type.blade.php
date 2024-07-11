@@ -9,7 +9,9 @@
         <div class="col-md-11">
             <h1>{{ $type_name }}
                 @auth
+                <!--不允許 iframe 
                 <a href="{{ route('posts.type_clean',$id) }}" target="_blank"><i class="fas fa-share-square"></i></a>
+                -->
                 @endauth
             </h1>
             <nav aria-label="breadcrumb">
