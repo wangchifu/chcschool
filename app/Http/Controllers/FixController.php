@@ -151,6 +151,26 @@ class FixController extends Controller
         return view('fixes.show', $data);
     }
 
+    public function show_clean(Fix $fix)
+    {
+        $fix_admin = null;
+        if(auth()->check()){
+            $fix_admin = check_power('報修系統', 'A', auth()->user()->id);
+        }
+        
+        $fix_classes = FixClass::orderBy('order_by')->get();
+        $types = [];
+        foreach($fix_classes as $fix_class){
+            $types[$fix_class->id] = $fix_class->name;
+        } 
+        $data = [
+            'fix' => $fix,
+            'fix_admin' => $fix_admin,
+            'types'=>$types,
+        ];
+        return view('fixes.show_clean', $data);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -193,6 +213,32 @@ class FixController extends Controller
 
 
         return redirect()->route('fixes.show', $fix->id);
+    }
+
+    public function update_clean(Request $request, Fix $fix)
+    {
+        $fix->update($request->all());
+
+        $att['email'] = $request->input('email');
+        $user = User::find(auth()->user()->id);
+        $user->update($att);
+
+        //寄信
+        if (!empty($fix->user->email)) {
+            $situation = ['2' => '處理中', '1' => '處理完畢'];
+
+            $subject = '回覆「學校網站」中「報修設備」的問題';
+            $body = "您問到：\r\n";
+            $body .= $request->input('title') . "\r\n";
+            $body .= "\r\n系統管理員回覆：\r\n";
+            $body .= $situation[$request->input('situation')] . "\r\n";
+            $body .= $request->input('reply');
+            $body .= "\r\n-----這是系統信件，請勿回信-----";
+            send_mail($fix->user->email, $subject, $body);
+        }
+
+
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     public function edit_class()

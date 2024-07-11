@@ -139,6 +139,8 @@
                                 @include('layouts.lend_list')
                             @elseif($block->title == "常駐公告(系統區塊)")
                                 @include('layouts.inbox_posts')
+                            @elseif($block->title == "待修通報(系統區塊)")
+                                @include('layouts.fix')
                             @else
                                 {!! $block->content !!}
                             @endif

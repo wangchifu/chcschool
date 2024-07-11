@@ -128,6 +128,8 @@ Route::get('lends/check_order_out_clean/{this_date}/{action}', 'LendsController@
 Route::post('lends/download_excel', 'LendsController@download_excel')->name('lends.download_excel');
 Route::post('lends/print_lend', 'LendsController@print_lend')->name('lends.print_lend');
 
+Route::get('fixes/{fix}/show_clean', 'FixController@show_clean')->where('fix', '[0-9]+')->name('fixes.show_clean');
+
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'], function () {
@@ -365,6 +367,7 @@ Route::group(['middleware' => 'exec'], function () {
 
     //報修回復
     Route::patch('fixes/{fix}', 'FixController@update')->name('fixes.update');
+    Route::patch('fixes/{fix}/update_clean', 'FixController@update_clean')->name('fixes.update_clean');
     Route::get('fixes/edit_class', 'FixController@edit_class')->name('fixes.edit_class');
     Route::post('fixes/edit_class/{fix_class}', 'FixController@update_class')->name('fixes.update_class');
     Route::post('fixes/store_class', 'FixController@store_class')->name('fixes.store_class');
