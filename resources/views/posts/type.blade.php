@@ -7,7 +7,11 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>{{ $type_name }}</h1>
+            <h1>{{ $type_name }}
+                @auth
+                <a href="{{ route('posts.type_clean',$id) }}" target="_blank"><i class="fas fa-share-square"></i></a>
+                @endauth
+            </h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>

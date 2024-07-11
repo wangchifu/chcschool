@@ -66,9 +66,11 @@ Route::get('posts', 'PostsController@index')->name('posts.index');
 //Route::get('posts/insite' , 'PostsController@insite')->name('posts.insite');
 //Route::get('posts/honor' , 'PostsController@honor')->name('posts.honor');
 Route::get('posts/{post}', 'PostsController@show')->where('post', '[0-9]+')->name('posts.show');
+Route::get('posts/{post}/show_clean', 'PostsController@show_clean')->where('post', '[0-9]+')->name('posts.show_clean');
 Route::match(['post', 'get'], 'posts/search/{search?}', 'PostsController@search')->name('posts.search');
 Route::get('posts/{job_title}/job_title', 'PostsController@job_title')->name('posts.job_title');
 Route::get('posts/{type}/type', 'PostsController@type')->name('posts.type');
+Route::get('posts/{type}/type_clean', 'PostsController@type_clean')->name('posts.type_clean');
 Route::post('posts/select_type', 'PostsController@select_type')->name('posts.select_type');
 
 //公開文件

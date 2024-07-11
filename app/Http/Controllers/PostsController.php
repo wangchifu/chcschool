@@ -315,6 +315,65 @@ class PostsController extends Controller
         return view('posts.show', $data);
     }
 
+    public function show_clean(Post $post)
+    {
+        if($post->top == 1){
+            if($post->top_date < date('Y-m-d')){
+                $att['top'] = null;
+                $att['top_date'] = null;
+                $post->update($att);
+            }
+        }
+
+        $s_key = "pv" . $post->id;
+        if (!session($s_key)) {
+            $att['views'] = $post->views + 1;
+            $post->update($att);
+
+            $ip = GetIP();
+            $school_code = school_code();
+            $post_folder = storage_path('app/public/'.$school_code.'/posts/'.$post->id); 
+            $file = $post_folder.'/'.$post->id.'.txt';
+            if(!is_dir($post_folder)) {
+                mkdir($post_folder,0777,true);
+            }
+            if(!file_exists($file)) {
+                $wfile = fopen($file, "w") or die("Unable to open file!");
+                fclose($wfile);        
+            }
+            $wfile = fopen($file, "at") or die("Unable to open file!");
+            fputs( $wfile, $att['views']." / ".$ip.' / '.date('Y-m-d H:i:s').PHP_EOL);
+            fclose($wfile);
+        }
+        session([$s_key => '1']);
+
+
+        $school_code = school_code();
+
+        //有無附件
+        $files = get_files(storage_path('app/public/' . $school_code . '/posts/' . $post->id . '/files'));
+        $photos = get_files(storage_path('app/public/' . $school_code . '/posts/' . $post->id . '/photos'));
+
+        $today = Carbon::today();
+        $next_month = $today->subMonth(1);
+        $hot_posts = Post::orderBy('views', 'DESC')
+            ->where('created_at', '>', $next_month)
+            ->paginate(20);
+
+        $post_type_array = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
+
+        $data = [
+            'school_code' => $school_code,
+            'post' => $post,
+            'hot_posts' => $hot_posts,
+            'files' => $files,
+            'photos'=>$photos,
+            'post_type_array'=>$post_type_array,
+        ];
+
+        return view('posts.show_clean', $data);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -571,6 +630,37 @@ class PostsController extends Controller
             $query->where('insite',null)->orWhere('insite',0);
             })->orderBy('top', 'DESC')
             ->orderBy('id', 'DESC')->paginate(20);
+            $id = 0;
+        }else{
+            $posts = Post::where('insite',$type)->orderBy('top', 'DESC')
+                ->orderBy('id', 'DESC')->paginate(20);
+            $id = $type;
+        }
+
+        if ($type == null) {
+            $type_name = "一般公告";
+        } else {
+            $post_type = PostType::where('id', $type)->first();
+            $type_name = $post_type->name;
+        }
+        $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
+
+        $data = [
+            'posts' => $posts,
+            'type_name' => $type_name,
+            'post_types' => $post_types,
+            'id'=>$id,
+        ];
+        return view('posts.type', $data);
+    }
+
+    public function type_clean($type)
+    {
+        if ($type == null or $type == 0){
+            $posts = Post::where(function ($query){
+            $query->where('insite',null)->orWhere('insite',0);
+            })->orderBy('top', 'DESC')
+            ->orderBy('id', 'DESC')->paginate(20);
         }else{
             $posts = Post::where('insite',$type)->orderBy('top', 'DESC')
                 ->orderBy('id', 'DESC')->paginate(20);
@@ -589,7 +679,7 @@ class PostsController extends Controller
             'type_name' => $type_name,
             'post_types' => $post_types,
         ];
-        return view('posts.type', $data);
+        return view('posts.type_clean', $data);
     }
 
     public function show_type()
