@@ -284,6 +284,12 @@ class FixController extends Controller
         return redirect()->route('fixes.index');
     }
 
+    public function destroy_clean(Fix $fix)
+    {
+        $fix->delete();
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
     function store_notify(Request $request){
         $att['line_key'] =  $request->input('line_key');
         $att['email'] =  $request->input('email');

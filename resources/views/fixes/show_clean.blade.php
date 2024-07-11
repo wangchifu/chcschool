@@ -72,7 +72,7 @@
                     {{ Form::close() }}
                 @endif
                 @if($fix->user_id == auth()->user()->id and $fix->created_at == $fix->updated_at)
-                    {{ Form::open(['route' => ['fixes.destroy',$fix->id], 'method' => 'DELETE']) }}
+                    {{ Form::open(['route' => ['fixes.destroy_clean',$fix->id], 'method' => 'DELETE']) }}
                     <button class="btn btn-danger btn-sm" onclick="return confirm('確定刪除？')"><i class="fas fa-trash"></i> 刪除</button>
                     {{ Form::close() }}
                 @endif

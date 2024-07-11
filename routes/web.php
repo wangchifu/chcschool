@@ -164,6 +164,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('fixes', 'FixController@store')->name('fixes.store');
     Route::post('fixes/store_notify', 'FixController@store_notify')->name('fixes.store_notify');
     Route::match(['delete', 'get'], 'fixes/{fix}/delete', 'FixController@destroy')->name('fixes.destroy');
+    Route::match(['delete', 'get'], 'fixes/{fix}/delete_clean', 'FixController@destroy_clean')->name('fixes.destroy_clean');
 
     //教室預約
     Route::get('classroom_orders/index', 'ClassroomOrderController@index')->name('classroom_orders.index');
