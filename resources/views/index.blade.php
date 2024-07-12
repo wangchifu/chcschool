@@ -105,7 +105,7 @@
                             </h5>
                         </div>
                         @endif
-                        <div class="content2">
+                        <div class="content2" id="block{{ $block->id }}" style="margin-bottom: 5px;">
                             <div class="table-responsive">
                             @if($block->title == "最新公告(系統區塊)")
                                 @include('layouts.news')

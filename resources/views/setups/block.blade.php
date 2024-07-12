@@ -38,6 +38,9 @@
                                 名稱
                             </th>
                             <th>
+                                css id
+                            </th>
+                            <th>
                                 編輯
                             </th>
                         </tr>
@@ -62,6 +65,9 @@
                                     {{ $v['title'] }}
                                 </td>
                                 <td>
+                                    id="block{{ $k }}"
+                                </td>
+                                <td>
                                     <a href="javascript:open_window('{{ route('setups.edit_block',$k) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
                                 </td>
                             </tr>
@@ -84,6 +90,9 @@
                                 ?>
                                 <td class="{{ $text_color }}">                                    
                                     {{ $v1['title'] }}
+                                </td>
+                                <td>
+                                    id="block{{ $k1 }}"
                                 </td>
                                 <td>
                                     <a href="javascript:open_window('{{ route('setups.edit_block',$k1) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>

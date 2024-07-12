@@ -28,9 +28,7 @@ $blogs = \App\Blog::orderBy('created_at','DESC')
         <tr>
             <td>
                 <a href="{{ route('blogs.show',$blog->id) }}" style="text-decoration: none">
-                    <h4>
-                        {{ $blog->title }}
-                    </h4>
+                    {{ $blog->title }}
                 </a>
                 <?php
                 $content = str_limit(strip_tags($blog->content),'150');
