@@ -4,6 +4,11 @@
 
 @section('title', $blog->title.' | ')
 
+@section('in_head')
+    <link rel="stylesheet" href="{{ asset('venobox/venobox.min.css') }}" type="text/css" media="screen">
+    <script src="{{ asset('venobox/venobox.min.js') }}"></script>
+@endsection
+
 @section('content')
     <style>
         .image-container{
@@ -56,7 +61,7 @@
                         <div class="card-body">
                             <div class="image-container">
                                 @if($blog->title_image)
-                                    <a href="{{ asset('storage/'.$school_code.'/blogs/'.$blog->id.'/title_image.png') }}" target="_blank">
+                                    <a href="{{ asset('storage/'.$school_code.'/blogs/'.$blog->id.'/title_image.png') }}" class="venobox" data-gall="gall1">
                                     <img src="{{ asset('storage/'.$school_code.'/blogs/'.$blog->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="40%">
                                     </a>
                                 @endif
@@ -84,4 +89,17 @@
             </div>
         </div>
     </div>
+<script>
+    var vb = new VenoBox({
+            selector: '.venobox',
+            numeration: true,
+            infinigall: true,
+            //share: ['facebook', 'twitter', 'linkedin', 'pinterest', 'download'],
+            spinner: 'rotating-plane'
+        });
+    
+        $(document).on('click', '.vbox-close', function() {
+            vb.close();
+        });
+</script>
 @endsection
