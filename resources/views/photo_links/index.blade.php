@@ -88,15 +88,15 @@
         </div>
         <div class="col-md-7">
             <h2>連結設定</h2>
-            <a href="{{ route('photo_links.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增連結</a><br><br>
+            <a href="{{ route('photo_links.create') }}" class="btn btn-success btn-sm" id="go_create"><i class="fas fa-plus"></i> 新增連結</a><br><br>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">不分類</button>
+                    <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="change_create_id({{ $photo_type->id }})">不分類</button>
                 </li>
                 <?php $p=1; ?>
                 @foreach($photo_types as $photo_type)
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="photo_link{{ $p }}-tab" data-toggle="tab" data-target="#photo_link{{ $p }}" type="button" role="tab" aria-controls="photo_link{{ $p }}" aria-selected="false">{{  $photo_type->name }}</button>
+                        <button class="nav-link" id="photo_link{{ $p }}-tab" data-toggle="tab" data-target="#photo_link{{ $p }}" type="button" role="tab" aria-controls="photo_link{{ $p }}" aria-selected="false" onclick="change_create_id({{ $photo_type->id }})">{{  $photo_type->name }}</button>
                     </li>
                 <?php $p++; ?>
                 @endforeach
@@ -208,5 +208,8 @@
         }
 
         var validator = $("#this_form1").validate();
+        function change_create_id(id){
+            $('#go_create').attr('href', '{{ route("photo_links.create") }}'+'/'+id);
+        }
     </script>
 @endsection

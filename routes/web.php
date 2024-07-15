@@ -445,7 +445,7 @@ Route::group(['middleware' => 'admin_exec'], function () {
 
     //圖片連結管理
     Route::get('photo_links', 'PhotoLinksController@index')->name('photo_links.index');
-    Route::get('photo_links/create', 'PhotoLinksController@create')->name('photo_links.create');
+    Route::get('photo_links/create/{photo_type_id?}', 'PhotoLinksController@create')->name('photo_links.create');
     Route::post('photo_links', 'PhotoLinksController@store')->name('photo_links.store');
     Route::post('photo_links/type_store', 'PhotoLinksController@type_store')->name('photo_links.type_store');
     Route::patch('photo_links/type_update/{photo_type}', 'PhotoLinksController@type_update')->name('photo_links.type_update');
@@ -562,7 +562,7 @@ Route::group(['middleware' => 'admin'], function () {
     //連結管理
     Route::get('links', 'LinksController@index')->name('links.index');
     //Route::get('links/browser/{select_type}', 'LinksController@browser')->name('links.browser');
-    Route::get('links/create', 'LinksController@create')->name('links.create');
+    Route::get('links/create/{type_id?}', 'LinksController@create')->name('links.create');
     Route::post('links', 'LinksController@store')->name('links.store');
     Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');
     Route::get('links/{link}/delete', 'LinksController@delete')->name('links.delete');

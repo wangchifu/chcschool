@@ -56,7 +56,7 @@ class PhotoLinksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($photo_type_id=null)
     {
         $photo_types = PhotoType::orderBy('order_by')->get();
         
@@ -84,6 +84,7 @@ class PhotoLinksController extends Controller
         $data = [
             'photo_types'=>$photo_types,
             'new_link_order_by'=>$new_link_order_by,
+            'photo_type_id'=>$photo_type_id,
         ];
         return view('photo_links.create',$data);
     }

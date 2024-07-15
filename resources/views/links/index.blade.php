@@ -133,17 +133,17 @@
             </div>
         </div>
         <div class="col-md-6">
-            <a href="{{ route('links.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增連結</a><br><br>
+            <a href="{{ route('links.create') }}" class="btn btn-success btn-sm" id="go_create"><i class="fas fa-plus"></i> 新增連結</a><br><br>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <?php $p=1; ?>
                 @foreach($types as $type)
                     @if($p==1)
                         <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">{{ $type->name }}</button>
+                        <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="change_create_id({{ $type->id }})">{{ $type->name }}</button>
                         </li>
                     @else
                         <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="link{{ $p }}-tab" data-toggle="tab" data-target="#link{{ $p }}" type="button" role="tab" aria-controls="link{{ $p }}" aria-selected="false">{{ $type->name}}</button>
+                        <button class="nav-link" id="link{{ $p }}-tab" data-toggle="tab" data-target="#link{{ $p }}" type="button" role="tab" aria-controls="link{{ $p }}" aria-selected="false" onclick="change_create_id({{ $type->id }})">{{ $type->name}}</button>
                         </li>
                     @endif
                     <?php $p++; ?>
@@ -365,5 +365,8 @@
     </div>
     <script>
         var validator = $("#this_form1").validate();
+        function change_create_id(id){
+            $('#go_create').attr('href', '{{ route("links.create") }}'+'/'+id);
+        }
     </script>
 @endsection

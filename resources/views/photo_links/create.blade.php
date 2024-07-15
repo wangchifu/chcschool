@@ -24,7 +24,8 @@
                         <select name="photo_type_id" class="form-control" id="photo_type_id" onclick="change_order_by()"">
                             <option value="0">不分類</option>
                             @foreach($photo_types as $photo_type)
-                                <option value="{{ $photo_type->id }}">{{ $photo_type->name }}</option>
+                                <?php $selected = ($photo_type_id==$photo_type->id)?"selected":null; ?>
+                                <option value="{{ $photo_type->id }}" {{ $selected }}>{{ $photo_type->name }}</option>
                             @endforeach
                         </select>
                     </div>

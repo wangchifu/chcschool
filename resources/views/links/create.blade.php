@@ -23,7 +23,7 @@
             </nav>
             @include('layouts.errors')
             {{ Form::open(['route' => 'links.store', 'method' => 'POST','id'=>'this_form']) }}
-            @include('links.form')
+            @include('links.form',['type_id'=>$type_id])
             {{ Form::close() }}
         </div>
     </div>

@@ -60,7 +60,7 @@ class LinksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($type_id=null)
     {
         $types = Type::where('type_id',null)->orderBy('order_by')->get();
         $type_array = [];
@@ -85,6 +85,7 @@ class LinksController extends Controller
         $data = [
             'type_array'=>$type_array,
             'new_link_order_by'=>$new_link_order_by,
+            'type_id'=>$type_id,
         ];
         return view('links.create',$data);
     }

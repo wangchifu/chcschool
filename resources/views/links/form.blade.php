@@ -1,3 +1,4 @@
+<?php if(!isset($type_id)) $type_id=null; ?>
 <link href="{{ asset('IconPicker/dist/iconpicker-1.5.0.css') }}" rel="stylesheet">
 <script src="{{ asset('IconPicker/dist/iconpicker-1.5.0.js') }}"></script>
 <div class="card my-4">
@@ -5,7 +6,7 @@
     <div class="card-body">
         <div class="form-group">
             <label for="name">類別*</label>
-            {{ Form::select('type_id', $type_array,null, ['id' => 'type_id', 'class' => 'form-control','required'=>'required','onchange'=>'change_order_by()']) }}
+            {{ Form::select('type_id', $type_array,$type_id, ['id' => 'type_id', 'class' => 'form-control','required'=>'required','onchange'=>'change_order_by()']) }}
         </div>       
         <div class="form-group">
             <label for="order_by">排序</label>
