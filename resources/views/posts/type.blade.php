@@ -21,7 +21,7 @@
                     <li class="breadcrumb-item active" aria-current="page">類別搜尋</li>
                 </ol>
             </nav>
-            @include('posts.list')
+            @include('posts.list',['type_name',$type_name])
             {{ $posts->links() }}
         </div>
     </div>

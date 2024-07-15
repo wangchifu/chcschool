@@ -1,4 +1,5 @@
 <?php
+    if(!isset($type_name)) $type_name=null;
     $key = rand(100,999);
     session(['search' => $key]);
 ?>
@@ -31,7 +32,7 @@
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
-        <th nowrap>日期
+        <th nowrap width="100px">日期
             @can('create',\App\Post::class)
                 <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
             @endauth
@@ -39,18 +40,19 @@
         <?php
         $post_type_array['a'] = "類別";
    	$post_type_array[0] = "一般公告";  
-	$post_types = \App\PostType::orderBy('order_by')->pluck('name','id')->toArray();	
+	$post_types = \App\PostType::where('disable',null)->orderBy('order_by')->pluck('name','id')->toArray();	
 
 	foreach($post_types as $k=>$v){
 	  $post_type_array[$k]=$v;
 	}
         ?>
-	<th>
+	<th width="200px">
 	    <form id="select_type_form" action='{{ route('posts.select_type') }}' method='post'>
             @csrf
-            <select id="select_type" name="select_type">
+            <select id="select_type" name="select_type" class="form-control">
 	    @foreach($post_type_array as $k=>$v)
-            <option value='{{$k}}'>{{$v}}</option>
+            <?php $selected = ($v== $type_name)?"selected":null; ?>
+            <option value='{{$k}}' {{ $selected }}>{{$v}}</option>
 	    @endforeach
 	    </select>
             </form>
