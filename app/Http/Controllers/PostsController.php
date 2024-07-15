@@ -624,8 +624,8 @@ class PostsController extends Controller
     }
 
     public function type($type)
-    {
-        if ($type == null or $type == 0){
+    {        
+        if ($type == 0){
             $posts = Post::where(function ($query){
             $query->where('insite',null)->orWhere('insite',0);
             })->orderBy('top', 'DESC')

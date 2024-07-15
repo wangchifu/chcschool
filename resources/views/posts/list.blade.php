@@ -2,8 +2,32 @@
     if(!isset($type_name)) $type_name=null;
     $key = rand(100,999);
     session(['search' => $key]);
+    $post_type_array['a'] = "請選類別";
+   	$post_type_array[0] = "一般公告";  
+	$post_types = \App\PostType::where('disable',null)->orderBy('order_by')->pluck('name','id')->toArray();	
+
+	foreach($post_types as $k=>$v){
+	  $post_type_array[$k]=$v;
+	}
 ?>
-<div align="right">
+<div style="float:left">
+    <table>
+        <tr>
+            <td>
+                <form id="select_type_form" action='{{ route('posts.select_type') }}' method='post'>
+                    @csrf                    
+                    <select id="select_type" name="select_type" class="form-control">
+                        @foreach($post_type_array as $k=>$v)
+                            <?php $selected = ($v== $type_name)?"selected":null; ?>
+                            <option value='{{$k}}' {{ $selected }}>{{$v}}</option>
+                        @endforeach
+                </select>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+<div style="float: right">
     <form action="{{ route('posts.search') }}" method="post" class="search-form" id="this_form">
         {{ csrf_field() }}
         <table>
@@ -14,15 +38,15 @@
                             <a href="javascript:open_window('{{ route('posts.show_type') }}','新視窗')" class="btn btn-success btn-sm"><i class="fas fa-cog"></i> 類別管理</a>
                         </td>
                     @endif
-                @endauth
+                @endauth                
                 <td>
-                    <input type="text" name="search" id="search" placeholder="關鍵字" required style="width: 100px;">
+                    <input type="text" class="form-control" name="search" id="search" placeholder="搜尋關鍵字" required>
                 </td>
                 <td>
-                    <input type="text" name="check" placeholder="請輸入：{{ session('search') }}" required maxlength="3" style="width:200px;">
+                    <input type="text" class="form-control" name="check" placeholder="請輸入：{{ session('search') }}" required maxlength="3">
                 </td>
                 <td>
-                    <button><i class="fas fa-search"></i></button>
+                    <button class="btn btn-secondary"><i class="fas fa-search"></i></button>
                 </td>
             </tr>
         </table>
@@ -32,30 +56,13 @@
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
-        <th nowrap width="100px">日期
+        <th nowrap width="200px">日期
             @can('create',\App\Post::class)
                 <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
             @endauth
-	</th>
-        <?php
-        $post_type_array['a'] = "類別";
-   	$post_type_array[0] = "一般公告";  
-	$post_types = \App\PostType::where('disable',null)->orderBy('order_by')->pluck('name','id')->toArray();	
-
-	foreach($post_types as $k=>$v){
-	  $post_type_array[$k]=$v;
-	}
-        ?>
-	<th width="200px">
-	    <form id="select_type_form" action='{{ route('posts.select_type') }}' method='post'>
-            @csrf
-            <select id="select_type" name="select_type" class="form-control">
-	    @foreach($post_type_array as $k=>$v)
-            <?php $selected = ($v== $type_name)?"selected":null; ?>
-            <option value='{{$k}}' {{ $selected }}>{{$v}}</option>
-	    @endforeach
-	    </select>
-            </form>
+	    </th>
+	    <th width="100px">
+            類別
         </th>
         <th nowrap>
             標題
