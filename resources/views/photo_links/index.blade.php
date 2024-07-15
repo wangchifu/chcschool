@@ -91,7 +91,7 @@
             <a href="{{ route('photo_links.create') }}" class="btn btn-success btn-sm" id="go_create"><i class="fas fa-plus"></i> 新增連結</a><br><br>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="change_create_id({{ $photo_type->id }})">不分類</button>
+                    <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="change_create_id()">不分類</button>
                 </li>
                 <?php $p=1; ?>
                 @foreach($photo_types as $photo_type)
