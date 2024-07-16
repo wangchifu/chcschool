@@ -133,7 +133,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <a href="{{ route('links.create',$type->id) }}" class="btn btn-success btn-sm" id="go_create"><i class="fas fa-plus"></i> 新增連結</a><br><br>
+            <a href="{{ route('links.create',$type_id) }}" class="btn btn-success btn-sm" id="go_create"><i class="fas fa-plus"></i> 新增連結</a><br><br>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <?php $p=1; ?>
                 @foreach($types as $type)
