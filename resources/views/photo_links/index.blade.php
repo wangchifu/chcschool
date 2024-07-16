@@ -212,4 +212,20 @@
             $('#go_create').attr('href', '{{ route("photo_links.create") }}'+'/'+id);
         }
     </script>
+    @if(!empty($photo_type_id))    
+    <?php $p=1; ?>
+    @foreach($photo_types as $photo_type)
+        @if($photo_type->id == $photo_type_id) 
+                <script>                                  
+                    $("#home-tab").removeClass("active");
+                    $("#home").removeClass("show");
+                    $("#home").removeClass("active");
+                    $("#photo_link{{ $p }}-tab").addClass("active");
+                    $("#photo_link{{ $p }}").addClass("show");
+                    $("#photo_link{{ $p }}").addClass("active");
+                </script>
+        @endif
+        <?php $p++; ?>
+    @endforeach    
+@endif
 @endsection

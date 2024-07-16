@@ -369,4 +369,22 @@
             $('#go_create').attr('href', '{{ route("links.create") }}'+'/'+id);
         }
     </script>
+    @if(!empty($type_id))    
+        <?php $p=1; ?>
+        @foreach($types as $type)
+            @if($type->id == $type_id)
+                @if($p != 1)  
+                    <script>                                  
+                        $("#home-tab").removeClass("active");
+                        $("#home").removeClass("show");
+                        $("#home").removeClass("active");
+                        $("#link{{ $p }}-tab").addClass("active");
+                        $("#link{{ $p }}").addClass("show");
+                        $("#link{{ $p }}").addClass("active");
+                    </script>
+                @endif
+            @endif
+            <?php $p++; ?>
+        @endforeach    
+    @endif
 @endsection

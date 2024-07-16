@@ -13,7 +13,7 @@ class LinksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($type_id=null)
     {
         $types= Type::where('type_id',null)->orderBy('order_by')
             ->get();
@@ -46,6 +46,7 @@ class LinksController extends Controller
         
 
         $data = [
+            'type_id'=>$type_id,
             'types'=>$types,
             'type2s'=>$type2s,
             'type_array'=>$type_array,
@@ -113,7 +114,7 @@ class LinksController extends Controller
             'order_by'=>['nullable','numeric'],
         ]);
         $link = Link::create($request->all());
-        return redirect()->route('links.index');
+        return redirect()->route('links.index',$link->type_id);
     }
 
     /**
@@ -157,7 +158,7 @@ class LinksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Link $link)
+    public function update(Request $request, Link $link,$type_id=null)
     {
         $request->validate([
             'name'=>'required',
@@ -165,7 +166,7 @@ class LinksController extends Controller
             'order_by'=>['nullable','numeric'],
         ]);
         $link->update($request->all());
-        return redirect()->route('links.index');
+        return redirect()->route('links.index',$link->type_id);
     }
 
     public function update_type(Request $request, Type $type)

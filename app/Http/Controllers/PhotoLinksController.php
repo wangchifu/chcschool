@@ -14,7 +14,7 @@ class PhotoLinksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($photo_type_id=null)
     {
         $photo_links = PhotoLink::orderBy('order_by','DESC')
             ->get();
@@ -47,6 +47,7 @@ class PhotoLinksController extends Controller
             'photo_type_array'=>$photo_type_array,
             'photo_types'=>$photo_types,
             'new_order_by'=>$new_order_by,
+            'photo_type_id'=>$photo_type_id,
         ];
         return view('photo_links.index',$data);
     }
@@ -136,7 +137,7 @@ class PhotoLinksController extends Controller
 
 
 
-        return redirect()->route('photo_links.index');
+        return redirect()->route('photo_links.index',$photo_link->photo_type_id);
     }
 
     public function type_store(Request $request)
@@ -149,7 +150,7 @@ class PhotoLinksController extends Controller
         return back();
     }
 
-    public function type_update(Request $request, PhotoType $photo_type)
+    public function type_update(Request $request, PhotoType $photo_type,$photo_types=null)
     {
         $att = $request->all();
         
@@ -261,7 +262,8 @@ class PhotoLinksController extends Controller
                 ->save(storage_path('app/'.$folder.'/'.$image_name));
         }
 
-        echo "<body onload='opener.location.reload();window.close();'>";
+        $u = route('photo_links.index',$photo_link->photo_type_id);
+        echo "<body onload='opener.location.href=\"{$u}\";window.close();'>";
     }
 
     /**

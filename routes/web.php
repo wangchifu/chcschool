@@ -444,11 +444,11 @@ Route::group(['middleware' => 'admin_exec'], function () {
     Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
 
     //圖片連結管理
-    Route::get('photo_links', 'PhotoLinksController@index')->name('photo_links.index');
+    Route::get('photo_links/index/{photo_type_id?}', 'PhotoLinksController@index')->name('photo_links.index');
     Route::get('photo_links/create/{photo_type_id?}', 'PhotoLinksController@create')->name('photo_links.create');
     Route::post('photo_links', 'PhotoLinksController@store')->name('photo_links.store');
     Route::post('photo_links/type_store', 'PhotoLinksController@type_store')->name('photo_links.type_store');
-    Route::patch('photo_links/type_update/{photo_type}', 'PhotoLinksController@type_update')->name('photo_links.type_update');
+    Route::patch('photo_links/type_update/{photo_type}/{photo_type_id?}', 'PhotoLinksController@type_update')->name('photo_links.type_update');
     Route::get('photo_links/type_delete/{photo_type}', 'PhotoLinksController@type_delete')->name('photo_links.type_delete');
     Route::delete('photo_links/{photo_link}', 'PhotoLinksController@destroy')->name('photo_links.destroy');    
     Route::get('photo_links/{photo_link}/edit', 'PhotoLinksController@edit')->name('photo_links.edit');
@@ -560,14 +560,14 @@ Route::group(['middleware' => 'admin'], function () {
     Route::patch('types/{type}', 'LinksController@update_type')->name('links.update_type');
 
     //連結管理
-    Route::get('links', 'LinksController@index')->name('links.index');
+    Route::get('links/index/{type_id?}', 'LinksController@index')->name('links.index');
     //Route::get('links/browser/{select_type}', 'LinksController@browser')->name('links.browser');
     Route::get('links/create/{type_id?}', 'LinksController@create')->name('links.create');
     Route::post('links', 'LinksController@store')->name('links.store');
     Route::delete('links/{link}', 'LinksController@destroy')->name('links.destroy');
     Route::get('links/{link}/delete', 'LinksController@delete')->name('links.delete');
     Route::get('links/{link}/edit', 'LinksController@edit')->name('links.edit');
-    Route::patch('links/{link}', 'LinksController@update')->name('links.update');
+    Route::patch('links/{link}/{type_id?}', 'LinksController@update')->name('links.update');
 
 
     //樹狀目錄
