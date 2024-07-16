@@ -88,7 +88,7 @@
         </div>
         <div class="col-md-7">
             <h2>連結設定</h2>
-            <a href="{{ route('photo_links.create') }}" class="btn btn-success btn-sm" id="go_create"><i class="fas fa-plus"></i> 新增連結</a><br><br>
+            <a href="{{ route('photo_links.create',$photo_type_id) }}" class="btn btn-success btn-sm" id="go_create"><i class="fas fa-plus"></i> 新增連結</a><br><br>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="change_create_id()">不分類</button>
