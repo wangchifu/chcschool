@@ -1,12 +1,11 @@
 <?php
     if(!isset($type_name)) $type_name=null;
     $key = rand(100,999);
-    session(['search' => $key]);
-    $post_type_array['a'] = "請選類別";
-	$post_types = \App\PostType::where('disable',null)->orderBy('order_by')->pluck('name','id')->toArray();	
+    session(['search' => $key]);    
+	$post_types = \App\PostType::orderBy('order_by')->get();	
 
-	foreach($post_types as $k=>$v){
-	  $post_type_array[$k]=$v;
+	foreach($post_types as $post_type){
+	  $post_type_array[$post_type->id]=$post_type->name;
 	}
 ?>
 <div style="float:left">
@@ -16,9 +15,12 @@
                 <form id="select_type_form" action='{{ route('posts.select_type') }}' method='post'>
                     @csrf                    
                     <select id="select_type" name="select_type" class="form-control">
-                        @foreach($post_type_array as $k=>$v)
-                            <?php $selected = ($v== $type_name)?"selected":null; ?>
-                            <option value='{{$k}}' {{ $selected }}>{{$v}}</option>
+                        <option value="a">請選類別</option>
+                        @foreach($post_types as $post_type)
+                            @if($post_type->disable != 1)
+                                <?php $selected = ($post_type->name== $type_name)?"selected":null; ?>
+                                <option value='{{ $post_type->id }}' {{ $selected }}>{{ $post_type->name }}</option>
+                            @endif
                         @endforeach
                 </select>
                 </form>
@@ -86,7 +88,7 @@
                 @if($post->insite == null)
                     <a href="{{ route('posts.type',0) }}">一般公告</a>
                 @else
-                    <a href="{{ route('posts.type',$post->insite) }}">{{ $post_types[$post->insite] }}</a>
+                    <a href="{{ route('posts.type',$post->insite) }}">{{ $post_type_array[$post->insite] }}</a>
                 @endif
             </td>
             <td data-th="標題">

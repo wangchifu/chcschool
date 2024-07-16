@@ -605,9 +605,11 @@ class PostsController extends Controller
 
     public function job_title($job_title)
     {
-        $posts = Post::where('job_title', $job_title)
-            ->orderBy('top', 'DESC')
-            ->orderBy('id', 'DESC')->paginate(20);
+        $posts = Post::where(function ($query) {
+            $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+            })->where('job_title', $job_title)->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(20);
         $post_types = PostType::orderBy('order_by')->pluck('name', 'id')->toArray();
 
         $data = [
