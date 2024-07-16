@@ -3,7 +3,6 @@
     $key = rand(100,999);
     session(['search' => $key]);
     $post_type_array['a'] = "請選類別";
-   	$post_type_array[0] = "一般公告";  
 	$post_types = \App\PostType::where('disable',null)->orderBy('order_by')->pluck('name','id')->toArray();	
 
 	foreach($post_types as $k=>$v){
@@ -142,7 +141,7 @@
         window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=800');
     }
     $('#select_type').change(function(){
-      if($('#select_typye').val() != 'a'){
+      if($('#select_type').val() != 'a'){        
         $('#select_type_form').submit();
       }
     });

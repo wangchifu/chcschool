@@ -627,13 +627,19 @@ class PostsController extends Controller
     {        
         if ($type == 0){
             $posts = Post::where(function ($query){
-            $query->where('insite',null)->orWhere('insite',0);
-            })->orderBy('top', 'DESC')
-            ->orderBy('id', 'DESC')->paginate(20);
+                $query->where('insite',null)->orWhere('insite',0);
+                })->where(function ($query) {
+                $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+                })->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(20);
             $id = 0;
         }else{
-            $posts = Post::where('insite',$type)->orderBy('top', 'DESC')
-                ->orderBy('id', 'DESC')->paginate(20);
+            $posts = Post::where(function ($query) {
+                $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+                })->where('insite',$type)->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(20);
             $id = $type;
         }
 
