@@ -73,7 +73,7 @@ class LinksController extends Controller
             }
         }
         
-        $new_link_order_by = [];
+        $new_link_order_by = []; 
         foreach($types as $k=>$v){
             $link = Link::where('type_id',$k)->orderBy('order_by','DESC')->first();
             if(!empty($link)){
