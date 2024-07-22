@@ -238,7 +238,7 @@ class LunchListController extends Controller
 
     public function semester_print(Request $request)
     {
-        if ($request->input('submit') == "印出教師全學期收費通知1") {
+        if ($request->input('submit') == "再印出全學期收費通知1") {
             $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
 
             $order_datas = LunchTeaDate::where('semester', $lunch_setup->semester)
@@ -267,7 +267,7 @@ class LunchListController extends Controller
             return view('lunch_lists.semester_call_money', $data);
         }
 
-        if ($request->input('submit') == "印出教師全學期收費通知2") {
+        if ($request->input('submit') == "再印出全學期收費通知2") {
             $lunch_setup = LunchSetup::find($request->input('lunch_setup_id'));
 
             $order_datas = LunchTeaDate::where('semester', $lunch_setup->semester)

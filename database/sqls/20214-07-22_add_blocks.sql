@@ -1,0 +1,1 @@
+INSERT INTO `blocks` (`title`, `created_at`, `updated_at`) VALUES ('搜尋本站(系統區塊)','2024-07-22 11:00:00','2024-07-22 11:00:00');

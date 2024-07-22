@@ -141,6 +141,8 @@
                                 @include('layouts.inbox_posts')
                             @elseif($block->title == "待修通報(系統區塊)")
                                 @include('layouts.fix')
+                            @elseif($block->title == "搜尋本站(系統區塊)")
+                                @include('layouts.search_site')
                             @else
                                 {!! $block->content !!}
                             @endif
