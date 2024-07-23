@@ -73,6 +73,8 @@ Route::get('posts/{type}/type', 'PostsController@type')->name('posts.type');
 Route::get('posts/{type}/type_clean', 'PostsController@type_clean')->name('posts.type_clean');
 Route::post('posts/select_type', 'PostsController@select_type')->name('posts.select_type');
 
+Route::get('rss', 'HomeController@rss')->name('rss');
+
 //公開文件
 Route::get('open_files/{path?}', 'OpenFileController@index')->name('open_files.index');
 Route::get('open_files_download/{path}', 'OpenFileController@download')->name('open_files.download');

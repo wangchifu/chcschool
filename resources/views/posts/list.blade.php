@@ -23,7 +23,10 @@
                             @endif
                         @endforeach
                 </select>
-                </form>
+                </form>                
+            </td>
+            <td>
+                <a href="{{ route('rss') }}" target="_blank"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a>
             </td>
         </tr>
     </table>
@@ -47,8 +50,8 @@
                     <input type="text" class="form-control" name="check" placeholder="請輸入：{{ session('search') }}" required maxlength="3">
                 </td>
                 <td>
-                    <button class="btn btn-secondary"><i class="fas fa-search"></i></button>
-                </td>
+                    <button class="btn btn-secondary btn-sm"><i class="fas fa-search"></i></button>
+                </td>                
             </tr>
         </table>
         @include('layouts.errors')

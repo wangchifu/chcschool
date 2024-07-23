@@ -311,4 +311,76 @@ class HomeController extends Controller
     {
         return view('teach_system');
     }
+
+    public function rss()
+    {
+        $posts = Post::where(function ($query) {
+            $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
+            })->where('created_at','<',date('Y-m-d H:i:s'))->orderBy('top', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(50);
+        
+        $post_types = PostType::orderBy('order_by')->get();
+        $type[0] = "一般公告";
+        foreach($post_types as $post_type){
+            $type[$post_type->id] = $post_type->name;
+        }        
+
+        $items = "";
+        $setup = Setup::first();
+        foreach ($posts as $post) {
+            $insite = (empty($post->insite))?0:$post->insite;
+            $web = $_SERVER['HTTP_HOST'];
+            $items .= '
+            <item>
+                <link>
+                https://' . $web . '/posts/' . $post->id . '
+                </link>
+                <title>
+                    <![CDATA[ ' . $post->title . ' ]]>
+                </title>
+                <author>' . $post->job_title . '</author>
+                <category>
+                    <![CDATA[ ' . $type[$insite] . ' ]]>
+                </category>
+                <pubDate>' . substr($post->passed_at, 0, 16) . '</pubDate>
+                <guid>
+                    ' . $web . '/posts/' . $post->id . '
+                </guid>
+                <description>
+                    <![CDATA[
+                        ' . $post->content . '
+                    ]]>
+                </description>
+            </item>
+            ';
+        }
+
+        $content = '<?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0">
+                <channel>
+                <title>
+                    <![CDATA[ '.$setup->site_name.' ]]>
+                </title>
+                <link>https://'.$web.'</link>
+                <description>
+                    <![CDATA[
+                        歡迎光臨本校網站，教育之美，美在人心！
+                    ]]>
+                </description>
+                <language>utf-8</language>
+                <copyright>
+                    <![CDATA[
+                        版權來自：https://'.$web.'
+                    ]]>
+                </copyright>
+                ' . $items . '
+                </channel>
+            </rss>
+
+        ';
+        $invalid_characters = '/[^\x9\xa\x20-\xD7FF\xE000-\xFFFD]/';
+        $content = preg_replace($invalid_characters, '', $content);
+        return Response::make($content, '200')->header('Content-Type', 'text/xml');
+    }
 }
