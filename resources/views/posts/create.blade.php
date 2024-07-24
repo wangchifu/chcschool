@@ -99,8 +99,8 @@
                                 filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
                                 filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
                             });
-                    </script>
-                    @include('layouts.hd')
+                    </script>                    
+                    @include('layouts.hd')                    
                     <div class="form-group">
                         <label for="photos[]">7.相關照片( 單檔不大於5MB的圖檔 )</label>
                         <small class="text-danger">(注意！請勿將公告當成圖庫相簿使用，單次也不要超過十張以上的照片，若造成伺服器負擔，經查證將取消貴校此功能。)</small>
@@ -121,7 +121,13 @@
                             <br>
                             <span class="text-danger">容量已滿！無法加附件！</span>
                         @endif
+                    </div>                  
+                    @if($setup->post_line_token)
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="send_line_token" name="send_line_token" value="yes" checked />
+                        <label class="form-check-label text-danger" for="send_line_token"><i class="fab fa-line text-success h3"></i> 同步發至 line notify (未來公告則不會發)</label>
                     </div>
+                    @endif  
                     <div class="form-group">
                         <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i> 返回</a>
                         <button type="submit" id="submit_button" class="btn btn-primary btn-sm" onclick="if(confirm('您確定送出嗎?')){change_button();return true;}else return false">

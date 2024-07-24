@@ -143,7 +143,7 @@
 
     function open_window(url,name)
     {
-        window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=800');
+        window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=900');
     }
     $('#select_type').change(function(){
       if($('#select_type').val() != 'a'){        

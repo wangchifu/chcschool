@@ -100,11 +100,23 @@
             <td>
                 <label for="post_show_number">公告的相關區塊中，一次顯示幾則？</label>
                 <form action="{{ route('setups.post_show_number') }}" method="post">
-                    @csrf
-                
+                    @csrf                
                 {{ Form::number('post_show_number',$setup->post_show_number,['id'=>'post_show_number','class' => 'form-control','placeholder'=>"預設為10則"]) }}
                 <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">修改</button>    
                 </form>   
+            </td>
+        </tr>
+        <tr>
+            <td><hr></td>
+        </tr>
+        <tr>
+            <td>
+                <label for="post_show_number">發公告時，順便使用 line notify 發訊息(但延後上架者無法使用)，權杖：</label>
+                <form action="{{ route('setups.post_line_token') }}" method="post">
+                    @csrf                
+                {{ Form::text('post_line_token',$setup->post_line_token,['id'=>'post_line_token','class' => 'form-control','placeholder'=>"line權杖"]) }}
+                <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">儲存</button>    
+                </form>
             </td>
         </tr>
     </table>

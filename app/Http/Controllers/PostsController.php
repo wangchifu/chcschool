@@ -161,7 +161,7 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(PostRequest $request)
-    {
+    {        
         //處理檔案上傳
         if ($request->hasFile('title_image')) {
             $title_image = $request->file('title_image');
@@ -185,6 +185,18 @@ class PostsController extends Controller
             //dd($att2);
             $att2['created_at'] = date('Y-m-d H:i:s',strtotime($live_date_time));
             $post->update($att2);
+        }else{
+            //不是未來公告的 才送 line notify
+            $send_line_notify = $request->input('send_line_token');
+            if($send_line_notify == "yes"){
+                $setup = Setup::first();
+                if (!empty($setup->post_line_token)) {
+                    $subject = $att['job_title'] . "公告了：\n" . $att['title'];            
+                    $string = $subject."\n詳細內容請點擊 https://". $_SERVER['HTTP_HOST']."/posts/".$post->id;
+                    line_notify($setup->post_line_token,$string);
+                }
+            }
+            
         }
         
 
@@ -229,6 +241,8 @@ class PostsController extends Controller
                 })->save(storage_path('app/public/'. $school_code.'/posts/'.$post->id.'/photos/'.$info2['original_filename']));
             }
         }
+
+        
 
 
             return redirect()->route('posts.index_my');

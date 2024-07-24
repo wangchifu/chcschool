@@ -21,6 +21,7 @@ class Setup extends Model
         'ip2',
         'ipv6',
         'all_post',
+        'post_line_token',
         'close_website',
         'homepage_name',
         'post_name',

@@ -528,6 +528,15 @@ class SetupController extends Controller
         echo "<body onload='opener.location.reload();window.close();'>";
     }
 
+    public function post_line_token(Request $request)
+    {        
+        $setup = Setup::first();
+        $att['post_line_token'] = $request->input('post_line_token');
+        
+        $setup->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
+    }
+
     public function close()
     {
         $setup = Setup::first();

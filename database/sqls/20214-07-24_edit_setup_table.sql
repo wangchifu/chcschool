@@ -1,0 +1,1 @@
+ALTER TABLE `setups` ADD `post_line_token` varchar(255) COLLATE utf8mb4_unicode_ci NULL AFTER `all_post`; 
