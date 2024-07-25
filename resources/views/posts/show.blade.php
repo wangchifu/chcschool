@@ -2,7 +2,7 @@
 
 @section('nav_post_active', 'active')
 
-@section('title', '顯示公告 | ')
+@section('title', $post->title.' | ')
 
 @section('in_head')
     <link rel="stylesheet" href="{{ asset('venobox/venobox.min.css') }}" type="text/css" media="screen">
