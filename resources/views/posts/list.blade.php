@@ -24,10 +24,19 @@
                         @endforeach
                 </select>
                 </form>                
-            </td>
-            <td>
-                <a href="{{ route('rss') }}" target="_blank"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a>
-            </td>
+            </td>            
+            @can('create',\App\Post::class)
+                <td>
+                    <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
+                </td>
+            @endauth            
+            @auth
+                @if(auth()->user()->admin==1)
+                    <td>
+                        <a href="javascript:open_window('{{ route('posts.show_type') }}','新視窗')" class="btn btn-success btn-sm"><i class="fas fa-cog"></i> 類別管理</a>
+                    </td>
+                @endif
+            @endauth
         </tr>
     </table>
 </div>
@@ -35,23 +44,19 @@
     <form action="{{ route('posts.search') }}" method="post" class="search-form" id="this_form">
         {{ csrf_field() }}
         <table>
-            <tr>
-                @auth
-                    @if(auth()->user()->admin==1)
-                        <td>
-                            <a href="javascript:open_window('{{ route('posts.show_type') }}','新視窗')" class="btn btn-success btn-sm"><i class="fas fa-cog"></i> 類別管理</a>
-                        </td>
-                    @endif
-                @endauth                
+            <tr>                         
                 <td>
-                    <input type="text" class="form-control" name="search" id="search" placeholder="搜尋關鍵字" required>
+                    <input type="text" class="form-control" name="search" id="search" placeholder="關鍵字" required style="width:120px;">
                 </td>
                 <td>
-                    <input type="text" class="form-control" name="check" placeholder="請輸入：{{ session('search') }}" required maxlength="3">
+                    <input type="text" class="form-control" name="check" placeholder="{{ session('search') }}" required maxlength="3" style="width:100px;">
                 </td>
                 <td>
                     <button class="btn btn-secondary btn-sm"><i class="fas fa-search"></i></button>
                 </td>                
+                <td>
+                    <a href="{{ route('rss') }}" target="_blank"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a></td>           
+                <td>
             </tr>
         </table>
         @include('layouts.errors')
@@ -60,10 +65,8 @@
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
-        <th nowrap width="200px">日期
-            @can('create',\App\Post::class)
-                <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
-            @endauth
+        <th nowrap width="200px">
+            日期            
 	    </th>
 	    <th width="100px">
             類別
