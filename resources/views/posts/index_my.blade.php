@@ -22,25 +22,24 @@
                 <li class="nav-item">
                   <a class="nav-link active" href="{{ route('posts.index_my') }}">我的公告</a>
                 </li>
-            </ul>
+            </ul>            
+            <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>                        
             @endcan
             <br>
             <table class="table table-striped rwd-table" style="word-break:break-all;">
                 <thead class="thead-light">
                 <tr>
-                    <th nowrap>日期
-                        @can('create',\App\Post::class)
-                            <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
-                        @endauth
+                    <th nowrap width="200px">
+                        日期                        
                     </th>
-                    <th>
+                    <th width="100px">
                         類別
                     </th>
                     <th nowrap>
                         標題
                     </th>
-                    <th nowrap>發佈者</th>
-                    <th nowrap>點閱</th>
+                    <th nowrap width="100px">發佈者</th>
+                    <th nowrap width="50px">點閱</th>
                 </tr>
                 </thead>
                 <tbody>

@@ -9,17 +9,17 @@ $inbox_posts = \App\Post::where('inbox',1)
 <table class="table table-striped rwd-table" style="word-break:break-all;">
     <thead class="thead-light">
     <tr>
-        <th nowrap width="160">
+        <th nowrap width="200px">
             日期
         </th>
-        <th>
+        <th width="100px">
             類別
         </th>
         <th nowrap>
             標題
         </th>
-        <th nowrap width="100">發佈者</th>
-        <th nowrap width="80">點閱</th>
+        <th nowrap width="100px">發佈者</th>
+        <th nowrap width="80px">點閱</th>
     </tr>
     </thead>
     <tbody>

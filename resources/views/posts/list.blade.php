@@ -74,8 +74,8 @@
         <th nowrap>
             標題
         </th>
-        <th nowrap>發佈者</th>
-        <th nowrap>點閱</th>
+        <th nowrap width="100px">發佈者</th>
+        <th nowrap width="50px">點閱</th>
     </tr>
     </thead>
     <tbody>
