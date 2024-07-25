@@ -10,7 +10,7 @@ $inbox_posts = \App\Post::where('inbox',1)
     <table class="table table-striped" style="word-break:break-all;">
         <thead class="thead-light">
         <tr>
-            <th nowrap width="200px">
+            <th nowrap width="120px">
                 日期
             </th>
             <th nowrap width="100px">
@@ -26,10 +26,7 @@ $inbox_posts = \App\Post::where('inbox',1)
         <tbody>
         @foreach($inbox_posts as $post)
         <tr>
-            <td>
-                @if($post->top)
-                    <p class="badge badge-danger">置頂</p>
-                @endif
+            <td>                
                 {{ substr($post->created_at,0,10) }}
             </td>
             <td>
@@ -39,6 +36,12 @@ $inbox_posts = \App\Post::where('inbox',1)
                 {{ $post_type_array[$insite] }}
             </td>
             <td>
+                @if($post->top)
+                    <p class="badge badge-danger">置頂</p>
+                @endif
+                @if($post->inbox)
+                    <p class="badge badge-warning">常駐</p>
+                @endif
                 <?php
                 if($post->insite==1){
                     if(auth()->check() or check_ip()){

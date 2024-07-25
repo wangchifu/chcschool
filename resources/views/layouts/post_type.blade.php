@@ -30,7 +30,7 @@
             <table class="table table-striped" style="word-break:break-all;">
                 <thead class="thead-light">
                 <tr>
-                    <th nowrap width="200px">
+                    <th nowrap width="120px">
                         日期
                     </th>
                     <th nowrap width="100px">
@@ -46,6 +46,15 @@
                 <tbody>
                     @foreach($posts as $post)
                         <tr>
+                            <td>                                
+                                {{ substr($post->created_at,0,10) }}
+                            </td>
+                            <td>                                
+                                <?php
+                                    $insite = ($post->insite != null)?$post->insite:0;
+                                ?>
+                                {{ $post_type_array[$insite] }}
+                            </td>
                             <td>
                                 @if($post->top)
                                     <p class="badge badge-danger">置頂</p>
@@ -53,15 +62,6 @@
                                 @if($post->inbox)
                                     <p class="badge badge-warning">常駐</p>
                                 @endif
-                                {{ substr($post->created_at,0,10) }}
-                            </td>
-                            <td>
-                                <?php
-                                    $insite = ($post->insite != null)?$post->insite:0;
-                                ?>
-                                {{ $post_type_array[$insite] }}
-                            </td>
-                            <td>
                                 <?php
                                 if($post->insite==1){
                                     if(auth()->check() or check_ip()){
