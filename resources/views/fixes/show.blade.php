@@ -26,7 +26,7 @@
                 ?>
                 {!! $icon[$fix->situation] !!} {{ $s[$fix->situation] }}
 
-                張貼者 {{ $fix->user->name }}</a>
+                 / 張貼者 {{ $fix->user->name }}</a>
             </p>
             <hr>
             <p>

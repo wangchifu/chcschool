@@ -20,7 +20,7 @@ $n=1;
 <div class="tab-content" id="myTabContent">
   @foreach($fix_classes as $fix_class)
   <?php
-  $fixes = \App\Fix::where('type',$fix_class->id)->orderBy('situation','DESC')->orderBy('created_at','DESC')->paginate(10);
+  $fixes = \App\Fix::where('situation','!=',1)->where('type',$fix_class->id)->orderBy('situation','DESC')->orderBy('created_at','DESC')->paginate(10);
   ?>
     @if($n==1)
       <div class="tab-pane fade show active" id="fix-home" role="tabpanel" aria-labelledby="fix-home-tab">
