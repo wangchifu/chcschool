@@ -58,12 +58,25 @@
                             $check1 = "";
                             $check2 = "checked";
                         }
+                        if($setup->title_image_style==1 or $setup->title_image_style == null){
+                            $title_image_style_check1 = "checked";
+                            $title_image_style_check2 = "";
+                        }elseif($setup->title_image_style==2){
+                            $title_image_style_check1 = "";
+                            $title_image_style_check2 = "checked";
+                        }
                         ?>
                         <input type="radio" name="title_image" value="1" id="enable" {{ $check1 }}>
                         <label for="enable">啟用</label>
                         <span>　</span>
                         <input type="radio" name="title_image" value="" id="disable" {{ $check2 }}>
                         <label for="disable">停用</label>
+                        <br>
+                        <input type="radio" name="title_image_style" value="1" id="title_image_style1" {{ $title_image_style_check1 }}>
+                        <label for="title_image_style1">滑動</label>
+                        <span>　</span>
+                        <input type="radio" name="title_image_style" value="2" id="title_image_style2" {{ $title_image_style_check2 }}>
+                        <label for="title_image_style2">淡出淡入</label>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存嗎？')">
@@ -71,6 +84,7 @@
                         </button>
                     </div>
                     {{ Form::close() }}
+                    <hr>
                     {{ Form::open(['route' => 'setups.add_imgs', 'method' => 'post', 'files' => true,'id'=>'this_form2']) }}
                     <div class="form-group">
                         <label for="files[]">圖檔( 2000 x 400 )</label>
@@ -82,9 +96,10 @@
                         </button>
                     </div>
                     {{ Form::close() }}
+                    <hr>
                     <form method="post" action="{{ route('setups.photo_desc') }}">
                     @csrf
-                    <table class="table table-striped">
+                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>

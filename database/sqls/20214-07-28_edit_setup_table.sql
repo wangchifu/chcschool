@@ -1,0 +1,1 @@
+ALTER TABLE `setups` ADD `title_image_style` tinyint NULL AFTER `title_image`; 

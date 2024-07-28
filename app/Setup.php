@@ -15,6 +15,7 @@ class Setup extends Model
         'post_show_number',
         'disable_right',
         'title_image',
+        'title_image_style',
         'views',
         'footer',
         'ip1',

@@ -2,10 +2,38 @@
 
 @section('nav_home_active', 'active')
 
+@if($setup->title_image_style==2)
+    @section('in_head')
+        <style>
+            .carousel-fade .carousel-inner .carousel-item {
+                opacity: 0;
+                transition-property: opacity;
+                transition-duration: 1s;
+                transition-timing-function: ease;
+            }
+
+            .carousel-fade .carousel-inner .active {
+                opacity: 1;
+            }
+
+            .carousel-fade .carousel-inner .carousel-item-next,
+            .carousel-fade .carousel-inner .carousel-item-prev,
+            .carousel-fade .carousel-inner .carousel-item.active,
+            .carousel-fade .carousel-inner .active.carousel-item-left,
+            .carousel-fade .carousel-inner .active.carousel-item-right {
+                transform: translateX(0);
+                -webkit-transform: translateX(0);
+                -ms-transform: translateX(0);
+            }
+        </style>
+    @endsection
+@endif
+
 @section('top_image')
     @if($setup->title_image)
         @if(!empty($photo_data))
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <?php $carousel_fade =($setup->title_image_style ==2 )?"carousel-fade":""; ?>
+            <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade  }}" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <?php $n=0; ?>
                     @foreach($photo_data as $k1=>$v1)

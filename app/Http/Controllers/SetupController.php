@@ -99,6 +99,7 @@ class SetupController extends Controller
     public function update_title_image(Request $request, Setup $setup)
     {
         $att['title_image'] = $request->input('title_image');
+        $att['title_image_style'] = $request->input('title_image_style');
         $setup->update($att);
         return redirect()->route('setups.photo');
     }
