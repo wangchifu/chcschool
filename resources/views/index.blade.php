@@ -223,4 +223,42 @@
             {{ date('Y') }} Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
         </div>
     @endif
+
+    <!-- 
+    警告
+    -->
+    <?php $admin = \App\User::where('username','admin')->first(); ?>
+    @auth
+        @if(auth()->user()->admin==1)
+            @if(Hash::check('demo1234', $admin->password))
+            <script>
+                $(document).ready(function(){
+                  $("#myModal").modal('show');
+                });
+              </script>
+            <div class="modal" tabindex="-1" id="myModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-danger">嚴重資安危險!</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        請你立即變更本機帳號 admin 的密碼，不得為預設的「demo1234」。2024年9月1日前若未變更，系統將任意填入新密碼！
+                        <br>步驟為：
+                        <br>1.本機登入 admin 帳號
+                        <br>2.右上角 <i class="fas fa-user"></i> 符號按一下，選擇「更改密碼」
+                        <br>3.輸入舊密碼，與兩次新密碼，「送出」完成變更。
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">我知道了</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            @endif
+        @endif
+    @endauth    
 @endsection
