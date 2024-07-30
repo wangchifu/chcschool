@@ -180,7 +180,7 @@
                         @if($per < 100)
                             {{ Form::open(['route' => 'open_files.upload_file', 'method' => 'POST','id'=>'this_form2','files' => true,'onsubmit'=>"return submitOnce(this)"]) }}
                             <div class="form-group">
-                                <label for="file"><strong>2.檔案( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )</strong><small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods 檔</small></label>
+                                <label for="file"><strong>2.檔案( 不大於10MB，若為文字檔，請改為[ <a href="https://www.ndc.gov.tw/cp.aspx?n=d6d0a9e658098ca2" target="_blank">ODF格式</a> ] [ <a href="{{ asset('ODF.pdf') }}" target="_blank">詳細公文</a> ] [ <a href="{{ asset('office2016_odt_pdf.png') }}" target="_blank">轉檔教學</a> ] )</strong><small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods, mp3 檔</small></label>
                                 {{ Form::file('files[]', ['class' => 'form-control','multiple'=>'multiple','required'=>'required']) }}
                             </div>
                             <div class="form-group">

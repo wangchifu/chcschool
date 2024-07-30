@@ -120,7 +120,7 @@
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="files[]">8.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://moda.gov.tw/digital-affairs/digital-service/app-services/248" target="_blank">ODF格式</a> ] [ 詳細公文 ] [ 轉檔教學 ] )</label>
+                        <label for="files[]">8.附件( 不大於10MB，若為文字檔，請改為[ <a href="https://moda.gov.tw/digital-affairs/digital-service/app-services/248" target="_blank">ODF格式</a> ] [ 詳細公文 ] [ 轉檔教學 ] )<small class="text-secondary">csv, txt, zip, jpeg, png, pdf, odt, ods, mp3 檔</small></label>
                         <br>
                         @if(!empty($files))
                             @foreach($files as $k=>$v)

@@ -24,7 +24,7 @@ class OpenFileRequest extends FormRequest
     public function rules()
     {
         return [
-            'files.*' => 'required|mimes:csv,txt,zip,jpeg,png,pdf,odt,ods|max:10240',
+            'files.*' => 'required|mimes:csv,txt,zip,jpeg,png,pdf,odt,ods,mp3|max:10240',
         ];
     }
 
