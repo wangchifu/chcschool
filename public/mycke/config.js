@@ -10,4 +10,5 @@ CKEDITOR.editorConfig = function( config ) {
     config.language = 'zh';
     config.allowedContent = true;
     config.filebrowserUploadUrl = '../../laravel-filemanager/upload?type=Files';
+    config.extraPlugins = 'textmatch,autolink';
 };
