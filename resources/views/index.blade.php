@@ -202,8 +202,7 @@
         <footer class="font-small py-4" id="footer">
             <div class="container-fluid text-center text-md-left">
                     <div class="row justify-content-center">
-                        <div class="col-md-11">
-                            <div class="table-responsive">
+                        <div class="col-md-11">                            
                             @auth
                                 @if(auth()->user()->admin==1)  
                                     <div style="float: right;">
@@ -211,8 +210,7 @@
                                     </div>
                                 @endif
                             @endauth
-                            {!! $setup->footer !!}
-                            </div>
+                            {!! $setup->footer !!}                            
                         </div>
                     </div>
             </div>
