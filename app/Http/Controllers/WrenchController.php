@@ -96,8 +96,11 @@ class WrenchController extends Controller
         $user = User::where('id',auth()->user()->id)->first();
         $user->update($att);
 
-        $subject = '學校網站平台有人回報系統錯誤與建議';
+        $subject = '學校網站平台'.$user->school.'回報系統錯誤與建議';
         $body = $request->input('content');
+        $string = $subject."\n\n".$body;
+        line_notify(env('ADMIN_LINE_KEY'),$string);
+        
         send_mail(env('ADMIN_EMAIL'),$subject,$body);
         return redirect()->route('wrench.index');
     }
