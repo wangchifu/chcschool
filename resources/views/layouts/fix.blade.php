@@ -27,6 +27,7 @@ $n=1;
         <ul>
           @foreach($fixes as $fix)
             <?php 
+              $color = "primary";
               if($fix->situation==3) $color = "danger";
               if($fix->situation==2) $color = "warning";
               if($fix->situation==1) $color = "success";
