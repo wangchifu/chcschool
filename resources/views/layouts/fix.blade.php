@@ -26,8 +26,7 @@ $n=1;
       <div class="tab-pane fade show active" id="fix-home" role="tabpanel" aria-labelledby="fix-home-tab">
         <ul>
           @foreach($fixes as $fix)
-            <?php 
-              $color = "primary";
+            <?php               
               if($fix->situation==3) $color = "danger";
               if($fix->situation==2) $color = "warning";
               if($fix->situation==1) $color = "success";
@@ -43,6 +42,11 @@ $n=1;
       <div class="tab-pane fade" id="fix{{ $n }}" role="tabpanel" aria-labelledby="fix{{ $n }}-tab">
         <ul>
           @foreach($fixes as $fix)
+            <?php               
+              if($fix->situation==3) $color = "danger";
+              if($fix->situation==2) $color = "warning";
+              if($fix->situation==1) $color = "success";
+            ?>
             <li>
               {{ substr($fix->created_at,0,10) }} <span class="badge badge-{{ $color }}">{{ substr_cut_name($fix->user->name) }}</span> <a href="javascript:open_window('{{ route('fixes.show_clean',$fix->id) }}','新視窗')">{{ $fix->title }}</a>
             </li>
