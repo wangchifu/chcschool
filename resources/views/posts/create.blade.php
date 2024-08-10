@@ -35,54 +35,63 @@
                         {{ Form::select('insite', $types,null, ['id' => 'insite', 'class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
-                        <label for="content">3.標題圖片( 不大於5MB )
+                        <label for="content">
+                            <a data-toggle="collapse" href="#collapse3" role="button" aria-expanded="false" aria-controls="collapse3" style="color:black;">
+                                3.標題圖片( 不大於5MB )
+                            </a>                            
                         <small class="text-secondary">jpeg, png 檔</small>
                         </label>
-                        {{ Form::file('title_image', ['class' => 'form-control']) }}
+                        <div class="collapse" id="collapse3">
+                            {{ Form::file('title_image', ['class' => 'form-control']) }}
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="title"><strong class="text-danger">4.標題*</strong></label>
                         {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required','placeholder' => '請輸入標題']) }}
                     </div>
-                    <table>
-                        <tr>
-                            <td colspan="2">
-                                5.上架起迄日期 ( 可不填 ) [<a href="{{ asset('live_date.png') }}" target="_blank">教學</a>]
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <label for="live_date">起</label>
-                                    {{ Form::date('live_date',null,['id'=>'live_date','class' => 'form-control','onchange'=>'check_today()']) }}
-                                    {{ Form::time('live_time',null,['id'=>'live_time','class' => 'form-control']) }}
-                                    <small>(不填代表即刻貼出)</small>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label for="die_date">迄(含)</label>
-                                    {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','onchange'=>'check_date()']) }}
-                                    <small>(不填代表不下架)</small>
-                                </div>
-                            </td>
-                        </tr>
-                        <script>
-                            function check_date(){                                        
-                                if($('#die_date').val() < $('#live_date').val() & document.getElementById("die_date").value !== ""){
-                                    $('#die_date').val("");
-                                    alert('迄日，不得小於起日！');
+                    <p>
+                    <a data-toggle="collapse" href="#collapse5" role="button" aria-expanded="false" aria-controls="collapse5" style="color:black;">
+                        5.上架起迄日期 ( 可不填 )
+                    </a>
+                    [<a href="{{ asset('live_date.png') }}" target="_blank">教學</a>]
+                    </p>
+                    <div class="collapse" id="collapse5">
+                        <table style="width:300px">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="live_date">起</label>
+                                        {{ Form::date('live_date',null,['id'=>'live_date','class' => 'form-control','onchange'=>'check_today()']) }}
+                                        {{ Form::time('live_time',null,['id'=>'live_time','class' => 'form-control']) }}
+                                        <small>(不填代表即刻貼出)</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="die_date">迄(含)</label>
+                                        {{ Form::date('die_date',null,['id'=>'die_date','class' => 'form-control','onchange'=>'check_date()']) }}
+                                        <small>(不填代表不下架)</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <script>
+                                function check_date(){                                        
+                                    if($('#die_date').val() < $('#live_date').val() & document.getElementById("die_date").value !== ""){
+                                        $('#die_date').val("");
+                                        alert('迄日，不得小於起日！');
+                                    }
                                 }
-                            }
-                            function check_today(){                               
-                                check_date();         
-                                if('{{ date('Y-m-d') }}'>= $('#live_date').val()){
-                                    $('#live_date').val("");
-                                    alert('不能選今天以前的日子！');
+                                function check_today(){                               
+                                    check_date();         
+                                    if('{{ date('Y-m-d') }}'>= $('#live_date').val()){
+                                        $('#live_date').val("");
+                                        alert('不能選今天以前的日子！');
+                                    }
                                 }
-                            }
-                        </script>
-                    </table>                                    
+                            </script>
+                        </table> 
+                    </div>
+                                                     
                     <div class="form-group">
                         <label for="content"><strong class="text-danger">6.內文*</strong></label>
                         {{ Form::textarea('content', null, ['id' => 'content', 'class' => 'form-control', 'rows' => 10,'required'=>'required', 'placeholder' => '請輸入內容']) }}
