@@ -59,11 +59,15 @@
                                     @endauth
                                     {{ Form::open(['route' => ['blogs.destroy',$blog->id], 'method' => 'DELETE','id'=>'delete'.$blog->id]) }}
                                     {{ Form::close() }}
-                                    @if($blog->user->name == "系統管理員")
-                                        系統管理員
+                                    @if(!empty($blog->job_title))
+                                        {{ $blog->job_title }}
                                     @else
-                                        {{ substr_cut_name($blog->user->name) }}
-                                    @endif
+                                        @if($blog->user->name == "系統管理員")
+                                            系統管理員
+                                        @else
+                                            {{ substr_cut_name($blog->user->name) }}
+                                        @endif
+                                    @endif                                    
                                      / {{ $blog->created_at }} / 點閱：{{ $blog->views }}
                                 </p>
                             </td>

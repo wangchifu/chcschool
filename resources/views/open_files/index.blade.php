@@ -95,11 +95,15 @@
                             {{ $n }} 個項目
                         </td>
                         <td>
-                            @if($folder->user->name == "系統管理員")
-                                系統管理員
+                            @if(!empty($folder->job_title))
+                                {{ $folder->job_title }}
                             @else
-                                {{ substr_cut_name($folder->user->name) }}
-                            @endif
+                                @if($folder->user->name == "系統管理員")
+                                    系統管理員
+                                @else
+                                    {{ substr_cut_name($folder->user->name) }}
+                                @endif
+                            @endif                            
                         </td>
                         <td>
                             @if(file_exists(storage_path($f.'/'.$folder->name)))
@@ -141,11 +145,15 @@
                             @endif
                         </td>
                         <td>
-                            @if($file->user->name == "系統管理員")
-                                系統管理員
+                            @if(!empty($file->job_title))
+                                {{ $file->job_title }}
                             @else
-                                {{ substr_cut_name($file->user->name) }}
-                            @endif
+                                @if($file->user->name == "系統管理員")
+                                    系統管理員
+                                @else
+                                    {{ substr_cut_name($file->user->name) }}
+                                @endif
+                            @endif                            
                         </td>
                         <td>
                             @if(file_exists(storage_path($f.'/'.$file->name)))

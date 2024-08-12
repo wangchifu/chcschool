@@ -72,6 +72,7 @@ class BlogsController extends Controller
         $att['title'] = $request->input('title');
         $att['content'] = $request->input('content');
         $att['user_id'] = auth()->user()->id;
+        $att['job_title'] = auth()->user()->title;
         $att['views'] = 0;
 
         $blog = Blog::create($att);

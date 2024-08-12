@@ -130,8 +130,8 @@ class OpenFileController extends Controller
         $att['name'] = $request->input('name');
         $att['type'] = 1; //目錄
         $att['user_id'] = auth()->user()->id;
-        $att['folder_id'] = $request->input('folder_id');
-
+        $att['job_title'] = auth()->user()->title;
+        $att['folder_id'] = $request->input('folder_id');        
 
         if (!is_dir($new_path)) {
             mkdir($new_path);
@@ -287,6 +287,7 @@ class OpenFileController extends Controller
                     $att['name'] = $info['original_filename'];
                     $att['type'] = 2; //檔案
                     $att['user_id'] = auth()->user()->id;
+                    $att['job_title'] = auth()->user()->title;
                     $att['folder_id'] = $request->input('folder_id');
                     Upload::create($att);
                 }
