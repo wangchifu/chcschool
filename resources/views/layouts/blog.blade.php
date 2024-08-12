@@ -43,7 +43,12 @@ $blogs = \App\Blog::orderBy('created_at','DESC')
                     {{ $content }}
                     <br>
                     <small class="text-secondary">
-                        {{ $blog->user->name }} / {{ $blog->created_at }} / 點閱：{{ $blog->views }}
+                        @if($blog->user->name == "系統管理員")
+                            系統管理員
+                        @else
+                            {{ substr_cut_name($blog->user->name) }}
+                        @endif                
+                         / {{ $blog->created_at }} / 點閱：{{ $blog->views }}
                     </small>
                 </p>
             </td>
