@@ -46,7 +46,12 @@
                             <h2>
                             {{ $blog->title }}
                             </h2>
-                            {{ $blog->user->name }} / {{ $blog->created_at }} / 點閱：{{ $blog->views }}
+                            @if($blog->user->name == "系統管理員")
+                                        系統管理員
+                            @else
+                                {{ substr_cut_name($blog->user->name) }}
+                            @endif
+                             / {{ $blog->created_at }} / 點閱：{{ $blog->views }}
                             @auth
                                 @if(auth()->user()->id == $blog->user_id)
                                     <a href="{{ route('blogs.edit',$blog->id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
