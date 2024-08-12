@@ -52,7 +52,7 @@
                                 @if($blog->user->name == "系統管理員")
                                             系統管理員
                                 @else
-                                    {{ substr_cut_name($blog->user->name) }}
+                                    {{ $blog->user->title }}
                                 @endif
                             @endif                            
                              / {{ $blog->created_at }} / 點閱：{{ $blog->views }}

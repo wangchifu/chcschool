@@ -101,7 +101,7 @@
                                 @if($folder->user->name == "系統管理員")
                                     系統管理員
                                 @else
-                                    {{ substr_cut_name($folder->user->name) }}
+                                    {{ $folder->user->title }}
                                 @endif
                             @endif                            
                         </td>
@@ -151,7 +151,7 @@
                                 @if($file->user->name == "系統管理員")
                                     系統管理員
                                 @else
-                                    {{ substr_cut_name($file->user->name) }}
+                                    {{ $file->user->title }}
                                 @endif
                             @endif                            
                         </td>
