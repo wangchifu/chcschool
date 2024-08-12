@@ -11,6 +11,7 @@ class Blog extends Model
         'title',
         'content',
         'user_id',
+        'job_title',
         'views',
     ];
 

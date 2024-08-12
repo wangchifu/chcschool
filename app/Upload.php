@@ -11,6 +11,7 @@ class Upload extends Model
         'type',
         'folder_id',
         'user_id',
+        'job_title',
         'order_by',
     ];
     public function user()
