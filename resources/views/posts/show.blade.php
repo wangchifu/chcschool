@@ -156,7 +156,7 @@
                         <div class="card-body">
                         @foreach($photos as $k=>$v)
                         <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="venobox" data-gall="gall1">
-                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="..." class="img-thumbnail col-2">
+                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="..." class="img-thumbnail col-lg-2 col-md-4 col-sm-6">
                         </a>
                         @endforeach
                         </div>
