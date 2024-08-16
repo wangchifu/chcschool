@@ -52,7 +52,7 @@
                             <hr>
                             <div class="card">
                                 <div class="card-header">
-                                    2.選擇取餐地點 (<small>導師請選班級教室，填入班級代碼(如101)</small>)
+                                    2.選擇取餐地點 (<small>導師請選班級教室，填入班級代碼(如101，特教班9901)</small>)
                                 </div>
                                 <div class="card-body">
                                     <table>
@@ -61,7 +61,7 @@
                                                 <input type="radio" name="select_place" id="s1" checked value="place_select"> <label for="s1">指定地點　　　　　　</label>
                                             </td>
                                             <td>
-                                                <input type="radio" name="select_place" id="s2" value="place_class"> <label for="s2">班級代號(如101)</label>
+                                                <input type="radio" name="select_place" id="s2" value="place_class"> <label for="s2">班級代號(如101，特教班9901)</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -69,7 +69,7 @@
                                                 {{ Form::select('lunch_place_id', $lunch_place_array,null, ['id'=>'place_select','class' => 'form-control','placeholder'=>'--請選擇地點--','required'=>'required']) }}
                                             </td>
                                             <td>
-                                                <input type="text" name="class_no" id="place_class" maxlength="4" class="form-control" style="display: none;" placeholder="班級代號(如101)" required value="1">
+                                                <input type="text" name="class_no" id="place_class" maxlength="4" class="form-control" style="display: none;" placeholder="班級代號(如101，特教班9901)" required value="1">
                                             </td>
                                         </tr>
                                     </table>
