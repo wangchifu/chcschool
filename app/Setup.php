@@ -30,5 +30,8 @@ class Setup extends Model
         'department_name',
         'schoolexec_name',
         'setup_name',
+        'school_marquee_behavior',
+        'school_marquee_direction',
+        'school_marquee_scrollamount',
     ];
 }

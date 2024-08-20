@@ -348,6 +348,11 @@ Route::group(['middleware' => 'auth'], function () {
 //行政人員可用
 Route::group(['middleware' => 'exec'], function () {
 
+    Route::get('school_marquee/index', 'SchoolMarqueeController@index')->name('school_marquee.index');
+    Route::get('school_marquee/create', 'SchoolMarqueeController@create')->name('school_marquee.create');
+    Route::post('school_marquee/store', 'SchoolMarqueeController@store')->name('school_marquee.store');
+    Route::delete('school_marquee/{school_marquee}/destroy', 'SchoolMarqueeController@destroy')->name('school_marquee.destroy');    
+
     Route::get('posts/create', 'PostsController@create')->name('posts.create');
     Route::post('posts', 'PostsController@store')->name('posts.store');
 
@@ -464,6 +469,9 @@ Route::group(['middleware' => 'admin_exec'], function () {
 
 //管理者可用
 Route::group(['middleware' => 'admin'], function () {
+
+    Route::get('school_marquee/setup', 'SchoolMarqueeController@setup')->name('school_marquee.setup');
+
     //模擬登入
     Route::get('sims/{user}/impersonate', 'SimulationController@impersonate')->name('sims.impersonate');
     //網站管理

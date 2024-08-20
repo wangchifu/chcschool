@@ -223,6 +223,7 @@
                                     </a>
                                 @endif
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
+                                <a class="dropdown-item" href="{{ route('school_marquee.index') }}"><i class="fas fa-running"></i> 校園跑馬燈</a>
                             </div>
                         </li>
                     @endif
@@ -236,6 +237,7 @@
                                 <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-user"></i> 帳號管理</a>
                                 <a class="dropdown-item" href="{{ route('groups.index') }}"><i class="fas fa-users"></i> 群組管理</a>
                                 <a class="dropdown-item" href="{{ route('departments.index') }}"><i class="fas fa-puzzle-piece"></i> 學校介紹管理</a>
+                                <a class="dropdown-item" href="{{ route('school_marquee.setup') }}"><i class="fas fa-running"></i> 校園跑馬燈管理</a>
                                 <a class="dropdown-item" href="{{ route('contents.index') }}"><i class="fas fa-file-alt"></i> 內容管理</a>
                                 <a class="dropdown-item" href="{{ route('links.index') }}"><i class="fas fa-link"></i> 選單連結</a>
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
