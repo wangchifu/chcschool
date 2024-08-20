@@ -471,6 +471,7 @@ Route::group(['middleware' => 'admin_exec'], function () {
 Route::group(['middleware' => 'admin'], function () {
 
     Route::get('school_marquee/setup', 'SchoolMarqueeController@setup')->name('school_marquee.setup');
+    Route::post('school_marquee/setup_store', 'SchoolMarqueeController@setup_store')->name('school_marquee.setup_store');
 
     //模擬登入
     Route::get('sims/{user}/impersonate', 'SimulationController@impersonate')->name('sims.impersonate');

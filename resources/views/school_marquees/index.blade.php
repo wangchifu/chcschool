@@ -9,9 +9,11 @@
                 校園跑馬燈
             </h1>
             <ul class="nav nav-tabs">
+                @if(auth()->user()->admin)
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('school_marquee.setup') }}">管理</a>
                 </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ route('school_marquee.index') }}">列表</a>
                 </li>

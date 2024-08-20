@@ -33,5 +33,6 @@ class Setup extends Model
         'school_marquee_behavior',
         'school_marquee_direction',
         'school_marquee_scrollamount',
+        'school_marquee_color',
     ];
 }

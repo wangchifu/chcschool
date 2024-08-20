@@ -17,9 +17,10 @@ class SchoolMarqueeController extends Controller
     }
 
     public function setup(){
-        
+
+        $setup = Setup::first();
         $data = [
-            
+            'setup'=>$setup,
         ];
         return view('school_marquees.setup',$data);
     }
@@ -65,6 +66,14 @@ class SchoolMarqueeController extends Controller
         }
         $school_marquee->delete();
         return redirect()->route('school_marquee.index');
+    }
+
+    public function setup_store(Request $request)
+    {
+        $setup = Setup::first();
+        $att = $request->all();        
+        $setup->update($att);
+        return redirect()->route('school_marquee.setup');
     }
     
 }
