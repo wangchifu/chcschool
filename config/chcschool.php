@@ -4,6 +4,7 @@ return [
     'modules'=>[
         'posts'=>'公告系統',
         'open_files'=>'檔案庫',
+        'school_marquee'=>'校園跑馬燈',
         'departments'=>'學校介紹',
         'links'=>'選單連結',
         'schools'=>'校務行政',

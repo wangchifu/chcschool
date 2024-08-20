@@ -19,7 +19,10 @@ class SchoolMarqueeController extends Controller
     public function setup(){
 
         $setup = Setup::first();
-        $school_marquees = SchoolMarquee::where('start_date','<=',date('Y-m-d'))->where('stop_date','>=',date('Y-m-d'))->get();
+        $school_marquees = SchoolMarquee::where('start_date','<=',date('Y-m-d'))
+        ->where('stop_date','>=',date('Y-m-d'))
+        ->orderBy('id','DESC')
+        ->get();
         $data = [
             'setup'=>$setup,
             'school_marquees'=>$school_marquees,
@@ -30,8 +33,13 @@ class SchoolMarqueeController extends Controller
     
     public function index(){
         
-        $school_marquees = SchoolMarquee::orderBy('stop_date','DESC')->paginate(10);
-        $school_marquee2s = SchoolMarquee::where('start_date','<=',date('Y-m-d'))->where('stop_date','>=',date('Y-m-d'))->get();
+        $school_marquees = SchoolMarquee::orderBy('stop_date','DESC')
+        ->orderBy('id','DESC')
+        ->paginate(10);
+        $school_marquee2s = SchoolMarquee::where('start_date','<=',date('Y-m-d'))
+        ->where('stop_date','>=',date('Y-m-d'))
+        ->orderBy('id','DESC')
+        ->get();
         $setup = Setup::first();
         $data = [
             'setup'=>$setup,
@@ -63,6 +71,34 @@ class SchoolMarqueeController extends Controller
         $att['user_id'] = auth()->user()->id;
         SchoolMarquee::create($att);
         return redirect()->route('school_marquee.index');
+    }
+
+    public function edit(SchoolMarquee $school_marquee){
+        if($school_marquee->user_id != auth()->user()->id){
+            if(!auth()->user()->admin){
+                return back();
+            }            
+        }
+        $data = [
+            'school_marquee'=>$school_marquee,
+        ];
+        return view('school_marquees.edit',$data);
+    }
+
+    public function update(Request $request,SchoolMarquee $school_marquee)
+    {
+        $request->validate([
+            'title' => 'required',
+            'start_date' => 'required',
+            'stop_date' => 'required',
+        ]);
+
+        $att['title'] = $request->input('title');
+        $att['start_date'] = $request->input('start_date');
+        $att['stop_date'] = $request->input('stop_date');
+
+        $school_marquee->update($att);
+        echo "<body onload='opener.location.reload();window.close();'>";
     }
 
     public function destroy(SchoolMarquee $school_marquee)

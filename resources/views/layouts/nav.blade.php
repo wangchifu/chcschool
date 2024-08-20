@@ -222,8 +222,11 @@
                                         <i class="fas fa-archive"></i> 借用系統
                                     </a>
                                 @endif
+                                @if(isset($module_setup['校園跑馬燈']))
+                                    <a class="dropdown-item" href="{{ route('school_marquee.index') }}"><i class="fas fa-running"></i> 校園跑馬燈</a>
+                                @endif
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
-                                <a class="dropdown-item" href="{{ route('school_marquee.index') }}"><i class="fas fa-running"></i> 校園跑馬燈</a>
+                                
                             </div>
                         </li>
                     @endif

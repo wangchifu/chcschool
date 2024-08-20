@@ -25,25 +25,33 @@
                 </div>
                 <div class="card-body">
                     @if($school_marquees->count()>0)                    
+                    <?php
+                    $school_marquee_color = (empty($setup->school_marquee_color))?$school_marquee_color="warning":$setup->school_marquee_color;
+                    $school_marquee_behavior = (empty($setup->school_marquee_behavior))?$school_marquee_behavior="scroll":$setup->school_marquee_behavior;
+                    $school_marquee_direction = (empty($setup->school_marquee_direction))?$school_marquee_direction="up":$setup->school_marquee_direction;
+                    $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?$school_marquee_scrollamount="2":$setup->school_marquee_scrollamount;
+                    ?>
+                    @if($school_marquees->count()>0)
                         <div class="row justify-content-center">
                             <div class="col-lg-11">
-                                <div class="alert alert-{{ $setup->school_marquee_color }}" height="10px">
-                                    <marquee behavior="{{ $setup->school_marquee_behavior }}" direction="{{ $setup->school_marquee_direction }}" scrollamount="{{ $setup->school_marquee_scrollamount }}" height="20px">
-                                        @if($setup->school_marquee_direction=="up" or $setup->school_marquee_direction=="down")
+                                <div class="alert alert-{{ $school_marquee_color }}" style="margin-top: -15px;">
+                                    <marquee behavior="{{ $school_marquee_behavior }}" direction="{{ $school_marquee_direction }}" scrollamount="{{ $school_marquee_scrollamount }}" height="20px">
+                                        @if($school_marquee_direction=="up" or $school_marquee_direction=="down")
                                             @foreach($school_marquees as $school_marquee)
                                                 <p>{{ $school_marquee->title }}</p>                                                
                                             @endforeach
                                         @endif
-                                        @if($setup->school_marquee_direction=="left" or $setup->school_marquee_direction=="right")
+                                        @if($school_marquee_direction=="left" or $school_marquee_direction=="right")
                                             @foreach($school_marquees as $school_marquee)
                                                 <span>{{ $school_marquee->title }}</span>
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             @endforeach
                                         @endif
                                     </marquee>
                                 </div>
                             </div>
                         </div>
+                    @endif
                     @endif
                     {{ Form::open(['route' => 'school_marquee.setup_store', 'method' => 'POST']) }}                   
                     <div class="form-group">

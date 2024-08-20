@@ -203,7 +203,10 @@ class HomeController extends Controller
 
 
         //校園跑馬燈
-        $school_marquees = SchoolMarquee::where('start_date','<=',date('Y-m-d'))->where('stop_date','>=',date('Y-m-d'))->get();
+        $school_marquees = SchoolMarquee::where('start_date','<=',date('Y-m-d'))
+        ->where('stop_date','>=',date('Y-m-d'))
+        ->orderBy('id','DESC')
+        ->get();
 
         //榮譽榜資料庫資料
         $honors = Post::where('insite', '2')
