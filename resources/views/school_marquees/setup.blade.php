@@ -26,14 +26,15 @@
                 <div class="card-body">
                     @if($school_marquees->count()>0)                    
                     <?php
-                    $school_marquee_color = (empty($setup->school_marquee_color))?$school_marquee_color="warning":$setup->school_marquee_color;
-                    $school_marquee_behavior = (empty($setup->school_marquee_behavior))?$school_marquee_behavior="scroll":$setup->school_marquee_behavior;
-                    $school_marquee_direction = (empty($setup->school_marquee_direction))?$school_marquee_direction="up":$setup->school_marquee_direction;
-                    $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?$school_marquee_scrollamount="2":$setup->school_marquee_scrollamount;
+                    $school_marquee_width = (empty($setup->school_marquee_width))?"12":$setup->school_marquee_width;
+                    $school_marquee_color = (empty($setup->school_marquee_color))?"warning":$setup->school_marquee_color;
+                    $school_marquee_behavior = (empty($setup->school_marquee_behavior))?"scroll":$setup->school_marquee_behavior;
+                    $school_marquee_direction = (empty($setup->school_marquee_direction))?"up":$setup->school_marquee_direction;
+                    $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?"2":$setup->school_marquee_scrollamount;
                     ?>
                     @if($school_marquees->count()>0)
                         <div class="row justify-content-center">
-                            <div class="col-lg-11">
+                            <div class="col-lg-{{ $school_marquee_width }}">
                                 <div class="alert alert-{{ $school_marquee_color }}" style="margin-top: -15px;">
                                     <marquee behavior="{{ $school_marquee_behavior }}" direction="{{ $school_marquee_direction }}" scrollamount="{{ $school_marquee_scrollamount }}" height="20px">
                                         @if($school_marquee_direction=="up" or $school_marquee_direction=="down")
@@ -53,7 +54,41 @@
                         </div>
                     @endif
                     @endif
-                    {{ Form::open(['route' => 'school_marquee.setup_store', 'method' => 'POST']) }}                   
+                    {{ Form::open(['route' => 'school_marquee.setup_store', 'method' => 'POST']) }}     
+                    <div class="form-group">
+                        <label for="school_marquee_width">寬度</label>
+                        <?php
+                            $select_width[1] = "";
+                            $select_width[2] = "";
+                            $select_width[3] = "";
+                            $select_width[4] = "";
+                            $select_width[5] = "";
+                            $select_width[6] = "";
+                            $select_width[7] = "";
+                            $select_width[8] = "";
+                            $select_width[9] = "";
+                            $select_width[10] = "";
+                            $select_width[11] = "";
+                            $select_width[12] = "";
+                            if(!empty($setup->school_marquee_width)){
+                                $select_width[$setup->school_marquee_width] = "selected";
+                            }
+                        ?>
+                        <select class="form-control" style="width:250px" name="school_marquee_width" id="school_marquee_width">
+                          <option value="1" {{ $select_width[1] }}>1格</option>
+                          <option value="2" {{ $select_width[2] }}>2格</option>
+                          <option value="3" {{ $select_width[3] }}>3格</option>
+                          <option value="4" {{ $select_width[4] }}>4格</option>
+                          <option value="5" {{ $select_width[5] }}>5格</option>
+                          <option value="6" {{ $select_width[6] }}>6格</option>
+                          <option value="7" {{ $select_width[7] }}>7格</option>
+                          <option value="8" {{ $select_width[8] }}>8格</option>
+                          <option value="9" {{ $select_width[9] }}>9格</option>
+                          <option value="10" {{ $select_width[10] }}>10格</option>
+                          <option value="11" {{ $select_width[11] }}>11格</option>
+                          <option value="12" {{ $select_width[12] }}>12格</option>
+                        </select>
+                    </div>              
                     <div class="form-group">
                         <label for="school_marquee_color">底部顏色</label>
                         <?php

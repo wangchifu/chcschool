@@ -1,0 +1,1 @@
+ALTER TABLE `setups` ADD `school_marquee_width` tinyint NULL AFTER `school_marquee_color`;

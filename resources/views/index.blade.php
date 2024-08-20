@@ -88,14 +88,15 @@
     <?php $module_setup = get_module_setup(); ?>
     @if(isset($module_setup['校園跑馬燈']))
         <?php
-            $school_marquee_color = (empty($setup->school_marquee_color))?$school_marquee_color="warning":$setup->school_marquee_color;
-            $school_marquee_behavior = (empty($setup->school_marquee_behavior))?$school_marquee_behavior="scroll":$setup->school_marquee_behavior;
-            $school_marquee_direction = (empty($setup->school_marquee_direction))?$school_marquee_direction="up":$setup->school_marquee_direction;
-            $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?$school_marquee_scrollamount="2":$setup->school_marquee_scrollamount;
+            $school_marquee_width = (empty($setup->school_marquee_width))?"12":$setup->school_marquee_width;
+            $school_marquee_color = (empty($setup->school_marquee_color))?"warning":$setup->school_marquee_color;
+            $school_marquee_behavior = (empty($setup->school_marquee_behavior))?"scroll":$setup->school_marquee_behavior;
+            $school_marquee_direction = (empty($setup->school_marquee_direction))?"up":$setup->school_marquee_direction;
+            $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?"2":$setup->school_marquee_scrollamount;
         ?>
         @if($school_marquees->count()>0)
             <div class="row justify-content-center">
-                <div class="col-lg-11">
+                <div class="col-lg-{{ $school_marquee_width }}">
                     <div class="alert alert-{{ $school_marquee_color }}" style="margin-top: -15px;">
                         <marquee behavior="{{ $school_marquee_behavior }}" direction="{{ $school_marquee_direction }}" scrollamount="{{ $school_marquee_scrollamount }}" height="20px">
                             @if($school_marquee_direction=="up" or $school_marquee_direction=="down")
