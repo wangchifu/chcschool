@@ -19,8 +19,10 @@ class SchoolMarqueeController extends Controller
     public function setup(){
 
         $setup = Setup::first();
+        $school_marquees = SchoolMarquee::where('start_date','<=',date('Y-m-d'))->where('stop_date','>=',date('Y-m-d'))->get();
         $data = [
             'setup'=>$setup,
+            'school_marquees'=>$school_marquees,
         ];
         return view('school_marquees.setup',$data);
     }
@@ -28,9 +30,13 @@ class SchoolMarqueeController extends Controller
     
     public function index(){
         
-        $school_marquees = SchoolMarquee::orderBy('stop_date','DESC')->get();
+        $school_marquees = SchoolMarquee::orderBy('stop_date','DESC')->paginate(10);
+        $school_marquee2s = SchoolMarquee::where('start_date','<=',date('Y-m-d'))->where('stop_date','>=',date('Y-m-d'))->get();
+        $setup = Setup::first();
         $data = [
+            'setup'=>$setup,
             'school_marquees'=>$school_marquees,
+            'school_marquee2s'=>$school_marquee2s,
         ];
         return view('school_marquees.index',$data);
     }
@@ -62,7 +68,9 @@ class SchoolMarqueeController extends Controller
     public function destroy(SchoolMarquee $school_marquee)
     {
         if($school_marquee->user_id != auth()->user()->id){
-            return back();
+            if(!auth()->user()->admin){
+                return back();
+            }            
         }
         $school_marquee->delete();
         return redirect()->route('school_marquee.index');

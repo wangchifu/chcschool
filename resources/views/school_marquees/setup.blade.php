@@ -24,6 +24,27 @@
                     </h3>
                 </div>
                 <div class="card-body">
+                    @if($school_marquees->count()>0)                    
+                        <div class="row justify-content-center">
+                            <div class="col-lg-11">
+                                <div class="alert alert-{{ $setup->school_marquee_color }}" height="10px">
+                                    <marquee behavior="{{ $setup->school_marquee_behavior }}" direction="{{ $setup->school_marquee_direction }}" scrollamount="{{ $setup->school_marquee_scrollamount }}" height="20px">
+                                        @if($setup->school_marquee_direction=="up" or $setup->school_marquee_direction=="down")
+                                            @foreach($school_marquees as $school_marquee)
+                                                <p>{{ $school_marquee->title }}</p>                                                
+                                            @endforeach
+                                        @endif
+                                        @if($setup->school_marquee_direction=="left" or $setup->school_marquee_direction=="right")
+                                            @foreach($school_marquees as $school_marquee)
+                                                <span>{{ $school_marquee->title }}</span>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                            @endforeach
+                                        @endif
+                                    </marquee>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     {{ Form::open(['route' => 'school_marquee.setup_store', 'method' => 'POST']) }}                   
                     <div class="form-group">
                         <label for="school_marquee_color">底部顏色</label>
@@ -88,21 +109,19 @@
                     <div class="form-group">
                         <label for="school_marquee_scrollamount">移動速度</label>
                         <?php
-                            $select_scrollamount[2] = ""; 
-                            $select_scrollamount[4] = "";
-                            $select_scrollamount[6] = "";
-                            $select_scrollamount[8] = "";
+                            $select_scrollamount[2] = "";                             
+                            $select_scrollamount[6] = "";                            
                             $select_scrollamount[10] = "";
+                            $select_scrollamount[14] = "";
                             if(!empty($setup->school_marquee_scrollamount)){
                                 $select_scrollamount[$setup->school_marquee_scrollamount] = "selected";
                             }
                         ?>
                         <select class="form-control" style="width:250px" name="school_marquee_scrollamount" id="school_marquee_scrollamount">
-                          <option {{ $select_scrollamount[2] }}>2</option>
-                          <option {{ $select_scrollamount[4] }}>4</option>
-                          <option {{ $select_scrollamount[6] }}>6</option>
-                          <option {{ $select_scrollamount[8] }}>8</option>
+                          <option {{ $select_scrollamount[2] }}>2</option>                          
+                          <option {{ $select_scrollamount[6] }}>6</option>                          
                           <option {{ $select_scrollamount[10] }}>10</option>
+                          <option {{ $select_scrollamount[14] }}>14</option>
                         </select>
                     </div>
                     <div class="form-group">                        
@@ -110,7 +129,7 @@
                             <i class="fas fa-save"></i> 儲存設定
                         </button>
                     </div>                    
-                    {{ Form::close() }}
+                    {{ Form::close() }}                    
                 </div>
             </div>
         </div>

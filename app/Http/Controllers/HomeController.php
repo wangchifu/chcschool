@@ -12,6 +12,7 @@ use App\SetupCol;
 use App\TitleImageDesc;
 use App\Tree;
 use App\User;
+use App\SchoolMarquee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
@@ -199,6 +200,11 @@ class HomeController extends Controller
                 }    
             }
         }
+
+
+        //校園跑馬燈
+        $school_marquees = SchoolMarquee::where('start_date','<=',date('Y-m-d'))->where('stop_date','>=',date('Y-m-d'))->get();
+
         //榮譽榜資料庫資料
         $honors = Post::where('insite', '2')
                 ->where(function ($query) {
@@ -241,6 +247,7 @@ class HomeController extends Controller
             'post_types' => $post_types,
             'post_type_array' => $post_type_array,
             'post_show_number'=>$post_show_number,
+            'school_marquees'=>$school_marquees,
         ];
         return view('index', $data);
     }

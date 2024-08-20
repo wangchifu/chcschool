@@ -30,7 +30,7 @@
                     {{ Form::open(['route' => 'school_marquee.store', 'method' => 'POST']) }}                   
                     <div class="form-group">
                         <label for="name">標題*</label>
-                        <input type="text" name="title" class="form-control" required maxlength="50">
+                        <input type="text" name="title" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="url">開始日期*</label>

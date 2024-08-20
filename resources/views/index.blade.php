@@ -85,6 +85,27 @@
 
 @section('content')
     <link href="{{ asset('css/block_style.css') }}" rel="stylesheet">
+    @if($school_marquees->count()>0)
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <div class="alert alert-{{ $setup->school_marquee_color }}" style="margin-top: -15px;" height="10px">
+                    <marquee behavior="{{ $setup->school_marquee_behavior }}" direction="{{ $setup->school_marquee_direction }}" scrollamount="{{ $setup->school_marquee_scrollamount }}" height="20px">
+                        @if($setup->school_marquee_direction=="up" or $setup->school_marquee_direction=="down")
+                            @foreach($school_marquees as $school_marquee)
+                                <p>{{ $school_marquee->title }}</p>                                                
+                            @endforeach
+                        @endif
+                        @if($setup->school_marquee_direction=="left" or $setup->school_marquee_direction=="right")
+                            @foreach($school_marquees as $school_marquee)
+                                <span>{{ $school_marquee->title }}</span>
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            @endforeach
+                        @endif
+                    </marquee>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="row justify-content-center">
         @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
