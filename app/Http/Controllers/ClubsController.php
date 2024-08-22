@@ -1189,6 +1189,7 @@ class ClubsController extends Controller
     {
 
         $clubs = Club::where('semester', $semester)->where('class_id', $class_id)->orderBy('no')->get();
+        $open_clubs = [];
         foreach ($clubs as $club) {
             $check_people = ClubRegister::where('club_id', $club->id)->count();
             if ($check_people >= $club->people and $club->money != 0) {
@@ -1212,7 +1213,7 @@ class ClubsController extends Controller
             ->whereIn('club_id', $open_clubs)
             ->orderBy('club_student_id')->get();
 
-
+        $students = [];
         foreach ($club_registers as $club_register) {
             if (isset($check_stu_order[$club_register->club->id][$club_register->user->id])) {
                 if ($check_stu_order[$club_register->club->id][$club_register->user->id] <= $club_register->club->taking) {
@@ -1227,6 +1228,7 @@ class ClubsController extends Controller
         }
 
         $n = 1;
+        $data = [];
         foreach ($students as $k => $v) {
             $data[$n] = [
                 '學號' => $v['no'],
@@ -1261,6 +1263,8 @@ class ClubsController extends Controller
         $lunch_setup = LunchSetup::where('semester', $semester)->first();
 
         $clubs = Club::where('semester', $semester)->where('class_id', $class_id)->orderBy('no')->get();
+        $open_clubs = [];
+        $open_clubs_name = [];
         foreach ($clubs as $club) {
             $check_people = ClubRegister::where('club_id', $club->id)->count();
             if ($check_people >= $club->people and $club->money != 0) {
@@ -1280,7 +1284,8 @@ class ClubsController extends Controller
             ->where('class_id', $class_id)
             ->whereIn('club_id', $open_clubs)
             ->orderBy('club_student_id')->get();
-
+        $students = [];
+        $register_data = [];
         foreach ($club_registers as $club_register) {
             if (isset($check_stu_order[$club_register->club->id][$club_register->user->id])) {
                 if ($check_stu_order[$club_register->club->id][$club_register->user->id] <= $club_register->club->taking) {
@@ -1308,6 +1313,8 @@ class ClubsController extends Controller
     public function report_money_download2($semester, $class_id)
     {
         $clubs = Club::where('semester', $semester)->where('class_id', $class_id)->orderBy('no')->get();
+        $open_clubs = [];
+        $open_clubs_name = [];
         foreach ($clubs as $club) {
             $check_people = ClubRegister::where('club_id', $club->id)->count();
             if ($check_people >= $club->people and $club->money != 0) {
@@ -1331,7 +1338,7 @@ class ClubsController extends Controller
             ->whereIn('club_id', $open_clubs)
             ->orderBy('club_student_id')->get();
 
-
+        $students = [];
         foreach ($club_registers as $club_register) {
             if (isset($check_stu_order[$club_register->club->id][$club_register->user->id])) {
                 if ($check_stu_order[$club_register->club->id][$club_register->user->id] <= $club_register->club->taking) {
