@@ -12,8 +12,8 @@
             </h1>
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <span class="text-danger">*使用手機等小螢幕觀看，請注意最右邊仍有資訊。</span>
+                    <span class="text-danger">*使用手機等小螢幕觀看，請注意最右邊仍有資訊。</span>
+                    <div class="table-responsive">                        
                         <table class="table table-striped">
                             <thead>
                             <tr>
