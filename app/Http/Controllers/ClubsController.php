@@ -616,6 +616,20 @@ class ClubsController extends Controller
         return view('clubs.semester_select', $data);
     }
 
+    public function show_clubs($semester, $class_id)
+    {        
+        $clubs = Club::where('semester', $semester)
+            ->where('class_id', $class_id)
+            ->orderBy('no')
+            ->get();
+        $data = [
+            'class_id'=>$class_id,
+            'semester'=>$semester,
+            'clubs'=>$clubs,
+        ];
+        return view('clubs.show_clubs', $data);
+    }
+
     public function parents_login($semester, $class_id)
     {
         $club_semester = ClubSemester::where('semester', $semester)->first();
