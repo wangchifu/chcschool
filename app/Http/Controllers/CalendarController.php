@@ -227,13 +227,14 @@ class CalendarController extends Controller
     public function delete(Calendar $calendar)
     {
         if ($calendar->user_id != auth()->user()->id) {
-            $words = "你不要亂來！";
-            return view('layouts.error', compact('words'));
+            if(auth()->user()->admin != 1){
+                dd("你不要亂來！");                
+            }            
         }
 
         $calendar->delete();
 
-        return redirect()->route('calendars.index');
+        return back();
     }
 
     public function print($semester = null)

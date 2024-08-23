@@ -87,7 +87,7 @@
                                                 @foreach($calendar_data[$calendar_week->id][$k] as $k=>$v)
                                                     <small class="text-primary">{{ $i }}.{{ $v['content'] }}</small>
                                                     @auth
-                                                        @if($v['user_id'] == auth()->user()->id)
+                                                        @if($v['user_id'] == auth()->user()->id or auth()->user()->admin==1)
                                                             <a href="javascript:open_url('{{ route('calendars.edit',$k) }}','新視窗')" class="text-info"><i class="fas fa-edit"></i></a>
                                                             <a href="{{ route('calendars.delete',$k) }}" class="text-danger" id="del{{ $k }}" onclick="return confirm('確定要刪？')"><i class="fas fa-minus-square"></i></a>
                                                         @endif
