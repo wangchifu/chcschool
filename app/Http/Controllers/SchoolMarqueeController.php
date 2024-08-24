@@ -33,8 +33,7 @@ class SchoolMarqueeController extends Controller
     
     public function index(){
         
-        $school_marquees = SchoolMarquee::orderBy('stop_date','DESC')
-        ->orderBy('id','DESC')
+        $school_marquees = SchoolMarquee::orderBy('id','DESC')
         ->paginate(10);
         $school_marquee2s = SchoolMarquee::where('start_date','<=',date('Y-m-d'))
         ->where('stop_date','>=',date('Y-m-d'))
