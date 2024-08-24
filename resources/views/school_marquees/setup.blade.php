@@ -153,18 +153,26 @@
                         <label for="school_marquee_scrollamount">移動速度</label>
                         <?php
                             $select_scrollamount[2] = "";                             
+                            $select_scrollamount[4] = "";
                             $select_scrollamount[6] = "";                            
+                            $select_scrollamount[8] = "";
                             $select_scrollamount[10] = "";
+                            $select_scrollamount[12] = "";
                             $select_scrollamount[14] = "";
+                            $select_scrollamount[16] = "";
                             if(!empty($setup->school_marquee_scrollamount)){
                                 $select_scrollamount[$setup->school_marquee_scrollamount] = "selected";
                             }
                         ?>
                         <select class="form-control" style="width:250px" name="school_marquee_scrollamount" id="school_marquee_scrollamount">
                           <option {{ $select_scrollamount[2] }}>2</option>                          
+                          <option {{ $select_scrollamount[4] }}>4</option>
                           <option {{ $select_scrollamount[6] }}>6</option>                          
+                          <option {{ $select_scrollamount[8] }}>8</option>
                           <option {{ $select_scrollamount[10] }}>10</option>
+                          <option {{ $select_scrollamount[12] }}>12</option>
                           <option {{ $select_scrollamount[14] }}>14</option>
+                          <option {{ $select_scrollamount[16] }}>16</option>
                         </select>
                     </div>
                     <div class="form-group">                        

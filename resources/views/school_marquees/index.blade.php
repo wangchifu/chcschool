@@ -34,19 +34,19 @@
                     $school_marquee_direction = (empty($setup->school_marquee_direction))?"up":$setup->school_marquee_direction;
                     $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?"2":$setup->school_marquee_scrollamount;
                     ?>
-                    @if($school_marquees->count()>0)
+                    @if($school_marquee2s->count()>0)
                         <div class="row justify-content-center">
                             <div class="col-lg-{{ $school_marquee_width }}">
                                 <div class="alert alert-{{ $school_marquee_color }}" style="margin-top: -15px;">
                                     <marquee behavior="{{ $school_marquee_behavior }}" direction="{{ $school_marquee_direction }}" scrollamount="{{ $school_marquee_scrollamount }}" height="20px">
                                         @if($school_marquee_direction=="up" or $school_marquee_direction=="down")
-                                            @foreach($school_marquees as $school_marquee)
-                                                <p>{{ $school_marquee->title }}</p>                                                
+                                            @foreach($school_marquee2s as $school_marquee2)
+                                                <p>{{ $school_marquee2->title }}</p>                                                
                                             @endforeach
                                         @endif
                                         @if($school_marquee_direction=="left" or $school_marquee_direction=="right")
-                                            @foreach($school_marquees as $school_marquee)
-                                                <span>{{ $school_marquee->title }}</span>
+                                            @foreach($school_marquee2s as $school_marquee2)
+                                                <span>{{ $school_marquee2->title }}</span>
                                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             @endforeach
                                         @endif
@@ -60,7 +60,7 @@
                     <table class="table table-striped" style="word-break:break-all;">
                         <thead class="thead-light">
                         <tr>
-                            <th>id</th>
+                            <th nowrap>id</th>
                             <th>標題</th>
                             <th>開始日期</th>
                             <th>結束日期</th>
@@ -72,7 +72,7 @@
                         <?php $i=0;$j=0; ?>
                         @foreach($school_marquees as $school_marquee)
                             <tr>
-                                <td>
+                                <td nowrap>
                                     {{ $school_marquee->id }}
                                 </td>
                                 <?php
