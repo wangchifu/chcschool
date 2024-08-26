@@ -161,10 +161,11 @@ class MeetingController extends Controller
     public function txtDown(Meeting $meeting)
     {
         $filename = $meeting->open_date . "_" . $meeting->name . ".txt";
-        $txtDown = $meeting->open_date . "_" . $meeting->name . "\r\n";
+        $txtDown = $meeting->open_date . "_" . $meeting->name . "\r\n";        
         foreach ($meeting->reports as $report) {
             $txt = "●" . $report->job_title . " " . $report->user->name . "\r\n" . $report->content . "\r\n \r\n";
-            $ori[$report->order_by] = $txt;
+            $order_by = (empty($report->order_by))?"-".$report->id:$report->order_by;
+            $ori[$order_by] = $txt;
         }
         ksort($ori);
         foreach ($ori as $k => $v) {
