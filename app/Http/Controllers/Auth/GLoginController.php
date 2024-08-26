@@ -135,6 +135,8 @@ class GLoginController extends Controller
                 //無使用者，即建立使用者資料
                 $att['username'] = $username;
                 $att['name'] = $obj['name'];
+                $att['edu_key'] = $obj['edu_key'];
+                $att['uid'] = $obj['uid'];
                 $att['password'] = bcrypt($request->input('password'));
                 $att['code'] = $code;
                 $att['school'] = $school;
@@ -146,6 +148,8 @@ class GLoginController extends Controller
             } else {
                 //有此使用者，即更新使用者資料
                 $att['name'] = $obj['name'];
+                $att['edu_key'] = $obj['edu_key'];
+                $att['uid'] = $obj['uid'];
                 $att['password'] = bcrypt($request->input('password'));
                 $att['code'] = $code;
                 $att['school'] = $school;
