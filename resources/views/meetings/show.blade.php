@@ -28,6 +28,7 @@
                 $school_code = school_code();
                 $files = get_files(storage_path('app/privacy/'.$school_code.'/reports/'.$report->id));
                 ?>
+                <span id="report{{ $i }}">　</span>
                 <div class="card my-4">
                     <h3 class="card-header">
                         {{ $i }}.{{ $report->job_title }}
@@ -72,6 +73,20 @@
                         報告人次：{{ $meeting->reports->count() }}
                     </p>
                 </div>
+            </div>
+            <div class="card my-4">
+                <h5 class="card-header">快速連結</h5>
+                <div class="card-body">                    
+                    <ul>
+                        <?php $i=1; ?>
+                        @foreach($reports as $report)
+                        <li><a href="#report{{ $i }}">{{ $i }}.{{ $report->job_title }}</a></li>
+                        <?php $i++; ?>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            <div>                
             </div>
         </div>
     </div>
