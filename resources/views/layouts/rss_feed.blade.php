@@ -4,10 +4,17 @@ $rss_feeds = \App\RssFeed::all();
 @foreach($rss_feeds as $rss_feed)
 <?php
     $rss = new DOMDocument();   
-	if($rss->load($rss_feed->url)){
+    $context = stream_context_create([
+    'ssl' => [
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+    ],
+    ]);
+    $xmlContent = file_get_contents($rss_feed->url, false, $context);
+	if($rss->loadXML($xmlContent)){
 
     }else{
-        dd('123');
+        //dd('123');
     }
     
 	$feeds = array();
