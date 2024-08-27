@@ -21,8 +21,8 @@
                                 <th scope="col" nowrap>名稱</th>
                                 <th scope="col" nowrap>聯絡人</th>                            
                                 <th scope="col" nowrap>連絡<br>電話</th>
-                                <th scope="col">收費標準</th>
-                                <th scope="col" nowrap>師　　資</th>
+                                <th scope="col">收費<br>標準</th>
+                                <th scope="col" nowrap>師資</th>
                                 <th scope="col" nowrap>開課日期</th>
                                 <th scope="col" nowrap>上課時間</th>
                                 <th scope="col" nowrap>集合地點</th>
@@ -38,10 +38,10 @@
                             <tr>
                                 <th scope="row">{{ $club->no }}</th>                            
                                 <td>{{ $club->name }}</td>
-                                <td>{{ $club->contact_person }}</td>
-                                <td style="word-break: break-all;">{{ $club->telephone_num }}</td>
+                                <td>{{ substr_cut_name($club->contact_person) }}</td>
+                                <td >*</td>
                                 <td nowrap>{{ $club->money }}</td>
-                                <td>{{ $club->teacher_info }}</td>
+                                <td>-</td>
                                 <td>{{ $club->start_date }}</td>
                                 <td>{{ $club->start_time }}</td>
                                 <td>{{ $club->place }}</td>
