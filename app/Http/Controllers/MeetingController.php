@@ -163,7 +163,7 @@ class MeetingController extends Controller
         $filename = $meeting->open_date . "_" . $meeting->name . ".txt";
         $txtDown = $meeting->open_date . "_" . $meeting->name . "\r\n";     
         $reports = Report::where('meeting_id', $meeting->id)
-            ->orderBy('order_by')
+            ->orderBy('order_by','DESC')
             ->get();   
         foreach ($reports as $report) {
             $txt = "●" . $report->job_title . " " . $report->user->name . "\r\n" . $report->content . "\r\n \r\n";
