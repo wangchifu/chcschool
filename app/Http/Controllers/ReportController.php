@@ -138,6 +138,7 @@ class ReportController extends Controller
 
         $att['job_title'] = auth()->user()->title;
         $att['content'] = $request->input('content');
+        $att['order_by'] = auth()->user()->order_by;
         $report->update($att);
 
         $folder = 'reports/'.$report->id;
