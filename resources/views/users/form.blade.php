@@ -16,7 +16,7 @@
             <tbody>
             @foreach($users as $user)
                 <tr>
-                    <td>
+                    <td nowrap>
                         @if($user->disable)
                             <i class="fas fa-times-circle text-danger"></i>
                         @else

@@ -17,7 +17,8 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::where('disable',null)
-            ->orderBy('order_by')
+            ->orderBy('login_type','DESC')
+            ->orderBy('order_by')            
             ->paginate('20');
 
         $data = [
@@ -29,7 +30,8 @@ class UsersController extends Controller
     public function leave()
     {
         $users = User::where('disable','1')
-            ->orderBy('order_by')
+            ->orderBy('login_type','DESC')
+            ->orderBy('order_by')            
             ->paginate('20');
 
         $data = [
