@@ -171,7 +171,7 @@ class MeetingController extends Controller
             $ori[$order_by] = $txt;
         }
         
-        krsort($ori);
+        //krsort($ori);
         
         foreach ($ori as $k => $v) {
             $txtDown .= $v;
