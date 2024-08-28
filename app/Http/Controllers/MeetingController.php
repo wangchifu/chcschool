@@ -161,13 +161,18 @@ class MeetingController extends Controller
     public function txtDown(Meeting $meeting)
     {
         $filename = $meeting->open_date . "_" . $meeting->name . ".txt";
-        $txtDown = $meeting->open_date . "_" . $meeting->name . "\r\n";        
-        foreach ($meeting->reports as $report) {
+        $txtDown = $meeting->open_date . "_" . $meeting->name . "\r\n";     
+        $reports = Report::where('meeting_id', $meeting->id)
+            ->orderBy('order_by')
+            ->get();   
+        foreach ($reports as $report) {
             $txt = "●" . $report->job_title . " " . $report->user->name . "\r\n" . $report->content . "\r\n \r\n";
             $order_by = (empty($report->order_by))?"-".$report->id:$report->order_by;
             $ori[$order_by] = $txt;
         }
-        ksort($ori);
+        
+        krsort($ori);
+        
         foreach ($ori as $k => $v) {
             $txtDown .= $v;
         }
