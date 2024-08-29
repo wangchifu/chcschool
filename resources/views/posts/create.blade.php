@@ -133,7 +133,7 @@
                     </div>                  
                     @if($setup->post_line_token)
                     <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="send_line_token" name="send_line_token" value="yes" checked />
+                        <input type="checkbox" class="form-check-input" id="send_line_token" name="send_line_token" value="yes">
                         <label class="form-check-label text-danger" for="send_line_token"><i class="fab fa-line text-success h3"></i> 同步發至 line notify (未來公告則不會發)</label>
                     </div>
                     @endif  
