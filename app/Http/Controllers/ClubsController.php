@@ -1012,7 +1012,7 @@ class ClubsController extends Controller
 
     public function report_situation_download($semester, $class_id)
     {
-        $clubs = Club::where('semester', $semester)->where('class_id', $class_id)->get();
+        $clubs = Club::where('semester', $semester)->where('class_id', $class_id)->orderBy('no')->get();
         $n = 1;
         foreach ($clubs as $club) {
             $club_registers = \App\ClubRegister::where('semester', $semester)

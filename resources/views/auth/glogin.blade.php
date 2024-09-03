@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h4>GSuite登入</h4></div>
+            <div class="card-header"><h4>教職員GSuite登入</h4></div>
 
             <div class="card-body">
                 <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}"></a>
@@ -14,7 +14,7 @@
                 <form id="this_form" method="POST" action="{{ route('gauth') }}" onsubmit="change_button()">
                     @csrf
                     <div class="form-group row">
-                        <label for="username" class="col-md-4 col-form-label text-md-right">帳號</label>
+                        <label for="username" class="col-md-4 col-form-label text-md-right">教職員帳號</label>
                         <div class="input-group col-md-6">
                             <input tabindex="1" id="username" type="text" class="form-control" name="username" required autofocus aria-label="Recipient's username" aria-describedby="basic-addon2" placeholder="教育處 Gsuite 帳號">
                             <div class="input-group-append">

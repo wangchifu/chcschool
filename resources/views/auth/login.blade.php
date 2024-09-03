@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h4>管理員登入</h4></div>
+            <div class="card-header"><h4>本機帳號登入</h4></div>
 
             <div class="card-body">
                 @if(session('login_error') < 3)
@@ -14,7 +14,7 @@
                     @csrf
 
                     <div class="form-group row">
-                        <label for="username" class="col-sm-4 col-form-label text-md-right">帳號</label>
+                        <label for="username" class="col-sm-4 col-form-label text-md-right">教職員帳號</label>
 
                         <div class="col-md-6">
                             <input tabindex="1" id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
