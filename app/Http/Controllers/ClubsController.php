@@ -1037,6 +1037,7 @@ class ClubsController extends Controller
 
                     $data[$n] = [
                         '社團' => $club->name,
+                        '上課地點'=>$club->place,
                         '班級座號' => $club_register->user->class_num,
                         '姓名' => $club_register->user->name,
                         '姓名(藏)' => mb_substr($club_register->user->name, 0, 1) . "O" . mb_substr($club_register->user->name, -1),
@@ -1051,6 +1052,7 @@ class ClubsController extends Controller
             } else {
                 $data[$n] = [
                     '社團' => $club->name,
+                    '上課地點'=>$club->place,
                     '班級座號' => '',
                     '姓名' => '',
                     '姓名(藏)' => '',
