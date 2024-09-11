@@ -129,6 +129,7 @@ Route::post('tasks/user_condition', 'TaskController@user_condition')->name('task
 
 Route::get('lends/clean/{lend_class_id?}/{this_date?}', 'LendsController@index')->name('lends.clean');
 Route::get('lends/list_clean', 'LendsController@list_clean')->name('lends.list_clean');
+Route::get('lends/check_order_month/{this_date}', 'LendsController@check_order_month')->name('lends.check_order_month');
 Route::get('lends/check_order_out_clean/{this_date}/{action}', 'LendsController@check_order_out_clean')->name('lends.check_order_out_clean');
 Route::post('lends/download_excel', 'LendsController@download_excel')->name('lends.download_excel');
 Route::post('lends/print_lend', 'LendsController@print_lend')->name('lends.print_lend');
@@ -337,8 +338,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('lends/admin_edit/{lend_item}', 'LendsController@admin_edit')->name('lends.admin_edit');
     Route::post('lends/update_item/{lend_item}', 'LendsController@update_item')->name('lends.update_item');
     Route::get('lends/check_item_num/{lend_item}', 'LendsController@check_item_num')->name('lends.check_item_num');
-    Route::get('lends/check_order_out/{this_date}/{action}', 'LendsController@check_order_out')->name('lends.check_order_out');
-    Route::get('lends/check_order_month/{this_date}', 'LendsController@check_order_month')->name('lends.check_order_month');
+    Route::get('lends/check_order_out/{this_date}/{action}', 'LendsController@check_order_out')->name('lends.check_order_out');    
     Route::post('lends/order', 'LendsController@order')->name('lends.order');
     Route::get('lends/delete_my_order/{lend_order}', 'LendsController@delete_my_order')->name('lends.delete_my_order');
     Route::get('lends/delete_order/{lend_order}', 'LendsController@delete_order')->name('lends.delete_order');
