@@ -464,3 +464,32 @@ function line_notify($token,$string){
     $result = curl_exec($ch);
     curl_close($ch);
 }
+
+function line_bot($group_id="",$token="j/CWnGpm2SjwDDBfcPUu73T1mr4+oRCHrEzz3cNN+YtTmPfRJS2jaMVBTVNeFus5efiACTwal76mJUy5gEfHKqA1SfhaUteQYehHPYGmkALt0ITCQsqojtewcOK01SsfpDjKpfLaZLIuT/ueqloEcwdB04t89/1O/w1cDnyilFU=",$secrect="f47d6781baec9d0e127370ae63caa946",$string="hi~"){
+   
+    $j=array(
+        "to"=>"U9279ddafe60d2c316d9f1f7cc45d4a0a",
+        "messages"=>
+            [
+                [			
+                "type"=>"text",	
+                "text"=>$string,
+                ]
+            ]
+                );
+
+    $ch = curl_init();
+    curl_setopt($ch , CURLOPT_URL , "https://api.line.me/v2/bot/message/push");
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($j));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token,
+    ]);
+    $result = curl_exec($ch);
+    curl_close($ch);
+}

@@ -393,4 +393,48 @@ class HomeController extends Controller
         $content = preg_replace($invalid_characters, '', $content);
         return Response::make($content, '200')->header('Content-Type', 'text/xml');
     }
+
+    function test_bot(){
+        line_bot($group_id="",$token="j/CWnGpm2SjwDDBfcPUu73T1mr4+oRCHrEzz3cNN+YtTmPfRJS2jaMVBTVNeFus5efiACTwal76mJUy5gEfHKqA1SfhaUteQYehHPYGmkALt0ITCQsqojtewcOK01SsfpDjKpfLaZLIuT/ueqloEcwdB04t89/1O/w1cDnyilFU=",$secrect="f47d6781baec9d0e127370ae63caa946",$string="hi~");
+    }
+
+    function webhook(){
+        // 設置錯誤報告（僅在開發模式中使用，生產環境應該禁用）
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+
+        // 接收 POST 請求的 JSON 資料
+        $input = file_get_contents('php://input');
+
+        // 將接收到的 JSON 資料轉換為 PHP 陣列
+        $events = json_decode($input, true);
+
+        // 確認事件資料存在並處理每個事件
+        if (!is_null($events)) {
+            // 處理每個事件
+            foreach ($events['events'] as $event) {
+                // 當事件是訊息類型並且訊息是文字時
+                if ($event['type'] === 'message' && $event['message']['type'] === 'text') {
+                    // 取得用戶 ID 或群組 ID
+                    $userId = $event['source']['userId'];
+                    $groupId = isset($event['source']['groupId']) ? $event['source']['groupId'] : null;
+                    $messageText = $event['message']['text'];
+
+                    // 處理收到的訊息
+                    error_log("收到訊息: " . $messageText);
+                    if ($groupId) {
+                        error_log("群組 ID: " . $groupId);
+                    } else {
+                        error_log("用戶 ID: " . $userId);
+                    }
+
+                    // 可以根據不同的文字訊息來進行回應
+                    // (這裡簡單輸出訊息，實際應該根據需要進行更複雜的處理)
+                }
+            }
+        }
+
+        // 回應 200 OK，確認 Webhook 已正確接收
+        http_response_code(200);
+    }
 }

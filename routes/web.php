@@ -34,6 +34,9 @@ if (isset($_SERVER['HTTP_HOST'])) {
 Route::get('ischool/publish_page/0', function () {
     return redirect()->route('index');
 });
+Route::get('testbot', 'HomeController@testbot')->name('testbot');
+Route::get('webhook', 'HomeController@webhook')->name('webhook');
+
 Route::get('close', 'SetupController@close')->name('close');
 
 Route::get('/', 'HomeController@index')->name('index');
