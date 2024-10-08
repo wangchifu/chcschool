@@ -468,7 +468,7 @@ function line_notify($token,$string){
 function line_bot($group_id,$token,$string){
    
     
-    $j=array(
+    $message=array(
         "to"=>$group_id,
         "messages"=>
             [
@@ -486,7 +486,7 @@ function line_bot($group_id,$token,$string){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($j));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Authorization: Bearer ' . $token,
