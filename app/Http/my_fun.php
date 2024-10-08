@@ -467,6 +467,7 @@ function line_notify($token,$string){
 
 function line_bot($group_id,$token,$string){
    
+    
     $j=array(
         "to"=>$group_id,
         "messages"=>
