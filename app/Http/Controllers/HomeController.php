@@ -394,7 +394,7 @@ class HomeController extends Controller
         return Response::make($content, '200')->header('Content-Type', 'text/xml');
     }
 
-    function test_bot(){
+    function testbot(){
         line_bot($group_id="",$token="j/CWnGpm2SjwDDBfcPUu73T1mr4+oRCHrEzz3cNN+YtTmPfRJS2jaMVBTVNeFus5efiACTwal76mJUy5gEfHKqA1SfhaUteQYehHPYGmkALt0ITCQsqojtewcOK01SsfpDjKpfLaZLIuT/ueqloEcwdB04t89/1O/w1cDnyilFU=",$secrect="f47d6781baec9d0e127370ae63caa946",$string="hi~");
     }
 
