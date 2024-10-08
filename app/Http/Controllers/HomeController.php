@@ -395,6 +395,6 @@ class HomeController extends Controller
     }
 
     function testbot(){
-        line_bot($group_id="C73df479528fbac524ec92636ed09424f",$token="j/CWnGpm2SjwDDBfcPUu73T1mr4+oRCHrEzz3cNN+YtTmPfRJS2jaMVBTVNeFus5efiACTwal76mJUy5gEfHKqA1SfhaUteQYehHPYGmkALt0ITCQsqojtewcOK01SsfpDjKpfLaZLIuT/ueqloEcwdB04t89/1O/w1cDnyilFU=",$string="測試機器人");
+        line_bot("C73df479528fbac524ec92636ed09424f","j/CWnGpm2SjwDDBfcPUu73T1mr4+oRCHrEzz3cNN+YtTmPfRJS2jaMVBTVNeFus5efiACTwal76mJUy5gEfHKqA1SfhaUteQYehHPYGmkALt0ITCQsqojtewcOK01SsfpDjKpfLaZLIuT/ueqloEcwdB04t89/1O/w1cDnyilFU=","測試\n\n機器人");
     }
 }
