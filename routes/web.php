@@ -30,6 +30,10 @@ if (isset($_SERVER['HTTP_HOST'])) {
 | contains the "web" middleware group. Now create something great!
 |
 */
+//下則到2025年12月底移除
+Route::get('ischool/publish_page/0', function () {
+    return redirect()->route('index');
+});
 Route::get('close', 'SetupController@close')->name('close');
 
 Route::get('/', 'HomeController@index')->name('index');
