@@ -397,7 +397,7 @@ class HomeController extends Controller
     function testbot(){
         $group_id = "";
         $token = "";
-        $string = "測試\n\n機器人";
+        $string = "測試\n機器人";
         line_bot($group_id,$token,$string);
     }
 }
