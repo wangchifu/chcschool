@@ -465,9 +465,7 @@ function line_notify($token,$string){
     curl_close($ch);
 }
 
-function line_bot($group_id,$token,$string){
-   
-    
+function line_bot($group_id,$token,$string){       
     $message=array(
         "to"=>$group_id,
         "messages"=>

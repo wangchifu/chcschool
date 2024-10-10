@@ -393,11 +393,4 @@ class HomeController extends Controller
         $content = preg_replace($invalid_characters, '', $content);
         return Response::make($content, '200')->header('Content-Type', 'text/xml');
     }
-
-    function testbot(){
-        $group_id = "";
-        $token = "";
-        $string = "測試\n機器人";
-        line_bot($group_id,$token,$string);
-    }
 }
