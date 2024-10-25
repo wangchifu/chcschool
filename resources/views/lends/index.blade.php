@@ -236,29 +236,31 @@ $active['list'] ="";
                                                 <td>借用日期</td>
                                                 <td>第幾節來借</td>
                                                 <td>歸還日期</td>
-                                                <td>第幾節來還</td>
+                                                <td>第幾節來還</td> 
                                             </tr>
-                                            <td>
-                                                <input type="date" class="form-control" name="lend_date" required>
-                                            </td>
-                                            <td>
-                                                <?php $section_array = config('chcschool.lend_sections');  ?>
-                                                <select class="form-control" name="lend_section" id="lend_section" required>
-                                                @foreach($first_item_sections as $k =>$v)
-                                                    <option value="{{ $v }}">{{ $section_array[$v] }}</option>
-                                                @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="date" class="form-control" name="back_date" required>
-                                            </td>
-                                            <td>
-                                                <select class="form-control" name="back_section" id="back_section" required>
-                                                @foreach($first_item_sections as $k =>$v)
-                                                    <option value="{{ $v }}">{{ $section_array[$v] }}</option>
-                                                @endforeach
-                                                </select>
-                                            </td>
+                                            <tr>
+                                                <td>
+                                                    <input type="date" class="form-control" name="lend_date" required>
+                                                </td>
+                                                <td>
+                                                    <?php $section_array = config('chcschool.lend_sections');  ?>
+                                                    <select class="form-control" name="lend_section" id="lend_section" required>
+                                                    @foreach($first_item_sections as $k =>$v)
+                                                        <option value="{{ $v }}">{{ $section_array[$v] }}</option>
+                                                    @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="date" class="form-control" name="back_date" required>
+                                                </td>
+                                                <td>
+                                                    <select class="form-control" name="back_section" id="back_section" required>
+                                                    @foreach($first_item_sections as $k =>$v)
+                                                        <option value="{{ $v }}">{{ $section_array[$v] }}</option>
+                                                    @endforeach
+                                                    </select>
+                                                </td>
+                                            </tr>
                                         </table>   
                                         <input type="hidden" name="to_go" value="index">                            
                                         <button class="btn btn-success btn-sm" onclick="return confirm('確定預訂嗎？')">我要借用</button>
