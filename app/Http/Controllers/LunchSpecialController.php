@@ -51,6 +51,7 @@ class LunchSpecialController extends Controller
             $att3['eat_style2'] = null;
             $att3['eat_style3'] = null;
             $att3['eat_style4'] = null;
+            $att3['eat_style4_egg'] = null;
             LunchClassDate::where('order_date', $request->input('order_date'))
             ->update($att3);
         } elseif ($request->input('action') == "eat") {
