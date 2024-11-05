@@ -199,7 +199,7 @@ $lend_orders = \App\LendOrder::orderBy('id','DESC')
                     </td>
                     <td>                              
                         {{ $lend_order->lend_item->name }}<br>                                                                                     
-                        {{ $lend_order->lend_item->num }}                                                                            
+                        {{ $lend_order->num }}                                                                            
                     </td>
                     <td>
                         {{ $lend_order->lend_date }}<br>
