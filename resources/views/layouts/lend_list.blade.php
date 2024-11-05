@@ -29,7 +29,7 @@ $lend_orders = \App\LendOrder::orderBy('id','DESC')
         <table>
             <tr>
                 <td>
-                    <a href="#" onclick="change_date(-1,'last_lend','lend_date')">
+                    <a href="#!" onclick="change_date(-1,'last_lend','lend_date')">
                     <i class="fas fa-angle-left"></i>往前
                     </a>
                 </td>
@@ -37,7 +37,7 @@ $lend_orders = \App\LendOrder::orderBy('id','DESC')
                     <input type="date" value="{{ date('Y-m-d') }}" class="form-control" id="this_date1" readonly style="font-size:20px;font-weight:bold;color:black">
                 </td>
                 <td>
-                    <a href="#" onclick="change_date(1,'last_lend','lend_date')">
+                    <a href="#!" onclick="change_date(1,'last_lend','lend_date')">
                     往後<i class="fas fa-angle-right"></i>
                     </a>
                 </td>
@@ -97,7 +97,7 @@ $lend_orders = \App\LendOrder::orderBy('id','DESC')
         <table>
             <tr>
                 <td>
-                    <a href="#" onclick="change_date(-1,'next_lend','back_date')">
+                    <a href="#!" onclick="change_date(-1,'next_lend','back_date')">
                     <i class="fas fa-angle-left"></i>往前
                     </a>
                 </td>
@@ -105,7 +105,7 @@ $lend_orders = \App\LendOrder::orderBy('id','DESC')
                     <input type="date" value="{{ date('Y-m-d') }}" class="form-control" id="this_date2" readonly style="font-size:20px;font-weight:bold;color:black">
                 </td>
                 <td>
-                    <a href="#" onclick="change_date(1,'next_lend','back_date')">
+                    <a href="#!" onclick="change_date(1,'next_lend','back_date')">
                     往後<i class="fas fa-angle-right"></i>
                     </a>
                 </td>

@@ -5,7 +5,7 @@
                 <input type="text" name="key_word" class="form-control" id="key_word" required>
             </td>
             <td>
-                <a href="#" class="btn btn-primary btn-sm" onclick="clean()"><i class="fas fa-search"></i></a>
+                <a href="#!" class="btn btn-primary btn-sm" onclick="clean()"><i class="fas fa-search"></i></a>
             </td>
         </tr>
     </table>    
