@@ -351,6 +351,65 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('lends/delete_order/{lend_order}', 'LendsController@delete_order')->name('lends.delete_order');
     Route::post('lends/update_other_order/{lend_order}', 'LendsController@update_other_order')->name('lends.update_other_order');
     Route::post('store_line_notify', 'LendsController@store_line_notify')->name('store_line_notify');
+
+    //運動會報名
+    Route::get('sport_meeting/admin', 'SportMeetingController@admin')->name('sport_meeting.admin');
+    Route::get('sport_meeting/index/{action_id?}', 'SportMeetingController@index')->name('sport_meeting.index');    
+    Route::post('sport_meeting/stu_import', 'SportMeetingController@stu_import')->name('sport_meeting.stu_import');
+    Route::get('sport_meeting/user', 'SportMeetingController@user')->name('sport_meeting.user');
+
+    Route::get('sport_meeting/action', 'SportMeetingController@action')->name('sport_meeting.action');
+    Route::get('sport_meeting/action', 'SportMeetingController@action')->name('sport_meeting.action');
+    Route::get('sport_meeting/action_create', 'SportMeetingController@action_create')->name('sport_meeting.action_create');
+    Route::post('sport_meeting/action_add', 'SportMeetingController@action_add')->name('sport_meeting.action_add');
+    Route::get('sport_meeting/action_show/{action}', 'SportMeetingController@action_show')->name('sport_meeting.action_show');                                                    
+    Route::get('sport_meeting/action_set_number/{action}', 'SportMeetingController@action_set_number')->name('sport_meeting.action_set_number');
+    Route::get('sport_meeting/action_set_number_null/{action}', 'SportMeetingController@action_set_number_null')->name('sport_meeting.action_set_number_null');
+    Route::get('sport_meeting/action_edit/{action}', 'SportMeetingController@action_edit')->name('sport_meeting.action_edit');
+    Route::patch('sport_meeting/action/{action}/update', 'SportMeetingController@action_update')->name('sport_meeting.action_update');
+    Route::get('sport_meeting/action_delete/{action}', 'SportMeetingController@action_delete')->name('sport_meeting.action_delete');
+    Route::get('sport_meeting/action_destroy/{action}', 'SportMeetingController@action_destroy')->name('sport_meeting.action_destroy');
+    Route::get('sport_meeting/action/enable/{action}', 'SportMeetingController@action_enable')->name('sport_meeting.action_enable');
+
+    Route::get('sport_meeting/item/{action_id?}', 'SportMeetingController@item')->name('sport_meeting.item');
+    Route::get('sport_meeting/item/{action}/create', 'SportMeetingController@item_create')->name('sport_meeting.item_create');
+    Route::post('sport_meeting/item/add', 'SportMeetingController@item_add')->name('sport_meeting.item_add');
+    Route::post('sport_meeting/item/import', 'SportMeetingController@item_import')->name('sport_meeting.item_import');
+    Route::get('sport_meeting/item/{item}/edit', 'SportMeetingController@item_edit')->name('sport_meeting.item_edit');
+    Route::patch('sport_meeting/item/{item}/update', 'SportMeetingController@item_update')->name('sport_meeting.item_update');
+    Route::get('sport_meeting/item/{item}/delete', 'SportMeetingController@item_delete')->name('sport_meeting.item_delete');
+    Route::get('sport_meeting/item/{item}/destroy', 'SportMeetingController@item_destroy')->name('sport_meeting.item_destroy');
+    Route::get('sport_meeting/item/{item}/enable', 'SportMeetingController@item_enable')->name('sport_meeting.item_enable');    
+
+    Route::get('sport_meeting/teacher', 'SportMeetingController@teacher')->name('sport_meeting.teacher');
+    Route::get('sport_meeting/{action}/sign_up_do', 'SportMeetingController@sign_up_do')->name('sport_meeting.sign_up_do');
+    Route::post('sport_meeting/sign_up_add', 'SportMeetingController@sign_up_add')->name('sport_meeting.sign_up_add');
+    Route::get('sport_meeting/{action}/sign_up_show', 'SportMeetingController@sign_up_show')->name('sport_meeting.sign_up_show');
+
+    Route::get('sport_meeting/list/{action_id?}', 'SportMeetingController@list')->name('sport_meeting.list');       
+    Route::get('sport_meeting/{semester}/stu_adm_more/{student_class_id?}', 'SportMeetingController@stu_adm_more')->name('sport_meeting.stu_adm_more');
+    Route::get('sport_meeting/{student_sign}/sign_up_delete', 'SportMeetingController@sign_up_delete')->name('sport_meeting.sign_up_delete');
+    Route::patch('sport_meeting/student_sign_update', 'SportMeetingController@student_sign_update')->name('sport_meeting.student_sign_update');
+    Route::post('sport_meeting/student_sign_make', 'SportMeetingController@student_sign_make')->name('sport_meeting.student_sign_make');
+
+    Route::get('sport_meeting/score_input/{action_id?}', 'SportMeetingController@score_input')->name('sport_meeting.score_input');
+    Route::match(['post','get'],'sport_meeting/score_input_do', 'SportMeetingController@score_input_do')->name('sport_meeting.score_input_do');
+    Route::get('sport_meeting/score_input/{action}/print/{item}/{year}/{sex}', 'SportMeetingController@score_input_print')->name('sport_meeting.score_input_print');
+    Route::get('sport_meeting/score_input2/{action}/print/{item}/{year}/{sex}', 'SportMeetingController@score_input_print2')->name('sport_meeting.score_input_print2');
+    Route::post('sport_meeting/score_input_update', 'SportMeetingController@score_input_update')->name('sport_meeting.score_input_update');
+    Route::get('sport_meeting/score', 'SportMeetingController@score')->name('sport_meeting.score'); 
+    Route::post('sport_meeting/print_extra', 'SportMeetingController@print_extra')->name('sport_meeting.print_extra');
+    Route::post('sport_meeting/demo_upload', 'SportMeetingController@demo_upload')->name('sport_meeting.demo_upload');
+    Route::get('sport_meeting/score_print/{action_id?}', 'SportMeetingController@score_print')->name('sport_meeting.score_print');
+    Route::get('sport_meeting/all_scores/{action_id?}', 'SportMeetingController@all_scores')->name('sport_meeting.all_scores');
+    Route::get('sport_meeting/total_scores/{action_id?}', 'SportMeetingController@total_scores')->name('sport_meeting.total_scores');
+
+    Route::get('sport_meeting/records/{action_id?}', 'SportMeetingController@records')->name('sport_meeting.records');
+    Route::get('sport_meeting/scores/{action_id?}', 'SportMeetingController@scores')->name('sport_meeting.scores');
+    Route::get('sport_meeting/download_records/{action}', 'SportMeetingController@download_records')->name('sport_meeting.download_records');
+    Route::get('sport_meeting/{action}/action_set_number', 'SportMeetingController@action_set_number')->name('sport_meeting.action_set_number');
+    Route::get('sport_meeting/{action}/action_set_number_null', 'SportMeetingController@action_set_number_null')->name('sport_meeting.action_set_number_null');
+    
 });
 
 //行政人員可用

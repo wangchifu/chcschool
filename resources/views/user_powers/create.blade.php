@@ -3,6 +3,10 @@
 @section('title', '新增使用者權限 | ')
 
 @section('content')
+<!-- Chosen v1.8.2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.min.css" rel="stylesheet" />
+<link href="{{ asset('css/component-chosen.min.css') }}" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.jquery.min.js"></script>
     <br>
     {{ Form::open(['route' =>'user_powers.store', 'method' => 'post']) }}
     <table class="table table-striped">
@@ -25,7 +29,12 @@
                 {{ $module }}
             </td>
             <td>
-                {{ Form::select('user_id',$users,null,['class'=>'form-control']) }}
+                {{ Form::select('user_id',$users,null,['class'=>'form-control search_selet']) }}
+                <script>
+                    $( ".search_selet" ).chosen({
+                        search_contains: true,
+                    });
+                </script>
             </td>
             <td>
                 {{ $type }}

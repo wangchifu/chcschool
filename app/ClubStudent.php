@@ -11,6 +11,7 @@ class ClubStudent extends Model
         'no',
         'name',
         'class_num',
+        'number',
         'pwd',
         'birthday',
         'parents_telephone',

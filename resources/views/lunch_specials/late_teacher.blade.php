@@ -40,7 +40,7 @@
                         @include('layouts.errors')
                         <form action="{{ route('lunch_specials.late_teacher_show') }}" method="post" id="this_form">
                             @csrf
-                        <div class="form-group">
+                        <div class="form-group"> 
                             <label>
                                 選擇教職員
                             </label>

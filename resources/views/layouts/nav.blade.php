@@ -225,6 +225,9 @@
                                 @if(isset($module_setup['校園跑馬燈']))
                                     <a class="dropdown-item" href="{{ route('school_marquee.index') }}"><i class="fas fa-running"></i> 校園跑馬燈</a>
                                 @endif
+                                @if(isset($module_setup['運動會報名']))
+                                    <a class="dropdown-item" href="{{ route('sport_meeting.index') }}"><i class="fas fa-volleyball-ball"></i> 運動會報名</a>
+                                @endif                                
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                                 
                             </div>
