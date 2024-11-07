@@ -85,23 +85,19 @@ class SportMeetingController extends Controller
         $admin = check_power('運動會報名', 'A', auth()->user()->id);
         $bdmin = check_power('運動會報名', 'B', auth()->user()->id);
         
-        $actions = Action::orderBy('semester','DESC')->get();
+        //$actions = Action::orderBy('semester','DESC')->get();
         $class_num = [];
         $club_student_num = [];
-        foreach($actions as $action){
-            $class_num[$action->semester] = StudentClass::where('semester', $action->semester)
-            ->orderBy('student_year')
-            ->orderBy('student_class')
-            ->count();
-            $club_student_num[$action->semester] = ClubStudent::where('semester', $action->semester)
-            ->where('disable', null)
-            ->orderBy('class_num')
-            ->count();
+        $student_classes = StudentClass::all()->groupBy('semester');
+        foreach($student_classes as $k=>$student_class){
+            $class_num[$k] = count($student_class);
         }
-        
-        
-        $data = [
-            'actions'=>$actions,
+        $club_students = ClubStudent::all()->groupBy('semester');
+        foreach($club_students as $k=>$club_student){
+            $club_student_num[$k] = count($club_student);
+        }                
+                
+        $data = [            
             'admin'=>$admin,
             'bdmin'=>$bdmin,
             'class_num' => $class_num,
@@ -234,6 +230,31 @@ class SportMeetingController extends Controller
         return view('sport_meetings.action', $data);
     }
 
+    public function action_show(Action $action)
+    {
+        $admin = check_power('運動會報名', 'A', auth()->user()->id);
+        $items = Item::where('action_id',$action->id)            
+            ->where('disable',null)
+            ->orderBy('order')
+            ->get();
+
+        $student_classes = StudentClass::where('semester',$action->semester)            
+            ->orderBy('student_year')
+            ->orderBy('student_class')
+            ->get();
+
+
+        $data = [
+            'admin' => $admin,  
+            'action'=>$action,
+            'items'=>$items,
+            'student_classes'=>$student_classes,
+
+        ];
+        return view('sport_meetings.action_show',$data);
+
+    }
+
     public function action_create()
     {
         $admin = check_power('運動會報名', 'A', auth()->user()->id);
@@ -304,12 +325,13 @@ class SportMeetingController extends Controller
             $action_array[$action->id] = $action->name;
         }
         $select_action = null;
+        
         if(empty($action_id)){
             $select_action = key($action_array);
         }else{
-            $select_action = $action_id;
-            $s_action = Action::find($select_action);
+            $select_action = $action_id;            
         }
+        $s_action = Action::find($select_action);
 
         $items = [];
         if(!empty($select_action)){

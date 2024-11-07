@@ -19,14 +19,14 @@
             <hr>
             <ul class="nav nav-pills">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.admin') }}">1.學生資料</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.user') }}">2.教師帳號</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="{{ route('sport_meeting.action') }}">3.報名任務</a>
-                </li>
+                    <a class="nav-link active" href="{{ route('sport_meeting.action') }}">1.報名任務</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('sport_meeting.admin') }}">2.學生資料</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('sport_meeting.user') }}">3.教師帳號</a>
+                  </li>  
               </ul>            
               <div class="card">
                 <div class="card-body">
@@ -63,8 +63,10 @@
                                           {{ $action->name }}
                                       </span>
                                       <a href="{{ route('sport_meeting.action_show',$action->id) }}" class="btn btn-info btn-sm">報名狀況</a>
+                                      <!--
                                       <a href="{{ route('sport_meeting.action_set_number',$action->id) }}" class="btn btn-outline-primary btn-sm" onclick="return confirm('確定？')">編入布牌號碼</a>
                                       <a href="{{ route('sport_meeting.action_set_number_null',$action->id) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('確定清空？')">學生布牌號碼清空</a>
+                                      -->
                                       @if($action->disable)
                                           <span class="text-danger">[已停止報名]</span>
                                       @endif

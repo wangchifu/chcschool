@@ -296,6 +296,7 @@
                         <hr>
                     @endif
                 @endforeach
+                <a href="{{ route('sport_meeting.teacher') }}" class="btn btn-secondary">返回</a>
         </div>
     </div>
 
@@ -348,7 +349,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">按錯了</button>
                     <button id="do" class="btn btn-primary" onclick="document.getElementById('make_form').submit()">確定</button>
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 

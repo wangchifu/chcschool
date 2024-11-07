@@ -18,15 +18,15 @@
             @include('sport_meetings.nav')
             <hr>
             <ul class="nav nav-pills">
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.admin') }}">1.學生資料</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="{{ route('sport_meeting.user') }}">2.教師帳號</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.action') }}">3.報名任務</a>
-                </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('sport_meeting.action') }}">1.報名任務</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('sport_meeting.admin') }}">2.學生資料</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="{{ route('sport_meeting.user') }}">3.教師帳號</a>
+              </li>  
               </ul>            
               <div class="card">
                 <div class="card-body">
@@ -57,7 +57,10 @@
                           </td>
                           <td>
                             @if(check_power('運動會報名', 'A', $user->id))
-                              本模組管理權
+                              模組管理權
+                            @endif
+                            @if(check_power('運動會報名', 'B', $user->id))
+                              成績輸入權
                             @endif
                           </td>
                         </tr>

@@ -19,14 +19,14 @@
             <hr>
             <ul class="nav nav-pills">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.admin') }}">1.學生資料</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.user') }}">2.教師帳號</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="{{ route('sport_meeting.action') }}">3.報名任務</a>
-                </li>
+                    <a class="nav-link active" href="{{ route('sport_meeting.action') }}">1.報名任務</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('sport_meeting.admin') }}">2.學生資料</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('sport_meeting.user') }}">3.教師帳號</a>
+                  </li>  
               </ul>            
               <div class="card">
                 <div class="card-body">
@@ -72,12 +72,14 @@
                             <input type="number" class="form-control" id="frequency" name="frequency" value="2" maxlength="1" required>
                         </div>
                     </div>
+                    <!--
                     <div class="form-row">
                         <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" id="open" name="open" checked>
                             <label class="form-check-label" for="open">開放他校查詢(姓名會隱藏)</label>
                         </div>
                     </div>
+                    -->
                     <a href="{{ route('sport_meeting.action') }}" class="btn btn-secondary">返回</a>
                     <button type="submit" class="btn btn-primary" onclick="return confirm('確定？')">新增</button>
                 </form>                            

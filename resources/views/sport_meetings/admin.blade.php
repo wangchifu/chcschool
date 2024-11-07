@@ -14,19 +14,19 @@
     ?>
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>運動會報名-學校管理員</h1>
+            <h1>運動會報名-學校管理</h1>
             @include('sport_meetings.nav')
             <hr>
             <ul class="nav nav-pills">
                 <li class="nav-item">
-                  <a class="nav-link active" href="{{ route('sport_meeting.admin') }}">1.學生資料</a>
+                  <a class="nav-link" href="{{ route('sport_meeting.action') }}">1.報名任務</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.user') }}">2.教師帳號</a>
+                  <a class="nav-link active" href="{{ route('sport_meeting.admin') }}">2.學生資料</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.action') }}">3.報名任務</a>
-                </li>
+                  <a class="nav-link" href="{{ route('sport_meeting.user') }}">3.教師帳號</a>
+                </li>                
               </ul>            
               <div class="card">
                 <div class="card-body">
@@ -57,16 +57,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach($actions as $action)                      
+                        @foreach($class_num as $k=>$v)                      
                         <tr>
                             <td>
-                              {{ $action->semester }}
+                              {{ $k }}
                             </td>
                             <td>
-                                {{ $class_num[$action->semester] }} <a href="{{ route('sport_meeting.stu_adm_more',['semester'=>$action->semester,'student_class_id'=>null]) }}" class="btn btn-info btn-sm">詳細資料</a>
+                                {{ $class_num[$k] }} <a href="{{ route('sport_meeting.stu_adm_more',['semester'=>$k,'student_class_id'=>null]) }}" class="btn btn-info btn-sm">詳細資料</a>
                             </td>
                             <td>
-                                {{ $club_student_num[$action->semester] }}   
+                                {{ $club_student_num[$k] }}   
                             </td>
                         </tr>
                         @endforeach

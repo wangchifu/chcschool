@@ -19,14 +19,14 @@
             <hr>
             <ul class="nav nav-pills">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.admin') }}">1.學生資料</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.user') }}">2.教師帳號</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" href="{{ route('sport_meeting.action') }}">3.報名任務</a>
-                </li>
+                    <a class="nav-link active" href="{{ route('sport_meeting.action') }}">1.報名任務</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('sport_meeting.admin') }}">2.學生資料</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ route('sport_meeting.user') }}">3.教師帳號</a>
+                  </li>  
               </ul>            
               <div class="card">
                 <div class="card-body">

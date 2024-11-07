@@ -1,13 +1,11 @@
 <ul class="nav nav-tabs">
-    @if($admin)
-    <li class="nav-item">
-        <a class="nav-link {{ $active['admin'] }}" href="{{ route('sport_meeting.admin') }}">學校管理員</a>
-    </li>
-    @endif        
     <li class="nav-item">
         <a class="nav-link {{ $active['show'] }}" href="{{ route('sport_meeting.index') }}">歷屆成績</a>
     </li>
-    @if($admin)
+    @if($admin)    
+    <li class="nav-item">
+        <a class="nav-link {{ $active['admin'] }}" href="{{ route('sport_meeting.action') }}">學校管理</a>
+    </li>
     <li class="nav-item">
         <a class="nav-link {{ $active['list'] }}" href="{{ route('sport_meeting.list') }}">各式表單</a>
     </li>
