@@ -41,7 +41,9 @@
                 <thead class="table-primary">
                 <tr>
                     <th>
-                        <a href="{{ route('sport_meeting.action_set_number',$action->id) }}" class="btn btn-outline-primary btn-sm" onclick="return confirm('確定？')">學生編入布牌號碼</a> <a href="{{ route('sport_meeting.action_set_number_null',$action->id) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('確定清空？')">學生布牌號碼清空</a>
+                        @if(!empty($action->id))
+                            <a href="{{ route('sport_meeting.action_set_number',$action->id) }}" class="btn btn-outline-primary btn-sm" onclick="return confirm('確定？')">學生編入布牌號碼</a> <a href="{{ route('sport_meeting.action_set_number_null',$action->id) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('確定清空？')">學生布牌號碼清空</a>
+                        @endif
                         資料
                     </th>
                 </tr>
