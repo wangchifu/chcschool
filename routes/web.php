@@ -395,7 +395,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('sport_meeting/score_input/{action_id?}', 'SportMeetingController@score_input')->name('sport_meeting.score_input');
     Route::match(['post','get'],'sport_meeting/score_input_do', 'SportMeetingController@score_input_do')->name('sport_meeting.score_input_do');
     Route::get('sport_meeting/score_input/{action}/print/{item}/{year}/{sex}', 'SportMeetingController@score_input_print')->name('sport_meeting.score_input_print');
-    Route::get('sport_meeting/score_input2/{action}/print/{item}/{year}/{sex}', 'SportMeetingController@score_input_print2')->name('sport_meeting.score_input_print2');
+    Route::get('sport_meeting/score_input/{action}/print2/{item}/{year}/{sex}', 'SportMeetingController@score_input_print2')->name('sport_meeting.score_input_print2');
     Route::post('sport_meeting/score_input_update', 'SportMeetingController@score_input_update')->name('sport_meeting.score_input_update');
     Route::get('sport_meeting/score', 'SportMeetingController@score')->name('sport_meeting.score'); 
     Route::post('sport_meeting/print_extra', 'SportMeetingController@print_extra')->name('sport_meeting.print_extra');

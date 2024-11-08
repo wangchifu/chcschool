@@ -129,7 +129,7 @@
                 </table>
                 <input type="hidden" name="action_id" value="{{ $action->id }}">
                 <input type="hidden" name="item_id" value="{{ $item->id }}">
-                <a href="#!" onclick="window.history.go(-1);" class="btn btn-secondary btn-sm">返回</a>
+                <a href="{{ route('sport_meeting.score_input') }}" class="btn btn-secondary btn-sm">返回</a>
                 <button class="btn btn-primary btn-sm" onclick="return confirm('確定送出？')">送出{{ $year }}年級@if($sex <>4){{ $sex }}子組@endif成績</button>                
                 @if(is_file(storage_path('app/public').'/demo.odt'))
                     <a href="{{ route('sport_meeting.score_input_print',['action'=>$action->id,'item'=>$item->id,'year'=>$year,'sex'=>$sex]) }}" class="btn btn-success btn-sm"><i class="fas fa-print"></i> 列印獎狀
