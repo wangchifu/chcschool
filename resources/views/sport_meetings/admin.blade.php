@@ -63,10 +63,14 @@
                               {{ $k }}
                             </td>
                             <td>
-                                {{ $class_num[$k] }} <a href="{{ route('sport_meeting.stu_adm_more',['semester'=>$k,'student_class_id'=>null]) }}" class="btn btn-info btn-sm">詳細資料</a>
+                                @if(isset($class_num[$k]))
+                                  {{ $class_num[$k] }} <a href="{{ route('sport_meeting.stu_adm_more',['semester'=>$k,'student_class_id'=>null]) }}" class="btn btn-info btn-sm">詳細資料</a>
+                                @endif
                             </td>
                             <td>
+                              @if(isset($club_student_num[$k]))
                                 {{ $club_student_num[$k] }}   
+                              @endif
                             </td>
                         </tr>
                         @endforeach

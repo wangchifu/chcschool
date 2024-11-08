@@ -33,6 +33,7 @@
                         <a href="{{ route('contents.together_edit',$content->id) }}" class="btn btn-primary btn-sm">共同編輯</a>
                         @endif
                         @if(auth()->user()->admin)                        
+                            <a href="{{ route('contents.edit',$content->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 編輯</a>
                             <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $content->id }}').submit();else return false;"><i class="fas fa-trash"></i> 刪除</a>
                             {{ Form::open(['route' => ['contents.destroy',$content->id], 'method' => 'DELETE','id'=>'delete'.$content->id]) }}
                             {{ Form::close() }}

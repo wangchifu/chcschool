@@ -88,14 +88,14 @@ class SportMeetingController extends Controller
         //$actions = Action::orderBy('semester','DESC')->get();
         $class_num = [];
         $club_student_num = [];
-        $student_classes = StudentClass::all()->groupBy('semester');
+        $student_classes = StudentClass::orderBy('semester','DESC')->get()->groupBy('semester');
         foreach($student_classes as $k=>$student_class){
             $class_num[$k] = count($student_class);
         }
         $club_students = ClubStudent::all()->groupBy('semester');
         foreach($club_students as $k=>$club_student){
             $club_student_num[$k] = count($club_student);
-        }                
+        }                    
                 
         $data = [            
             'admin'=>$admin,
