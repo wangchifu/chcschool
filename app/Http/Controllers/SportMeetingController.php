@@ -481,13 +481,32 @@ class SportMeetingController extends Controller
     {
         $items = Item::where('action_id',$request->input('old_action_id'))->get();
         foreach($items as $item){
-            $att = $item->getAttributes();
+            $att = $item->getAttributes();            
             $att['action_id'] = $request->input('new_action_id');
             $att['disable'] = null;
             unset($att['id']);
             unset($att['created_at']);
             unset($att['updated_at']);
-            Item::create($att);
+            $item = Item::create($att);
+            if($att['game_type'] == "class"){
+                $years = unserialize($item->years);
+                $student_classes = StudentClass::where('semester', $item->action->semester)                
+                    ->whereIn('student_year',$years)
+                    ->orderBy('student_year')
+                    ->orderBy('student_class')
+                    ->get();
+                foreach($student_classes as $student_class){                
+                    $att['item_id'] = $item->id;
+                    $att['item_name'] = $item->name;
+                    $att['game_type'] = "class";
+                    $att['student_id'] = $student_class->id;
+                    $att['action_id'] = $item->action_id;
+                    $att['student_year'] = $student_class->student_year;
+                    $att['student_class'] = $student_class->student_class;
+                    $att['sex'] = 4;
+                    StudentSign::create($att);
+                }
+            }
         }
         return redirect()->route('sport_meeting.item');
     }
@@ -1131,7 +1150,7 @@ class SportMeetingController extends Controller
             ->orderBy('student_class')
             ->orderBy('is_official','DESC')
             ->get();
-
+        
         $student_array = [];
         foreach($student_signs as $student_sign){
             if($item->game_type=="personal"){
@@ -1151,8 +1170,7 @@ class SportMeetingController extends Controller
                     $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['order'] = $student_sign->order;
                     $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['is_official'] = $student_sign->is_official;
             }
-        }
-
+        }        
         if($item->game_type=="class") {
 
             $cht_num = config('chcschool.cht_num');
@@ -1164,9 +1182,9 @@ class SportMeetingController extends Controller
                 $student_array[$student_sign->id]['achievement'] = $student_sign->achievement;
                 $student_array[$student_sign->id]['ranking'] = $student_sign->ranking;
                 $student_array[$student_sign->id]['order'] = $student_sign->order;
-
             }
         }
+        
         $data = [
             'admin'=>$admin,
             'bdmin'=>$bdmin,
