@@ -58,7 +58,7 @@
                                 }                          
                                 }                                       
                             ?>
-                            @if(isset($teacher_class[$action->semester]))
+                            @if(!isset($teacher_class[$action->semester]))
                                 非導師
                             @else
                                 @if($action->disable==1)
