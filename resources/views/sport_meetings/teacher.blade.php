@@ -46,25 +46,30 @@
                             @endif
                         </td>
                         <td>
-                            <?php     
-                            
+                            <?php                                     
                                 $check = [];
-                                if(!empty($teacher_class)){
+                                if(isset($teacher_class[$action->semester]['year']) and $teacher_class[$action->semester]['class']){
+                                    if(!empty($teacher_class)){
                                     $check = \App\StudentSign::where('action_id',$action->id)
                                     ->where('student_year',$teacher_class[$action->semester]['year'])
                                     ->where('student_class',$teacher_class[$action->semester]['class'])
                                     ->where('game_type','<>','class')
                                     ->first();
-                                }                                 
+                                }                          
+                                }                                       
                             ?>
-                            @if(empty($teacher_class))
+                            @if(isset($teacher_class[$action->semester]))
                                 非導師
                             @else
-                                @if(empty($check->id))
-                                    <a href="{{ route('sport_meeting.sign_up_do',$action->id) }}" class="btn btn-primary">報名</a>
+                                @if($action->disable==1)
+                                    已停止報名
                                 @else
-                                    已報過名 <a href="{{ route('sport_meeting.sign_up_show',$action->id) }}" class="btn btn-info">詳細資料...</a>
-                                @endif
+                                    @if(empty($check->id))
+                                        <a href="{{ route('sport_meeting.sign_up_do',$action->id) }}" class="btn btn-primary">報名</a>
+                                    @else
+                                        已報過名 <a href="{{ route('sport_meeting.sign_up_show',$action->id) }}" class="btn btn-info">詳細資料...</a>
+                                    @endif
+                                @endif                                
                             @endif                            
                         </td>
                     </tr>
