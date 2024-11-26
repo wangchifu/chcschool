@@ -504,6 +504,7 @@ class SportMeetingController extends Controller
                     $att['game_type'] = "class";
                     $att['student_id'] = $student_class->id;
                     $att['action_id'] = $item->action_id;
+                    $att['scoring'] = $item->scoring;
                     $att['student_year'] = $student_class->student_year;
                     $att['student_class'] = $student_class->student_class;
                     $att['sex'] = 4;
