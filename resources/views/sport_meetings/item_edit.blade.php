@@ -125,6 +125,10 @@
                             <label for="reward">錄取名次<span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="reward" name="reward" placeholder="數字" required value="{{ $item->reward }}">
                         </div>
+                        <div class="form-group col-md-2">
+                            <label for="scoring">名次計分(從第一名開始用 , 分隔)<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="scoring" name="scoring" required value="{{ $item->scoring }}">
+                        </div>
                         <div class="form-group col-md-1">
                             <?php
                             $t1 = null;

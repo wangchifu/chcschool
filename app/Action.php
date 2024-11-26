@@ -18,4 +18,9 @@ class Action extends Model
         'started_at',
         'stopped_at',
     ];
+
+    public function items()
+    {
+        return $this->hasMany(Item::class)->orderBy('order');
+    }
 }

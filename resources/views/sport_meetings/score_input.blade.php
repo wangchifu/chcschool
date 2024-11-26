@@ -28,7 +28,7 @@
                   <a class="nav-link" href="{{ route('sport_meeting.all_scores') }}">3.成績一覽表</a>                  
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.total_scores') }}">4.田徑賽積分總表</a>
+                  <a class="nav-link" href="{{ route('sport_meeting.total_scores') }}">4.田徑賽計分總表</a>
                 </li>                
               </ul>    
               <hr>

@@ -13,7 +13,10 @@ use App\StudentSign;
 use Rap2hpoutre\FastExcel\FastExcel;
 use PHPExcel_IOFactory;
 use PHPExcel;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 use ZipArchive;
+
 
 class SportMeetingController extends Controller
 {
@@ -1146,6 +1149,7 @@ class SportMeetingController extends Controller
         $student_signs = StudentSign::where('item_id',$item->id)
             ->where('sex',$request->input('sex'))
             ->where('student_year',$request->input('student_year'))
+            ->orderBy('group_num')
             ->orderBy('order')
             ->orderBy('student_class')
             ->orderBy('is_official','DESC')
@@ -1160,6 +1164,7 @@ class SportMeetingController extends Controller
                 $student_array[$student_sign->id]['achievement'] = $student_sign->achievement;
                 $student_array[$student_sign->id]['ranking'] = $student_sign->ranking;
                 $student_array[$student_sign->id]['order'] = $student_sign->order;
+                $student_array[$student_sign->id]['class'] = $student_sign->student_year."年".$student_sign->student_class."班";
             }
             if($item->game_type=="group"){
                     $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['id'] = $student_sign->id;
@@ -1169,6 +1174,7 @@ class SportMeetingController extends Controller
                     $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['ranking'] = $student_sign->ranking;
                     $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['order'] = $student_sign->order;
                     $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['is_official'] = $student_sign->is_official;
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['class'] = $student_sign->student_year."年".$student_sign->student_class."班";
             }
         }        
         if($item->game_type=="class") {
@@ -1526,7 +1532,6 @@ class SportMeetingController extends Controller
                 $zip->addFile($odt_folder . '/demo/styles.xml', 'styles.xml');
                 $zip->addFile($odt_folder . '/demo/META-INF/manifest.xml', 'META-INF/manifest.xml');
 
-
                 $zip->close();
             }
 
@@ -1557,15 +1562,214 @@ class SportMeetingController extends Controller
         if($select_action) {
             $action = Action::find($select_action);            
         }
+        $student_score = [];
+        foreach($action->items as $item){
+            $item_name[$item->id] = $item->name;
+            $years = unserialize($item->years);           
+            //$item_reward[$item->id] = $item->reward;             
+            foreach($years as $k=>$v){
+                if($item->group==1){
+                    if(!isset($year_item[$v]['男'])) $year_item[$v]['男'] = [];                
+                    array_push($year_item[$v]['男'],$item->id);
+                }
+                if($item->group==2){
+                    if(!isset($year_item[$v]['女'])) $year_item[$v]['女'] = [];                
+                    array_push($year_item[$v]['女'],$item->id);
+                }
+                if($item->group==3){
+                    if(!isset($year_item[$v]['男'])) $year_item[$v]['男'] = [];                
+                    array_push($year_item[$v]['男'],$item->id);
+                    if(!isset($year_item[$v]['女'])) $year_item[$v]['女'] = [];                
+                    array_push($year_item[$v]['女'],$item->id);
+                } 
+                if($item->group==4){
+                    if(!isset($year_item[$v]['全班'])) $year_item[$v]['全班'] = [];                
+                    array_push($year_item[$v]['全班'],$item->id);
+                }          
+
+            }            
+            $student_signs = StudentSign::where('item_id',$item->id)
+                ->where('ranking',"<>",null)
+                ->where('ranking',"<=",$item->reward)
+                ->orderBy('ranking')
+                ->get();
+            if($item->game_type != "class"){                            
+                foreach($student_signs as $student_sign){
+                    $student_score[$student_sign->student_year][$student_sign->sex][$student_sign->item_id][$student_sign->ranking]['class'] = $student_sign->student_year.sprintf("%02s",$student_sign->student_class);
+                    $student_score[$student_sign->student_year][$student_sign->sex][$student_sign->item_id][$student_sign->ranking]['name'] = $student_sign->student->name;
+                    $student_score[$student_sign->student_year][$student_sign->sex][$student_sign->item_id][$student_sign->ranking]['achievement'] = $student_sign->achievement;
+                }
+            }else{
+                foreach($student_signs as $student_sign){
+                    $student_score[$student_sign->student_year]['全班'][$student_sign->item_id][$student_sign->ranking]['class'] = $student_sign->student_year.sprintf("%02s",$student_sign->student_class);
+                    $student_score[$student_sign->student_year]['全班'][$student_sign->item_id][$student_sign->ranking]['name'] = null;
+                    $student_score[$student_sign->student_year]['全班'][$student_sign->item_id][$student_sign->ranking]['achievement'] = $student_sign->achievement;
+                }
+            }
+            
+
+        }        
+        ksort($year_item);
+        
+        //dd($year_item);
+        //dd($student_score);
         $data = [
             'admin'=>$admin,
-            'bdmin'=>$bdmin,
+            'bdmin'=>$bdmin,            
             'action_array'=>$action_array,
             'select_action'=>$select_action,
             'action'=>$action,
+            //'item_reward'=>$item_reward,
+            'student_score'=>$student_score,
+            'year_item'=>$year_item,
+            'cht_num' =>config('chcschool.cht_num'),
+            'item_name'=>$item_name,
         ];
 
         return view('sport_meetings.all_scores',$data);
+    }
+
+    public function all_scores_print(Action $action)
+    {                                
+        $student_score = [];
+        $cht_num = config('chcschool.cht_num');
+        foreach($action->items as $item){
+            $item_name[$item->id] = $item->name;
+            $years = unserialize($item->years);           
+            //$item_reward[$item->id] = $item->reward;             
+            foreach($years as $k=>$v){
+                if($item->group==1){
+                    if(!isset($year_item[$v]['男'])) $year_item[$v]['男'] = [];                
+                    array_push($year_item[$v]['男'],$item->id);
+                }
+                if($item->group==2){
+                    if(!isset($year_item[$v]['女'])) $year_item[$v]['女'] = [];                
+                    array_push($year_item[$v]['女'],$item->id);
+                }
+                if($item->group==3){
+                    if(!isset($year_item[$v]['男'])) $year_item[$v]['男'] = [];                
+                    array_push($year_item[$v]['男'],$item->id);
+                    if(!isset($year_item[$v]['女'])) $year_item[$v]['女'] = [];                
+                    array_push($year_item[$v]['女'],$item->id);
+                }   
+                if($item->group==4){
+                    if(!isset($year_item[$v]['全班'])) $year_item[$v]['全班'] = [];                
+                    array_push($year_item[$v]['全班'],$item->id);
+                }                
+            }
+
+            $student_signs = StudentSign::where('item_id',$item->id)
+                ->where('ranking',"<>",null)
+                ->where('ranking',"<=",$item->reward)
+                ->orderBy('ranking')
+                ->get();            
+            if($item->game_type != "class"){                            
+                foreach($student_signs as $student_sign){
+                    $student_score[$student_sign->student_year][$student_sign->sex][$student_sign->item_id][$student_sign->ranking]['class'] = $student_sign->student_year.sprintf("%02s",$student_sign->student_class);
+                    $student_score[$student_sign->student_year][$student_sign->sex][$student_sign->item_id][$student_sign->ranking]['name'] = $student_sign->student->name;
+                    $student_score[$student_sign->student_year][$student_sign->sex][$student_sign->item_id][$student_sign->ranking]['achievement'] = $student_sign->achievement;
+                }
+            }else{
+                foreach($student_signs as $student_sign){
+                    $student_score[$student_sign->student_year]['全班'][$student_sign->item_id][$student_sign->ranking]['class'] = $student_sign->student_year.sprintf("%02s",$student_sign->student_class);
+                    $student_score[$student_sign->student_year]['全班'][$student_sign->item_id][$student_sign->ranking]['name'] = null;
+                    $student_score[$student_sign->student_year]['全班'][$student_sign->item_id][$student_sign->ranking]['achievement'] = $student_sign->achievement;
+                }
+            }
+
+        }
+        ksort($year_item);
+        
+        // 建立 PhpWord 實例
+        $phpWord = new PhpWord();             
+        // 設置 A4 橫向紙張
+        $sectionStyle = [
+            'marginTop' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 上邊界 2 厘米
+            'marginBottom' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 下邊界 2 厘米
+            'marginLeft' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 左邊界 2.5 厘米
+            'marginRight' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 右邊界 2.5 厘米
+            'orientation' => 'landscape', // 橫向
+        ];
+        // 添加一個章節
+        $section = $phpWord->addSection($sectionStyle);
+
+        $phpWord->addTitleStyle(
+            1, // 標題層級（1 表示最高級標題）
+            ['size' => 24, 'bold' => true, 'color' => '000000'], // 字體樣式
+            ['alignment' => 'center'] // 對齊方式
+        );
+        
+        $tableStyle = [     
+            'cellMarginTop' => 100,    // 單元格上內邊距
+            'cellMarginBottom' => 100, // 單元格下內邊距
+            'cellMarginLeft' => 100,   // 單元格左內邊距
+            'cellMarginRight' => 100,  // 單元格右內邊距       
+            'borderSize' => 6,        // 邊框粗細
+            'borderColor' => '000000' // 邊框顏色
+        ];
+        $phpWord->addTableStyle('myTableStyle', $tableStyle);
+        // 添加文字內容        
+
+        foreach($year_item as $k=>$v){
+            $section->addTitle($action->name.' '.$cht_num[$k].'年級 田徑賽成績一覽表',1);
+            
+            $table = $section->addTable('myTableStyle');
+            $table->addRow();
+            $table->addCell(3000,['vMerge' => 'restart']);   
+            for($i=1;$i<6;$i++){
+                $table->addCell(2550)->addText('第'.$cht_num[$i].'名',['size' => 14,'gridSpan' => 3],['alignment' => 'center']);   
+            }
+            $table->addRow();
+            $table->addCell(3000,['vMerge' => 'continue']);   
+            for($i=1;$i<6;$i++){
+                $table->addCell(850)->addText('班級',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(850)->addText('姓名',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(850)->addText('紀錄',['size' => 14],['alignment' => 'center']);   
+            }
+
+            $last_sex="";            
+            foreach($v as $k1=>$v1){                
+                foreach($v1 as $k2=>$v2){
+                    $table->addRow();     
+                    if($last_sex != $k1){                        
+                        $table->addCell(1000,['vMerge' => 'restart','valign' => 'center'])->addText($k1."生",['size' => 14],['alignment' => 'center']);                       
+                    }else{                    
+                        $table->addCell(1000,['vMerge' => 'continue']);   
+                    }                    
+                    $table->addCell(2000)->addText($item_name[$v2],['size' => 14],['alignment' => 'center']);   
+                    for($i=1;$i<=5;$i++){
+                        $class=(isset($student_score[$k][$k1][$v2][$i]['class']))?$student_score[$k][$k1][$v2][$i]['class']:null;                                          
+                        $name=(isset($student_score[$k][$k1][$v2][$i]['name']))?$student_score[$k][$k1][$v2][$i]['name']:null;
+                        $achievement=(isset($student_score[$k][$k1][$v2][$i]['achievement']))?$student_score[$k][$k1][$v2][$i]['achievement']:null;
+                        $table->addCell(850)->addText($class,['size' => 14],['alignment' => 'center']);   
+                        $table->addCell(850)->addText($name,['size' => 10],['alignment' => 'center']);   
+                        $table->addCell(850)->addText($achievement,['size' => 10],['alignment' => 'center']);   
+                    }
+                    $last_sex=$k1;                    
+                }                    
+            }
+            
+
+            
+            // 插入換頁符
+            $section->addPageBreak();
+        }
+
+
+
+        // 定義文件名稱
+        $fileName = $action->name.'田徑賽成績一覽表.docx';
+        
+        // 將文件存為臨時檔案
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+
+        // 寫入文件
+        $writer = IOFactory::createWriter($phpWord, 'Word2007');
+        $writer->save($tempFile);
+
+        // 回傳文件下載回應
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+                    
     }
 
     public function total_scores($action_id=null)
@@ -1586,18 +1790,398 @@ class SportMeetingController extends Controller
         }
 
         $action = [];
+        $student_classes = [];
+        $class_data = [];
+        $sex_item['男'] = [];
+        $sex_item['女'] = [];
+        $sex_item['不'] = [];
+        $item_ranking = [];
         if($select_action) {
             $action = Action::find($select_action);            
+            $student_classes = StudentClass::where('semester',$action->semester)
+            ->orderBy('student_year','DESC')->orderBy('student_class')->get();
+
+            foreach($student_classes as $student_class){
+                array_push($class_data,$student_class->student_year.sprintf("%02s",$student_class->student_class));
+            }
+
+            foreach($action->items as $item){
+                if($item->group == 1 or $item->group == 3){
+                    $sex_item['男'][$item->id] = $item->name;
+                }
+                if($item->group == 2 or $item->group == 3){
+                    $sex_item['女'][$item->id] = $item->name;
+                }
+                if($item->group == 4){
+                    $sex_item['不'][$item->id] = $item->name;
+                }
+                if(!empty($item->scoring)){
+                    $scoring_array[$item->id] = explode(",",$item->scoring);                    
+                }else{
+                    $scoring_array[$item->id] = [];
+                    $scoring[$item->id] = [];
+                }                
+                foreach($scoring_array[$item->id] as $k=>$v){
+                    $scoring[$item->id][$k+1] = $v;
+                }
+             }
+
+            $student_signs = StudentSign::where('action_id',$action->id)->get();
+            foreach($student_signs as $student_sign){
+                if($student_sign->game_type=="personal"){
+                    $num = $student_sign->student_id;
+                }
+                if($student_sign->game_type=="group"){
+                    $num = $student_sign->group_num;
+                }
+                if($student_sign->game_type=="class"){
+                    $num = 1;
+                }
+                if($student_sign->sex==4){
+                    $item_ranking[$student_sign->student_year.sprintf("%02s",$student_sign->student_class)][$student_sign->item_id]['不'][$num] = $student_sign->ranking;
+                }else{
+                    $item_ranking[$student_sign->student_year.sprintf("%02s",$student_sign->student_class)][$student_sign->item_id][$student_sign->sex][$num] = $student_sign->ranking;
+                }            
+                
+            }
         }
+
+        $row = [];
+        foreach($class_data as $k=>$v){
+            foreach($sex_item['男'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['男'])){
+                    foreach($item_ranking[$v][$k1]['男'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }
+                }
+                $row[$v] = (isset($row[$v]))?$row[$v]:null;
+                $row[$v] = (int)$row[$v]+(int)$one;
+            }
+            foreach($sex_item['女'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['女'])){
+                    foreach($item_ranking[$v][$k1]['女'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }
+                }
+                $row[$v] = (isset($row[$v]))?$row[$v]:null;
+                $row[$v] = (int)$row[$v]+(int)$one;
+            }
+            foreach($sex_item['不'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['不'])){
+                    foreach($item_ranking[$v][$k1]['不'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }
+                }
+                $row[$v] = (isset($row[$v]))?$row[$v]:null;
+                $row[$v] = (int)$row[$v]+(int)$one;
+            }
+        }
+
+        $last_y = null;
+       foreach($row as $k=>$v){
+        if(strlen($k) == 4){
+            $y = substr($k,0,2);
+        }else{
+            $y = substr($k,0,1);
+        }
+        
+        $year[$y][$k] = $v;        
+       }
+       foreach($year as $k=>$v){
+        arsort($year[$k]);
+       }
+       
+       foreach($year as $k=>$v){
+        $n=1;
+        foreach($v as $k1=>$v1){
+            if($n<4){
+                $year_award[$k1] = $n;
+            }else{
+                $year_award[$k1] = null;
+            }
+            
+            $n++;
+        }                
+       }
+       //dd($year_award);
         $data = [
             'admin'=>$admin,
             'bdmin'=>$bdmin,
             'action_array'=>$action_array,
             'select_action'=>$select_action,
             'action'=>$action,
+            'sex_item'=>$sex_item,
+            'class_data'=>$class_data,
+            'item_ranking'=>$item_ranking,
+            'scoring'=>$scoring,
+            'year_award'=>$year_award,
         ];
 
         return view('sport_meetings.total_scores',$data);
+    }
+
+    public function total_scores_print(Action $action)
+    {
+        $student_classes = [];
+        $class_data = [];
+        $sex_item['男'] = [];
+        $sex_item['女'] = [];
+        $sex_item['不'] = [];
+        $item_ranking = [];
+
+        $student_classes = StudentClass::where('semester',$action->semester)
+            ->orderBy('student_year','DESC')->orderBy('student_class')->get();
+
+            foreach($student_classes as $student_class){
+                array_push($class_data,$student_class->student_year.sprintf("%02s",$student_class->student_class));
+            }
+
+            foreach($action->items as $item){
+                if($item->group == 1 or $item->group == 3){
+                    $sex_item['男'][$item->id] = $item->name;
+                }
+                if($item->group == 2 or $item->group == 3){
+                    $sex_item['女'][$item->id] = $item->name;
+                }
+                if($item->group == 4){
+                    $sex_item['不'][$item->id] = $item->name;
+                }
+                if(!empty($item->scoring)){
+                    $scoring_array[$item->id] = explode(",",$item->scoring);                    
+                }else{
+                    $scoring_array[$item->id] = [];
+                    $scoring[$item->id] = [];
+                }                
+                foreach($scoring_array[$item->id] as $k=>$v){
+                    $scoring[$item->id][$k+1] = $v;
+                }
+             }
+
+            $student_signs = StudentSign::where('action_id',$action->id)->get();
+            foreach($student_signs as $student_sign){
+                if($student_sign->game_type=="personal"){
+                    $num = $student_sign->student_id;
+                }
+                if($student_sign->game_type=="group"){
+                    $num = $student_sign->group_num;
+                }
+                if($student_sign->game_type=="class"){
+                    $num = 1;
+                }
+                if($student_sign->sex==4){
+                    $item_ranking[$student_sign->student_year.sprintf("%02s",$student_sign->student_class)][$student_sign->item_id]['不'][$num] = $student_sign->ranking;
+                }else{
+                    $item_ranking[$student_sign->student_year.sprintf("%02s",$student_sign->student_class)][$student_sign->item_id][$student_sign->sex][$num] = $student_sign->ranking;
+                }            
+                
+            }
+
+        $row = [];
+        foreach($class_data as $k=>$v){
+            foreach($sex_item['男'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['男'])){
+                    foreach($item_ranking[$v][$k1]['男'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }
+                }
+                $row[$v] = (isset($row[$v]))?$row[$v]:null;
+                $row[$v] = (int)$row[$v]+(int)$one;
+            }
+            foreach($sex_item['女'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['女'])){
+                    foreach($item_ranking[$v][$k1]['女'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }
+                }
+                $row[$v] = (isset($row[$v]))?$row[$v]:null;
+                $row[$v] = (int)$row[$v]+(int)$one;
+            }
+            foreach($sex_item['不'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['不'])){
+                    foreach($item_ranking[$v][$k1]['不'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }
+                }
+                $row[$v] = (isset($row[$v]))?$row[$v]:null;
+                $row[$v] = (int)$row[$v]+(int)$one;
+            }
+        }
+
+        $last_y = null;
+       foreach($row as $k=>$v){
+        if(strlen($k) == 4){
+            $y = substr($k,0,2);
+        }else{
+            $y = substr($k,0,1);
+        }
+        
+        $year[$y][$k] = $v;        
+       }
+       foreach($year as $k=>$v){
+        arsort($year[$k]);
+       }
+       
+       foreach($year as $k=>$v){
+        $n=1;
+        foreach($v as $k1=>$v1){
+            if($n<4){
+                $year_award[$k1] = $n;
+            }else{
+                $year_award[$k1] = null;
+            }
+            
+            $n++;
+        }                
+       }
+
+
+        // 建立 PhpWord 實例
+        $phpWord = new PhpWord();             
+        // 設置 A4 橫向紙張
+        $sectionStyle = [
+            'marginTop' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 上邊界 2 厘米
+            'marginBottom' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 下邊界 2 厘米
+            'marginLeft' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 左邊界 2.5 厘米
+            'marginRight' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 右邊界 2.5 厘米
+            'orientation' => 'landscape', // 橫向
+        ];
+        // 添加一個章節
+        $section = $phpWord->addSection($sectionStyle);
+
+        $phpWord->addTitleStyle(
+            1, // 標題層級（1 表示最高級標題）
+            ['size' => 24, 'bold' => true, 'color' => '000000'], // 字體樣式
+            ['alignment' => 'center'] // 對齊方式
+        );
+        
+        $tableStyle = [     
+            'cellMarginTop' => 100,    // 單元格上內邊距
+            'cellMarginBottom' => 100, // 單元格下內邊距
+            'cellMarginLeft' => 100,   // 單元格左內邊距
+            'cellMarginRight' => 100,  // 單元格右內邊距       
+            'borderSize' => 6,        // 邊框粗細
+            'borderColor' => '000000' // 邊框顏色
+        ];
+        $phpWord->addTableStyle('myTableStyle', $tableStyle);
+        // 添加文字內容  
+        $section->addTitle($action->name.' 田徑賽計分總表',1);
+            
+        $table = $section->addTable('myTableStyle');
+        $table->addRow();
+        $table->addCell(800,['vMerge' => 'restart'])->addText('項目',['size' => 14],['alignment' => 'center']);             
+        $b = (int)round(6000/count($sex_item['男']));    
+        $all_b = $b*count($sex_item['男']);
+        
+        $table->addCell($all_b)->addText('男生',['size' => 14,'gridSpan' => count($sex_item['男'])],['alignment' => 'center']);   
+        
+        $g = (int)round(6000/count($sex_item['女']));    
+        $all_g = $g*count($sex_item['女']);
+        $table->addCell($all_g)->addText('女生',['size' => 14,'gridSpan' => count($sex_item['女'])],['alignment' => 'center']);   
+        foreach($sex_item['不'] as $k=>$v){
+            $table->addCell(1200,['vMerge' => 'restart'])->addText($v,['size' => 14],['alignment' => 'center']);   
+        }
+        $table->addCell(800,['vMerge' => 'restart'])->addText('總計',['size' => 14],['alignment' => 'center']);   
+        $table->addCell(800,['vMerge' => 'restart'])->addText('名次',['size' => 14],['alignment' => 'center']);   
+        
+        $table->addRow();        
+        $table->addCell(800,['vMerge' => 'continue']);
+        foreach($sex_item['男'] as $k=>$v){
+            $table->addCell($b)->addText($v,['size' => 14],['alignment' => 'center']);         
+        }
+        foreach($sex_item['女'] as $k=>$v){
+            $table->addCell($g)->addText($v,['size' => 14],['alignment' => 'center']);         
+        }
+        foreach($sex_item['不'] as $k=>$v){
+            $table->addCell(1200,['vMerge' => 'continue']);   
+        }
+        $table->addCell(800,['vMerge' => 'continue']);  
+        $table->addCell(800,['vMerge' => 'continue']);  
+
+        foreach($class_data as $k=>$v){
+            if(!isset($show_class[substr($v,0,1)])) $show_class[substr($v,0,1)] = "";
+            $show_class[substr($v,0,1)] = $show_class[substr($v,0,1)]."\"".$v."\",";
+            $table->addRow();        
+            $table->addCell(800)->addText($v,['size' => 14],['alignment' => 'center']);  
+            foreach($sex_item['男'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['男'])){
+                    foreach($item_ranking[$v][$k1]['男'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }                    
+                }
+                $table->addCell($b)->addText($one,['size' => 14],['alignment' => 'center']); 
+            }
+            foreach($sex_item['女'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['女'])){
+                    foreach($item_ranking[$v][$k1]['女'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }                    
+                }
+                $table->addCell($g)->addText($one,['size' => 14],['alignment' => 'center']); 
+            }
+            foreach($sex_item['不'] as $k1=>$v1){
+                $one = null;
+                if(isset($item_ranking[$v][$k1]['不'])){
+                    foreach($item_ranking[$v][$k1]['不'] as $k2=>$v2){
+                        if(isset($scoring[$k1][$v2])){
+                            $one = (int)$one+(int)$scoring[$k1][$v2];
+                        } 
+                    }                    
+                }
+                $table->addCell(1200)->addText($one,['size' => 14],['alignment' => 'center']); 
+            }
+            $s = ($row[$v] <> 0)?$row[$v]:null;                        
+            $table->addCell(800)->addText($s,['size' => 14],['alignment' => 'center']);                               
+            $table->addCell(800)->addText($year_award[$v],['size' => 14],['alignment' => 'center']);                                           
+        }
+
+                    
+                    
+        
+
+        
+
+
+
+
+
+
+        // 定義文件名稱
+        $fileName = $action->name.'田徑賽成績一覽表.docx';
+                
+        // 將文件存為臨時檔案
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+
+        // 寫入文件
+        $writer = IOFactory::createWriter($phpWord, 'Word2007');
+        $writer->save($tempFile);
+
+        // 回傳文件下載回應
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+
     }
 
     public function action_set_number_null(Action $action)
@@ -1814,19 +2398,377 @@ class SportMeetingController extends Controller
             $select_action = $action_id;
         }
 
-        $action = [];
-        if($select_action) {
-            $action = Action::find($select_action);            
-        }
+        $items = Item::where('action_id',$select_action)            
+            ->where('disable',null)
+            ->orderBy('order')
+            ->get();
+
+
         $data = [
             'admin'=>$admin,
             'bdmin'=>$bdmin,
             'action_array'=>$action_array,
             'select_action'=>$select_action,
-            'action'=>$action,
+            'items'=>$items,
         ];
 
         return view('sport_meetings.scores',$data);
+    }
+
+    public function scores_do(Request $request)
+    {        
+        $admin = check_power('運動會報名', 'A', auth()->user()->id);
+        $bdmin = check_power('運動會報名', 'B', auth()->user()->id);
+        
+        $action = Action::find($request->input('action_id'));
+        $item = Item::find($request->input('item_id'));
+        $student_signs = StudentSign::where('item_id',$item->id)
+            ->where('sex',$request->input('sex'))
+            ->where('student_year',$request->input('student_year'))
+            ->orderBy('section_num')
+            ->orderBy('run_num')
+            ->orderBy('student_class')
+            ->orderBy('is_official','DESC')
+            ->orderBy('student_id')
+            ->get();
+        
+        $student_array = [];
+        foreach($student_signs as $student_sign){
+            if($item->game_type=="personal"){
+                $student_array[$student_sign->id]['id'] = $student_sign->id;
+                $student_array[$student_sign->id]['number'] = $student_sign->student->number;
+                $student_array[$student_sign->id]['name'] = $student_sign->student->name;                                
+                $student_array[$student_sign->id]['section_num'] = $student_sign->section_num;
+                $student_array[$student_sign->id]['run_num'] = $student_sign->run_num;
+                $student_array[$student_sign->id]['class'] = $student_sign->student_year."年".$student_sign->student_class."班";
+            }
+            if($item->game_type=="group"){
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['id'] = $student_sign->id;
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['number'] = $student_sign->student->number;
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['name'] = $student_sign->student->name;                                        
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['section_num'] = $student_sign->section_num;
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['run_num'] = $student_sign->run_num;
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['is_official'] = $student_sign->is_official;
+                    $student_array[$student_sign->student_year.$student_sign->student_class.$student_sign->group_num][$student_sign->id]['class'] = $student_sign->student_year."年".$student_sign->student_class."班";
+
+            }
+        }        
+        if($item->game_type=="class") {
+
+            $cht_num = config('chcschool.cht_num');
+            foreach ($student_signs as $student_sign) {
+                $class_name = $cht_num[$student_sign->student_year] . "年" . $student_sign->student_class . "班";
+                $student_array[$student_sign->id]['name'] = $class_name;
+                $student_array[$student_sign->id]['student_year'] = $student_sign->student_year;
+                $student_array[$student_sign->id]['student_class'] = $student_sign->student_class;                                
+                $student_array[$student_sign->id]['section_num'] = $student_sign->section_num;
+                $student_array[$student_sign->id]['run_num'] = $student_sign->run_num;
+            }
+        }
+        
+        $data = [
+            'admin'=>$admin,
+            'bdmin'=>$bdmin,
+            'year'=>$request->input('student_year'),
+            'sex'=>$request->input('sex'),
+            'action'=>$action,
+            'item'=>$item,
+            'student_signs'=>$student_signs,
+            'student_array'=>$student_array,
+        ];
+
+        return view('sport_meetings.scores_do',$data);
+
+    }
+
+    public function scores_update(Request $request)
+    {                        
+        $section_num = $request->input('section_num');
+        $run_num = $request->input('run_num');
+        $action_id = $request->input('action_id');
+        $item_id = $request->input('item_id');
+        $item = Item::find($item_id);
+        
+        foreach($section_num as $k=>$v){            
+            $att['section_num'] = $v;
+            $att['run_num'] = (isset($run_num[$k]))?$run_num[$k]:null;            
+            
+            $student_sign = StudentSign::find($k);
+            
+            if($item->game_type=="group"){                
+                $all_student_signs = StudentSign::where('item_id',$item->id)
+                    ->where('student_year',$student_sign->student_year)
+                    ->where('student_class',$student_sign->student_class)                    
+                    ->where('sex',$student_sign->sex)                    
+                    ->where('group_num',$student_sign->group_num)                        
+                    ->update($att);                                                            
+            }else{
+                $student_sign->update($att);                
+            }
+            
+        }        
+        return redirect()->route('sport_meeting.scores_do',['action_id'=>$action_id,'item_id'=>$item_id,'student_year'=>$student_sign->student_year,'sex'=>$student_sign->sex]);
+    }
+
+    public function scores_print(Action $action,Item $item,$year,$sex){                
+        
+        $cht_num = config('chcschool.cht_num');
+
+        $student_signs = StudentSign::where('item_id',$item->id)
+            ->where('sex',$sex)
+            ->where('student_year',$year)
+            ->orderBy('section_num')
+            ->orderBy('run_num')
+            ->orderBy('student_class')
+            ->orderBy('is_official','DESC')
+            ->orderBy('student_id')
+            ->get();
+
+        $section_num = 0;
+        foreach($student_signs as $student_sign){
+            //取組數
+            $section_num = ($student_sign->section_num > $section_num)?$student_sign->section_num:$section_num;
+        }
+        $student_array = [];
+        $s = 0;
+        $r = 0;
+        foreach($student_signs as $student_sign){
+            if($item->game_type=="personal"){                                     
+                $student_array[$student_sign->section_num][$student_sign->run_num]['class'] = $student_sign->student_year.sprintf("%02s",$student_sign->student_class);
+                $student_array[$student_sign->section_num][$student_sign->run_num]['number'] = $student_sign->student->number;
+                $student_array[$student_sign->section_num][$student_sign->run_num]['name'] = $student_sign->student->name;                                                                                                
+            }
+            if($item->game_type=="group"){
+                $student_array[$student_sign->section_num][$student_sign->run_num]['class'] = $student_sign->student_year."年".$student_sign->student_class."班";
+                $student_array[$student_sign->section_num][$student_sign->run_num]['number'] = null;
+                if(!isset($student_array[$student_sign->section_num][$student_sign->run_num]['name'])) $student_array[$student_sign->section_num][$student_sign->run_num]['name']= null;
+                if($student_sign->is_official == null){
+                    $st_name = $student_sign->student->name."(候)";
+                }else{
+                    $st_name = $student_sign->student->name;
+                }
+                $student_array[$student_sign->section_num][$student_sign->run_num]['name'] .= $st_name." ";                     
+            }                
+        }      
+        
+        if($item->game_type=="class") {   
+            foreach ($student_signs as $student_sign) {
+                $student_array[$student_sign->section_num][$student_sign->run_num]['class'] = $cht_num[$student_sign->student_year] . "年" . $student_sign->student_class . "班";
+                $student_array[$student_sign->section_num][$student_sign->run_num]['number'] = null;
+                $student_array[$student_sign->section_num][$student_sign->run_num]['name'] = null;                 
+            }
+        }
+                
+        //徑賽
+        // 建立 PhpWord 實例
+        $phpWord = new PhpWord();
+        if($item->type==1){            
+            // 設置 A4 橫向紙張
+            $sectionStyle = [
+                'marginTop' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(2), // 上邊界 2 厘米
+                'marginBottom' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(2), // 下邊界 2 厘米
+                //'marginLeft' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(2.5), // 左邊界 2.5 厘米
+                //'marginRight' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(2.5), // 右邊界 2.5 厘米
+                'orientation' => 'landscape', // 橫向
+            ];
+            // 添加一個章節
+            $section = $phpWord->addSection($sectionStyle);
+
+            $phpWord->addTitleStyle(
+                1, // 標題層級（1 表示最高級標題）
+                ['size' => 24, 'bold' => true, 'color' => '000000'], // 字體樣式
+                ['alignment' => 'center'] // 對齊方式
+            );
+            
+            $tableStyle = [     
+                'cellMarginTop' => 100,    // 單元格上內邊距
+                'cellMarginBottom' => 100, // 單元格下內邊距
+                'cellMarginLeft' => 100,   // 單元格左內邊距
+                'cellMarginRight' => 100,  // 單元格右內邊距       
+                'borderSize' => 6,        // 邊框粗細
+                'borderColor' => '000000' // 邊框顏色
+            ];
+            $phpWord->addTableStyle('myTableStyle', $tableStyle);
+            // 添加文字內容
+            $section->addTitle($item->name.'檢錄表',1);
+
+            foreach($student_array as $k=>$v){   
+                if($item->game_type != "class"){
+                    $s = $sex.'生組';
+                }else{
+                    $s = null;
+                }
+                $section->addText($cht_num[$year].'年級            '.$s.'          ▢預賽          共 '.$section_num.' 組      第 '.$k.' 組    每組取 2 名決賽',['size' => 14]);                                                                    
+
+                $table = $section->addTable('myTableStyle');
+
+                // 添加表格標題行
+                $table->addRow();
+                $table->addCell(1200)->addText('道次',['size' => 14],['alignment' => 'center']);               
+                foreach($v as $k1=>$v1){
+                    if(!isset($cht_num[$k1])) $cht_num[$k1]=null;
+                    $table->addCell(1200)->addText($cht_num[$k1],['size' => 14],['alignment' => 'center']);                         
+                }
+                // 添加表格標題行
+                $table->addRow();
+                $table->addCell(1200)->addText('班級',['size' => 14],['alignment' => 'center']);               
+                foreach($v as $k1=>$v1){
+                    $table->addCell(1200)->addText($v1['class'],['size' => 14],['alignment' => 'center']);                         
+                }
+                if($item->game_type != "class"){
+                    // 添加表格標題行
+                    if($item->game_type !="group"){
+                        $table->addRow();
+                        $table->addCell(1200)->addText('號碼',['size' => 14],['alignment' => 'center']);               
+                        foreach($v as $k1=>$v1){
+                            $table->addCell(1200)->addText($v1['number'],['size' => 14],['alignment' => 'center']);                         
+                        }    
+                    }        
+                    // 添加表格標題行
+                    $table->addRow();
+                    $table->addCell(1200)->addText('姓名',['size' => 14],['alignment' => 'center']);               
+                    foreach($v as $k1=>$v1){
+                        $table->addCell(1200)->addText($v1['name'],['size' => 14],['alignment' => 'center']);                         
+                    }
+                }
+                // 添加表格標題行
+                $table->addRow();
+                $table->addCell(1200)->addText('成績',['size' => 14],['alignment' => 'center']);               
+                foreach($v as $k1=>$v1){
+                    $table->addCell(1200)->addText(null,['size' => 14],['alignment' => 'center']);                         
+                }
+                // 添加表格標題行
+                $table->addRow();
+                $table->addCell(1200)->addText('名次',['size' => 14],['alignment' => 'center']);               
+                foreach($v as $k1=>$v1){
+                    $table->addCell(1200)->addText(null,['size' => 14],['alignment' => 'center']);                         
+                }      
+                $section->addTextBreak(1);          
+        }
+        
+
+            $section->addTextBreak(2);            
+        }
+        if($item->type==2){
+            $sectionStyle = [
+                'marginTop' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(2), // 上邊界 2 厘米
+                'marginBottom' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(2), // 下邊界 2 厘米
+                'marginLeft' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 左邊界 2.5 厘米
+                'marginRight' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 右邊界 2.5 厘米
+                //'orientation' => 'landscape', // 橫向
+            ];
+            // 添加一個章節
+            $section = $phpWord->addSection($sectionStyle);
+
+            $phpWord->addTitleStyle(
+                1, // 標題層級（1 表示最高級標題）
+                ['size' => 24, 'bold' => true, 'color' => '000000'], // 字體樣式
+                ['alignment' => 'center'] // 對齊方式
+            );
+            
+            $tableStyle = [     
+                'cellMarginTop' => 100,    // 單元格上內邊距
+                'cellMarginBottom' => 100, // 單元格下內邊距
+                'cellMarginLeft' => 100,   // 單元格左內邊距
+                'cellMarginRight' => 100,  // 單元格右內邊距       
+                'borderSize' => 6,        // 邊框粗細
+                'borderColor' => '000000' // 邊框顏色
+            ];
+            $phpWord->addTableStyle('myTableStyle', $tableStyle);
+            // 添加文字內容
+            $section->addTitle($item->name.'記錄表',1);
+            $section->addText($cht_num[$year].'年級            '.$sex.'生組',['size' => 14]);
+            $section->addTextBreak(1);  
+
+            if(strpos($item->name,"跳高") !== false){                  
+                $table = $section->addTable('myTableStyle');
+                $table->addRow();
+                $table->addCell(2000,['vMerge' => 'restart','valign' => 'center'])->addText('號碼姓名',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(6600)->addText('高度',['size' => 14,'gridSpan' => 10],['alignment' => 'center']);   
+                $table->addCell(1200,['vMerge' => 'restart','valign' => 'center'])->addText('成績',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(1200,['vMerge' => 'restart','valign' => 'center'])->addText('名次',['size' => 14],['alignment' => 'center']);   
+                $table->addRow();
+                $table->addCell(2000,['vMerge' => 'continue']);
+                $table->addCell(660)->addText('80',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);   
+                $table->addCell(660)->addText('85',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('90',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('95',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('100',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('105',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('108',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('111',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('120',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);
+                $table->addCell(660)->addText('130',['size' => 10,'gridSpan' =>3],['alignment' => 'center']);         
+                $table->addCell(1200,['vMerge' => 'continue']);   
+                $table->addCell(1200,['vMerge' => 'continue']);     
+                foreach($student_array as $k=>$v){  
+                    foreach($v as $k1=>$v1){
+                        $table->addRow();
+                        $table->addCell(2000)->addText($v1['number'].' '.$v1['name'],['size' => 14],['alignment' => 'center']);                         
+                        for($i=0;$i<30;$i++){
+                            $table->addCell(220);
+                        }
+                        $table->addCell(1200);
+                        $table->addCell(1200);                        
+                    }
+                }
+            }
+            if(strpos($item->name,"跳遠") !== false){
+                $table = $section->addTable('myTableStyle');
+                $table->addRow();
+                $table->addCell(2000,['vMerge' => 'restart','valign' => 'center'])->addText('號碼姓名',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(2100,['valign' => 'center'])->addText('前三次成績',['size' => 14,'gridSpan' => 3],['alignment' => 'center']);   
+                $cell = $table->addCell(1500,['vMerge' => 'restart','valign' => 'center']);
+                $cell->addText('前三次',['size' => 14],['alignment' => 'center']);   
+                $cell->addText('最佳成績',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(2100)->addText('後三次成績',['size' => 14,'gridSpan' => 3],['alignment' => 'center']);                   
+                $table->addCell(1500,['vMerge' => 'restart','valign' => 'center'])->addText('最佳成績',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(1200,['vMerge' => 'restart','valign' => 'center'])->addText('名次',['size' => 14],['alignment' => 'center']);   
+                $table->addRow();
+                $table->addCell(2000,['vMerge' => 'continue']);
+                $table->addCell(700)->addText('一',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(700)->addText('二',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(700)->addText('三',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(1500,['vMerge' => 'continue']);
+                $table->addCell(700)->addText('一',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(700)->addText('二',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(700)->addText('三',['size' => 14],['alignment' => 'center']);   
+                $table->addCell(1500,['vMerge' => 'continue']);
+                $table->addCell(1200,['vMerge' => 'continue']);
+                foreach($student_array as $k=>$v){  
+                    foreach($v as $k1=>$v1){
+                        $table->addRow();
+                        $table->addCell(2000)->addText($v1['number'].' '.$v1['name'],['size' => 14],['alignment' => 'center']);                         
+                        for($i=0;$i<3;$i++){
+                            $table->addCell(700);
+                        }
+                        $table->addCell(1500);
+                        for($i=0;$i<3;$i++){
+                            $table->addCell(700);
+                        }
+                        $table->addCell(1500);                        
+                        $table->addCell(1200);
+                    }
+                }
+            }
+            $section->addTextBreak(4);    
+            $section->addText('裁判員：_______________________      記錄員：_______________________',['size' => 14]);
+        }
+
+        // 定義文件名稱
+        $fileName = $item->name.'檢錄表.docx';
+        
+        // 將文件存為臨時檔案
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+
+        // 寫入文件
+        $writer = IOFactory::createWriter($phpWord, 'Word2007');
+        $writer->save($tempFile);
+
+        // 回傳文件下載回應
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+                 
+
     }
 
 }

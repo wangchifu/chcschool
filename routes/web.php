@@ -402,7 +402,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('sport_meeting/demo_upload', 'SportMeetingController@demo_upload')->name('sport_meeting.demo_upload');
     Route::get('sport_meeting/score_print/{action_id?}', 'SportMeetingController@score_print')->name('sport_meeting.score_print');
     Route::get('sport_meeting/all_scores/{action_id?}', 'SportMeetingController@all_scores')->name('sport_meeting.all_scores');
+    Route::get('sport_meeting/all_scores_print/{action}', 'SportMeetingController@all_scores_print')->name('sport_meeting.all_scores_print');
+    Route::match(['post','get'],'sport_meeting/scores_do', 'SportMeetingController@scores_do')->name('sport_meeting.scores_do');
+    Route::post('sport_meeting/scores_update', 'SportMeetingController@scores_update')->name('sport_meeting.scores_update');
+    Route::get('sport_meeting/scores_print/{action}/{item}/{year}/{sex}', 'SportMeetingController@scores_print')->name('sport_meeting.scores_print');
     Route::get('sport_meeting/total_scores/{action_id?}', 'SportMeetingController@total_scores')->name('sport_meeting.total_scores');
+    Route::get('sport_meeting/total_scores_print/{action}', 'SportMeetingController@total_scores_print')->name('sport_meeting.total_scores_print');
 
     Route::get('sport_meeting/records/{action_id?}', 'SportMeetingController@records')->name('sport_meeting.records');
     Route::get('sport_meeting/scores/{action_id?}', 'SportMeetingController@scores')->name('sport_meeting.scores');

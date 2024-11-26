@@ -25,7 +25,7 @@
                   <a class="nav-link" href="{{ route('sport_meeting.records') }}">2.項目記錄表</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" href="{{ route('sport_meeting.scores') }}">3.成績記錄單</a>
+                  <a class="nav-link active" href="{{ route('sport_meeting.scores') }}">3.成績記錄表(檢錄)</a>
                 </li>
               </ul>            
               <hr>
@@ -40,18 +40,77 @@
                 <thead class="table-primary">
                 <tr>
                     <th>
-                        資料
+                        序號
+                    </th>
+                    <th>
+                        名稱
+                    </th>
+                    <th>
+                        年級
+                    </th>
+                    <th>
+                        組別
+                    </th>
+                    <th>
+                        動作
                     </th>
                 </tr>
                 </thead>
                 <tbody>
+                @foreach($items as $item)
                 <tr>
+                    <form action="{{ route('sport_meeting.scores_do') }}" method="post">
+                        @csrf
                     <td>
-                        施工中
+                        {{ $item->order }}
                     </td>
+                    <td>
+                        {{ $item->name }}
+                        @if($item->game_type=="personal")
+                            <span class="badge badge-warning">個人賽</span>
+                        @endif
+                        @if($item->game_type=="group")
+                            <span class="badge badge-primary">團體賽</span>
+                        @endif
+                        @if($item->game_type=="class")
+                            <span class="badge badge-info">班際賽</span>
+                        @endif
+                    </td>
+                    <td>
+                        <?php
+                            $years = unserialize($item->years);
+                        ?>
+                        <select class="form-control" name="student_year">
+                        @foreach($years as  $v)
+                            <option value="{{ $v }}">
+                                {{ $v }} 年級
+                            </option>
+                        @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select id="sex" class="form-control" name="sex">
+                            @if($item->group ==1 or $item->group ==3)
+                                <option value="男">男子組</option>
+                            @endif
+                            @if($item->group ==1 or $item->group ==3)
+                                    <option value="女">女子組</option>
+                            @endif
+                            @if($item->group ==4)
+                                <option value="4">不分性別</option>
+                            @endif
+                        </select>
+                    </td>
+                        <input type="hidden" name="action_id" value="{{ $select_action }}">
+                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                    <td>                        
+                        <button class="btn btn-primary btn-sm">送出</button>
+                    </td>
+                    </form>
                 </tr>
+                @endforeach
                 </tbody>
-            </table>
+            </table>     
         </div>                
     </div>
     <script>

@@ -19,6 +19,7 @@ class Item extends Model
         'limit',
         'people',
         'reward',
+        'scoring',
         'disable',
     ];
 

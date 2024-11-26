@@ -25,7 +25,7 @@
                   <a class="nav-link active" href="{{ route('sport_meeting.records') }}">2.項目記錄表</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('sport_meeting.scores') }}">3.成績記錄單</a>
+                  <a class="nav-link" href="{{ route('sport_meeting.scores') }}">3.成績記錄表(檢錄)</a>
                 </li>
               </ul>            
               <hr>

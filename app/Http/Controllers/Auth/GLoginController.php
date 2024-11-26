@@ -67,7 +67,7 @@ class GLoginController extends Controller
         );
         $result = curl_exec($ch);
         $obj = json_decode($result, true);
-
+        dd($obj);
         if ($obj['success']) {
             //非教職員，即跳開
             if ($obj['kind'] != "教職員") {

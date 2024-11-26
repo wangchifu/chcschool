@@ -96,6 +96,10 @@
                             <label for="reward">錄取名次<span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="reward" name="reward" placeholder="數字" required value="5">
                         </div>
+                        <div class="form-group col-md-2">
+                            <label for="scoring">名次計分(從第一名開始用 , 分隔)<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="scoring" name="scoring" required value="6,4,3,2,1">
+                        </div>
                         <div class="form-group col-md-1">
                             <label for="sex">類别<span class="text-danger">*</span></label>
                             <select id="sex" class="form-control" name="type">

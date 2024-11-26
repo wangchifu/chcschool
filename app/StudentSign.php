@@ -14,7 +14,7 @@ class StudentSign extends Model
         'item_name',
         'game_type',
         'is_official',
-        'group_num',
+        'group_num',//同一項目不同組
         'student_id',
         'action_id',
         'student_year',
@@ -24,6 +24,8 @@ class StudentSign extends Model
         'achievement',
         'ranking',
         'order',
+        'section_num',//預賽組別
+        'run_num',//道次 出場順序
     ];
 
     public function student()
