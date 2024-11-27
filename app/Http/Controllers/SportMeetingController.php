@@ -2091,11 +2091,11 @@ class SportMeetingController extends Controller
         $b = (int)round(6000/count($sex_item['男']));    
         $all_b = $b*count($sex_item['男']);
         
-        $table->addCell($all_b)->addText('男生',['size' => 14,'gridSpan' => count($sex_item['男'])],['alignment' => 'center']);   
+        $table->addCell($all_b,['gridSpan' => count($sex_item['男'])])->addText('男生',['size' => 14],['alignment' => 'center']);   
         
         $g = (int)round(6000/count($sex_item['女']));    
         $all_g = $g*count($sex_item['女']);
-        $table->addCell($all_g)->addText('女生',['size' => 14,'gridSpan' => count($sex_item['女'])],['alignment' => 'center']);   
+        $table->addCell($all_g,['gridSpan' => count($sex_item['男'])])->addText('女生',['size' => 14],['alignment' => 'center']);   
         foreach($sex_item['不'] as $k=>$v){
             $table->addCell(1200,['vMerge' => 'restart'])->addText($v,['size' => 14],['alignment' => 'center']);   
         }
