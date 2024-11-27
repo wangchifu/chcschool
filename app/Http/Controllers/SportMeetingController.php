@@ -1716,12 +1716,12 @@ class SportMeetingController extends Controller
             
             $table = $section->addTable('myTableStyle');
             $table->addRow();
-            $table->addCell(3000,['vMerge' => 'restart']);   
+            $table->addCell(3000,['vMerge' => 'restart','gridSpan' => 2]);   
             for($i=1;$i<6;$i++){
-                $table->addCell(2550)->addText('第'.$cht_num[$i].'名',['size' => 14,'gridSpan' => 3],['alignment' => 'center']);   
+                $table->addCell(2550,['gridSpan' => 3])->addText('第'.$cht_num[$i].'名',['size' => 14],['alignment' => 'center']);   
             }
             $table->addRow();
-            $table->addCell(3000,['vMerge' => 'continue']);   
+            $table->addCell(3000,['vMerge' => 'continue','gridSpan' => 2]);   
             for($i=1;$i<6;$i++){
                 $table->addCell(850)->addText('班級',['size' => 14],['alignment' => 'center']);   
                 $table->addCell(850)->addText('姓名',['size' => 14],['alignment' => 'center']);   
