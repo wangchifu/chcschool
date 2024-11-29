@@ -551,9 +551,12 @@ class SetupController extends Controller
     {
         $key = rand(10000, 99999);
         $back = rand(0, 9);
-        $r = rand(0, 255);
-        $g = rand(0, 255);
-        $b = rand(0, 255);
+        //$r = rand(0, 255);
+        $r = 0;
+        //$g = rand(0, 255);
+        $g = 0;
+        //$b = rand(0, 255);
+        $b = 0;
 
         session(['chaptcha' => $key]);
 
