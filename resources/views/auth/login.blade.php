@@ -45,7 +45,11 @@
                         <div class="col-md-4 text-md-left">
                         </div>
                         <div class="col-md-6 text-md-left">
-                            <a href="{{ route('admin_login') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>
+                            <a href="{{ route('admin_login') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>                       
+                            <a href="#!" id="loadAudio"><i class="fas fa-volume-up"></i> [語音播放]</a>
+                            <audio id="myAudio">
+                                <source src="" type="audio/mp3">                                
+                            </audio>                            
                         </div>
                     </div>
                     <div class="form-group row">
@@ -83,5 +87,32 @@
 </div>
 <script>
     var validator = $("#this_form").validate();
+
+
+        $(document).ready(function () {
+            $('#loadAudio').click(function () {
+                // 發送 AJAX 請求到 PHP 文件
+                $.ajax({
+                    url: '{{ route('voice') }}', // PHP 文件路徑
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.startsWith('Error')) {
+                            alert(response); // 錯誤提示
+                        } else {
+                            // 動態設置 <audio> 的 src
+                            const base64Src = `data:audio/mpeg;base64,${response}`;
+                            $('#myAudio source').attr('src', base64Src);
+                            
+                            // 必須重新加載音頻以使新設置生效
+                            $('#myAudio')[0].load();
+                            $('#myAudio')[0].play(); // 播放音頻
+                        }
+                    },
+                    error: function () {
+                        alert('無法載入音頻數據！');
+                    }
+                });
+            });
+        });
 </script>
 @endsection

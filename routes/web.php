@@ -66,6 +66,7 @@ Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('login');
 Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
 
 Route::get('pic', 'SetupController@pic')->name('pic');
+Route::get('voice', 'SetupController@voice')->name('voice');
 
 
 //公告系統

@@ -23,6 +23,15 @@ class GLoginController extends Controller
 
     public function showLoginForm(Request $request)
     {
+        $key = rand(10000, 99999);
+        session(['chaptcha' => $key]);
+        $cht = array(0 => "零", 1 => "壹", 2 => "貳", 3 => "參", 4 => "肆", 5 => "伍", 6 => "陸", 7 => "柒", 8 => "捌", 9 => "玖");
+        //$cht = array(0=>"0",1=>"1",2=>"2",3=>"3",4=>"4",5=>"5",6=>"6",7=>"7",8=>"8",9=>"9");
+        $cht_key = "";
+        for ($i = 0; $i < 5; $i++) $cht_key .= $cht[substr($key, $i, 1)];
+
+        session(['cht_chaptcha' => $cht_key]);
+        
         if (auth()->check()) {
             return redirect()->route('index');
         }
