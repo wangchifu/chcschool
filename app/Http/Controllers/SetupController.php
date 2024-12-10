@@ -549,7 +549,8 @@ class SetupController extends Controller
 
     public function voice()
     {
-        $text = session('cht_chaptcha');                                
+        $text = session('cht_chaptcha');              
+        $text = urlencode($text);                  
         $html = file_get_contents('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q='.$text.'&tl=zh-TW');
         $audioData = base64_encode($html);
         echo $audioData;        
