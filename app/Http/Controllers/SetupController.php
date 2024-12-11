@@ -551,8 +551,15 @@ class SetupController extends Controller
     {
         //$text = session('cht_chaptcha');              
         //中文字的話要$text = urlencode($text);         
-        $text = session('chaptcha');                       
-        $html = file_get_contents('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q='.$text.'&tl=zh-TW');
+        $text = session('chaptcha');                
+        $a = substr($text,0,1);
+        $b = substr($text,1,1);
+        $c = substr($text,2,1);
+        $d = substr($text,3,1);
+        $e = substr($text,4,1);
+        $string = $a." ".$b." ".$c." ".$d." ".$e;
+        $string = urlencode($string);       
+        $html = file_get_contents('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q='.$string.'&tl=zh-TW');
         $audioData = base64_encode($html);
         echo $audioData;        
     }
