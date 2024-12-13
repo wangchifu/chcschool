@@ -164,6 +164,42 @@
                         </td>
                     </tr>
                 @endforeach
+                @foreach($clouds as $cloud)
+                    <?php
+                    $file_p = $path.'&'.$cloud->id;
+                    ?>
+                    <tr>
+                        <td>
+                            <span class="text-primary"><i class="fas fa-cloud"></i> <a href="{{ $cloud->url }}" target="_blank">{{ $cloud->name }}</a></span>
+                        </td>
+                        <td>
+                            雲端連結
+                            @auth
+                                @if(($cloud->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
+                                    <a href="javascript:open_window('{{ route('open_files.edit',[$cloud->id,$file_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
+                                    <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $cloud->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
+                                @endif
+                            @endauth
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            @if(!empty($cloud->job_title))
+                                {{ $cloud->job_title }}
+                            @else
+                                @if($cloud->user->name == "系統管理員")
+                                    系統管理員
+                                @else
+                                    {{ $cloud->user->title }}
+                                @endif
+                            @endif                            
+                        </td>
+                        <td>
+                            {{ $cloud->created_at }}
+                        </td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
             <hr>
@@ -198,6 +234,18 @@
                             </div>
                             {{ Form::close() }}
                         @endif
+                        {{ Form::open(['route' => 'open_files.upload_cloud', 'method' => 'POST','id'=>'this_form3']) }}
+                            <div class="form-group">
+                                <label for="file"><strong>3.雲端連結</strong></label>
+                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','placeholder'=>'名稱','required'=>'required']) }}
+                                {{ Form::text('url',null,['id'=>'url','class' => 'form-control','placeholder'=>'連結','required'=>'required']) }}
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" name="folder_id" value="{{ $folder_id }}">
+                                <input type="hidden" name="path" value="{{ $path }}">
+                                <button class="btn btn-success btn-sm" onclick="if(confirm('您確定新增雲端檔案嗎?')){return true;}else return false"><i class="fas fa-plus"></i> 新增雲端連結</button>
+                            </div>
+                        {{ Form::close() }}
                     </div>
                 </div>
             @endcan

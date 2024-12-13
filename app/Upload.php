@@ -8,7 +8,8 @@ class Upload extends Model
 {
     protected $fillable = [
         'name',
-        'type',
+        'url',
+        'type',//1目錄  2檔案  3雲端檔案
         'folder_id',
         'user_id',
         'job_title',

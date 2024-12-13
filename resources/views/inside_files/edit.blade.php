@@ -20,6 +20,9 @@
             <tr>
                 <td>
                     {{ Form::text('name',$inside_file->name,['id'=>'name','class' => 'form-control','required'=>'required', 'placeholder' => '名稱']) }}
+                    @if($inside_file->type==3)
+                        {{ Form::text('url',$inside_file->url,['id'=>'url','class' => 'form-control','required'=>'required', 'placeholder' => '連結']) }}
+                    @endif
                 </td>
                 <td>
                     <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">

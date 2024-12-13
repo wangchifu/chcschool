@@ -8,6 +8,7 @@ class InsideFile extends Model
 {
     protected $fillable = [
         'name',
+        'url',
         'type',
         'folder_id',
         'user_id',

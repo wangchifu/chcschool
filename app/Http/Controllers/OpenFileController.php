@@ -56,6 +56,13 @@ class OpenFileController extends Controller
             ->orderBy('name')
             ->get();
 
+
+        //列出雲端檔案
+        $clouds = Upload::where('type', '3')
+            ->where('folder_id', $folder_id)
+            ->orderBy('name')
+            ->get();
+
         //學校目錄
         $f1 = storage_path('app/public/' . $school_code);
         $dir_size1 = get_dir_size($f1);
@@ -73,6 +80,7 @@ class OpenFileController extends Controller
             'path' => $path,
             'folder_id' => $folder_id,
             'folders' => $folders,
+            'clouds' => $clouds,
             'folder_path' => $folder_path,
             'files' => $files,
             'per' => $per,
@@ -82,7 +90,7 @@ class OpenFileController extends Controller
         return view('open_files.index', $data);
     }
 
-    public function create()
+    public function create() 
     {
         //新增上傳目錄
         $school_code = school_code();
@@ -153,17 +161,22 @@ class OpenFileController extends Controller
         return view('open_files.edit', $data);
     }
 
+    
+
     public function update(Request $request, Upload $upload)
     {
-        if (strpos($request->input('name'), "&")) {
-            return back()->withErrors(['error' => ['不得有特殊字元「&」！']]);
+        if($upload->type != 3){
+            if (strpos($request->input('name'), "&")) {
+                return back()->withErrors(['error' => ['不得有特殊字元「&」！']]);
+            }
+            if (strpos($request->input('name'), "\"")) {
+                return back()->withErrors(['error' => ['不得有特殊字元「"」！']]);
+            }
+            if (strpos($request->input('name'), "'")) {
+                return back()->withErrors(['error' => ["不得有特殊字元「'」！"]]);
+            }
         }
-        if (strpos($request->input('name'), "\"")) {
-            return back()->withErrors(['error' => ['不得有特殊字元「"」！']]);
-        }
-        if (strpos($request->input('name'), "'")) {
-            return back()->withErrors(['error' => ["不得有特殊字元「'」！"]]);
-        }
+        
         $school_code = school_code();
 
         $path_array = explode('&', $request->input('path'));
@@ -193,6 +206,7 @@ class OpenFileController extends Controller
 
 
         $att['name'] = $request->input('name');
+        $att['url'] = $request->input('url');
         $upload->update($att);
 
         echo "<body onload='opener.location.reload();window.close();'>";
@@ -293,6 +307,20 @@ class OpenFileController extends Controller
                 }
             }
         }
+
+        return redirect()->route('open_files.index', $request->input('path'));
+    }
+
+    public function upload_cloud(Request $request)
+    {
+        $att['name'] = $request->input('name');
+        $att['url'] = $request->input('url');
+        $att['type'] = 3; //雲端檔案
+        $att['user_id'] = auth()->user()->id;
+        $att['job_title'] = auth()->user()->title;
+        $att['folder_id'] = $request->input('folder_id');
+        
+        Upload::create($att);
 
         return redirect()->route('open_files.index', $request->input('path'));
     }

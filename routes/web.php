@@ -442,12 +442,14 @@ Route::group(['middleware' => 'exec'], function () {
 
     Route::post('open_files_create_folder', 'OpenFileController@create_folder')->name('open_files.create_folder');
     Route::post('open_files_upload_file', 'OpenFileController@upload_file')->name('open_files.upload_file');
+    Route::post('open_files_upload_cloud', 'OpenFileController@upload_cloud')->name('open_files.upload_cloud');
 
     //內部文件
     Route::get('inside_files_create', 'InsideFilesController@create')->name('inside_files.create');
 
     Route::post('inside_files_create_folder', 'InsideFilesController@create_folder')->name('inside_files.create_folder');
     Route::post('inside_files_upload_file', 'InsideFilesController@upload_file')->name('inside_files.upload_file');
+    Route::post('inside_files_upload_cloud', 'InsideFilesController@upload_cloud')->name('inside_files.upload_cloud');
 
 
     //報修回復

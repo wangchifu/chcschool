@@ -55,6 +55,12 @@ class InsideFilesController extends Controller
             ->orderBy('name')
             ->get();
 
+        //列出雲端檔案
+        $clouds = InsideFile::where('type', '3')
+            ->where('folder_id', $folder_id)
+            ->orderBy('name')
+            ->get();
+
         //學校目錄
         $f1 = storage_path('app/public/' . $school_code);
         $dir_size1 = get_dir_size($f1);
@@ -74,6 +80,7 @@ class InsideFilesController extends Controller
             'folders' => $folders,
             'folder_path' => $folder_path,
             'files' => $files,
+            'clouds' => $clouds,
             'per' => $per,
             'size' => $size,
         ];
@@ -136,15 +143,18 @@ class InsideFilesController extends Controller
 
     public function update(Request $request, InsideFile $inside_file)
     {
-        if (strpos($request->input('name'), "&")) {
-            return back()->withErrors(['error' => ['不得有特殊字元「&」！']]);
+        if($inside_file->type != 3){
+            if (strpos($request->input('name'), "&")) {
+                return back()->withErrors(['error' => ['不得有特殊字元「&」！']]);
+            }
+            if (strpos($request->input('name'), "\"")) {
+                return back()->withErrors(['error' => ['不得有特殊字元「"」！']]);
+            }
+            if (strpos($request->input('name'), "'")) {
+                return back()->withErrors(['error' => ["不得有特殊字元「'」！"]]);
+            }
         }
-        if (strpos($request->input('name'), "\"")) {
-            return back()->withErrors(['error' => ['不得有特殊字元「"」！']]);
-        }
-        if (strpos($request->input('name'), "'")) {
-            return back()->withErrors(['error' => ["不得有特殊字元「'」！"]]);
-        }
+        
 
         $school_code = school_code();
 
@@ -175,6 +185,7 @@ class InsideFilesController extends Controller
 
 
         $att['name'] = $request->input('name');
+        $att['url'] = $request->input('url');
         $inside_file->update($att);
 
         echo "<body onload='opener.location.reload();window.close();'>";
@@ -267,6 +278,19 @@ class InsideFilesController extends Controller
                 InsideFile::create($att);
             }
         }
+
+        return redirect()->route('inside_files.index', $request->input('path'));
+    }
+
+    public function upload_cloud(Request $request)
+    {
+        $att['name'] = $request->input('name');
+        $att['url'] = $request->input('url');
+        $att['type'] = 3; //雲端檔案
+        $att['user_id'] = auth()->user()->id;        
+        $att['folder_id'] = $request->input('folder_id');
+        
+        InsideFile::create($att);
 
         return redirect()->route('inside_files.index', $request->input('path'));
     }

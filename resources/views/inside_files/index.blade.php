@@ -77,7 +77,21 @@
                             @endif
                         </div>
                     @endforeach
-
+                    @foreach($clouds as $cloud)
+                        <?php
+                        $file_p = $path.'&'.$cloud->id;
+                        ?>
+                        <div class="col-lg-1 col-md2 col-sm-3 col-4">
+                            <a href="{{ $cloud->url }}" target="_blank">
+                                <img src="{{ asset('images/cloud.svg') }}">
+                                <small>{{ $cloud->name }}</small>
+                            </a>
+                            @if($cloud->user_id == auth()->user()->id or auth()->user()->admin==1)
+                                    <a href="javascript:open_window('{{ route('inside_files.edit',[$cloud->id,$file_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
+                                <a href="{{ route('inside_files.delete',$file_p) }}" id="delete_file{{ $cloud->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
+                            @endif
+                        </div>
+                    @endforeach
                 </div>
             </div>
             <hr>
@@ -112,6 +126,18 @@
                             </div>
                             {{ Form::close() }}
                         @endif
+                        {{ Form::open(['route' => 'inside_files.upload_cloud', 'method' => 'POST','id'=>'this_form3']) }}
+                            <div class="form-group">
+                                <label for="file"><strong>3.雲端連結</strong></label>
+                                {{ Form::text('name',null,['id'=>'name','class' => 'form-control','placeholder'=>'名稱','required'=>'required']) }}
+                                {{ Form::text('url',null,['id'=>'url','class' => 'form-control','placeholder'=>'連結','required'=>'required']) }}
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" name="folder_id" value="{{ $folder_id }}">
+                                <input type="hidden" name="path" value="{{ $path }}">
+                                <button class="btn btn-success btn-sm" onclick="if(confirm('您確定新增雲端檔案嗎?')){return true;}else return false"><i class="fas fa-plus"></i> 新增雲端連結</button>
+                            </div>
+                        {{ Form::close() }}
                     </div>
                 </div>
             @endcan
