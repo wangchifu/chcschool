@@ -25,7 +25,7 @@
                                 a:hover img{filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;}
                             </style>
                             <a href="{{ $photo_link->url }}" target="_blank">
-                                <img src="{{ asset($img) }}" class="figure-img img-fluid rounded">
+                                <img src="{{ asset($img) }}" class="figure-img img-fluid rounded" alt="編號{{ $photo_link->id }}圖片連結的縮圖">
                             </a>
                                 <figcaption class="figure-caption" style="word-wrap: break-word;word-break: break-all;">
                                     <small>
@@ -64,7 +64,7 @@
                                     a:hover img{filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;}
                                 </style>
                                 <a href="{{ $photo_link->url }}" target="_blank">
-                                    <img src="{{ asset($img) }}" class="figure-img img-fluid rounded">
+                                    <img src="{{ asset($img) }}" class="figure-img img-fluid rounded" alt="編號{{ $photo_link->id }}圖片連結的縮圖">
                                 </a>
                                     <figcaption class="figure-caption" style="word-wrap: break-word;word-break: break-all;">
                                         <small>
