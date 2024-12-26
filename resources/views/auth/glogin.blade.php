@@ -35,7 +35,7 @@
                         <div class="col-md-4 text-md-left">
                         </div>
                         <div class="col-md-6 text-md-left">
-                            <a href="{{ route('login') }}"><img src="{{ route('pic') }}" class="img-fluid"></a>                                                        
+                            <a href="{{ route('login') }}"><img src="{{ route('pic') }}" class="img-fluid" alt="驗證碼圖片"></a>                                                        
                             <a href="#!" id="loadAudio"><i class="fas fa-volume-up"></i> [語音播放]</a>
                             <audio id="myAudio">
                                 <source src="" type="audio/mp3">                                
