@@ -53,10 +53,10 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th width="80">
+                                <th width="80" scope="col">
                                     週別
                                 </th>
-                                <th width="100">
+                                <th width="100" scope="col">
                                     起迄
                                 @auth
                                     @if(auth()->user()->admin)
@@ -65,7 +65,7 @@
                                 @endauth
                                 </th>
                                 @foreach(config('chcschool.calendar_kind') as $v)
-                                    <th nowrap>
+                                    <th scope="col" nowrap>
                                         {{ $v }}
                                     </th>
                                 @endforeach

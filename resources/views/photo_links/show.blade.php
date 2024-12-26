@@ -51,7 +51,7 @@
                                 a:hover img{filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;}
                             </style>
                             <a href="{{ $photo_link->url }}" target="_blank">
-                                <img src="{{ asset($img) }}" height="50">
+                                <img src="{{ asset($img) }}" height="50" alt="{{ $photo_link->id }}"連結的縮圖>
                             </a>
                         </td>
                         <td>
