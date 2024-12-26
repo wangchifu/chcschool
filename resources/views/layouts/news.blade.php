@@ -40,7 +40,7 @@
             @endif
             <td colspan="{{ $n }}">
                 @if($can_see)
-                    <h5>
+                    <span style="font-size: 12px">
                         @if($post->top)
                             <p class="badge badge-danger">置頂</p>
                         @endif
@@ -51,7 +51,7 @@
                             <p class="badge badge-danger">內部公告</p>
                         @endif
                     <a href="{{ route('posts.show',$post->id) }}">{{ $post->title }}</a>
-                    </h5>
+                    </span><br>
                     <?php
                         $content = str_limit(strip_tags($post->content),'320');
                         $content = str_replace('&nbsp;','',$content);
@@ -73,9 +73,9 @@
                     </div>
                 @else
 		    <span class='text-danger'>[ 內部公告 ]</span>
-                    <h5>
+                    <span style="font-size: 12px">
                         {{ $title }}
-                    </h5>
+                    </span>
                     <div class="text-secondary">
                         @if($post->insite==null)
                             一般公告 / {{ $post->job_title }} / {{ $post->created_at }} / 點閱：{{ $post->views }}

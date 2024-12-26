@@ -39,7 +39,7 @@ $rss_feeds = \App\RssFeed::all();
 		
 	}
 ?>
-    <h4>{{ $rss_feed->title }}</h4>
+    <span style="font-size: 16px">{{ $rss_feed->title }}</span><br>
     @if($rss_feed->type==1)
     <div class="list-group">
         @foreach($feeds as $k=>$v)

@@ -29,9 +29,9 @@
     <div class="container-fluid">
         <a href="#page-top" style="margin-right: 10px;">
             @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
-                <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="d-inline-block align-top" alt="">
+                <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="d-inline-block align-top" alt="學校logo">
             @else
-                <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="d-inline-block align-top" alt="">
+                <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="d-inline-block align-top" alt="預設的學校logo">
             @endif
         </a>
         <a class="navbar-brand js-scroll-trigger" href="{{  route('index') }}" style="white-space:pre-wrap;">{{ $setup->site_name }}</a>

@@ -84,9 +84,9 @@
                             <strong>目錄</strong>
                             @auth                            
                             @if(($folder->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
-                                    <a href="javascript:open_window('{{ route('open_files.edit',[$folder->id,$folder_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
+                                    <a href="javascript:open_window('{{ route('open_files.edit',[$folder->id,$folder_p]) }}','新視窗')" title="編輯"><i class='fas fa-edit'></i></a>
                                 @if($n == 0)
-                                    <a href="{{ route('open_files.delete',$folder_p) }}" id="delete_folder{{ $folder->id }}" onclick="return confirm('確定刪除目錄嗎？')"><i class="fas fa-minus-square text-danger"></i></a>
+                                    <a href="{{ route('open_files.delete',$folder_p) }}" id="delete_folder{{ $folder->id }}" onclick="return confirm('確定刪除目錄嗎？')" title="刪除"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
                             @endif
                             @endauth
@@ -132,8 +132,8 @@
                             檔案
                             @auth
                                 @if(($file->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
-                                    <a href="javascript:open_window('{{ route('open_files.edit',[$file->id,$file_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
-                                    <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $file->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
+                                    <a href="javascript:open_window('{{ route('open_files.edit',[$file->id,$file_p]) }}','新視窗')" title="編輯"><i class='fas fa-edit'></i></a>
+                                    <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $file->id }}" onclick="return confirm('確定刪除？')" title="刪除"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
                             @endauth
                         </td>
@@ -176,8 +176,8 @@
                             雲端連結
                             @auth
                                 @if(($cloud->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
-                                    <a href="javascript:open_window('{{ route('open_files.edit',[$cloud->id,$file_p]) }}','新視窗')"><i class='fas fa-edit'></i></a>
-                                    <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $cloud->id }}" onclick="return confirm('確定刪除？')"><i class="fas fa-minus-square text-danger"></i></a>
+                                    <a href="javascript:open_window('{{ route('open_files.edit',[$cloud->id,$file_p]) }}','新視窗')" title="編輯"><i class='fas fa-edit'></i></a>
+                                    <a href="{{ route('open_files.delete',$file_p) }}" id="delete_file{{ $cloud->id }}" onclick="return confirm('確定刪除？')" title="刪除"><i class="fas fa-minus-square text-danger"></i></a>
                                 @endif
                             @endauth
                         </td>

@@ -105,10 +105,8 @@ $first_w = get_date_w($this_month_date[1]);
         })
     }
 
-    function show_calendar(result){
-        data = '<h2>';
-        data = data+'<span style="text-decoration:none;" onclick="go_submit(\''+result['last_month']+'\')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span> '+result['this_month']+' <span style="text-decoration:none;" onclick="go_submit(\''+result['next_month']+'\')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>';
-        data = data+'</h2>';
+    function show_calendar(result){        
+        data = '<span style="text-decoration:none;font-size: 24px" onclick="go_submit(\''+result['last_month']+'\')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span> '+result['this_month']+' <span style="text-decoration:none;font-size: 24px" onclick="go_submit(\''+result['next_month']+'\')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>';        
         data = data+'<div class="table-responsive"><table class="table table-bordered table-sm">';
         data = data+'<thead>';
         data = data+'<tr style="background-color: #888888">';
@@ -193,10 +191,8 @@ $first_w = get_date_w($this_month_date[1]);
 {{ Form::open(['route' => 'monthly_calendars.return_month', 'method' => 'POST','id'=>'calendar_month','onsubmit'=>'return false']) }}
 <input type="hidden" name="item_month" id="item_month">
 {{ Form::close() }}
-<div id="calendar_content">
-    <h2>
-        <span style="text-decoration:none;" onclick="go_submit('{{ substr($dt->subMonth()->toDateTimeString(),0,7) }}')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span> {{ $this_month }} <span style="text-decoration:none;" onclick="go_submit('{{ $next_month }}')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>
-    </h2>
+<div id="calendar_content">    
+    <span style="text-decoration:none;font-size: 24px;" onclick="go_submit('{{ substr($dt->subMonth()->toDateTimeString(),0,7) }}')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span> {{ $this_month }} <span style="text-decoration:none;font-size: 24px" onclick="go_submit('{{ $next_month }}')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>    
     <div class="table-responsive">
     <table class="table table-bordered table-sm">
         <thead>

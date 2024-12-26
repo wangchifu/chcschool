@@ -89,7 +89,7 @@
             data = data +'<thead>';
             data = data +'<tr>';
             data = data +'<td rowspan="2">';
-            data = data + '<h4><span onclick="change_classroom_order(\''+result['last_sunday']+'\',\''+k+'\')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span></h4>';
+            data = data + '<span style="font-size: 16px;" onclick="change_classroom_order(\''+result['last_sunday']+'\',\''+k+'\')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span>';
             data = data + '</td>';
             for(var k1 in result['week']){
                 data = data +'<td>';
@@ -103,7 +103,7 @@
                 data = data +'</td>';
             }
             data = data +'<td rowspan="2">';
-            data = data + '<h4><span onclick="change_classroom_order(\''+result['next_sunday']+'\',\''+k+'\')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span></h4>';
+            data = data + '<span style="font-size: 16px;" onclick="change_classroom_order(\''+result['next_sunday']+'\',\''+k+'\')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>';
             data = data + '</td>';
             data = data +'</tr>';
             data = data +'<tr>';
@@ -180,7 +180,7 @@
                 <thead>
                 <tr>
                     <td rowspan="2">
-                        <h4><span onclick="change_classroom_order('{{ $last_sunday }}','{{ $classroom->id }}')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span></h4>
+                        <span style="font-size: 16px;" onclick="change_classroom_order('{{ $last_sunday }}','{{ $classroom->id }}')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></span>
                     </td>
                     @foreach($week as $k => $v)
                         <?php
@@ -200,7 +200,7 @@
                         </td>
                     @endforeach
                     <td rowspan="2">
-                        <h4><span onclick="change_classroom_order('{{ $next_sunday }}','{{ $classroom->id }}')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span></h4>
+                        <span style="font-size: 16px;" onclick="change_classroom_order('{{ $next_sunday }}','{{ $classroom->id }}')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></span>
                     </td>
                 </tr>
                 <tr>

@@ -52,10 +52,10 @@
                             <div class="carousel-item {{ $active }}">
                                 @if($v2['link'] != null)
                                     <a href="{{ $v2['link'] }}" target="_blank">
-                                        <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}">
+                                        <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" alt="有連結的橫幅{{ $k1 }}">
                                     </a>
                                 @else
-                                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}">
+                                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" alt="橫幅{{ $k1 }}">
                                 @endif
                                 <div class="carousel-caption d-none d-md-block">
                                     @if($v2['title'] != null)

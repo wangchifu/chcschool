@@ -196,7 +196,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">置頂至哪一天？</h5>
+          <span style="font-size: 16px;" class="modal-title" id="exampleModalLabel">置頂至哪一天？</span><br>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -204,7 +204,7 @@
         <form id="top_up_form" action="{{ route('posts.top_up2',$post->id) }}" method="post">
             @csrf
         <div class="modal-body">
-          <input type="date" name="top_date" id="top_date" class="form-control" required="required">
+          <input type="date" name="top_date" id="top_date" class="form-control" title="請填入置頂至哪一天" required="required">
         </div>
         <div class="modal-footer">
           <span class="btn btn-secondary" data-dismiss="modal">取消</span>

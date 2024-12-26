@@ -9,7 +9,7 @@
             <div class="card-header"><h4>教職員GSuite登入</h4></div>
 
             <div class="card-body">
-                <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}"></a>
+                <a href="https://gsuite.chc.edu.tw" target="_blank"><img src="{{ asset('images/gsuite_logo.png') }}" ale="彰化gsuite的logo"></a>
                 @if(session('login_error') < 3)
                 <form id="this_form" method="POST" action="{{ route('gauth') }}" onsubmit="change_button()">
                     @csrf

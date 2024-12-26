@@ -46,16 +46,16 @@
         <table>
             <tr>                         
                 <td>
-                    <input type="text" class="form-control" name="search" id="search" placeholder="關鍵字" required style="width:120px;">
+                    <input type="text" class="form-control" name="search" id="search" title="請輸入要搜尋公告的關鍵字" placeholder="關鍵字" required style="width:120px;">
                 </td>
                 <td>
-                    <input type="text" class="form-control" name="check" placeholder="{{ session('search') }}" required maxlength="3" style="width:100px;">
+                    <input type="text" class="form-control" name="check" title="請輸入驗證碼" placeholder="{{ session('search') }}" required maxlength="3" style="width:100px;">
                 </td>
                 <td>
-                    <button class="btn btn-secondary btn-sm"><i class="fas fa-search"></i></button>
+                    <button class="btn btn-secondary btn-sm" aria-label="提交搜尋公告的表單"><i class="fas fa-search"></i></button>
                 </td>                
                 <td>
-                    <a href="{{ route('rss') }}" target="_blank"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a></td>           
+                    <a href="{{ route('rss') }}" title="連結到RSS畫面" target="_blank"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a></td>           
                 <td>
             </tr>
         </table>
