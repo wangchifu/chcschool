@@ -32,7 +32,7 @@
                 @if($post->title_image)
                     <td width="20%">
                         <a href="{{ route('posts.show',$post->id) }}">
-                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded">
+                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded" alt="{{ $post->id }}公告的示意圖片">
                         </a>
                     </td>
                     <?php $n=1; ?>

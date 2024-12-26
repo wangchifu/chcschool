@@ -14,7 +14,7 @@
             <td>
                 <form id="select_type_form" action='{{ route('posts.select_type') }}' method='post'>
                     @csrf                    
-                    <select id="select_type" name="select_type" class="form-control">
+                    <select id="select_type" name="select_type" class="form-control" title="選擇公告類別">
                         <option value="a">請選類別</option>
                         @foreach($post_types as $post_type)
                             @if($post_type->disable != 1)
@@ -55,7 +55,7 @@
                     <button class="btn btn-secondary btn-sm" aria-label="提交搜尋公告的表單"><i class="fas fa-search"></i></button>
                 </td>                
                 <td>
-                    <a href="{{ route('rss') }}" title="連結到RSS畫面" target="_blank"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a></td>           
+                    <a href="{{ route('rss') }}" title="連結到RSS畫面" target="_blank" aria-label="查看最新的RSS訂閱內容"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a></td>           
                 <td>
             </tr>
         </table>

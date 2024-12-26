@@ -91,7 +91,7 @@
                         @if($can_see)
                             @if($post->title_image)
                                 <a href="{{ route('posts.show',$post->id) }}">
-                                    <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100px">
+                                    <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100px" alt="{{ $post->id }}公告的示意圖片">
                                 </a>
                             @endif
                         @endif
@@ -202,7 +202,7 @@
                             @if($can_see)
                                 @if($post->title_image)
                                     <a href="{{ route('posts.show',$post->id) }}">
-                                        <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100px">
+                                        <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100px" alt="{{ $post->id }}公告的示意圖片">
                                     </a>
                                 @endif
                             @endif
