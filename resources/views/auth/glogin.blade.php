@@ -45,7 +45,7 @@
                     <div class="form-group row">
                         <label for="chaptcha" class="col-md-4 col-form-label text-md-right">驗證碼</label>                        
                         <div class="col-md-6">
-                            <input tabindex="3" id="password" type="text" class="form-control" name="chaptcha" required placeholder="上圖國字轉阿拉伯數字" maxlength="5">                            
+                            <input tabindex="3" id="chaptcha" type="text" class="form-control" name="chaptcha" required placeholder="上圖國字轉阿拉伯數字" maxlength="5" title="請輸入驗證碼">                            
                         </div>
                     </div>
 

@@ -31,7 +31,7 @@
                 <small>{{ $calendar_week->start_end }}</small>
             </td>
             @foreach(config('chcschool.calendar_kind') as $k =>$v)
-                <th>
+                <th scope="col">
                     @if(!empty($calendar_data[$calendar_week->id][$k]))
                         <?php $i=1; ?>
                         @foreach($calendar_data[$calendar_week->id][$k] as $k=>$v)

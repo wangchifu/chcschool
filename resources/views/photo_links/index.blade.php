@@ -127,7 +127,7 @@
                                             $school_code = school_code();
                                             $img = "storage/".$school_code.'/photo_links/'.$v['image'];
                                         ?>
-                                        <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
+                                        <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50" alt="連結縮圖"></a>
                                     </td>                                    
                                     <td>
                                         <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
@@ -174,7 +174,7 @@
                                                 $school_code = school_code();
                                                 $img = "storage/".$school_code.'/photo_links/'.$v['image'];
                                             ?>
-                                            <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50"></a>
+                                            <a href="{{ $v['url'] }}" target="_blank"><img src="{{ asset($img) }}" height="50" alt="連結縮圖"></a>
                                         </td>                                        
                                         <td>
                                             <a href="{{ $v['url'] }}" target="_blank">{{ $v['name'] }}</a>
