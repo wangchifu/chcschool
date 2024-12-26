@@ -83,8 +83,7 @@
                                 @endif
                                 @if($can_see)
                                     <a href="{{ route('posts.show',$post->id) }}">{{ $title }}</a>
-                                @else
-                    
+                                @else                    
                                     {{ $title }}
                                 @endif
                                 @if(!empty($photos))

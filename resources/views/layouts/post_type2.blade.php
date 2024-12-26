@@ -51,7 +51,7 @@
             @foreach($posts as $post)
                 <tr>
                     <td>
-                        <span style="font-size: 12px">
+                        <span style="font-size: 20px">
                             @if($post->top)
                                 <p class="badge badge-danger">置頂</p>
                             @endif
@@ -162,7 +162,7 @@
                 @foreach($posts as $post)
                     <tr>
                         <td>
-                            <h5>
+                            <span style="font-size: 20px">
                                 @if($post->top)
                                     <p class="badge badge-danger">置頂</p>
                                 @endif
@@ -194,7 +194,7 @@
                                     <span class='text-danger'>[ 內部公告 ]</span>
                                     {{ $title }}
                                 @endif
-                            </h5>
+                            </span><br>
                             <?php
                             $content = str_limit(strip_tags($post->content),'150');
                             $content = str_replace('&nbsp;','',$content);
