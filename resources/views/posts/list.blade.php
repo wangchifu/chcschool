@@ -53,10 +53,12 @@
                 </td>
                 <td>
                     <button class="btn btn-secondary btn-sm" aria-label="提交搜尋公告的表單"><i class="fas fa-search"></i></button>
-                </td>                
+                </td>     
+                <!--           
                 <td>
                     <a href="{{ route('rss') }}" title="連結到RSS畫面" target="_blank" aria-label="查看最新的RSS訂閱內容"><i class="fas fa-rss-square h2" style="color:#FF9224"></i></a></td>           
                 <td>
+                -->
             </tr>
         </table>
         @include('layouts.errors')
