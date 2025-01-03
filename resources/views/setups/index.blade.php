@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group">
                         <label for="views">學校真實IP範圍</label><br>
-                        <small>[<a href="http://gg.gg/chc_ipv4"  target="_blank">ipv4參考文件</a>]</small> <small>[<a href="http://gg.gg/chc_ipv6" target="_blank">ipv6參考文件</a>]</small>
+                        <small>[<a href="{{ asset('ipv4.xlsx') }}"  target="_blank">ipv4參考文件</a>]</small> <small>[<a href="{{ asset('ipv6.xlsx') }}" target="_blank">ipv6參考文件</a>]</small>
                         <table>
                             <tr>
                                 <td>
