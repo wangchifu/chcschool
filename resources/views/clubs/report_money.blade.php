@@ -103,7 +103,9 @@
                                             @if(isset($register_data1[$k][$k2]))
                                                 {{ $register_data1[$k][$k2] }}
                                                 <?php 
-                                                    $all1 = $all1+$register_data1[$k][$k2];
+                                                    if(isset($register_data1[$k][$k2])){
+                                                        $all1 = $all1+$register_data1[$k][$k2];
+                                                    }                                                    
                                                 ?>
                                             @else
                                             @endif
@@ -188,7 +190,9 @@
                                             @endif
                                         </td>
                                         <?php 
-                                            $all2 = $all2+$register_data2[$k][$k2];
+                                            if(isset($register_data2[$k][$k2])){
+                                                $all2 = $all2+$register_data2[$k][$k2];                                                                                            
+                                            }                               
                                         ?>
                                     @endforeach
                                 </tr>

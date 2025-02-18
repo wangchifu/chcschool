@@ -1022,7 +1022,7 @@ class ClubsController extends Controller
             $prepare = $club->prepare;
             $i = 1;
             $j = 1;
-            if (count($club_registers) < $club->people) {
+            if (count($club_registers) < $club->people or count($club_registers)==0) {
                 $open = "不開班";
             } else {
                 $open = "開班成功";
