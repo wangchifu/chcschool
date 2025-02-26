@@ -186,6 +186,10 @@ class OpenIDController extends Controller
 
                 User::create($att);
             } else {
+                if($user->disable==1){
+                    return redirect()->route('login')->withErrors(['gsuite_error' => ['你被停權了']]);
+                }
+
                 //有此使用者，即更新使用者資料
                 $att['name'] = $user_obj['name'];
                 $att['edu_key'] = $user_obj['personid'];
