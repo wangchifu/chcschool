@@ -109,8 +109,8 @@ class OpenIDController extends Controller
       //echo "<hr>";
       //print_r($profile);      
       //echo "<hr>";
-      print_r($edufile);      
-      die();
+      //print_r($edufile);      
+      //die();
 
       $user_obj['username'] = $userinfo['sub'];
       $user_obj['password'] = "openID";
@@ -124,10 +124,80 @@ class OpenIDController extends Controller
         //學生禁止訪問
         if ($user_obj['success']) {
 
-            if ($obj['kind'] != "教職員") {
-                return back()->withErrors(['gsuite_error' => ['非教職員 GSuite 帳號']]);
+            if ($user_obj['kind'] == "學生") {
+                return redirect()->route('login')->withErrors(['gsuite_error' => ['非教職員帳號']]);
             }
             
+            $database = config('app.database');
+            if (isset($_SERVER['HTTP_HOST'])) {
+                $d = $database[$_SERVER['HTTP_HOST']];
+            } else {
+                $d = env('DB_DATABASE');
+            }
+
+            $code = $user_obj['code']; 
+            $schools_array = config('chcschool.schools');
+            $school = $schools_array[$user_obj['code']];
+
+            if ($user_obj['code'] != substr($d, 1, 6)) {
+                $check_code = 0;
+                //民權國小 國中互登
+                if(substr($d, 1, 6) == "074760" and $user_obj['code']=="074543"){
+                    $check_code = 1;
+                    $code = $user_obj['code'];
+                }
+                //信義國小 國中互登
+                if(substr($d, 1, 6) == "074541" and $user_obj['code']=="074774"){
+                    $check_code = 1;
+                    $code = $user_obj['code'];
+                }
+                //鹿江國小 國中互登
+                if(substr($d, 1, 6) == "074542" and $user_obj['code']=="074778"){
+                    $check_code = 1;
+                    $code = $user_obj['code'];
+                }
+                //原斗國小 國中互登
+                if(substr($d, 1, 6) == "074537" and $user_obj['code']=="074745"){
+                    $check_code = 1;
+                    $code = $user_obj['code'];
+                }                                                
+                
+                if ($check_code == 0) {
+                    return redirect()->route('login')->withErrors(['gsuite_error' => ['非本校教職員帳號']]);
+                }
+            }
+            
+          //是否已有此帳號
+            $user = User::where('edu_key', $user_obj['personid'])                
+                ->first();
+
+            if (empty($user)) {
+                //無使用者，即建立使用者資料
+                $att['username'] = $user_obj['username'];
+                $att['name'] = $user_obj['name'];
+                $att['edu_key'] = $user_obj['personid'];
+                $att['uid'] = "openID";
+                $att['password'] = $user_obj['password'];
+                $att['code'] = $code;
+                $att['school'] = $school;
+                $att['kind'] = $user_obj['kind'];
+                $att['title'] = $user_obj['title'];
+                $att['login_type'] = "openID";
+
+                User::create($att);
+            } else {
+                //有此使用者，即更新使用者資料
+                $att['name'] = $user_obj['name'];
+                $att['edu_key'] = $user_obj['personid'];
+                $att['uid'] = "openID";
+                $att['password'] = $user_obj['password'];
+                $att['code'] = $code;
+                $att['school'] = $school;
+                $att['kind'] = $user_obj['kind'];
+                $att['title'] = $user_obj['title'];                
+
+                $user->update($att);
+            }
 
             
             Auth::login($user);
