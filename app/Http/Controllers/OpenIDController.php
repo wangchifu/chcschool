@@ -184,7 +184,7 @@ class OpenIDController extends Controller
                 $att['title'] = $user_obj['title'];
                 $att['login_type'] = "openID";
 
-                User::create($att);
+                $user = User::create($att);
             } else {
                 if($user->disable==1){
                     return redirect()->route('login')->withErrors(['gsuite_error' => ['你被停權了']]);
