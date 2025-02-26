@@ -51,6 +51,10 @@ Route::post('login', 'Auth\MLoginController@auth')->name('auth');
 #登出
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
+//openid登入
+Route::get('sso', 'OpenIDController@sso')->name('sso');
+Route::get('auth/callback', 'OpenIDController@callback')->name('callback');
+
 #註冊
 //Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 //Route::post('register', 'Auth\RegisterController@register')->name('register.post');
