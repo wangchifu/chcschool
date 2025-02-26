@@ -136,8 +136,7 @@ class GLoginController extends Controller
             //$username = str_replace('@chc.edu.tw','',$request->input('username'));
             $u = explode('@', $request->input('username'));
             $username = $u[0];
-            $user = User::where('username', $username)
-                ->where('login_type', 'gsuite')
+            $user = User::where('edu_key', $obj['edu_key'])                
                 ->first();
 
             if (empty($user)) {
