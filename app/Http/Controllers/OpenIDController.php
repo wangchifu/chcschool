@@ -140,7 +140,12 @@ class OpenIDController extends Controller
 
             $code = $user_obj['code']; 
             $schools_array = config('chcschool.schools');
-            $school = $schools_array[$user_obj['code']];
+            if(is_array($user_obj['code'],$schools_array)){
+              $school = $schools_array[$user_obj['code']];
+            }else{
+              return redirect()->route('login')->withErrors(['gsuite_error' => ['非學校教職員']]);
+            }
+            
 
             if ($user_obj['code'] != substr($d, 1, 6)) {
                 $check_code = 0;
