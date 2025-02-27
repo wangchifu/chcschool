@@ -119,6 +119,9 @@ class OpenIDController extends Controller
       $user_obj['personid'] = $profile['personid'];
       $user_obj['code'] = $edufile['schoolid'];
       $user_obj['kind'] = $edufile['titles'][0]['titles'][0];      
+      if ($user_obj['kind'] == "學生") {
+        return redirect()->route('login')->withErrors(['gsuite_error' => ['非教職員帳號']]);
+      }
       $user_obj['title'] = $edufile['titles'][0]['titles'][1];
 
         //學生禁止訪問
