@@ -28,6 +28,13 @@
                         <label class="text-primary"><strong>填 EMail 可收回覆信件</strong></label>
                         <input type="email" name="email" value="{{ auth()->user()->email }}" class="form-control">
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="iknow" required>
+                        <label class="form-check-label text-danger" for="iknow">
+                          <strong>我知道這裡不是報修物品的地方</strong>
+                        </label>
+                    </div>
+                    <br>
                     <div class="form-group">
                         <label class="text-danger"><strong>反應內容*</strong></label>
                         <textarea name="content" class="form-control" required placeholder="請詳細描述，或留公務電話聯絡"></textarea>
