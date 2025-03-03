@@ -37,7 +37,7 @@
                     <br>
                     <div class="form-group">
                         <label class="text-danger"><strong>反應內容*</strong></label>
-                        <textarea name="content" class="form-control" required placeholder="請詳細描述，或留公務電話聯絡"></textarea>
+                        <textarea name="content" class="form-control" required placeholder="學校網頁系統有什麼問題，請詳細描述，或留公務電話聯絡"></textarea>
                     </div>
                     <div class="form-group">
                         <label>附件</label><br>
