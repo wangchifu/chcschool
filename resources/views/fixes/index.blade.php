@@ -24,9 +24,16 @@
                         <tr>
                             <td>
                                 <div class="mb-3">
-                                    <label for="exampleInputEmail1" class="form-label"><i class="fab fa-line"></i> LINE權杖</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="line_key" value="{{ auth()->user()->line_key }}" required>
+                                    <label for="exampleInputEmail1" class="form-label"><i class="fab fa-line"></i> LINE NOTIFY 權杖</label>
+                                    <input type="text" class="form-control" id="line_key" aria-describedby="emailHelp" name="line_key" value="{{ auth()->user()->line_key }}">                                
                                     <div id="emailHelp" class="form-text">新張貼會發LINE通知給你.</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label"><i class="fab fa-line"></i> LINE BOT</label> [<a href="{{ asset('line_bot.pdf') }}" target="_blank">教學</a>]
+                                    <input type="text" class="form-control" id="line_bot_token" aria-describedby="emailHelp" name="line_bot_token" value="{{ auth()->user()->line_bot_token }}" placeholder="line bot token">
+                                    <input type="text" class="form-control" id="line_user_id" aria-describedby="emailHelp" name="line_user_id" value="{{ auth()->user()->line_user_id }}" placeholder="user_id">
                                 </div>
                             </td>
                             <td>

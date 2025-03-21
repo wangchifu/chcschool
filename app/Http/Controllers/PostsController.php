@@ -196,6 +196,17 @@ class PostsController extends Controller
                     line_notify($setup->post_line_token,$string);
                 }
             }
+
+            //不是未來公告的 才送 line notify
+            $send_line_bot = $request->input('send_line_bot_token');
+            if($send_line_bot == "yes"){
+                $setup = Setup::first();
+                if (!empty($setup->post_line_bot_token)) {
+                    $subject = $att['job_title'] . "公告了：\n" . $att['title'];            
+                    $string = $subject."\n詳細內容請點擊 https://". $_SERVER['HTTP_HOST']."/posts/".$post->id;                    
+                    line_bot($setup->post_line_group_id,$setup->post_line_bot_token,$string);
+                }
+            }
             
         }
         

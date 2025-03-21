@@ -533,7 +533,8 @@ class SetupController extends Controller
     {        
         $setup = Setup::first();
         $att['post_line_token'] = $request->input('post_line_token');
-        
+        $att['post_line_bot_token'] = $request->input('post_line_bot_token');
+        $att['post_line_group_id'] = $request->input('post_line_group_id');        
         $setup->update($att);
         echo "<body onload='opener.location.reload();window.close();'>";
     }

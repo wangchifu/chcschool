@@ -23,6 +23,8 @@ class Setup extends Model
         'ipv6',
         'all_post',
         'post_line_token',
+        'post_line_bot_token',
+        'post_line_group_id',
         'close_website',
         'homepage_name',
         'post_name',

@@ -125,6 +125,12 @@ class FixController extends Controller
                 $string = $subject."\n\n".$body;
                 line_notify($user_power->user->line_key,$string);
             }
+            if (!empty($user_power->user->line_bot_token)) {
+                $subject = '學校網站中「' . auth()->user()->name . '」在「報修設備」寫了：' . $att['title'];
+                $body = $att['content'];
+                $string = $subject."\n\n".$body;
+                line_bot($user_power->user->line_user_id,$user_power->user->line_bot_token,$string);
+            }
         }
         return redirect()->route('fixes.index');
     }
@@ -292,6 +298,8 @@ class FixController extends Controller
 
     function store_notify(Request $request){
         $att['line_key'] =  $request->input('line_key');
+        $att['line_bot_token'] =  $request->input('line_bot_token');
+        $att['line_user_id'] =  $request->input('line_user_id');
         $att['email'] =  $request->input('email');
         $user = User::where('id',auth()->user()->id)->first();
         $user->update($att);

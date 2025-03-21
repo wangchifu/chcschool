@@ -110,11 +110,15 @@
             <td><hr></td>
         </tr>
         <tr>
-            <td>
-                <label for="post_show_number">發公告時，順便使用 line notify 發訊息(但延後上架者無法使用)，權杖：</label>
+            <td>                
                 <form action="{{ route('setups.post_line_token') }}" method="post">
                     @csrf                
-                {{ Form::text('post_line_token',$setup->post_line_token,['id'=>'post_line_token','class' => 'form-control','placeholder'=>"line權杖"]) }}
+                <label for="post_line_token">發公告時，順便使用 line notify 發訊息(但延後上架者無法使用)，權杖：</label>
+                {{ Form::text('post_line_token',$setup->post_line_token,['id'=>'post_line_token','class' => 'form-control','placeholder'=>"line notify權杖"]) }}
+                <br>
+                <label for="post_line_bot_token">發公告時，順便使用 line bot 發訊息(但延後上架者無法使用)，權杖及ID： [<a href="{{ asset('line_bot.pdf') }}" target="_blank">教學</a>]</label>
+                {{ Form::text('post_line_bot_token',$setup->post_line_bot_token,['id'=>'post_line_bot_token','class' => 'form-control','placeholder'=>"line bot 權杖"]) }}
+                {{ Form::text('post_line_group_id',$setup->post_line_group_id,['id'=>'post_line_group_id','class' => 'form-control','placeholder'=>"line group 或 user id"]) }}
                 <button class="btn btn-primary btn-sm" onclick="return confirm('確定？')">儲存</button>    
                 </form>
             </td>

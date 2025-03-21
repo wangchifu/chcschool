@@ -31,6 +31,8 @@ class User extends Authenticatable
         'kind',
         'title',
         'line_key',
+        'line_bot_token',
+        'line_user_id',
         'login_type',
         'disable',
     ];
