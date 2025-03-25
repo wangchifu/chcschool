@@ -24,8 +24,9 @@ $active['list'] ="active";
                     <tr>
                         <td>
                             <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label"><i class="fab fa-line"></i> LINE權杖</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="line_key" value="{{ auth()->user()->line_key }}" required>
+                                <label for="exampleInputEmail1" class="form-label"><i class="fab fa-line"></i> LINE BOT [<a href="{{ asset('line_bot.pdf') }}" target="_blank">教學</a>] [<a href="https://www.youtube.com/watch?v=PgYwIH2bHO0" target="_blank">影片</a>]</label>                                                                    
+                                <input type="text" class="form-control" id="line_bot_token" name="line_bot_token" value="{{ auth()->user()->line_bot_token }}" placeholder="line bot token">
+                                <input type="text" class="form-control" id="line_user_id" name="line_user_id" value="{{ auth()->user()->line_user_id }}" placeholder="user_id">                                                                
                                 <div id="emailHelp" class="form-text">有借用單時，會發LINE通知給你.</div>
                               </div>
                         </td>

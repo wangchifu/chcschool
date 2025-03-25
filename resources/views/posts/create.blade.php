@@ -132,10 +132,12 @@
                         @endif
                     </div>                  
                     @if($setup->post_line_token)
+                    <!--
                     <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="send_line_token" name="send_line_token" value="yes">
                         <label class="form-check-label text-danger" for="send_line_token"><i class="fab fa-line text-success h3"></i> 同步發至 line notify (三月底停用)</label>
                     </div>
+                    -->
                     @endif  
                     @if($setup->post_line_bot_token)
                     <div class="form-group form-check">

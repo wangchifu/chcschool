@@ -387,11 +387,11 @@ class LendsController extends Controller
 
         $lend_order = LendOrder::create($att);
 
-        if(!empty($lend_order->owner_user->line_key)){           
+        if(!empty($lend_order->owner_user->line_user_id)){           
             $lend_section_array = config('chcschool.lend_sections');
             $ps = ($lend_order->ps)?"\n備註：".$lend_order->ps:null;            
-            $string =  auth()->user()->name."在借用系統登記\n\n".$lend_order->lend_item->name." 數量：".$lend_order->num."\n於 ".$lend_order->lend_date." ".$lend_section_array[$lend_order->lend_section]." 來借\n於 ".$lend_order->back_date." ".$lend_section_array[$lend_order->back_section]." 來還\n".$ps;
-            line_notify($lend_order->owner_user->line_key,$string);
+            $string =  auth()->user()->name."在借用系統登記\n\n".$lend_order->lend_item->name." 數量：".$lend_order->num."\n於 ".$lend_order->lend_date." ".$lend_section_array[$lend_order->lend_section]." 來借\n於 ".$lend_order->back_date." ".$lend_section_array[$lend_order->back_section]." 來還\n".$ps;            
+            line_bot($lend_order->owner_user->line_user_id,$lend_order->owner_user->line_bot_token,$string);            
         }
         
 
@@ -501,6 +501,8 @@ class LendsController extends Controller
 
     function store_line_notify(Request $request){
         $att['line_key'] =  $request->input('line_key');
+        $att['line_bot_token'] =  $request->input('line_bot_token');
+        $att['line_user_id'] =  $request->input('line_user_id');
         $user = User::where('id',auth()->user()->id)->first();
         $user->update($att);
         return redirect()->route('lends.list');
