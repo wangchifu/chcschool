@@ -213,8 +213,8 @@ class MonthlyCalendarController extends Controller
     }
 
     public function return_month(Request $request)
-    {
-        $this_month = $request->input('item_month');
+    {        
+        $this_month = $request->input('item_month');        
         $items = MonthlyCalendar::where('item_date', 'like', $this_month . '%')->get();
 
         $item_array = [];
@@ -225,11 +225,12 @@ class MonthlyCalendarController extends Controller
         }
 
         $d = explode('-', $this_month);
-        $dt = Carbon::create($d[0], $d[1]);
-        $next_month =  substr($dt->addMonth()->toDateTimeString(), 0, 7);
-        $dt = Carbon::create($d[0], $d[1]);
-        $last_month =  substr($dt->subMonth()->toDateTimeString(), 0, 7);
-
+        $dt = Carbon::create($d[0], $d[1],1);        
+        $next_month = $dt->addMonthsNoOverflow(1)->format('Y-m');
+        
+        $dt2 = Carbon::create($d[0], $d[1],1);
+        $last_month = $dt2->subMonthsNoOverflow(1)->format('Y-m');
+        
         $this_month_date = get_month_date($this_month);
         foreach ($this_month_date as $k => $v) {
             $this_month_date_w[$v] = get_date_w($v);
