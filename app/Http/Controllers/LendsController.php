@@ -413,7 +413,8 @@ class LendsController extends Controller
         if(!empty($lend_order->owner_user->line_key)){           
             $lend_section_array = config('sms.lend_sections');                   
             $string =  auth()->user()->name."已取消在借用系統登記的\n\n".$lend_order->lend_item->name." 數量：".$lend_order->num."\n原本於 ".$lend_order->lend_date." ".$lend_section_array[$lend_order->lend_section]." 來借";
-            line_notify($lend_order->owner_user->line_key,$string);
+            line_bot($lend_order->owner_user->line_user_id,$lend_order->owner_user->line_bot_token,$string);
+            //line_notify($lend_order->owner_user->line_key,$string);
         }
 
         return back();

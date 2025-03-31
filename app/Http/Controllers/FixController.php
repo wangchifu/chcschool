@@ -123,7 +123,7 @@ class FixController extends Controller
                 $subject = '學校網站中「' . auth()->user()->name . '」在「報修設備」寫了：' . $att['title'];
                 $body = $att['content'];
                 $string = $subject."\n\n".$body;
-                line_notify($user_power->user->line_key,$string);
+                //line_notify($user_power->user->line_key,$string);
             }
             if (!empty($user_power->user->line_bot_token)) {
                 $subject = '學校網站中「' . auth()->user()->name . '」在「報修設備」寫了：' . $att['title'];

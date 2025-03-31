@@ -193,7 +193,7 @@ class PostsController extends Controller
                 if (!empty($setup->post_line_token)) {
                     $subject = $att['job_title'] . "公告了：\n" . $att['title'];            
                     $string = $subject."\n詳細內容請點擊 https://". $_SERVER['HTTP_HOST']."/posts/".$post->id;
-                    line_notify($setup->post_line_token,$string);
+                    //line_notify($setup->post_line_token,$string);
                 }
             }
 
