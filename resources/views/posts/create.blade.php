@@ -142,7 +142,7 @@
                     @if($setup->post_line_bot_token)
                     <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="send_line_bot_token" name="send_line_bot_token" value="yes">
-                        <label class="form-check-label text-danger" for="send_line_bot_token"><i class="fab fa-line text-success h3"></i> 同步發至 line bot (未來公告則不會發)</label>
+                        <label class="form-check-label text-danger" for="send_line_bot_token"><i class="fab fa-line text-success h3"></i> 同步發至 line bot (1.未來公告則不會發出，2.僅有200則免費的推播，群組一則以總人數計)</label>
                     </div>
                     @endif
                     <div class="form-group">
