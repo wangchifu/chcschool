@@ -52,7 +52,7 @@ foreach($user_datas as $k1 => $v1){
     $table .= "
                <tr>
                 <td align='center' width='250'>繳　款　人</td>
-                <td colspan='2'>{$i}.{$k1}</td>
+                <td colspan='2'>{$i}.{$user2name[$k1]}</td>
                </tr>
                <tr>
                 <td align='center'>明細</td>

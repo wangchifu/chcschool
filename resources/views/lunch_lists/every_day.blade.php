@@ -81,7 +81,7 @@
                         @foreach($user_data as $k1=>$v1)
                             <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF' onmouseover="this.style.backgroundColor='#FFCDE5';" onMouseOut="this.style.backgroundColor='#FFFFFF';">
                                 <td>
-                                    {{ $i }}{{ $k1 }}<br>
+                                    {{ $i }}{{ $user2name[$k1] }}<br>
                                 </td>
                                 <td>
                                     {{ $place_data[$k1] }}

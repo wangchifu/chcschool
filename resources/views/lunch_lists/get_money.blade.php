@@ -22,7 +22,7 @@ echo "<body onload='window.print()'>";
     @foreach($user_data as $k1=>$v1)
         <tr bgcolor='#FFFFFF'  bgcolor='#FFFFFF'>
             <td>
-                {{ $i }}{{ $k1 }}<br>
+                {{ $i }}{{ $user2name[$k1] }}<br>
             </td>
             <td>
                 {{ $days_data[$k1] }}

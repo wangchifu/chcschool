@@ -32,7 +32,7 @@ $i=1;
                 教師午餐收費通知
             </td>
             <td>
-                {{ $i }} - {{ $k1 }}<br>
+                {{ $i }} - {{ $user2name[$k1] }}<br>
             </td>
             <td>
                 單價：{{ $lunch_setup->teacher_money }}

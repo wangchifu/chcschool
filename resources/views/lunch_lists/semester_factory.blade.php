@@ -43,7 +43,7 @@
                 @foreach($v as $k2=>$v2)
                     <tr>
                         <td>
-                            {{ $k2 }}
+                            {{ $user2name[$k2] }}
                         </td>
                         <td>
                             {{ $v2 }}

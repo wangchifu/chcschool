@@ -31,7 +31,7 @@ $i=1;
                 餐期：{{ $lunch_order->name }}
             </td>
             <td>
-                {{ $i }} - {{ $k1 }}<br>
+                {{ $i }} - {{ $user2name[$k1] }}<br>
             </td>
             <td>
                 單價：{{ $teacher_money }}

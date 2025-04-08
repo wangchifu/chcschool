@@ -11,7 +11,7 @@ $num=1;
 ?>
 <div style="border: solid 1px;width:30%;float:left;margin:10px;page-break-inside:avoid;">
     {{ $lunch_setup->semester }} 學期教師午餐收費通知<br>
-    編號：{{ $num }}　{{ $k1 }} 你好：<br>
+    編號：{{ $num }}　{{ $user2name[$k1] }} 你好：<br>
     請於 {{ substr($die_line,5,5) }} 前繳費，謝謝！<br>
     共計 {{ $total_days }} 餐 * {{ $lunch_setup->teacher_money }} 元<br>合計 {{ round($lunch_setup->teacher_money*$total_days) }} 元
         @foreach($lunch_orders as $lunch_order)
