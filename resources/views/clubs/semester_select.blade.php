@@ -15,7 +15,7 @@
                         $check_club1 = \App\Club::where('semester',$club_semester->semester)->where('class_id','1')->get();
                         $check_club2 = \App\Club::where('semester',$club_semester->semester)->where('class_id','2')->get();
                     ?>
-                    @if(date('YmdHi') >= str_replace('-','',$club_semester->start_date) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date))
+                    @if(date('YmdHi') >= str_replace('-','',$club_semester->start_date) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date) and count($check_club1) >0)
                         <a href="{{ route('clubs.parents_login',['semester'=>$club_semester->semester,'class_id'=>'1']) }}" class="btn btn-primary">{{ $club_semester->semester }} 學期「學生特色社團」報名</a>
                         <a href="{{ route('clubs.show_clubs',['semester'=>$club_semester->semester,'class_id'=>'1']) }}" class="btn btn-info" target="_blank"> <i class="fas fa-hand-point-up"></i>社團一覽</a>
                         <br>
@@ -29,7 +29,7 @@
 
                         @endif
                     @endif
-                    @if(date('YmdHi') >= str_replace('-','',$club_semester->start_date2) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date2) and count($check_club1) >0)
+                    @if(date('YmdHi') >= str_replace('-','',$club_semester->start_date2) and date('YmdHi') <= str_replace('-','',$club_semester->stop_date2) and count($check_club2) >0)
                         <hr>
                         <a href="{{ route('clubs.parents_login',['semester'=>$club_semester->semester,'class_id'=>'2']) }}" class="btn btn-primary">{{ $club_semester->semester }} 學期「學生課後活動」報名</a>
                         <a href="{{ route('clubs.show_clubs',['semester'=>$club_semester->semester,'class_id'=>'2']) }}" class="btn btn-info" target="_blank"><i class="fas fa-hand-point-up"></i> 社團一覽</a>
