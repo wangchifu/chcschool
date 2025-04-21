@@ -43,6 +43,8 @@
                             本機帳號
                         @elseif($user->login_type=="gsuite")
                             gsuite帳號
+                        @elseif($user->login_type=="openID")
+                            openID帳號
                         @endif
                     </td>
                     <td>
