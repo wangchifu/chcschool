@@ -349,7 +349,7 @@ class HomeController extends Controller
 
     public function check_file(){
         $check_file = $this->school_check_file[$_SERVER['HTTP_HOST']];        
-        $filePath = storage_path('check_file/'.$check_file.'/DN_CHECK_FILE.htm');
+        $filePath = storage_path('app/public/check_file/'.$check_file.'/DN_CHECK_FILE.htm');
         return response()->file($filePath);
     }
 
