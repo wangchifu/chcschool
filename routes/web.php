@@ -40,6 +40,7 @@ Route::post('webhook', 'HomeController@webhook')->name('webhook');
 Route::get('close', 'SetupController@close')->name('close');
 
 Route::get('/', 'HomeController@index')->name('index');
+Route::get('.well-known/pki-validation/DN_CHECK_FILE.htm', 'HomeController@check_file')->name('check_file');
 Route::post('not_bot', 'HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
