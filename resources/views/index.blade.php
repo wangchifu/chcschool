@@ -290,35 +290,4 @@
             @endif
         @endif
     @endauth    
-<script>
-  $(document).ready(function() {
-    $('iframe').each(function(index) {
-      const $iframe = $(this);
-
-      // 1. 動態包裝外層 div
-      $iframe.wrap('<div class="iframe-wrapper" style="position:relative; display:inline-block;"></div>');
-
-      // 2. 動態加入 spinner
-      const $spinner = $('<div class="spinner">載入中...</div>').css({
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        background: '#fff',
-        padding: '10px 15px',
-        border: '1px solid #ccc',
-        'border-radius': '8px',
-        'z-index': 1000,
-        'font-weight': 'bold'
-      });
-
-      $iframe.before($spinner); // 插入 spinner 到 iframe 上面（同 wrapper 裡）
-
-      // 3. iframe 載入完畢時移除 spinner
-      $iframe.on('load', function() {
-        $spinner.fadeOut(300);
-      });
-    });
-  });
-</script>    
 @endsection
