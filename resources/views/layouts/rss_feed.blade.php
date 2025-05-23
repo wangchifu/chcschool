@@ -2,19 +2,30 @@
 $rss_feeds = \App\RssFeed::all();
 ?>
 @foreach($rss_feeds as $rss_feed)
-<?php
-    $rss = new DOMDocument();   
-    $context = stream_context_create([
-    'ssl' => [
-        'verify_peer' => false,
-        'verify_peer_name' => false,
-    ],
-    ]);
-    $xmlContent = file_get_contents($rss_feed->url, false, $context);
-	if($rss->loadXML($xmlContent)){
+<?php   
+    libxml_use_internal_errors(true); // 開啟內部錯誤處理
 
-    }else{
-        //dd('123');
+    $rss = new DOMDocument();   
+
+    $context = stream_context_create([
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ],
+    ]);
+
+    $xmlContent = file_get_contents($rss_feed->url, false, $context);
+
+    // 👉 濾掉常見錯誤符號
+    $xmlContent = preg_replace('/&(?!amp;|lt;|gt;|quot;|apos;)/', '&amp;', $xmlContent);
+
+    if ($rss->loadXML($xmlContent)) {
+        // 成功處理
+    } else {
+        foreach (libxml_get_errors() as $error) {
+            echo "XML Error: " . $error->message . "\n";
+        }
+        libxml_clear_errors();
     }
     
 	$feeds = array();
