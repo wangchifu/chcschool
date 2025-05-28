@@ -168,19 +168,26 @@ class GLoginController extends Controller
                 $user->update($att);
             }
 
-            if (Auth::attempt([
-                'username' => $username,
-                'password' => $request->input('password'), 'login_type' => 'gsuite', 'disable' => null
-            ])) {
-                //return redirect()->route('index');
-                if (empty($request->session()->get('url.intended'))) {
-                    return redirect()->route('index');
-                } else {
-                    return redirect($request->session()->get('url.intended'));
-                }
+
+            //停用者，沒有換學校，不得登入
+            if ($user->disable == 1) {
+                    return back()->withErrors(['gsuite_error' => ['被停權了？']]);
+            }            
+            
+            Auth::login($user);
+            if (empty($request->session()->get('url.intended'))) {
+               return redirect()->route('index');
             } else {
-                return back()->withErrors(['gsuite_error' => ['被停權了？']]);
+                return redirect($request->session()->get('url.intended'));
             }
+            //if (Auth::attempt([
+            //    'username' => $username,
+            //    'password' => $request->input('password'), 'login_type' => 'gsuite', 'disable' => null
+            //])) {
+            //    
+            //} else {
+            //    return back()->withErrors(['gsuite_error' => ['被停權了？']]);
+            //}
         } else {
             if (!session('login_error')) {
                 session(['login_error' => 1]);
