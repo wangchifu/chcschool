@@ -34,8 +34,8 @@
         <script src="{{ asset('js/messages_zh_TW.min.js') }}"></script>
         <!-- icons -->
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('bootstrap-4.6.2-dist/css/bootstrap.min.css') }}">
-    <link href="{{ asset('css/bootstrap-4-navbar.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+    <link href="{{ asset('css/bootstrap-navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome-5.15.4/css/all.css') }}" rel="stylesheet">
     @yield('in_head')
 </head>
@@ -64,8 +64,8 @@
     @yield('content')
 </div>
 <script src="{{ asset('js/popper2.min.js') }}"></script>
-<script src="{{ asset('bootstrap-4.6.2-dist/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap-4-navbar.js') }}"></script>
+<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-navbar.js') }}"></script>
 
 @if($setup->fixed_nav)
 <link href="{{ asset('css/navbar-top-fixed.css') }}" rel="stylesheet">
