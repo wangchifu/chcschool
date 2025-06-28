@@ -3,26 +3,6 @@
 @section('title','管理登入 | ')
 
 @section('content')
-<style>
-    .image-button {
-        border: 2px solid #ccc;       /* 邊框 */
-        border-radius: 10px;          /* 圓角 */
-        padding: 4px;                 /* 內距讓圖片不貼邊 */
-        transition: 0.3s ease-in-out; /* 平滑過渡效果 */
-        display: inline-block;
-    }
-
-    .image-button:hover {
-        border-color: #007bff;        /* hover 邊框顏色 */
-        box-shadow: 0 0 10px rgba(0,123,255,0.4); /* hover 陰影 */
-        transform: scale(1.03);       /* 微微放大 */
-    }
-
-    .image-button img {
-        border-radius: 10px; /* 圖片本身也圓角 */
-        display: block;
-    }
-</style>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
