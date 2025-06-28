@@ -15,8 +15,9 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">                        
                         <div class="text-center">
                             <a href="{{ route('sso') }}" class="image-button">
-                                <img src="{{ asset('images/chc.jpg') }}" alt="彰化chc的logo" width="120">
+                                <img src="{{ asset('images/chc.jpg') }}" alt="彰化chc的logo" width="120">                                
                             </a>
+                            <br>OpenID登入
                         </div>
                         <div class="text-right">
                             <a href="{{ route('admin_login') }}"><i class="fas fa-cog"></i> 使用本機帳號</a>

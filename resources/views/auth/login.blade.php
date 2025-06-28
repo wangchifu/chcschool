@@ -82,7 +82,7 @@
                 @endif
                 @include('layouts.errors')
                 <div class="text-right">
-                    <a href="{{ route('sso') }}" class="image-button"><img src="{{ asset('images/chc.jpg') }}" alt="彰化chc的logo" width="80"></a>
+                    <a href="{{ route('sso') }}" class="image-button"><img src="{{ asset('images/chc.jpg') }}" alt="彰化chc的logo" width="80"></a><br>OpenID登入
                 </div>
             </div>
         </div>
