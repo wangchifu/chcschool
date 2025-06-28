@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class MLoginController extends Controller
 {
+    public function logins(Request $request)
+    {
+
+        return view('auth.logins');
+    }
+
     public function showLoginForm(Request $request)
     {
         $key = rand(10000, 99999);

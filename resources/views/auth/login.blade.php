@@ -3,10 +3,30 @@
 @section('title','管理登入 | ')
 
 @section('content')
+<style>
+    .image-button {
+        border: 2px solid #ccc;       /* 邊框 */
+        border-radius: 10px;          /* 圓角 */
+        padding: 4px;                 /* 內距讓圖片不貼邊 */
+        transition: 0.3s ease-in-out; /* 平滑過渡效果 */
+        display: inline-block;
+    }
+
+    .image-button:hover {
+        border-color: #007bff;        /* hover 邊框顏色 */
+        box-shadow: 0 0 10px rgba(0,123,255,0.4); /* hover 陰影 */
+        transform: scale(1.03);       /* 微微放大 */
+    }
+
+    .image-button img {
+        border-radius: 10px; /* 圖片本身也圓角 */
+        display: block;
+    }
+</style>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header"><h4>本機帳號登入</h4></div>
+            <div class="card-header"><h4>登入</h4></div>
 
             <div class="card-body">
                 @if(session('login_error') < 3)
@@ -14,7 +34,7 @@
                     @csrf
 
                     <div class="form-group row">
-                        <label for="username" class="col-sm-4 col-form-label text-md-right">教職員帳號</label>
+                        <label for="username" class="col-sm-4 col-form-label text-md-right">本機帳號</label>
 
                         <div class="col-md-6">
                             <input tabindex="1" id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
@@ -81,6 +101,9 @@
                         </form>
                 @endif
                 @include('layouts.errors')
+                <div class="text-right">
+                    <a href="{{ route('sso') }}" class="image-button"><img src="{{ asset('images/chc.jpg') }}" alt="彰化chc的logo" width="80"></a>
+                </div>
             </div>
         </div>
     </div>

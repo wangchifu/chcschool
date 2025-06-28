@@ -47,6 +47,7 @@ Route::get('.well-known/pki-validation/whois.txt', 'HomeController@whois')->name
 Route::post('not_bot', 'HomeController@not_bot')->name('not_bot');
 //Auth::routes();
 #登入
+Route::get('logins', 'Auth\MLoginController@logins')->name('logins');
 Route::get('login', 'Auth\MLoginController@showLoginForm')->name('admin_login');
 Route::get('login_close', 'Auth\MLoginController@showLoginForm_close')->name('admin_login_close');
 //Route::post('login', 'Auth\LoginController@login');
@@ -70,8 +71,8 @@ Route::get('auth/callback', 'OpenIDController@callback')->name('callback');
 //Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 //gsuite登入
-Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('login');
-Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
+//Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('login');
+//Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
 
 Route::get('pic', 'SetupController@pic')->name('pic');
 Route::get('voice', 'SetupController@voice')->name('voice');

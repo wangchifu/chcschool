@@ -292,7 +292,7 @@
                 @endauth
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">登入</a>
+                        <a class="nav-link" href="{{ route('logins') }}">登入</a>
                     </li>
                 @endguest
             </ul>
