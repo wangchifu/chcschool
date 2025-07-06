@@ -217,6 +217,14 @@ class OpenIDController extends Controller
         };      
 
     }
+
+    public function go_logout($message){
+        $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+        $post_logout_redirect_uri = url('/');        
+        $id_token_hint = session('id_token');
+        $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+        return redirect($link)->withErrors(['gsuite_error' => [$message]]);
+    }
 }
 
 class openid {
@@ -292,15 +300,6 @@ class openid {
          $input .= str_repeat('=', $padlen);
       }
       return base64_decode(strtr($input, '-_', '+/'));
-    }
-
-    public function go_logout($message){
-        $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
-        $post_logout_redirect_uri = url('/');        
-        $id_token_hint = session('id_token');
-        $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
-        return redirect($link)->withErrors(['gsuite_error' => [$message]]);
-    }
-   
+    }       
   
   }
