@@ -122,7 +122,11 @@ class OpenIDController extends Controller
       $user_obj['kind'] = "";
       if ($user_obj['title'] == "學生") {
         $message = "學生禁止訪問";
-        $this->go_logout($message);
+        $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+        $post_logout_redirect_uri = url('logins');        
+        $id_token_hint = session('id_token');
+        $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+        return redirect($link)->withErrors(['gsuite_error' => [$message]]);
       }else{
         $user_obj['kind'] = $edufile['titles'][0]['titles'][1];      
       }
@@ -216,15 +220,7 @@ class OpenIDController extends Controller
             return redirect()->route('index');
         };      
 
-    }
-
-    public function go_logout($message){
-        $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
-        $post_logout_redirect_uri = url('logins');        
-        $id_token_hint = session('id_token');
-        $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
-        return redirect($link)->withErrors(['gsuite_error' => [$message]]);
-    }
+    }    
 }
 
 class openid {
