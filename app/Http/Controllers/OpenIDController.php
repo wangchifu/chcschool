@@ -147,7 +147,12 @@ class OpenIDController extends Controller
             if(isset($schools_array[$user_obj['code']])){
               $school = $schools_array[$user_obj['code']];
             }else{
-              return redirect()->route('logins')->withErrors(['gsuite_error' => ['非學校教職員']]);
+              $message = "非學校教職員";
+              $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+              $post_logout_redirect_uri = url('logins');        
+              $id_token_hint = session('id_token');
+              $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+              return redirect($link)->withErrors(['gsuite_error' => [$message]]);              
             }
             
 
@@ -175,7 +180,12 @@ class OpenIDController extends Controller
                 }                                                
                 
                 if ($check_code == 0) {
-                    return redirect()->route('logins')->withErrors(['gsuite_error' => ['非本校教職員帳號']]);
+                    $message = "非本校教職員";
+                    $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+                    $post_logout_redirect_uri = url('logins');        
+                    $id_token_hint = session('id_token');
+                    $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+                    return redirect($link)->withErrors(['gsuite_error' => [$message]]);                                                    
                 }
             }
             
@@ -199,7 +209,12 @@ class OpenIDController extends Controller
                 $user = User::create($att);
             } else {
                 if($user->disable==1){
-                    return redirect()->route('logins')->withErrors(['gsuite_error' => ['你被停權了']]);
+                  $message = "你被停權了";
+                  $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+                  $post_logout_redirect_uri = url('logins');        
+                  $id_token_hint = session('id_token');
+                  $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+                  return redirect($link)->withErrors(['gsuite_error' => [$message]]);                                                    
                 }
 
                 //有此使用者，即更新使用者資料
