@@ -46,7 +46,7 @@ class LoginController extends Controller
         $post_logout_redirect_uri = url('/');        
         $id_token_hint = session('id_token');
         $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
-        return redirect($link);        
+        return redirect($link);
     }
 
     public function username()

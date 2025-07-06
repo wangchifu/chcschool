@@ -118,18 +118,18 @@ class OpenIDController extends Controller
       $user_obj['name'] = $userinfo['name'];      
       $user_obj['personid'] = $profile['personid'];
       $user_obj['code'] = $edufile['schoolid'];
-      $user_obj['kind'] = $edufile['titles'][0]['titles'][1];      
-      if ($user_obj['kind'] == "學生") {
-        return redirect()->route('login')->withErrors(['gsuite_error' => ['非教職員帳號']]);
-      }
       $user_obj['title'] = $edufile['titles'][0]['titles'][0];
+      $user_obj['kind'] = "";
+      if ($user_obj['title'] == "學生") {
+        $message = "學生禁止訪問";
+        $this->go_logout($message);
+      }else{
+        $user_obj['kind'] = $edufile['titles'][0]['titles'][1];      
+      }
+      
 
         //學生禁止訪問
-        if ($user_obj['success']) {
-
-            if ($user_obj['kind'] == "學生") {
-                return redirect()->route('login')->withErrors(['gsuite_error' => ['非教職員帳號']]);
-            }
+        if ($user_obj['success']) {            
             
             $database = config('app.database');
             if (isset($_SERVER['HTTP_HOST'])) {
@@ -143,7 +143,7 @@ class OpenIDController extends Controller
             if(isset($schools_array[$user_obj['code']])){
               $school = $schools_array[$user_obj['code']];
             }else{
-              return redirect()->route('login')->withErrors(['gsuite_error' => ['非學校教職員']]);
+              return redirect()->route('logins')->withErrors(['gsuite_error' => ['非學校教職員']]);
             }
             
 
@@ -171,7 +171,7 @@ class OpenIDController extends Controller
                 }                                                
                 
                 if ($check_code == 0) {
-                    return redirect()->route('login')->withErrors(['gsuite_error' => ['非本校教職員帳號']]);
+                    return redirect()->route('logins')->withErrors(['gsuite_error' => ['非本校教職員帳號']]);
                 }
             }
             
@@ -195,7 +195,7 @@ class OpenIDController extends Controller
                 $user = User::create($att);
             } else {
                 if($user->disable==1){
-                    return redirect()->route('login')->withErrors(['gsuite_error' => ['你被停權了']]);
+                    return redirect()->route('logins')->withErrors(['gsuite_error' => ['你被停權了']]);
                 }
 
                 //有此使用者，即更新使用者資料
@@ -292,6 +292,14 @@ class openid {
          $input .= str_repeat('=', $padlen);
       }
       return base64_decode(strtr($input, '-_', '+/'));
+    }
+
+    public function go_logout($message){
+        $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+        $post_logout_redirect_uri = url('/');        
+        $id_token_hint = session('id_token');
+        $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+        return redirect($link)->withErrors(['gsuite_error' => [$message]]);
     }
    
   
