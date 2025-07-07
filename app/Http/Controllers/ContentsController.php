@@ -45,9 +45,15 @@ class ContentsController extends Controller
     public function search($tag=null)
     {
         $contents = Content::where('tags','like','%'.$tag.'%')->get();
+        $group_array = [];
+        $groups = Group::orderBy('id')->get();
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
         $data = [
             'contents'=>$contents,
             'tag'=>$tag,
+            'group_array'=>$group_array,
         ];
         return view('contents.index', $data);
     }
