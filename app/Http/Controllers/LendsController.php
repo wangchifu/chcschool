@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
 use PHPExcel_IOFactory;
 use PHPExcel;
+use Illuminate\Support\Facades\Mail;
 
 class LendsController extends Controller
 {
@@ -392,6 +393,17 @@ class LendsController extends Controller
             $ps = ($lend_order->ps)?"\n備註：".$lend_order->ps:null;            
             $string =  auth()->user()->name."在借用系統登記\n\n".$lend_order->lend_item->name." 數量：".$lend_order->num."\n於 ".$lend_order->lend_date." ".$lend_section_array[$lend_order->lend_section]." 來借\n於 ".$lend_order->back_date." ".$lend_section_array[$lend_order->back_section]." 來還\n".$ps;            
             line_bot($lend_order->owner_user->line_user_id,$lend_order->owner_user->line_bot_token,$string);            
+        }
+
+        if(!empty($lend_order->owner_user->email)){      
+            $email = $lend_order->owner_user->email;     
+            $lend_section_array = config('chcschool.lend_sections');
+            $ps = ($lend_order->ps)?"\n備註：".$lend_order->ps:null;            
+            $subject = '借用系統通知';
+            $string =  auth()->user()->name."在借用系統登記\n\n".$lend_order->lend_item->name." 數量：".$lend_order->num."\n於 ".$lend_order->lend_date." ".$lend_section_array[$lend_order->lend_section]." 來借\n於 ".$lend_order->back_date." ".$lend_section_array[$lend_order->back_section]." 來還\n".$ps;            
+            Mail::raw($string, function ($string) use ($subject,$email){
+                    $string->to($email)->subject($subject);
+            });                       
         }
         
 
