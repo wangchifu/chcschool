@@ -40,7 +40,7 @@ $active['list'] ="";
                     <th>動作</th>
                 </tr>
             @foreach($lend_classes as $lend_class)                        
-            <form action="{{ route('lends.update_class',$lend_class) }}" id="update_class_form{{ $lend_class->id }}" method="post" onsubmit="return false">
+            <form action="{{ route('lends.update_class',$lend_class) }}" id="update_class_form{{ $lend_class->id }}" method="post">
                 @csrf
                 <tr>
                     <td><input type="text" class ="form-control" name="name" value="{{ $lend_class->name }}"></td>                    
@@ -51,7 +51,7 @@ $active['list'] ="";
                             </div>
                         </div>
                     </td>                            
-                    <td><button class="btn btn-primary btn-sm" onclick="sw_confirm2('確定更新嗎？','update_class_form{{ $lend_class->id }}')">更新</button> <a href="#" class="btn btn-danger btn-sm" onclick="return confirm('確定刪除嗎？相關借用記錄也會一起刪除喔！')">刪除</a></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="return confirm('確定更新嗎？')">更新</button> <a href="{{ route('lends.delete_class',$lend_class) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定刪除嗎？相關借用記錄也會一起刪除喔！')">刪除</a></td>
                 </tr>
             </form>
             @endforeach
