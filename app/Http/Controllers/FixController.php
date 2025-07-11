@@ -117,9 +117,9 @@ class FixController extends Controller
                 $subject = '學校網站中「' . auth()->user()->name . '」在「報修設備」寫了：' . $att['title'];
                 $body = $att['content'];
                 //send_mail($user_power->user->email, $subject, $body);
-                Mail::raw($body, function ($body) use ($subject,$email){
-                    $body->to($email)->subject($subject);
-                });      
+                //Mail::raw($body, function ($body) use ($subject,$email){
+                //    $body->to($email)->subject($subject);
+                //});      
             }
         }
 
