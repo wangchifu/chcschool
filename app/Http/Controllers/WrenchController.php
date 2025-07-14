@@ -6,6 +6,7 @@ use App\User;
 use App\Wrench;
 use Illuminate\Http\Request;
 Use SQLite3;
+use Illuminate\Support\Facades\Mail;
 
 class WrenchController extends Controller
 {
@@ -99,9 +100,12 @@ class WrenchController extends Controller
         $subject = '學校網站平台'.$user->school.'回報系統錯誤與建議';
         $body = $request->input('content');
         $string = $subject."\n\n".$body;
-        line_notify(env('ADMIN_LINE_KEY'),$string);
+        //line_notify(env('ADMIN_LINE_KEY'),$string);
         
-        send_mail(env('ADMIN_EMAIL'),$subject,$body);
+        //send_mail(env('ADMIN_EMAIL'),$subject,$body);
+        Mail::raw($body, function ($body) use ($subject){
+            $body->to(env('ADMIN_EMAIL'))->subject($subject);
+        });
         return redirect()->route('wrench.index');
     }
 
@@ -126,7 +130,10 @@ class WrenchController extends Controller
             $body .= "\r\n系統管理員回覆：\r\n";
             $body .= $request->input('reply');
             $body .= "\r\n-----這是系統信件，請勿回信-----";
-            send_mail($user_email,$subject,$body);
+            //send_mail($user_email,$subject,$body);
+            Mail::raw($body, function ($body) use ($subject,$user_email){
+                    $body->to($user_email)->subject($subject);
+            });
         }
 
         return redirect()->route('wrench.index');
