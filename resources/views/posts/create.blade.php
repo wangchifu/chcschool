@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <?php $job_title = (auth()->user()->username=="admin")?"系統管理":auth()->user()->title; ?>
-                        <label for="job_title"><strong class="text-danger">1.職稱*</strong></label>
+                        <label for="job_title"><strong class="text-danger">1.職稱*</strong> <a href="{{ route('edit_title') }}">更改</a></label>
                         {{ Form::text('job_title',$job_title,['id'=>'job_title','class' => 'form-control', 'readonly' => 'readonly']) }}
                     </div>
                     <div class="form-group">

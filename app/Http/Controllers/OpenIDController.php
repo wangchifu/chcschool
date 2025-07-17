@@ -224,6 +224,7 @@ class OpenIDController extends Controller
                 }
 
                 //有此使用者，即更新使用者資料
+                $att['username'] = $user_obj['username'];
                 $att['name'] = $user_obj['name'];
                 $att['edu_key'] = $user_obj['personid'];
                 $att['uid'] = "openID";

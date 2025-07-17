@@ -156,6 +156,9 @@ Route::get('fixes/{fix}/show_clean', 'FixController@show_clean')->where('fix', '
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('edit_title', 'HomeController@edit_title')->name('edit_title');
+    Route::patch('update_title/{user}', 'HomeController@update_title')->name('update_title');
     //共同編輯
     Route::get('contents_together/{content}/edit', 'ContentsController@together_edit')->name('contents.together_edit');
     Route::patch('contents_together/{content}', 'ContentsController@together_update')->name('contents.together_update');

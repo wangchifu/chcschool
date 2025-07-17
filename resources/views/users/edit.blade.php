@@ -9,17 +9,21 @@
         <thead class="thead-light">
         <tr>
             <th colspan="5">
-                帳號：{{ $user->username }}
+                姓名：{{ $user->name }} 帳號：{{ $user->username }}
             </th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td>
-                {{ Form::text('title',$user->title,['class' => 'form-control','required'=>'required','placeholder'=>'職稱']) }}
+            <td>目前為：{{ $user->title }}，改為：
+                <select class="form-control" id="title" name="title" tabindex="1" required>
+                    @foreach($title_array as $k => $v)
+                        <option value="{{ $v }}" {{ ($user->title == $v) ? 'selected' : '' }}>{{ $v }}</option>
+                    @endforeach                            
+                </select>                
             </td>
             <td>
-                {{ Form::text('name',$user->name,['class' => 'form-control','required'=>'required','placeholder'=>'姓名']) }}
+                {{ Form::text('name',$user->name,['class' => 'form-control','required'=>'required','readonly'=>'readonly','placeholder'=>'姓名']) }}
             </td>
             <td width="100">
                 排序：

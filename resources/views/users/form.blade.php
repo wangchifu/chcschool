@@ -69,6 +69,6 @@
     }
     function open_window(url,name)
     {
-        window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=330');
+        window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=1000,height=400');
     }
 </script>

@@ -2,7 +2,7 @@
 
 @section('nav_user_active', 'active')
 
-@section('title', '更改管理者')
+@section('title', '更改密碼')
 
 @section('content')
     <div class="row justify-content-center">

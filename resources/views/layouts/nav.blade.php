@@ -269,6 +269,9 @@
                                     alert('點了'+n+'下!');
                                 }
                             </script>
+                            @if(auth()->user()->login_type=="openID")
+                                <a class="dropdown-item" href="{{ route('edit_title') }}"><i class="fas fa-user-tag"></i> 更改職稱</a>
+                            @endif
                             @if(auth()->user()->login_type=="local")
                                 <a class="dropdown-item" href="{{ route('edit_password') }}"><i class="fas fa-key"></i> 更改密碼</a>
                             @endif

@@ -134,8 +134,10 @@ class UsersController extends Controller
         $groups = Group::where('disable','=',null)->pluck('name', 'id')->toArray();
 
         $default_group = UserGroup::where('user_id',$user->id)->pluck('group_id')->toArray();
+        $title_array = explode(',',$user->kind);
         $data = [
             'user'=>$user,
+            'title_array'=>$title_array,
             'groups'=>$groups,
             'default_group'=>$default_group,
         ];
