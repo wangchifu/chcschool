@@ -128,7 +128,13 @@ class OpenIDController extends Controller
         $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
         return redirect($link)->withErrors(['gsuite_error' => [$message]]);
       }else{
-        $user_obj['kind'] = $edufile['titles'][0]['titles'][1];      
+        $title_array = $edufile['titles'][0]['titles'];
+        $title = "";
+        foreach($title_array as $k =>$v){
+          $title .= $v.',';
+        }
+        $title = rtrim($title, ',');
+        $user_obj['kind'] = $title;      
       }
       
 
@@ -225,7 +231,7 @@ class OpenIDController extends Controller
                 $att['code'] = $code;
                 $att['school'] = $school;
                 $att['kind'] = $user_obj['kind'];
-                $att['title'] = $user_obj['title'];                
+                //$att['title'] = $user_obj['title'];                
 
                 $user->update($att);
             }
