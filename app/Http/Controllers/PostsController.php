@@ -476,6 +476,7 @@ class PostsController extends Controller
             $att['created_at'] = date('Y-m-d H:i:s',strtotime($live_date_time));
         }        
         $att['die_date'] = $request->input('die_date');
+        $att['job_title'] = $request->input('job_title');        
         $att['content'] = $request->input('content');
         $att['insite'] = ($request->input('insite')) ? $request->input('insite') : null;
         $post->update($att);
