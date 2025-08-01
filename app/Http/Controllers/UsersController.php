@@ -17,8 +17,7 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::where('disable',null)
-            ->orderBy('login_type','DESC')
-            ->orderBy('order_by')            
+            ->orderBy('order_by')                        
             ->paginate('20');
 
         $data = [
