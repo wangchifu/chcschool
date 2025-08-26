@@ -117,7 +117,9 @@ Route::get('lunch_lists/change_factory/', 'LunchListController@change_factory')-
 Route::get('clubs/semester_select', 'ClubsController@semester_select')->name('clubs.semester_select');
 Route::get('clubs/{semester}/{class_id}/show_clubs', 'ClubsController@show_clubs')->name('clubs.show_clubs');
 Route::get('clubs/{semester}/{class_id}/parents_login', 'ClubsController@parents_login')->name('clubs.parents_login');
+Route::get('clubs/{semester}/parents_login_test', 'ClubsController@parents_login_test')->name('clubs.parents_login_test');
 Route::post('clubs/do_login', 'ClubsController@do_login')->name('clubs.do_login');
+Route::post('clubs/do_login_test', 'ClubsController@do_login_test')->name('clubs.do_login_test');
 Route::get('clubs/parents_do/{class_id}', 'ClubsController@parents_do')->name('clubs.parents_do');
 Route::get('clubs/parents_logout', 'ClubsController@parents_logout')->name('clubs.parents_logout');
 Route::get('clubs/{class_id}/change_pwd', 'ClubsController@change_pwd')->name('clubs.change_pwd');

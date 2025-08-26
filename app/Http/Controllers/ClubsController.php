@@ -609,7 +609,7 @@ class ClubsController extends Controller
         //$semester = get_date_semester(date('Y-m-d'));
         //改列尚在報名中的
         $this_date = date('Y-m-d-H-i');
-        $club_semesters = ClubSemester::where('stop_date', '>=', $this_date)->orWhere('stop_date2', '>=', $this_date)->orderBy('semester')->get();
+        $club_semesters = ClubSemester::where('stop_date', '>=', $this_date)->orWhere('stop_date2', '>=', $this_date)->orderBy('semester')->get();        
         $data = [
             'club_semesters' => $club_semesters,
         ];
@@ -657,6 +657,15 @@ class ClubsController extends Controller
         }
     }
 
+    public function parents_login_test($semester)
+    {
+        $club_semester = ClubSemester::where('semester', $semester)->first();
+        $data = [
+            'semester' => $club_semester->semester,
+        ];
+        return view('clubs.parents_login_test', $data);
+    }
+
     public function do_login(Request $request)
     {
         if ($request->input('class_num')) {
@@ -676,6 +685,39 @@ class ClubsController extends Controller
                 } else {
                     session(['parents' => $check->id]);
                     return redirect()->route('clubs.parents_do', $request->input('class_id'));
+                };
+            }
+        }
+    }
+
+    public function do_login_test(Request $request)
+    {
+        if(session('parents_test_error')>=3){
+            return back();
+        }
+        if ($request->input('class_num')) {
+            $check = ClubStudent::where('class_num', $request->input('class_num'))
+                ->where('semester', $request->input('semester'))
+                ->where('disable', null)
+                ->first();
+
+            if (!$check) {
+                return back()->withErrors(['error' => ['查無此帳號！']]);
+            } else {
+                if ($check->disable == 1) {
+                    return back()->withErrors(['error' => ['此帳號已被停用！']]);
+                }
+                if ($request->input('pwd') != $check->pwd) {
+                    if(empty(session('parents_test_error'))){
+                        session(['parents_test_error' => 1]);   
+
+                    }else{
+                        session(['parents_test_error' => session('parents_test_error') + 1]);   
+                    }                    
+                    return back()->withErrors(['error' => ['密碼錯誤！若系統生日登記錯誤，請洽學校管理者！']]);
+                } else {
+                    session(['parents_test_error' => 0]);   
+                    return back()->withErrors(['error' => ['密碼正確！請放心等待正式開放！']]);
                 };
             }
         }
