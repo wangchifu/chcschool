@@ -62,6 +62,9 @@
                             <th>
                                 姓名
                             </th>
+                            <th>
+                                動作
+                            </th>
                         </tr>
                         <?php $i=1; ?>
                         @foreach($club_students as $club_student)
@@ -85,7 +88,10 @@
                                 </td>                                
                                 <td>
                                     {{ $club_student->name }}
-                                </td>                               
+                                </td>        
+                                <td>
+                                    <a href="{{ route('sport_meeting.stu_disable',['club_student'=>$club_student->id,'student_class_id'=>$this_class->id]) }}" class="btn btn-warning btn-sm" onclick="return confirm('確定停用？座號將被改為99號！！')">停用</a>
+                                </td>                       
                             </tr>
                             <?php $i++; ?>
                             @endif

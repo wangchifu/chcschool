@@ -95,7 +95,7 @@ class SportMeetingController extends Controller
         foreach($student_classes as $k=>$student_class){
             $class_num[$k] = count($student_class);
         }
-        $club_students = ClubStudent::all()->groupBy('semester');
+        $club_students = ClubStudent::where('disable',null)->get()->groupBy('semester');
         foreach($club_students as $k=>$club_student){
             $club_student_num[$k] = count($club_student);
         }                    
@@ -204,7 +204,15 @@ class SportMeetingController extends Controller
             'student_classes' => $student_classes,
             'this_class' => $this_class,
         ];
-        return view('sport_meetings.stu_adm_more', $data);
+        return view('sport_meetings.stu_adm_more', $data); 
+    }
+
+    public function stu_disable(ClubStudent $club_student, $student_class_id)
+    {
+        $att['class_num'] = substr($club_student->class_num, 0, 3) . '99';
+        $att['disable'] = 1;
+        $club_student->update($att);
+        return redirect()->route('sport_meeting.stu_adm_more', ['semester' => $club_student->semester, 'student_class_id' => $student_class_id]);
     }
 
     public function user(){
