@@ -86,7 +86,7 @@
                                     <hr>
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" id="exampleCheck1" name="eat_style_egg">
-                                        <label class="form-check-label" for="exampleCheck1">🥚 <span class="text-primary">蛋奶素請打勾</span>(奶素及葷食者不用)</label>
+                                        <label class="form-check-label" for="exampleCheck1">🥚 <span class="text-primary">蛋奶素(素食要吃蛋)請打勾</span>(奶素及葷食者不用勾)</label>
                                     </div>
                                 </div>
                             </div>
