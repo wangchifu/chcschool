@@ -18,7 +18,7 @@ class UsersController extends Controller
     {
         $users = User::where('disable',null)
             ->orderBy('order_by')                        
-            ->paginate('20');
+            ->get();
 
         $data = [
             'users'=>$users,
@@ -31,7 +31,7 @@ class UsersController extends Controller
         $users = User::where('disable','1')
             ->orderBy('login_type','DESC')
             ->orderBy('order_by')            
-            ->paginate('20');
+            ->get();
 
         $data = [
             'users'=>$users,
