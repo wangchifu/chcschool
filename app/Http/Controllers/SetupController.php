@@ -8,6 +8,7 @@ use App\Post;
 use App\Setup;
 use App\SetupCol;
 use App\TitleImageDesc;
+use App\PostType;
 use Illuminate\Http\Request;
 
 class SetupController extends Controller
@@ -490,13 +491,26 @@ class SetupController extends Controller
 
     public function batch_delete_posts()
     {
-        return view('setups.batch_delete_posts');
+        $all_types = PostType::where('disable',null)->orderBy('order_by')->pluck('name', 'id')->toArray();    
+        $types['all'] = '全部類別';
+        foreach ($all_types as $k => $v) {
+            $types[$k] = $v;
+        }
+        $data = [
+            'types' => $types,
+        ];
+        return view('setups.batch_delete_posts',$data);
     }
 
     public function batch_delete(Request $request)
-    {
-
-        $posts = Post::where('id', '<=', $request->input('post_no'))->get();
+    {        
+        if($request->input('insite') != 'all'){
+            $posts = Post::where('insite', $request->input('insite'))
+                         ->where('id', '<=', $request->input('post_no'))->get();
+        }else{
+            $posts = Post::where('id', '<=', $request->input('post_no'))->get();
+        }
+        //$posts = Post::where('id', '<=', $request->input('post_no'))->get();
         if (auth()->user()->admin == 1) {
             $school_code = school_code();
             foreach ($posts as $post) {

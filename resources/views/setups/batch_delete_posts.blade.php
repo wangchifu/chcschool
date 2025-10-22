@@ -14,7 +14,10 @@
         <br>
         <input type="number" name="post_no" class="form-control" placeholder="請填公告的編號" required>
     </div>
-
+    <div class="form-group">
+        <label for="insite"><strong class="text-danger">請選擇要刪除的公告類別*</strong></label>
+        {{ Form::select('insite', $types,null, ['id' => 'insite', 'class' => 'form-control']) }}
+    </div>
     <br>
     <br>
     <br>
