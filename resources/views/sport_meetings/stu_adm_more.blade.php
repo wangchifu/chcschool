@@ -9,9 +9,9 @@
         <div class="col-md-11">
             <h1>運動會報名-學生列表</h1>
             <?php
-                $admin = check_power('社團報名','A',auth()->user()->id);
-            ?>
-            @if($admin)
+                $admin = check_power('運動會報名','A',auth()->user()->id);                
+            ?>            
+            @if($admin)            
                 <div class="card">
                 <div class="card-header">
                     <h5>
