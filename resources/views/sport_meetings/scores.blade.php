@@ -93,7 +93,7 @@
                             @if($item->group ==1 or $item->group ==3)
                                 <option value="男">男子組</option>
                             @endif
-                            @if($item->group ==1 or $item->group ==3)
+                            @if($item->group ==2 or $item->group ==3)
                                     <option value="女">女子組</option>
                             @endif
                             @if($item->group ==4)
