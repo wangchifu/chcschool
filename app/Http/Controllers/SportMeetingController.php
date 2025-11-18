@@ -209,7 +209,7 @@ class SportMeetingController extends Controller
 
     public function stu_disable(ClubStudent $club_student, $student_class_id)
     {
-        $att['class_num'] = substr($club_student->class_num, 0, 3) . '99';
+        $att['class_num'] = substr($club_student->class_num, 0, -2) . '99';
         $att['disable'] = 1;
         $club_student->update($att);
         return redirect()->route('sport_meeting.stu_adm_more', ['semester' => $club_student->semester, 'student_class_id' => $student_class_id]);
@@ -606,19 +606,19 @@ class SportMeetingController extends Controller
         $student_class = StudentClass::where('semester',$action->semester)->where('user_names','like', "%".auth()->user()->name."%")->first();          
         
         $class_num = $student_class['student_year'].sprintf("%02s",$student_class['student_class']);
-        
+        //dd($class_num);
         $students = ClubStudent::where('semester',$action->semester)
             ->where('class_num','like',$class_num.'%')            
             ->orderBy('class_num')
             ->where('disable',null)
             ->get();            
-
+        //dd($students);
         $girls = [];
         $boys = [];
-        foreach($students as $student){
-            if($student->sex == "男") $boys[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
-            if($student->sex == "女") $girls[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
-            $all_students[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
+        foreach($students as $student){            
+            if($student->sex == "男") $boys[$student->id] = substr($student->class_num,-2).'-'.$student->name;
+            if($student->sex == "女") $girls[$student->id] = substr($student->class_num,-2).'-'.$student->name;
+            $all_students[$student->id] = substr($student->class_num,-2).'-'.$student->name;
         }        
 
         $items = Item::where('action_id',$action->id)
@@ -662,8 +662,9 @@ class SportMeetingController extends Controller
             ->orderBy('class_num')
             ->get();
         foreach($this_class_students as $this_class_student){
-            $student_num[$this_class_student->id] = substr($this_class_student->class_num,3,2);
+            $student_num[$this_class_student->id] = substr($this_class_student->class_num,-2);
         }
+        //dd($student_num);
 
         if(!empty($boy_select)){
             foreach($boy_select as $k=>$v){
@@ -946,9 +947,9 @@ class SportMeetingController extends Controller
             ->get();
 
         foreach($students as $student){
-            if($student->sex == "男") $boys[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
-            if($student->sex == "女") $girls[$student->id] = substr($student->class_num,3,2).'-'.$student->name;            
-            $all_students[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
+            if($student->sex == "男") $boys[$student->id] = substr($student->class_num,-2).'-'.$student->name;
+            if($student->sex == "女") $girls[$student->id] = substr($student->class_num,-2).'-'.$student->name;            
+            $all_students[$student->id] = substr($student->class_num,-2).'-'.$student->name;
         }        
 
         $items = Item::where('action_id',$action->id)
@@ -995,7 +996,7 @@ class SportMeetingController extends Controller
 
         $att['student_id'] = $request->input('student_id');
         $student = ClubStudent::find($request->input('student_id'));
-        $att['num'] = (int)substr($student->class_num,3,2);
+        $att['num'] = (int)substr($student->class_num,-2);
         $student_sign->update($att);
         return redirect()->route('sport_meeting.sign_up_show',$request->input('action_id'));
     }
@@ -1020,9 +1021,9 @@ class SportMeetingController extends Controller
         $att['student_id'] = $request->input('student_id');
         $att['action_id'] = $request->input('action_id');
         $student = ClubStudent::find($att['student_id']);
-        $att['student_year'] = substr($student->class_num,0,1);
-        $att['student_class'] = (int)substr($student->class_num,1,2);
-        $att['num'] = (int)substr($student->class_num,3,2);
+        $att['student_year'] = preg_replace('/\d+$/', '', $student->class_num);
+        $att['student_class'] = (int)substr($student->class_num,-4,2);
+        $att['num'] = (int)substr($student->class_num,-2);
         $att['sex'] = ($item->group==4)?4:$student->sex;
 
         StudentSign::create($att);
@@ -2219,7 +2220,7 @@ class SportMeetingController extends Controller
                     $students[$student_sign->student_id]['name'] = $student_sign->student->name;
                     $students[$student_sign->student_id]['year'] = $student_sign->student_year;
                     $students[$student_sign->student_id]['class'] = $student_sign->student_class;
-                    $students[$student_sign->student_id]['num'] = (int)substr($student_sign->student->class_num,3,2);
+                    $students[$student_sign->student_id]['num'] = (int)substr($student_sign->student->class_num,-2);
                 }
             }
         }
