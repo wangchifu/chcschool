@@ -603,7 +603,7 @@ class SportMeetingController extends Controller
     {        
         $admin = check_power('運動會報名', 'A', auth()->user()->id);
         $bdmin = check_power('運動會報名', 'B', auth()->user()->id);
-        $student_class = StudentClass::where('semester',$action->semester)->where('user_names','like', "%".auth()->user()->name."%")->first();  
+        $student_class = StudentClass::where('semester',$action->semester)->where('user_names','like', "%".auth()->user()->name."%")->first();          
         
         $class_num = $student_class['student_year'].sprintf("%02s",$student_class['student_class']);
         
@@ -619,13 +619,13 @@ class SportMeetingController extends Controller
             if($student->sex == "男") $boys[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
             if($student->sex == "女") $girls[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
             $all_students[$student->id] = substr($student->class_num,3,2).'-'.$student->name;
-        }
+        }        
 
         $items = Item::where('action_id',$action->id)
             ->where('disable',null)
             ->orderBy('order')
             ->get();
-        
+        //dd($items);
 
         $data = [
             "admin"=>$admin,
@@ -635,8 +635,8 @@ class SportMeetingController extends Controller
             'all_students'=>$all_students,
             'action'=>$action,
             'items'=>$items,
-            'student_year'=>substr($class_num,0,1),
-            'student_class'=>(int)substr($class_num,1,2),
+            'student_year'=>$student_class->student_year,
+            'student_class'=>$student_class->student_class,
         ];
         return view('sport_meetings.sign_up_do',$data);
     }
