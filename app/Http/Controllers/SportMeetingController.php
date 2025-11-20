@@ -340,15 +340,42 @@ class SportMeetingController extends Controller
         $att['group_num'] = $request->input('group_num');
         //$item = Item::find($att['item_id']);
         $att['item_name'] = $item->name;
-        $att['game_type'] = $item->game_type;
-        $att['student_id'] = $request->input('student_id');
+        $att['game_type'] = $item->game_type;        
         $att['action_id'] = $request->input('action_id');
-        $student = ClubStudent::find($att['student_id']);
-        $att['student_year'] = substr($student->class_num,0,-4);
-        $att['student_class'] = (int)substr($student->class_num,-4,2);
-        $att['num'] = (int)substr($student->class_num,-2);
-        $att['sex'] = ($item->group==4)?4:$student->sex;        
-        StudentSign::create($att);        
+        
+        $official_student_ids = $request->input('official_student_ids');      
+        $reserve_student_ids = $request->input('reserve_student_ids');
+
+        foreach($official_student_ids as $k=>$student_id){
+            $att['student_id'] = $student_id;
+            $student = ClubStudent::find($student_id);
+            $att['student_year'] = substr($student->class_num,0,-4);
+            $att['student_class'] = (int)substr($student->class_num,-4,2);
+            $att['num'] = (int)substr($student->class_num,-2);
+            $att['sex'] = ($item->group==4)?4:$student->sex;        
+            if($request->input('is_group') == 1){
+                $att['is_official'] = 1;
+                $att['group_num'] = $request->input('group_num');
+            }
+            
+            StudentSign::create($att); 
+        }
+        
+        if($request->input('is_group') == 1){
+            foreach($reserve_student_ids as $k=>$student_id){
+                $att['student_id'] = $student_id;
+                $student = ClubStudent::find($student_id);
+                $att['student_year'] = substr($student->class_num,0,-4);
+                $att['student_class'] = (int)substr($student->class_num,-4,2);
+                $att['num'] = (int)substr($student->class_num,-2);
+                $att['sex'] = ($item->group==4)?4:$student->sex;        
+                $att['is_official'] = null;
+                $att['group_num'] = $request->input('group_num');
+                //dd($att);
+                StudentSign::create($att); 
+            }
+        }
+               
         return back();
     }
 

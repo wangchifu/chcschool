@@ -94,31 +94,31 @@
                                                 --
                                             @elseif($item->game_type=="group" or $item->game_type=="personal")
                                                 <?php 
+                                                    if($item->game_type=="group"){
+                                                        $item_group =1;
+                                                        $item_group_people =$item->people;
+                                                        $item_group_official =$item->official;
+                                                        $item_group_reserve =$item->reserve;
+                                                    }
                                                     if($item->game_type=="personal"){
-                                                        $group_num = null;
-                                                        $is_office = null;
+                                                        $item_group =null;
+                                                        $item_group_people =null;
+                                                        $item_group_official =null;
+                                                        $item_group_reserve =null;
                                                     }
-                                                    if($item->game_type=="group") {
-                                                        if($boy_count < $item->official) {
-                                                            $is_office = 1;
-                                                        } else {
-                                                            $is_office = null;
-                                                        }
-                                                    }
-                                                    
-                                                ?>
+                                                ?>                                            
                                                 @if($item->group==3 or $item->group==1)
-                                                    @if(($boy_count < $item->people) and $item->game_type <> "group")     
+                                                    @if(($boy_count < $item->people) or $item->game_type=="group")
                                                         <a href="#!">                                                            
-                                                            <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-is_official="{{ $is_office }}" data-group_num="{{ $group_num }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
+                                                            <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_group="{{ $item_group }}" data-item_group_people="{{ $item_group_people }}" data-item_group_official="{{ $item_group_official }}" data-item_group_reserve="{{ $item_group_reserve }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
                                                         <?php $show_br = 1; ?>
                                                     @endif                                                    
                                                 @endif
-                                                @if(($item->group==3 or $item->group==2) and $item->game_type <> "group")
-                                                    @if($girl_count < $item->people)
+                                                @if($item->group==3 or $item->group==2)
+                                                    @if(($girl_count < $item->people) or $item->game_type=="group")
                                                         <a href="#!">
-                                                            <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-is_official="{{ $is_office }}" data-group_num="{{ $group_num }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
+                                                            <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_group="{{ $item_group }}" data-item_group_people="{{ $item_group_people }}" data-item_group_official="{{ $item_group_official }}" data-item_group_reserve="{{ $item_group_reserve }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
                                                         <?php $show_br = 1; ?>
                                                     @endif
@@ -216,9 +216,8 @@
                     <form action="{{ route('sport_meeting.get_students_do') }}" method="post" id="add_form">                        
                         @csrf
                         <input type="hidden" name="action_id" value="{{ $action->id }}">
-                        <input type="hidden" id="item_id" name="item_id">
-                        <input type="hidden" id="is_official" name="is_official">
-                        <input type="hidden" id="group_num" name="group_num">
+                        <input type="hidden" id="item_id" name="item_id">                  
+                        <input type="hidden" id="is_group" name="is_group">
                     <span id="showText"></span>
                     </form>
                 </div>
@@ -237,13 +236,17 @@
             var sex = button.data('sex');
             var student_year = button.data('student_year');
             var student_class = button.data('student_class');
-            var item_id = button.data('item_id');            
-            var is_official = button.data('is_official');
-            var group_num = button.data('group_num');
+            var item_id = button.data('item_id');
+            var item_group = button.data('item_group');            
+            var item_group_people = button.data('item_group_people');
+            var item_group_official = button.data('item_group_official');
+            var item_group_reserve = button.data('item_group_reserve');            
 
             $('#item_id').val(item_id);
-            $('#is_official').val(is_official);
-            $('#group_num').val(group_num);
+            if(item_group_official){
+                $('#is_group').val(1);
+            }
+            
             $.ajax({
                 url: '{{ route('sport_meeting.get_students') }}',
                 type: 'post',
@@ -256,13 +259,40 @@
                     student_class: student_class
                 },
                 success: function (result) {    
-                    var html = item_name+'<br>'+student_year + '年' + student_class + '班 ' + sex + '生<br>';
-                    html += '<select class=\'form-control\' name=\'student_id\'><option>--請選擇--</option>';
+                    var head = item_name+'<br>'+student_year + '年' + student_class + '班 ' + sex + '生<br>';
+                    var select_official = '<select class=\'form-control\' name=\'official_student_ids[]\'><option>--請選擇--</option>';
                     for (var key in result) {
-                        html += '<option value="'+ key +'">'+ result[key] +'</option>';
+                        select_official += '<option value="'+ key +'">'+ result[key] +'</option>';
                     }
-                    html += '</select>';                                        
-                    $('#showText').html(html)
+                    select_official += '</select>';
+                    var select_reserve = '<select class=\'form-control\' name=\'reserve_student_ids[]\'><option>--請選擇--</option>';
+                    for (var key in result) {
+                        select_reserve += '<option value="'+ key +'">'+ result[key] +'</option>';
+                    }
+                    select_reserve += '</select>';
+
+                    if(item_group==1){              
+                        var group_num = "<table><tr><td>請選組別</td><td><select class=\'form-control\' name=\'group_num\'>";
+                        for(var i=1;i<=item_group_people;i++){
+                            group_num += '<option value="'+ i +'">'+ i +'</option>';
+                        }
+                        group_num += '</select></td></tr></table><hr>';
+                        var table1 = "<table>";
+                        for(var i=1;i<=item_group_official;i++){
+                            table1 += '<tr><td>正式'+i+'</td><td>'+select_official+'</td></tr>';
+                        }        
+                        table1 += '</table><hr>';   
+                        var table2 = "<table>";
+                        for(var j=1;j<=item_group_reserve;j++){
+                            table2 += '<tr><td>預備'+j+'</td><td>'+select_reserve+'</td></tr>';
+                        }        
+                        table2 += '</table>';   
+                        html = group_num+table1 + table2;                        
+                    }else{
+                        html = select_official;
+                    }
+                    html = head + html;
+                    $('#showText').html(html)                                                            
                 },
                 error: function () {
                     $('#showText').html('not ok');
