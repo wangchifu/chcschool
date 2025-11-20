@@ -306,12 +306,12 @@ class SportMeetingController extends Controller
         $att['student_id'] = $request->input('student_id');
         $att['action_id'] = $request->input('action_id');
         $student = ClubStudent::find($att['student_id']);
-        $att['student_year'] = preg_replace('/\d+$/', '', $student->class_num);
+        $att['student_year'] = substr($student->class_num,0,-4);
         $att['student_class'] = (int)substr($student->class_num,-4,2);
         $att['num'] = (int)substr($student->class_num,-2);
-        $att['sex'] = ($item->group==4)?4:$student->sex;
-
+        $att['sex'] = ($item->group==4)?4:$student->sex;        
         StudentSign::create($att);        
+        return back();
     }
 
     public function action_create()

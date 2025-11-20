@@ -32,6 +32,8 @@
                 <div class="card-body">                  
                   @if($admin)
                     <h4>報名狀況</h4>
+                    @include('layouts.errors')
+                    <span>*無號碼者，請記得去「各式表單」--「1.註冊選手名單」--「學生編入布牌號碼」</span><br>
                     <a href="{{ route('sport_meeting.action') }}" class="btn btn-secondary btn-sm">返回</a>
                     <table class="table table-striped">
                         <thead class="table-primary">
@@ -91,10 +93,24 @@
                                             @if(!in_array($student_class->student_year,$years_array))
                                                 --
                                             @elseif($item->game_type=="group" or $item->game_type=="personal")
+                                                <?php 
+                                                    if($item->game_type=="personal"){
+                                                        $group_num = null;
+                                                        $is_office = null;
+                                                    }
+                                                    if($item->game_type=="group") {
+                                                        if($boy_count < $item->official) {
+                                                            $is_office = 1;
+                                                        } else {
+                                                            $is_office = null;
+                                                        }
+                                                    }
+                                                    
+                                                ?>
                                                 @if($item->group==3 or $item->group==1)
                                                     @if($boy_count < $item->people)     
                                                         <a href="#!">                                                            
-                                                            <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
+                                                            <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-is_official="{{ $is_office }}" data-group_num="{{ $group_num }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
                                                         <?php $show_br = 1; ?>
                                                     @endif                                                    
@@ -102,7 +118,7 @@
                                                 @if($item->group==3 or $item->group==2)
                                                     @if($girl_count < $item->people)
                                                         <a href="#!">
-                                                            <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
+                                                            <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-is_official="{{ $is_office }}" data-group_num="{{ $group_num }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
                                                         <?php $show_br = 1; ?>
                                                     @endif
@@ -121,13 +137,21 @@
                                                 @if($student_sign->item->game_type=="personal")
                                                     @if($student_sign->student->sex == "男")
                                                         <span class="text-primary">
-                                                            {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @if(empty($student_sign->student->number))
+                                                                無號碼 {{ $student_sign->student->name }}
+                                                            @else
+                                                                {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @endif                                                            
                                                         </span>
                                                         <br>
                                                     @endif
                                                     @if($student_sign->student->sex == "女")
                                                         <span class="text-danger">
-                                                            {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @if(empty($student_sign->student->number))
+                                                                無號碼 {{ $student_sign->student->name }}
+                                                            @else
+                                                                {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @endif
                                                         </span>
                                                         <br>
                                                     @endif
@@ -140,13 +164,21 @@
                                                     @endif
                                                     @if($student_sign->student->sex == "男")
                                                         <span class="text-primary">
-                                                        {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @if(empty($student_sign->student->number))
+                                                                無號碼 {{ $student_sign->student->name }}
+                                                            @else
+                                                                {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @endif
                                                     </span>
                                                         <br>
                                                     @endif
                                                     @if($student_sign->student->sex == "女")
                                                         <span class="text-danger">
-                                                        {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @if(empty($student_sign->student->number))
+                                                                無號碼 {{ $student_sign->student->name }}
+                                                            @else
+                                                                {{ $student_sign->student->number }} {{ $student_sign->student->name }}
+                                                            @endif
                                                     </span>
                                                         <br>
                                                     @endif
@@ -177,7 +209,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('sport_meeting.student_sign_update') }}" method="post" id="add_form">                        
+                    <form action="{{ route('sport_meeting.get_students_do') }}" method="post" id="add_form">                        
                         @csrf
                         <input type="hidden" name="action_id" value="{{ $action->id }}">
                         <input type="hidden" id="item_id" name="item_id">
