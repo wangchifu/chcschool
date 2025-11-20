@@ -108,14 +108,14 @@
                                                     
                                                 ?>
                                                 @if($item->group==3 or $item->group==1)
-                                                    @if($boy_count < $item->people)     
+                                                    @if(($boy_count < $item->people) and $item->game_type <> "group")     
                                                         <a href="#!">                                                            
                                                             <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-is_official="{{ $is_office }}" data-group_num="{{ $group_num }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
                                                         <?php $show_br = 1; ?>
                                                     @endif                                                    
                                                 @endif
-                                                @if($item->group==3 or $item->group==2)
+                                                @if(($item->group==3 or $item->group==2) and $item->game_type <> "group")
                                                     @if($girl_count < $item->people)
                                                         <a href="#!">
                                                             <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-is_official="{{ $is_office }}" data-group_num="{{ $group_num }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
