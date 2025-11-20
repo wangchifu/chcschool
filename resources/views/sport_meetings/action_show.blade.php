@@ -141,7 +141,8 @@
                                                                 無號碼 {{ $student_sign->student->name }}
                                                             @else
                                                                 {{ $student_sign->student->number }} {{ $student_sign->student->name }}
-                                                            @endif                                                            
+                                                            @endif
+                                                            <a href="{{ route('sport_meeting.get_students_delete',$student_sign->id) }}" onclick="return confirm('確定刪除 {{ $student_sign->student->name }} 嗎？')"><i class="fas fa-times-circle text-danger"></i></a>                                                           
                                                         </span>
                                                         <br>
                                                     @endif
@@ -152,6 +153,7 @@
                                                             @else
                                                                 {{ $student_sign->student->number }} {{ $student_sign->student->name }}
                                                             @endif
+                                                            <a href="{{ route('sport_meeting.get_students_delete',$student_sign->id) }}" onclick="return confirm('確定刪除 {{ $student_sign->student->name }} 嗎？')"><i class="fas fa-times-circle text-danger"></i></a>                                                           
                                                         </span>
                                                         <br>
                                                     @endif
@@ -169,6 +171,7 @@
                                                             @else
                                                                 {{ $student_sign->student->number }} {{ $student_sign->student->name }}
                                                             @endif
+                                                            <a href="{{ route('sport_meeting.get_students_delete',$student_sign->id) }}" onclick="return confirm('確定刪除 {{ $student_sign->student->name }} 嗎？')"><i class="fas fa-times-circle text-danger"></i></a>                                                           
                                                     </span>
                                                         <br>
                                                     @endif
@@ -179,6 +182,7 @@
                                                             @else
                                                                 {{ $student_sign->student->number }} {{ $student_sign->student->name }}
                                                             @endif
+                                                            <a href="{{ route('sport_meeting.get_students_delete',$student_sign->id) }}" onclick="return confirm('確定刪除 {{ $student_sign->student->name }} 嗎？')"><i class="fas fa-times-circle text-danger"></i></a>                                                           
                                                     </span>
                                                         <br>
                                                     @endif

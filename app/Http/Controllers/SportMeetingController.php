@@ -287,6 +287,12 @@ class SportMeetingController extends Controller
             
     }
 
+    public function get_students_delete(StudentSign $student_sign)
+    {
+        $student_sign->delete();
+        return back();
+    }
+
     public function get_students_do(Request $request){
 //檢查此學生報名過了嗎
         $check_has = StudentSign::where('action_id',$request->input('action_id'))
