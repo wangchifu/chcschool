@@ -288,7 +288,7 @@ class SportMeetingController extends Controller
     }
 
     public function get_students_delete(StudentSign $student_sign)
-    {
+    {        
         $student_sign->delete();
         return back();
     }
@@ -300,13 +300,45 @@ class SportMeetingController extends Controller
             ->where('student_id',$request->input('student_id'))
             ->first();
         if(!empty($check_has)){
-            return back()->withErrors(['eroor'=>['***********失敗，此學生報名相同項目***********']])->withInput();
-        }    
+            return back()->withErrors(['eroor'=>['***********失敗，此學生報名相同項目***********']]);
+        }                
+//檢查限額項目是否已達上限        
+        $check_signs = StudentSign::where('action_id',$request->input('action_id'))            
+            ->where('student_id',$request->input('student_id'))
+            ->get();
+        $count_track = 0;
+        $count_field = 0;
+        $count_frequency = 0;
+        foreach($check_signs as $check_sign){
+            if($check_sign->item->type==1 and $check_sign->item->limit==1) $count_track++;
+            if($check_sign->item->type==2 and $check_sign->item->limit==1) $count_field++;
+            if($check_sign->item->limit==1) $count_frequency++;
+        }
+
+        $action = Action::find($request->input('action_id'));
+        $item = Item::find($request->input('item_id'));
         
+        //如果此動作加上去
+        if($item->type ==1) $count_track++;
+        if($item->type ==2) $count_field++;
+        $count_frequency++;
+
+        if($count_track > $action->track){
+            return back()->withErrors(['eroor'=>['***********失敗，若此學生報名此徑賽，項目將達'.$count_track.'項，上限為'.$action->track.'項***********']]);
+        }
+        if($count_field > $action->field){
+            return back()->withErrors(['eroor'=>['***********失敗，若此學生報名此田賽，項目將達'.$count_field.'項，上限為'.$action->field.'項***********']]);
+        }   
+        if($count_frequency > $action->frequency){
+            return back()->withErrors(['eroor'=>['***********失敗，若此學生報名此賽，總項目將達'.$count_frequency.'項，上限為'.$action->frequency.'項***********']]);
+        }   
+        
+        //dd('123');
+
         $att['item_id'] = $request->input('item_id');
         $att['is_official'] = $request->input('is_official');
         $att['group_num'] = $request->input('group_num');
-        $item = Item::find($att['item_id']);
+        //$item = Item::find($att['item_id']);
         $att['item_name'] = $item->name;
         $att['game_type'] = $item->game_type;
         $att['student_id'] = $request->input('student_id');
