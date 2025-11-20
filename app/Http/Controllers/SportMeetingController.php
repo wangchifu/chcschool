@@ -287,6 +287,33 @@ class SportMeetingController extends Controller
             
     }
 
+    public function get_students_do(Request $request){
+//檢查此學生報名過了嗎
+        $check_has = StudentSign::where('action_id',$request->input('action_id'))
+            ->where('item_id',$request->input('item_id'))
+            ->where('student_id',$request->input('student_id'))
+            ->first();
+        if(!empty($check_has)){
+            return back()->withErrors(['eroor'=>['***********失敗，此學生報名相同項目***********']])->withInput();
+        }    
+        
+        $att['item_id'] = $request->input('item_id');
+        $att['is_official'] = $request->input('is_official');
+        $att['group_num'] = $request->input('group_num');
+        $item = Item::find($att['item_id']);
+        $att['item_name'] = $item->name;
+        $att['game_type'] = $item->game_type;
+        $att['student_id'] = $request->input('student_id');
+        $att['action_id'] = $request->input('action_id');
+        $student = ClubStudent::find($att['student_id']);
+        $att['student_year'] = preg_replace('/\d+$/', '', $student->class_num);
+        $att['student_class'] = (int)substr($student->class_num,-4,2);
+        $att['num'] = (int)substr($student->class_num,-2);
+        $att['sex'] = ($item->group==4)?4:$student->sex;
+
+        StudentSign::create($att);        
+    }
+
     public function action_create()
     {
         $admin = check_power('運動會報名', 'A', auth()->user()->id);
@@ -1042,10 +1069,10 @@ class SportMeetingController extends Controller
         $att['student_id'] = $request->input('student_id');
         $att['action_id'] = $request->input('action_id');
         $student = ClubStudent::find($att['student_id']);
-        $att['student_year'] = preg_replace('/\d+$/', '', $student->class_num);
+        $att['student_year'] = substr($student->class_num,0,-4);
         $att['student_class'] = (int)substr($student->class_num,-4,2);
         $att['num'] = (int)substr($student->class_num,-2);
-        $att['sex'] = ($item->group==4)?4:$student->sex;
+        $att['sex'] = ($item->group==4)?4:$student->sex;        
 
         StudentSign::create($att);
 

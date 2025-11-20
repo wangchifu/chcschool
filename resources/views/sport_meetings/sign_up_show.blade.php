@@ -81,7 +81,7 @@
                                             @for($j=1;$j<=$item->people;$j++)
                                                 <div class="col-6">
                                                     <?php
-                                                    $boys_sign = \App\StudentSign::where('action_id',$action->id)->where('item_id',$item->id)->where('sex','男')->where('student_year',$student_year)->where('student_class',$student_class)->get();
+                                                    $boys_sign = \App\StudentSign::where('action_id',$action->id)->where('item_id',$item->id)->where('sex','男')->where('student_year',$student_year)->where('student_class',$student_class)->get();                                                    
                                                     ?>
                                                     <div class="card">
                                                         <div class="card-header text-primary">
@@ -89,8 +89,9 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <label>正式選手</label><br>
-                                                            <?php $boy_official=0; ?>
+                                                            <?php $boy_official=0; ?>                                                            
                                                             @foreach($boys_sign as $boy_sign)
+                                                                
                                                                 @if($boy_sign->is_official==1 and $boy_sign->group_num==$j)
                                                                     <span class="st_name" data-item_type="{{ $item->type }}" data-limit="{{ $item->limit }}" data-id="{{ $boy_sign->student_id }}">{{ $boy_sign->student->name }}</span>
                                                                     @if($action->disable <> 1)

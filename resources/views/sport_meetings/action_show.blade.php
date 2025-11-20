@@ -94,7 +94,7 @@
                                                 @if($item->group==3 or $item->group==1)
                                                     @if($boy_count < $item->people)     
                                                         <a href="#!">                                                            
-                                                            <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
+                                                            <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
                                                         <?php $show_br = 1; ?>
                                                     @endif                                                    
@@ -102,7 +102,7 @@
                                                 @if($item->group==3 or $item->group==2)
                                                     @if($girl_count < $item->people)
                                                         <a href="#!">
-                                                            <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
+                                                            <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
                                                         <?php $show_br = 1; ?>
                                                     @endif
@@ -177,10 +177,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('sport_meeting.student_sign_update') }}" method="post" id="add_form">
-                        
+                    <form action="{{ route('sport_meeting.student_sign_update') }}" method="post" id="add_form">                        
                         @csrf
-                        @method('patch')
+                        <input type="hidden" name="action_id" value="{{ $action->id }}">
+                        <input type="hidden" id="item_id" name="item_id">
+                        <input type="hidden" id="is_official" name="is_official">
+                        <input type="hidden" id="group_num" name="group_num">
                     <span id="showText"></span>
                     </form>
                 </div>
@@ -199,6 +201,13 @@
             var sex = button.data('sex');
             var student_year = button.data('student_year');
             var student_class = button.data('student_class');
+            var item_id = button.data('item_id');            
+            var is_official = button.data('is_official');
+            var group_num = button.data('group_num');
+
+            $('#item_id').val(item_id);
+            $('#is_official').val(is_official);
+            $('#group_num').val(group_num);
             $.ajax({
                 url: '{{ route('sport_meeting.get_students') }}',
                 type: 'post',
