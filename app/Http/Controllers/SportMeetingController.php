@@ -16,6 +16,7 @@ use PHPExcel;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use ZipArchive;
+use Illuminate\Support\Facades\DB;
 
 
 class SportMeetingController extends Controller
@@ -2339,6 +2340,30 @@ class SportMeetingController extends Controller
         }
         $s = 1;        
 	$last_class = "";    
+    $ids = "";
+    $string1 = "";
+        foreach($students as $k => $v){
+            if($last_class <> $v['year'].$v['class']) $s =1;
+                if($action->numbers == 4){
+                    $number = $v['year'].$v['class'].sprintf("%02s",$s);
+                }
+                if($action->numbers == 5){
+                    $number = $v['year'].sprintf("%02s",$v['class']).sprintf("%02s",$s);
+                }                
+                $att['number'] = $number;                  
+                $string1 = $string1." when id=".$k." then '".$att['number']."'";
+                $ids = $ids.$k.",";
+            $s++;
+            $last_class = $v['year'].$v['class'];
+        }
+        $ids = substr($ids,0,-1);
+    
+        DB::statement("UPDATE club_students SET 
+        number = CASE 
+        ".$string1." 
+        END
+        WHERE id IN (".$ids.")");
+    /*** 
 	foreach($students as $k => $v){
 	    if($last_class <> $v['year'].$v['class']) $s =1;
             if($action->numbers == 4){
@@ -2353,6 +2378,7 @@ class SportMeetingController extends Controller
 	    $s++;
 	    $last_class = $v['year'].$v['class'];
         }
+        */
 
         return redirect()->back()->withErrors(['error'=>['編入號碼完成！']]);
 
