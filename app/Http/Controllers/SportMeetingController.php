@@ -68,7 +68,7 @@ class SportMeetingController extends Controller
                 ->orderBy('student_class')
                 ->get();
 
-        }
+        }        
 
         $data = [
             "admin"=>$admin,
@@ -264,6 +264,27 @@ class SportMeetingController extends Controller
         ];
         return view('sport_meetings.action_show',$data);
 
+    }
+
+    public function get_students(Request $request){
+            $action = Action::find($request->input('action_id'));
+            $class_num = $request->input('student_year').sprintf("%02s",$request->input('student_class'));
+            $students = ClubStudent::where('semester',$action->semester)
+                ->where('class_num','like',$class_num.'%')            
+                ->orderBy('class_num')
+                ->where('disable',null)
+                ->get();            
+            //dd($students);
+            $girls = [];
+            $boys = [];
+            foreach($students as $student){            
+                if($student->sex == "男") $boys[$student->id] = substr($student->class_num,-2).'-'.$student->name;
+                if($student->sex == "女") $girls[$student->id] = substr($student->class_num,-2).'-'.$student->name;                
+            }   
+            
+            if($request->input('sex') == "男") return response()->json($boys);            
+            if($request->input('sex') == "女") return response()->json($girls);
+            
     }
 
     public function action_create()

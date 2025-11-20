@@ -379,6 +379,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('sport_meeting/action_create', 'SportMeetingController@action_create')->name('sport_meeting.action_create');
     Route::post('sport_meeting/action_add', 'SportMeetingController@action_add')->name('sport_meeting.action_add');
     Route::get('sport_meeting/action_show/{action}', 'SportMeetingController@action_show')->name('sport_meeting.action_show');                                                    
+    Route::post('sport_meeting/get_students', 'SportMeetingController@get_students')->name('sport_meeting.get_students');
     Route::get('sport_meeting/action_set_number/{action}', 'SportMeetingController@action_set_number')->name('sport_meeting.action_set_number');
     Route::get('sport_meeting/action_set_number_null/{action}', 'SportMeetingController@action_set_number_null')->name('sport_meeting.action_set_number_null');
     Route::get('sport_meeting/action_edit/{action}', 'SportMeetingController@action_edit')->name('sport_meeting.action_edit');

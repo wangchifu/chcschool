@@ -93,7 +93,7 @@
     <script>
         function jump(){
             if(document.myform.select_action.options[document.myform.select_action.selectedIndex].value!=''){
-                location="/show/" + document.myform.select_action.options[document.myform.select_action.selectedIndex].value;
+                location="/sport_meeting/index/" + document.myform.select_action.options[document.myform.select_action.selectedIndex].value;
             }
         }
     </script>
