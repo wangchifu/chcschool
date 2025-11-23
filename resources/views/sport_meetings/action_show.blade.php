@@ -143,13 +143,13 @@
                                                             ) && !(
                                                                 ($group_show_img == 0) && ($item->game_type == "group")
                                                             );
+                                                            if($should_show_image) $show_br = 1;
                                                         ?>               
                                                         @if($should_show_image)                                       
                                                             <a href="#!">                                                            
                                                                 <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_group="{{ $item_group }}" data-item_group_people="{{ $item_group_people }}" data-item_group_official="{{ $item_group_official }}" data-item_group_reserve="{{ $item_group_reserve }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                             </a>               
-                                                        @endif                  
-                                                        <?php $show_br = 1; ?>
+                                                        @endif                                                                          
                                                     @endif                                                    
                                                 @endif
                                                 @if($item->group==3 or $item->group==2)
@@ -187,13 +187,13 @@
                                                             ) && !(
                                                                 ($group_show_img == 0) && ($item->game_type == "group")
                                                             );
+                                                            if($should_show_image) $show_br = 1;
                                                         ?>               
                                                         @if($should_show_image)                                                    
                                                         <a href="#!">
                                                             <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_group="{{ $item_group }}" data-item_group_people="{{ $item_group_people }}" data-item_group_official="{{ $item_group_official }}" data-item_group_reserve="{{ $item_group_reserve }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
-                                                        @endif
-                                                        <?php $show_br = 1; ?>
+                                                        @endif                                                        
                                                     @endif
                                                 @endif
                                                 @if($show_br == 1)
