@@ -106,20 +106,93 @@
                                                         $item_group_official =null;
                                                         $item_group_reserve =null;
                                                     }
+                                                    $group_show_img = 0;                                                    
                                                 ?>                                            
                                                 @if($item->group==3 or $item->group==1)
                                                     @if(($boy_count < $item->people) or $item->game_type=="group")
-                                                        <a href="#!">                                                            
-                                                            <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_group="{{ $item_group }}" data-item_group_people="{{ $item_group_people }}" data-item_group_official="{{ $item_group_official }}" data-item_group_reserve="{{ $item_group_reserve }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
-                                                        </a>
+                                                        @if($item->game_type=="group")
+                                                            <?php
+                                                                $group = [];
+                                                                foreach($student_signs as $student_sign){
+                                                                    $group[$student_sign->group_num] ??= [];                                                                    
+                                                                    $group[$student_sign->group_num]['is_official'] ??= 0;
+                                                                    $group[$student_sign->group_num]['reserve'] ??= 0;
+                                                                    if($student_sign->sex=="男"){
+                                                                        if($student_sign->is_official==1){
+                                                                            $group[$student_sign->group_num]['is_official']++ ;
+                                                                        }else{
+                                                                            $group[$student_sign->group_num]['reserve']++ ;
+                                                                        }
+                                                                    }                                                                    
+                                                                }
+                                                                if(count($group)==0){
+                                                                    $group[1]['is_official'] = 0;
+                                                                    $group[1]['reserve'] = 0;
+                                                                }
+                                                                for($i=1;$i<=$item->people;$i++){
+                                                                    if($group[$i]['is_official'] < $item->official or $group[$i]['reserve'] < $item->reserve){
+                                                                        $group_show_img = 1;                                                                        
+                                                                    }
+                                                                }                                                                   
+                                                            ?>
+                                                        @endif 
+                                                        <?php
+                                                        // 判斷是否應該顯示圖片的條件
+                                                            $should_show_image = (
+                                                                ($boy_count < $item->people) || ($item->game_type == "group")
+                                                            ) && !(
+                                                                ($group_show_img == 0) && ($item->game_type == "group")
+                                                            );
+                                                        ?>               
+                                                        @if($should_show_image)                                       
+                                                            <a href="#!">                                                            
+                                                                <img id="get_boy_students" src="{{ asset('images/boy_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_group="{{ $item_group }}" data-item_group_people="{{ $item_group_people }}" data-item_group_official="{{ $item_group_official }}" data-item_group_reserve="{{ $item_group_reserve }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="男" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
+                                                            </a>               
+                                                        @endif                  
                                                         <?php $show_br = 1; ?>
                                                     @endif                                                    
                                                 @endif
                                                 @if($item->group==3 or $item->group==2)
                                                     @if(($girl_count < $item->people) or $item->game_type=="group")
+                                                        @if($item->game_type=="group")
+                                                            <?php
+                                                                $group = [];
+                                                                foreach($student_signs as $student_sign){
+                                                                    $group[$student_sign->group_num] ??= [];                                                                    
+                                                                    $group[$student_sign->group_num]['is_official'] ??= 0;
+                                                                    $group[$student_sign->group_num]['reserve'] ??= 0;
+                                                                    if($student_sign->sex=="女"){
+                                                                        if($student_sign->is_official==1){
+                                                                            $group[$student_sign->group_num]['is_official']++ ;
+                                                                        }else{
+                                                                            $group[$student_sign->group_num]['reserve']++ ;
+                                                                        }
+                                                                    }                                                                    
+                                                                }
+                                                                if(count($group)==0){
+                                                                    $group[1]['is_official'] = 0;
+                                                                    $group[1]['reserve'] = 0;
+                                                                }
+                                                                for($i=1;$i<=$item->people;$i++){
+                                                                    if($group[$i]['is_official'] < $item->official or $group[$i]['reserve'] < $item->reserve){
+                                                                        $group_show_img = 1;                                                                        
+                                                                    }
+                                                                }                                                                   
+                                                            ?>
+                                                        @endif 
+                                                        <?php
+                                                        // 判斷是否應該顯示圖片的條件
+                                                            $should_show_image = (
+                                                                ($boy_count < $item->people) || ($item->game_type == "group")
+                                                            ) && !(
+                                                                ($group_show_img == 0) && ($item->game_type == "group")
+                                                            );
+                                                        ?>               
+                                                        @if($should_show_image)                                                    
                                                         <a href="#!">
                                                             <img id="get_girl_students" src="{{ asset('images/girl_plus.png') }}" width="20" data-toggle="modal" data-target="#addModal" data-item_id="{{ $item->id }}" data-item_group="{{ $item_group }}" data-item_group_people="{{ $item_group_people }}" data-item_group_official="{{ $item_group_official }}" data-item_group_reserve="{{ $item_group_reserve }}" data-item_name="{{ $item->name }}" data-action_id="{{ $action->id }}" data-sex="女" data-student_year="{{ $student_class->student_year }}" data-student_class="{{ $student_class->student_class }}">
                                                         </a>
+                                                        @endif
                                                         <?php $show_br = 1; ?>
                                                     @endif
                                                 @endif

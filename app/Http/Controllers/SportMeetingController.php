@@ -346,34 +346,41 @@ class SportMeetingController extends Controller
         
         $official_student_ids = $request->input('official_student_ids');      
         $reserve_student_ids = $request->input('reserve_student_ids');
+        //dd($official_student_ids);
 
         foreach($official_student_ids as $k=>$student_id){
-            $att['student_id'] = $student_id;
-            $student = ClubStudent::find($student_id);
-            $att['student_year'] = substr($student->class_num,0,-4);
-            $att['student_class'] = (int)substr($student->class_num,-4,2);
-            $att['num'] = (int)substr($student->class_num,-2);
-            $att['sex'] = ($item->group==4)?4:$student->sex;        
-            if($request->input('is_group') == 1){
-                $att['is_official'] = 1;
-                $att['group_num'] = $request->input('group_num');
-            }
-            
-            StudentSign::create($att); 
+                if($student_id != "--請選擇--"){
+                    $att['student_id'] = $student_id;
+                    $student = ClubStudent::find($student_id);
+                    if(!empty($student->id)){
+                        $att['student_year'] = substr($student->class_num,0,-4);
+                        $att['student_class'] = (int)substr($student->class_num,-4,2);
+                        $att['num'] = (int)substr($student->class_num,-2);
+                        $att['sex'] = ($item->group==4)?4:$student->sex;        
+                        if($request->input('is_group') == 1){
+                            $att['is_official'] = 1;
+                            $att['group_num'] = $request->input('group_num');
+                        }
+                        
+                        StudentSign::create($att);                      
+                    }                
+                }                
         }
         
         if($request->input('is_group') == 1){
             foreach($reserve_student_ids as $k=>$student_id){
-                $att['student_id'] = $student_id;
-                $student = ClubStudent::find($student_id);
-                $att['student_year'] = substr($student->class_num,0,-4);
-                $att['student_class'] = (int)substr($student->class_num,-4,2);
-                $att['num'] = (int)substr($student->class_num,-2);
-                $att['sex'] = ($item->group==4)?4:$student->sex;        
-                $att['is_official'] = null;
-                $att['group_num'] = $request->input('group_num');
-                //dd($att);
-                StudentSign::create($att); 
+                if($student_id != "--請選擇--"){
+                    $att['student_id'] = $student_id;
+                    $student = ClubStudent::find($student_id);
+                    $att['student_year'] = substr($student->class_num,0,-4);
+                    $att['student_class'] = (int)substr($student->class_num,-4,2);
+                    $att['num'] = (int)substr($student->class_num,-2);
+                    $att['sex'] = ($item->group==4)?4:$student->sex;        
+                    $att['is_official'] = null;
+                    $att['group_num'] = $request->input('group_num');
+                    //dd($att);
+                    StudentSign::create($att); 
+                }
             }
         }
                
