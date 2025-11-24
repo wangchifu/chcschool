@@ -114,9 +114,9 @@
                                                             <?php
                                                                 $group = [];
                                                                 foreach($student_signs as $student_sign){
-                                                                    $group[$student_sign->group_num] ??= [];                                                                    
-                                                                    $group[$student_sign->group_num]['is_official'] ??= 0;
-                                                                    $group[$student_sign->group_num]['reserve'] ??= 0;
+                                                                    $group[$student_sign->group_num] = $group[$student_sign->group_num] ?? [];                                                                    
+                                                                    $group[$student_sign->group_num]['is_official'] = $group[$student_sign->group_num]['is_official'] ?? 0;
+                                                                    $group[$student_sign->group_num]['reserve'] = $group[$student_sign->group_num]['reserve'] ?? 0;
                                                                     if($student_sign->sex=="男"){
                                                                         if($student_sign->is_official==1){
                                                                             $group[$student_sign->group_num]['is_official']++ ;
@@ -158,9 +158,9 @@
                                                             <?php
                                                                 $group = [];
                                                                 foreach($student_signs as $student_sign){
-                                                                    $group[$student_sign->group_num] ??= [];                                                                    
-                                                                    $group[$student_sign->group_num]['is_official'] ??= 0;
-                                                                    $group[$student_sign->group_num]['reserve'] ??= 0;
+                                                                    $group[$student_sign->group_num] = $group[$student_sign->group_num] ?? [];                                                                    
+                                                                    $group[$student_sign->group_num]['is_official'] = $group[$student_sign->group_num]['is_official'] ?? 0;
+                                                                    $group[$student_sign->group_num]['reserve'] = $group[$student_sign->group_num]['reserve'] ?? 0;
                                                                     if($student_sign->sex=="女"){
                                                                         if($student_sign->is_official==1){
                                                                             $group[$student_sign->group_num]['is_official']++ ;
