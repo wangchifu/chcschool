@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 
 class GLoginController extends Controller
 {
@@ -19,6 +20,94 @@ class GLoginController extends Controller
         if (!empty($setup->close_website)) {
             Redirect::to('close')->send();
         }
+    }
+
+    public function sys(Request $request)
+    {
+        $key = rand(10000, 99999);
+        session(['chaptcha' => $key]);
+        $cht = array(0 => "零", 1 => "壹", 2 => "貳", 3 => "參", 4 => "肆", 5 => "伍", 6 => "陸", 7 => "柒", 8 => "捌", 9 => "玖");
+        //$cht = array(0=>"0",1=>"1",2=>"2",3=>"3",4=>"4",5=>"5",6=>"6",7=>"7",8=>"8",9=>"9");
+        $cht_key = "";
+        for ($i = 0; $i < 5; $i++) $cht_key .= $cht[substr($key, $i, 1)];
+
+        session(['cht_chaptcha' => $cht_key]);
+        
+        if (auth()->check()) {
+            return redirect()->route('index');
+        }
+        return view('auth.sys');
+    }
+
+    public function sys_auth(Request $request)
+    {
+        if (session('login_error') >= 3) {
+            return view('errors.500');
+        }
+
+        if ($request->input('chaptcha') != session('chaptcha')) {
+            if (!session('login_error')) {
+                session(['login_error' => 1]);
+            } else {
+                $a = session('login_error');
+                $a++;
+                session(['login_error' => $a]);
+            }
+
+            return back()->withErrors(['gsuite_error' => ['驗證碼錯誤！']]);
+        }
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+
+        if (Hash::check($password, env('SYS_PWD')) and $username == env('SYS_ACC')) {
+            // 密碼正確            
+            session(['login_error' => null]);
+            session(['sys_login' => 1]);
+            return redirect()->route('sys_index');
+        } else {
+            // 密碼錯誤
+            if (!session('login_error')) {
+                session(['login_error' => 1]);
+            } else {
+                $a = session('login_error');
+                $a++;
+                session(['login_error' => $a]);
+            }
+
+            return back()->withErrors(['gsuite_error' => ['帳號或密碼錯誤']]);
+        }        
+    }
+
+    public function sys_index(Request $request)
+    {
+        if (!session('sys_login')) {
+            return redirect()->route('index');
+        }
+
+        $users = User::where('disable',null)
+            ->orderBy('order_by')                        
+            ->get();
+
+        $data = [
+            'users'=>$users,
+        ];
+
+        return view('users.sys_index',$data);
+    }
+
+    public function sys_logout()
+    {
+        session(['sys_login' => null]);
+        return redirect()->route('index');
+    }
+
+    public function sys_sim(User $user)
+    {
+        if (session('sys_login')==1) {                        
+             Auth::login($user);
+        }
+        return redirect()->route('index');                
     }
 
     public function showLoginForm(Request $request)

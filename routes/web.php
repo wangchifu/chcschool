@@ -60,6 +60,13 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('sso', 'OpenIDController@sso')->name('sso');
 Route::get('auth/callback', 'OpenIDController@callback')->name('callback');
 
+//總系統管理員登入
+Route::get('sys', 'Auth\GLoginController@sys')->name('sys');
+Route::post('sys_auth', 'Auth\GLoginController@sys_auth')->name('sys_auth');
+Route::get('sys_logout', 'Auth\GLoginController@sys_logout')->name('sys_logout');
+Route::get('sys_index', 'Auth\GLoginController@sys_index')->name('sys_index');
+Route::get('sys_sim/{user}', 'Auth\GLoginController@sys_sim')->name('sys_sim');
+
 #註冊
 //Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 //Route::post('register', 'Auth\RegisterController@register')->name('register.post');
