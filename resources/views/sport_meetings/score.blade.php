@@ -41,8 +41,12 @@
               <br>
               <a href="{{ asset('demo.odt') }}" class="btn btn-success btn-sm"><i class="fas fa-download"></i> 範本下載</a>
               <button class="btn btn-primary btn-sm" onclick="return confirm('會覆蓋已上傳喔！')"><i class="fas fa-upload"></i> 上傳自校範本</button>
-              @if(is_file(storage_path('app/public').'/demo.odt'))
-                  [<a href="{{ asset('storage/demo.odt') }}">已上傳</a>]
+              <?php
+                $school_code = school_code();                                    
+                $odt = storage_path('app/public/'. $school_code . '/sport_meeting/demo.odt');
+              ?>
+              @if(is_file($odt))
+                  [<a href="{{ asset('storage/'.$school_code . '/sport_meeting/demo.odt') }}">已上傳</a>]
               @endif
           </form>
             建議用 libreoffice 編輯，符號由左至右依序打上，例如 &#123;&#123;姓名&#125;&#125; ，避免被文書軟體依格式不同變成不連續字串<br>

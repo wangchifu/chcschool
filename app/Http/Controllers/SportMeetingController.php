@@ -1152,9 +1152,8 @@ class SportMeetingController extends Controller
         return redirect()->route('sport_meeting.sign_up_show',$request->input('action_id'));
     }
 
-    public function demo_upload(Request $request)
-    {        
-        $folder = 'public';
+    public function demo_upload(Request $request) 
+    {                
         //處理檔案上傳
         if ($request->hasFile('demo')) {
             $demo = $request->file('demo');
@@ -1163,17 +1162,19 @@ class SportMeetingController extends Controller
                 'extension' => $demo->getClientOriginalExtension(),
             ];
 
+            $school_code = school_code();
+            $folder = 'public/' . $school_code . '/sport_meeting';
+            //執行上傳檔案
             $demo->storeAs($folder, 'demo.odt');
-        }
 
-        $odt_folder = storage_path('app/public');
-
-        $zip = new ZipArchive;
-        $res = $zip->open($odt_folder.'/demo.odt');
-        if ($res === TRUE) {
-            $zip->extractTo($odt_folder.'/demo');
-            $zip->close();
-        }
+            $odt_folder = storage_path('app/public/'. $school_code . '/sport_meeting');
+            $zip = new ZipArchive;
+            $res = $zip->open($odt_folder.'/demo.odt');
+            if ($res === TRUE) {
+                $zip->extractTo($odt_folder.'/demo');
+                $zip->close();
+            }
+        }        
 
 
         return redirect()->route('sport_meeting.score');
@@ -1181,7 +1182,9 @@ class SportMeetingController extends Controller
 
     public function print_extra(Request $request)
     {
-        $odt_folder = storage_path('app/public');
+        //$odt_folder = storage_path('app/public');
+        $school_code = school_code();   
+        $odt_folder = storage_path('app/public/'. $school_code . '/sport_meeting');
 
         $zip = new ZipArchive;
         if(file_exists($odt_folder.'/自訂獎狀.odt')){
@@ -1397,7 +1400,9 @@ class SportMeetingController extends Controller
             ->orderBy('is_official','DESC')
             ->get();
 
-        $odt_folder = storage_path('app/public');
+        //$odt_folder = storage_path('app/public');
+        $school_code = school_code();   
+        $odt_folder = storage_path('app/public/'. $school_code . '/sport_meeting');
 
         $zip = new ZipArchive;
         if(file_exists($odt_folder.'/'.$year.'年級'.$sex.'子組'.$item->name.'獎狀.odt')){
@@ -1557,7 +1562,9 @@ class SportMeetingController extends Controller
             ->orderBy('is_official','DESC')
             ->get();
 
-        $odt_folder = storage_path('app/public');
+        //$odt_folder = storage_path('app/public');
+        $school_code = school_code();   
+        $odt_folder = storage_path('app/public/'. $school_code . '/sport_meeting');
 
         $zip = new ZipArchive;
         if(file_exists($odt_folder.'/'.$year.'年級'.$sex.'子組'.$item->name.'獎狀.odt')){

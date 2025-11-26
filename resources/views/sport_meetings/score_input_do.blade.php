@@ -131,7 +131,11 @@
                 <input type="hidden" name="item_id" value="{{ $item->id }}">
                 <a href="{{ route('sport_meeting.score_input') }}" class="btn btn-secondary btn-sm">返回</a>
                 <button class="btn btn-primary btn-sm" onclick="return confirm('確定送出？')">送出{{ $year }}年級@if($sex <>4){{ $sex }}子組@endif成績</button>                
-                @if(is_file(storage_path('app/public').'/demo.odt'))
+                <?php
+                    $school_code = school_code();                                    
+                    $odt = storage_path('app/public/'. $school_code . '/sport_meeting/demo.odt');
+                ?>
+                @if(is_file($odt))
                     <a href="{{ route('sport_meeting.score_input_print',['action'=>$action->id,'item'=>$item->id,'year'=>$year,'sex'=>$sex]) }}" class="btn btn-success btn-sm"><i class="fas fa-print"></i> 列印獎狀
                     @if($item->game_type == "group")
                         (團體)
