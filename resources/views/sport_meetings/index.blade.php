@@ -76,7 +76,9 @@
                                             全班
                                         @endif
                                         @if($student_sign->achievement or $student_sign->ranking)
-                                            [{{ $student_sign->achievement }} {{ $rankings[$student_sign->ranking] }}]
+                                            @if(isset($rankings[$student_sign->ranking]))
+                                                [{{ $student_sign->achievement }} {{ $rankings[$student_sign->ranking] }}]
+                                            @endif
                                         @endif
                                     </span>
                                     <br>
