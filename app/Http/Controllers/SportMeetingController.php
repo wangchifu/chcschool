@@ -1465,6 +1465,15 @@ class SportMeetingController extends Controller
                             $class_group = $student_sign->student_year.$student_sign->student_class.$student_sign->group_num;
                             if($last_group <> $class_group){
                                 $i++;
+                                if($student_sign->student_year=="幼小" or $student_sign->student_year=="幼中" or $student_sign->student_year=="幼大"){
+                                    $score_data[$i]['year_name'] = $cht_num[$student_sign->student_year];
+                                    $score_data[$i]['year_class_name'] = $cht_num[$student_sign->student_year].$student_sign->student_class . "班";
+                                    $score_data[$i]['cht_year_class_name'] = $cht_num[$student_sign->student_year] . $cht_num[$student_sign->student_class] . "班";
+                                }else{
+                                    $score_data[$i]['year_name'] = $cht_num[$student_sign->student_year] . "年級";
+                                    $score_data[$i]['year_class_name'] = $cht_num[$student_sign->student_year] . "年" . $student_sign->student_class . "班";
+                                    $score_data[$i]['cht_year_class_name'] = $cht_num[$student_sign->student_year] . "年" . $cht_num[$student_sign->student_class] . "班";
+                                }
                             }
                             $score_data[$i]['ranking'] = $student_sign->ranking;
                             $score_data[$i]['achievement'] = $student_sign->achievement;
