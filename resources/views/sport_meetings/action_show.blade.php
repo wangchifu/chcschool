@@ -138,11 +138,13 @@
                                                         @endif 
                                                         <?php
                                                         // 判斷是否應該顯示圖片的條件
-                                                            $should_show_image = (
-                                                                ($boy_count < $item->people) || ($item->game_type == "group")
-                                                            ) && !(
-                                                                ($group_show_img == 0) && ($item->game_type == "group")
-                                                            );
+                                                        $should_show_image = (
+                                                            ($boy_count < $item->people) || 
+                                                            ($girl_count < $item->people) || // 新加入的條件
+                                                            ($item->game_type == "group")
+                                                        ) && !(
+                                                            ($group_show_img == 0) && ($item->game_type == "group")
+                                                        );
                                                             if($should_show_image) $show_br = 1;
                                                         ?>               
                                                         @if($should_show_image)                                       
@@ -183,7 +185,9 @@
                                                         <?php
                                                         // 判斷是否應該顯示圖片的條件
                                                             $should_show_image = (
-                                                                ($boy_count < $item->people) || ($item->game_type == "group")
+                                                                ($boy_count < $item->people) || 
+                                                                ($girl_count < $item->people) || // 新加入的條件
+                                                                ($item->game_type == "group")
                                                             ) && !(
                                                                 ($group_show_img == 0) && ($item->game_type == "group")
                                                             );
