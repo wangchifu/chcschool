@@ -20,21 +20,21 @@
                         $school_code = school_code();
                         $img = "storage/".$school_code.'/photo_links/'.$photo_link->image;
                         ?>
-                        <figure class="figure w-100"> <style>
+                        <figure class="figure w-100">
+                            <style>
                                 .fixed-size-img {
-                                    width: 100%;        /* 寬度隨外層 Grid 縮放 */
-                                    aspect-ratio: 1 / 1; /* 設定為正方形，也可以改為 4 / 3 或 16 / 9 */
-                                    object-fit: cover;   /* 關鍵：圖片會填滿容器並自動裁切，不變形 */
-                                    object-position: center; /* 裁切時以中心點為主 */
+                                    width: 100%;            /* 寬度撐滿 Bootstrap 的欄位 */
+                                    aspect-ratio: 16 / 9;    /* 設定為 16:9 比例 */
+                                    object-fit: cover;       /* 圖片裁切以填滿容器，不變形 */
+                                    object-position: center; /* 裁切時以中心點為準 */
+                                    display: block;          /* 消除圖片下方微小間隙 */
                                 }
                                 
                                 a:hover img {
-                                    filter: alpha(Opacity=50);
-                                    -moz-opacity: 0.5;
                                     opacity: 0.5;
+                                    transition: opacity 0.2s ease; /* 增加平滑過渡效果 */
                                 }
                             </style>
-
                             <a href="{{ $photo_link->url }}" target="_blank">
                                 <img src="{{ asset($img) }}" 
                                     class="figure-img img-fluid rounded fixed-size-img" 
