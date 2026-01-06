@@ -20,20 +20,32 @@
                         $school_code = school_code();
                         $img = "storage/".$school_code.'/photo_links/'.$photo_link->image;
                         ?>
-                        <figure class="figure">
-                            <style>
-                                a:hover img{filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;}
+                        <figure class="figure w-100"> <style>
+                                .fixed-size-img {
+                                    width: 100%;        /* 寬度隨外層 Grid 縮放 */
+                                    aspect-ratio: 1 / 1; /* 設定為正方形，也可以改為 4 / 3 或 16 / 9 */
+                                    object-fit: cover;   /* 關鍵：圖片會填滿容器並自動裁切，不變形 */
+                                    object-position: center; /* 裁切時以中心點為主 */
+                                }
+                                
+                                a:hover img {
+                                    filter: alpha(Opacity=50);
+                                    -moz-opacity: 0.5;
+                                    opacity: 0.5;
+                                }
                             </style>
+
                             <a href="{{ $photo_link->url }}" target="_blank">
-                                <img src="{{ asset($img) }}" class="figure-img img-fluid rounded" alt="編號{{ $photo_link->id }}圖片連結的縮圖">
+                                <img src="{{ asset($img) }}" 
+                                    class="figure-img img-fluid rounded fixed-size-img" 
+                                    alt="編號{{ $photo_link->id }}圖片連結的縮圖">
                             </a>
-                                <figcaption class="figure-caption" style="word-wrap: break-word;word-break: break-all;">
-                                    <small>
-                                        {{ $photo_link->name }}
-                                    </small>
-                                </figcaption>
+                            
+                            <figcaption class="figure-caption" style="word-wrap: break-word;word-break: break-all;">
+                                <small>{{ $photo_link->name }}</small>
+                            </figcaption>
                         </figure>
-                    </div>
+                    </div>                    
                 @endforeach
             </div>
             <div class="row">
