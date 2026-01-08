@@ -928,5 +928,6 @@ return [
         //'web.thjh.chc.edu.tw'=>'s074516',
         //'web.esjh.chc.edu.tw'=>'s074529',
         //'web.elsh.chc.edu.tw'=>'s074313',
+        'www3.hdes.chc.edu.tw'=>'s074628_3',
     ],
 ];
