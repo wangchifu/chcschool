@@ -49,12 +49,12 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
     
     
 
-    if(!isset($data->records)){
+    if(!isset($data)){
         $data = [];
         //$select_data=[];
         $air_data=[];
     }else{
-        foreach($data->records as $k=>$v){
+        foreach($data as $k=>$v){
             $select_data[$v->county][] = $v->sitename;
             $air_data[$v->sitename]['AQI'] = $v->aqi;
             $air_data[$v->sitename]['Status'] = $v->status;
