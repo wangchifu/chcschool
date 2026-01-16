@@ -585,25 +585,23 @@ class HomeController extends Controller
         foreach ($posts as $post) {
             $insite = (empty($post->insite))?0:$post->insite;
             $web = $_SERVER['HTTP_HOST'];
+            $safe_title = htmlspecialchars($post->title, ENT_XML | ENT_QUOTES, 'UTF-8');
+            $safe_content = htmlspecialchars($post->content, ENT_XML | ENT_QUOTES, 'UTF-8');
             $items .= '
             <item>
                 <link>
                 https://' . $web . '/posts/' . $post->id . '
                 </link>
-                <title>
-                    <![CDATA[ ' . $post->title . ' ]]>
-                </title>
-                <author>' . $post->job_title . '</author>
+                <title><![CDATA[ ' . $safe_title . ' ]]></title>
+                <dc:creator>' . $post->job_title . '</dc:creator>
                 <category>
                     <![CDATA[ ' . $type[$insite] . ' ]]>
                 </category>
-                <pubDate>' . substr($post->passed_at, 0, 16) . '</pubDate>
-                <guid>
-                    ' . $web . '/posts/' . $post->id . '
-                </guid>
+                <pubDate>' . date(DATE_RSS, strtotime(substr($post->passed_at, 0, 16))) . '</pubDate>
+                <guid>' . $web . '/posts/' . $post->id . '</guid>
                 <description>
                     <![CDATA[
-                        ' . $post->content . '
+                        ' . $safe_content . '
                     ]]>
                 </description>
             </item>
@@ -611,18 +609,17 @@ class HomeController extends Controller
         }
 
         $content = '<?xml version="1.0" encoding="UTF-8"?>
-            <rss version="2.0">
+            <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
                 <channel>
-                <title>
-                    <![CDATA[ '.$setup->site_name.' ]]>
-                </title>
+                <title><![CDATA[ '.$setup->site_name.' ]]></title>
                 <link>https://'.$web.'</link>
                 <description>
                     <![CDATA[
                         歡迎光臨本校網站，教育之美，美在人心！
                     ]]>
                 </description>
-                <language>utf-8</language>
+                <language>zh-TW</language>
+                <atom:link href="https://newboe.chc.edu.tw/rss" rel="self" type="application/rss+xml" />
                 <copyright>
                     <![CDATA[
                         版權來自：https://'.$web.'
