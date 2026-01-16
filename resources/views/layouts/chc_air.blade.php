@@ -5,6 +5,8 @@
 //$url = "http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json";
 //$url = "http://opendata2.epa.gov.tw/AQI.json";
 //curl -X GET "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=ab9e1a2c-b503-4a4f-a369-b1b5a7b24938" -H "accept: */*"
+@file_get_contents("https://chcschool.chc.edu.tw/chc_air/");
+@file_get_contents("https://chcschool2.chc.edu.tw/chc_air/");
 
 if(date('i')>10){
     $chk_file = date('YmdH0000');
