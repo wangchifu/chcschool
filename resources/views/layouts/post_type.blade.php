@@ -72,8 +72,7 @@
                                 }else{
                                     $can_see = 1;
                                 };
-                                $school_code = school_code();
-                                $title = str_limit($post->title,80);
+                                $school_code = school_code();                                
                                 //有無附件
                                 $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
                                 $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
@@ -82,9 +81,9 @@
                                     <span class="text-danger">[ 內部公告 ]</span>
                                 @endif
                                 @if($can_see)
-                                    <a href="{{ route('posts.show',$post->id) }}">{{ $title }}</a>
+                                    <a href="{{ route('posts.show',$post->id) }}">{{ $post->title }}</a>
                                 @else                    
-                                    {{ $title }}
+                                    {{ $post->title }}
                                 @endif
                                 @if(!empty($photos))
                                     <span class="text-success"><i class="fas fa-image"></i></span>
@@ -182,8 +181,7 @@
                                     }else{
                                         $can_see = 1;
                                     };
-                                    $school_code = school_code();
-                                    $title = str_limit($post->title,80);
+                                    $school_code = school_code();                                    
                                     //有無附件
                                     $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
                                     $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
@@ -192,10 +190,10 @@
                                         <span class="text-danger">[ 內部公告 ]</span>
                                     @endif
                                     @if($can_see)
-                                        <a href="{{ route('posts.show',$post->id) }}">{{ $title }}</a>
+                                        <a href="{{ route('posts.show',$post->id) }}">{{ $post->title }}</a>
                                     @else
                         
-                                        {{ $title }}
+                                        {{ $post->title }}
                                     @endif
                                     @if(!empty($photos))
                                         <span class="text-success"><i class="fas fa-image"></i></span>
