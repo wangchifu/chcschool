@@ -374,6 +374,23 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('lends/update_other_order/{lend_order}', 'LendsController@update_other_order')->name('lends.update_other_order');
     Route::post('store_line_notify', 'LendsController@store_line_notify')->name('store_line_notify');
 
+//填報學生
+    Route::get('report_student/index', 'ReportStudentController@index')->name('report_students.index');    
+    Route::get('report_student/admin', 'ReportStudentController@admin')->name('report_students.admin');    
+    Route::get('report_student/{report_student}/admin_result', 'ReportStudentController@admin_result')->name('report_students.admin_result');    
+    Route::get('report_student/{report_student}/admin_result_download', 'ReportStudentController@admin_result_download')->name('report_students.admin_result_download');    
+    Route::get('report_student/{report_student}/admin_item', 'ReportStudentController@admin_item')->name('report_students.admin_item');    
+    Route::post('report_student/admin_item_store', 'ReportStudentController@admin_item_store')->name('report_students.admin_item_store');    
+    Route::get('report_student/{report_student_item}/admin_item_delete', 'ReportStudentController@admin_item_delete')->name('report_students.admin_item_delete');        
+    Route::get('report_student/{semester}/stu_adm_more/{student_class_id?}', 'ReportStudentController@stu_adm_more')->name('report_students.stu_adm_more');
+    Route::get('report_student/{club_student}/stu_disable/{student_class_id}', 'ReportStudentController@stu_disable')->name('report_students.stu_disable');
+    Route::post('report_student/store_report_student', 'ReportStudentController@store_report_student')->name('report_students.store_report_student');
+    Route::post('report_student/{report_student}/update_report_student', 'ReportStudentController@update_report_student')->name('report_students.update_report_student');
+    Route::get('report_student/{report_student}/delete_report_student', 'ReportStudentController@delete_report_student')->name('report_students.delete_report_student');    
+    Route::get('report_student/{report_student}/teacher_fill', 'ReportStudentController@teacher_fill')->name('report_students.teacher_fill');
+    Route::post('report_student/{report_student}/save_teacher_fill', 'ReportStudentController@save_teacher_fill')->name('report_students.save_teacher_fill');
+
+
     //運動會報名
     Route::get('sport_meeting/admin', 'SportMeetingController@admin')->name('sport_meeting.admin');
     Route::get('sport_meeting/index/{action_id?}', 'SportMeetingController@index')->name('sport_meeting.index');    

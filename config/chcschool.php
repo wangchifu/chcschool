@@ -21,6 +21,7 @@ return [
         'tasks'=>'行政待辦',
         'lends'=>'借用系統',
         'sport_meeting'=>'運動會報名',
+        'select_student'=>'填報學生',
     ],
     'lend_sections'=>[
         '0'=>'晨光時間',

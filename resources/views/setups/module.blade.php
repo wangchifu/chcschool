@@ -193,6 +193,16 @@
                                                     已指定「可輸入成績」：
                                                     {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
                                                 @endforeach
+                                            @elseif($v=="填報學生")
+                                                <a href="javascript:open_window('{{ route('user_powers.create',['module'=>$v,'type'=>'A']) }}','新視窗')" class="btn btn-info btn-sm"><i class="fas fa-mouse-pointer"></i> 新指定系統管理</a>
+                                                <?php
+                                                $user_powers = \App\UserPower::where('name',$v)->where('type','A')->get();
+                                                ?>
+                                                @foreach($user_powers as $user_power)
+                                                    <br>
+                                                    已指定「可系統管理」：
+                                                    {{ $user_power->user->name }}<a href="{{ route('user_powers.destroy',$user_power->id) }}" onclick="return confirm('確定刪除？')"><i class="text-danger fas fa-times-circle"></i></a>,
+                                                @endforeach                                                                                              
                                             @endif
                                         </td>
                                     </tr>

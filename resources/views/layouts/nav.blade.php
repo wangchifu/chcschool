@@ -227,7 +227,10 @@
                                 @endif
                                 @if(isset($module_setup['運動會報名']))
                                     <a class="dropdown-item" href="{{ route('sport_meeting.index') }}"><i class="fas fa-volleyball-ball"></i> 運動會報名</a>
-                                @endif                                
+                                @endif   
+                                @if(isset($module_setup['填報學生']))
+                                    <a class="dropdown-item" href="{{ route('report_students.index') }}"><i class="fas fa-child"></i> 填報學生</a>
+                                @endif                             
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                                 
                             </div>
