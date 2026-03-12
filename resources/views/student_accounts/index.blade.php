@@ -9,7 +9,7 @@
             @if($admin)  
                 <div class="card">
                     <div class="card-body">
-                        XLSX檔上傳。<br>
+                        XLSX檔上傳。[<a href="{{ asset('student_sample.xlsx') }}" target="_blank">範本下載</a>]<br>
                         {{ Form::open(['route' => ['student_account.upload'], 'method' => 'POST', 'files' => true]) }}
                             @csrf             
                             <input type="file" name="file" accept='.xlsx' required>
