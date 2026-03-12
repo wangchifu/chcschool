@@ -162,6 +162,10 @@ Route::post('lends/print_lend', 'LendsController@print_lend')->name('lends.print
 
 Route::get('fixes/{fix}/show_clean', 'FixController@show_clean')->where('fix', '[0-9]+')->name('fixes.show_clean');
 
+//學生帳號
+Route::get('student_account/check', 'StudentAccountController@check')->name('student_account.check');
+Route::post('student_account/do_check', 'StudentAccountController@do_check')->name('student_account.do_check');
+
 
 //登入的使用者可用
 Route::group(['middleware' => 'auth'], function () {
@@ -390,6 +394,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('report_student/{report_student}/teacher_fill', 'ReportStudentController@teacher_fill')->name('report_students.teacher_fill');
     Route::post('report_student/{report_student}/save_teacher_fill', 'ReportStudentController@save_teacher_fill')->name('report_students.save_teacher_fill');
 
+    //學生帳號
+    Route::get('student_account/index', 'StudentAccountController@index')->name('student_account.index');   
+    Route::post('student_account/upload', 'StudentAccountController@upload')->name('student_account.upload');   
+    Route::get('student_account/delete/{file}', 'StudentAccountController@delete')->name('student_account.delete');   
 
     //運動會報名
     Route::get('sport_meeting/admin', 'SportMeetingController@admin')->name('sport_meeting.admin');

@@ -22,6 +22,7 @@ return [
         'lends'=>'借用系統',
         'sport_meeting'=>'運動會報名',
         'select_student'=>'填報學生',
+        'student_account'=>'學生帳號',
     ],
     'lend_sections'=>[
         '0'=>'晨光時間',

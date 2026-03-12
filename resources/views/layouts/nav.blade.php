@@ -231,6 +231,9 @@
                                 @if(isset($module_setup['填報學生']))
                                     <a class="dropdown-item" href="{{ route('report_students.index') }}"><i class="fas fa-child"></i> 填報學生</a>
                                 @endif                             
+                                @if(isset($module_setup['學生帳號']))
+                                    <a class="dropdown-item" href="{{ route('student_account.index') }}"><i class="far fa-user-circle"></i> 學生帳號</a>
+                                @endif                             
                                 <a class="dropdown-item" href="{{ route('photo_links.index') }}"><i class="fas fa-image"></i> 圖片連結</a>
                                 
                             </div>
