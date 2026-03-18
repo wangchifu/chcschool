@@ -35,20 +35,20 @@
                     @if($school_marquees->count()>0)
                         <div class="row justify-content-center">
                             <div class="col-lg-{{ $school_marquee_width }}">
-                                <div class="alert alert-{{ $school_marquee_color }}" style="margin-top: -15px;">
-                                    <marquee behavior="{{ $school_marquee_behavior }}" direction="{{ $school_marquee_direction }}" scrollamount="{{ $school_marquee_scrollamount }}" height="20px">
-                                        @if($school_marquee_direction=="up" or $school_marquee_direction=="down")
+                                <div class="alert alert-{{ $school_marquee_color }} p-1" style="margin-top: -15px; overflow: hidden;">
+                                    
+                                    <div class="marquee-wrapper" id="marquee-container" 
+                                        style="height: 25px; overflow: hidden; position: relative; background: transparent;">                            
+                                        
+                                        <div class="marquee-inner" id="marquee-content">
                                             @foreach($school_marquees as $school_marquee)
-                                                <p>{{ $school_marquee->title }}</p>                                                
+                                                <span class="marquee-item" style="margin-right: 50px; display: inline-block;">
+                                                    📣 {{ $school_marquee->title }}
+                                                </span>
                                             @endforeach
-                                        @endif
-                                        @if($school_marquee_direction=="left" or $school_marquee_direction=="right")
-                                            @foreach($school_marquees as $school_marquee)
-                                                <span>{{ $school_marquee->title }}</span>
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                            @endforeach
-                                        @endif
-                                    </marquee>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -186,3 +186,77 @@
         </div>
     </div>
 @endsection
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. 取得後端傳入的參數 (若變數名稱不同請自行調整)
+    const behavior = "{{ $school_marquee_behavior }}";     // scroll, slide, alternate
+    const direction = "{{ $school_marquee_direction }}";   // left, right, up, down
+    const amount = parseInt("{{ $school_marquee_scrollamount }}") || 6;
+
+    const container = document.getElementById('marquee-container');
+    const content = document.getElementById('marquee-content');
+
+    // 2. 基礎樣式設定
+    content.style.position = 'absolute';
+    content.style.display = 'flex';
+    content.style.whiteSpace = 'nowrap';
+    
+    if (direction === 'up' || direction === 'down') {
+        content.style.flexDirection = 'column';
+    }
+
+    // 3. 動態計算動畫路徑
+    const contentWidth = content.offsetWidth;
+    const containerWidth = container.offsetWidth;
+    const contentHeight = content.offsetHeight;
+    const containerHeight = container.offsetHeight;
+
+    // 定義動畫 Keyframes
+    let keyframes = '';
+    if (direction === 'left') {
+        keyframes = `@keyframes marqueeMove { 
+            0% { transform: translateX(${containerWidth}px); } 
+            100% { transform: translateX(-${contentWidth}px); } 
+        }`;
+    } else if (direction === 'right') {
+        keyframes = `@keyframes marqueeMove { 
+            0% { transform: translateX(-${contentWidth}px); } 
+            100% { transform: translateX(${containerWidth}px); } 
+        }`;
+    } else if (direction === 'up') {
+        keyframes = `@keyframes marqueeMove { 
+            0% { transform: translateY(${containerHeight}px); } 
+            100% { transform: translateY(-${contentHeight}px); } 
+        }`;
+    } else if (direction === 'down') {
+        keyframes = `@keyframes marqueeMove { 
+            0% { transform: translateY(-${contentHeight}px); } 
+            100% { transform: translateY(${containerHeight}px); } 
+        }`;
+    }
+
+    // 注入 CSS
+    const style = document.createElement('style');
+    style.innerHTML = keyframes;
+    document.head.appendChild(style);
+
+    // 4. 套用動畫效果
+    const duration = (direction === 'left' || direction === 'right') 
+                     ? (contentWidth + containerWidth) / (amount * 10) 
+                     : (contentHeight + containerHeight) / (amount * 5);
+
+    content.style.animation = `marqueeMove ${duration}s linear infinite`;
+
+    // 5. 處理 Behavior
+    if (behavior === 'slide') {
+        content.style.animationIterationCount = '1';
+        content.style.animationFillMode = 'forwards';
+    } else if (behavior === 'alternate') {
+        content.style.animationDirection = 'alternate';
+    }
+
+    // 滑鼠移入停止 (可選，通常跑馬燈需要這個功能)
+    container.onmouseover = () => content.style.animationPlayState = 'paused';
+    container.onmouseout = () => content.style.animationPlayState = 'running';
+});
+</script>
