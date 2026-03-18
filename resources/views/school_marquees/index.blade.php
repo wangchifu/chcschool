@@ -26,14 +26,13 @@
                     </h3>
                 </div>
                 <div class="card-body">                    
-                    @if($school_marquees->count()>0)                    
                     <?php
                     $school_marquee_width = (empty($setup->school_marquee_width))?"12":$setup->school_marquee_width;
                     $school_marquee_color = (empty($setup->school_marquee_color))?"warning":$setup->school_marquee_color;
                     $school_marquee_behavior = (empty($setup->school_marquee_behavior))?"scroll":$setup->school_marquee_behavior;
                     $school_marquee_direction = (empty($setup->school_marquee_direction))?"up":$setup->school_marquee_direction;
                     $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?"2":$setup->school_marquee_scrollamount;
-                    ?>
+                    ?>                                        
                     @if($school_marquee2s->count()>0)
                         <div class="row justify-content-center">
                             <div class="col-lg-{{ $school_marquee_width }}">
@@ -54,8 +53,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
-                    @endif
+                    @endif                    
                     <a href="{{ route('school_marquee.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增跑馬燈</a>
                     <table class="table table-striped" style="word-break:break-all;">
                         <thead class="thead-light">
