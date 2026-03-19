@@ -23,7 +23,7 @@
                             text-decoration: none !important; /* 強制不顯示底線 */
                             color: #333; 
                             font-weight: bold; 
-                            font-size: 1.5rem; 
+                            font-size: 1.2rem; 
                             white-space: nowrap;
                             transition: color 0.2s; /* 增加變色平滑感 */
                     "
