@@ -38,7 +38,7 @@
             padding-left: 15px;
         ">
             @foreach($honors as $honor)
-                <div style="height: 80px; display: flex; align-items: center; white-space: nowrap;">
+                <div style="height: 50px; display: flex; align-items: center; white-space: nowrap;">
                     <a href="../posts/{{ $honor->id }}" style="
                         text-decoration: none; 
                         color: #333; 
