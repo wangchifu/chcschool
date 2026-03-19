@@ -116,7 +116,7 @@
                     -->
                     <div class="form-group">
                         <div class="alert alert-light" role="alert">
-                            <span class="text-danger">「榮譽榜跑馬燈」區塊已棄用，請管理者在上方「1.放置欄位」選擇「空白」移除它。</span><br>
+                            <span class="text-danger">「榮譽榜跑馬燈」固定跑動樣式。</span><br>
                             <!--
                             方向設定：direction="參數值"；可設定 up（向上）、dun（向下）、left（向左）、right（向右）<br>
                             速度設定：scrollamount="參數值" ；可設定為數字，通常設定 1~10 的範圍，數字越大跑得越快<br>

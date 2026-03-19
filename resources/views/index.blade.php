@@ -132,8 +132,7 @@
 
                     @if($block->title == "榮譽榜跑馬燈")                        
                         <div class="table-responsive">
-                            <div>
-                                <span class="text-danger">「榮譽榜跑馬燈」區塊已棄用，請管理者移除。</span>
+                            <div>                                
                                 @include('layouts.marquee')
                             </div>
                         </div>
@@ -293,78 +292,80 @@
     @endauth    
 @endsection
 @if(isset($module_setup['校園跑馬燈']))
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // 1. 取得後端傳入的參數 (若變數名稱不同請自行調整)
-    const behavior = "{{ $school_marquee_behavior }}";     // scroll, slide, alternate
-    const direction = "{{ $school_marquee_direction }}";   // left, right, up, down
-    const amount = parseInt("{{ $school_marquee_scrollamount }}") || 6;
+    @if($school_marquees->count()>0)
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. 取得後端傳入的參數 (若變數名稱不同請自行調整)
+            const behavior = "{{ $school_marquee_behavior }}";     // scroll, slide, alternate
+            const direction = "{{ $school_marquee_direction }}";   // left, right, up, down
+            const amount = parseInt("{{ $school_marquee_scrollamount }}") || 6;
 
-    const container = document.getElementById('marquee-container');
-    const content = document.getElementById('marquee-content');
+            const container = document.getElementById('marquee-container');
+            const content = document.getElementById('marquee-content');
 
-    // 2. 基礎樣式設定
-    content.style.position = 'absolute';
-    content.style.display = 'flex';
-    content.style.whiteSpace = 'nowrap';
-    
-    if (direction === 'up' || direction === 'down') {
-        content.style.flexDirection = 'column';
-    }
+            // 2. 基礎樣式設定
+            content.style.position = 'absolute';
+            content.style.display = 'flex';
+            content.style.whiteSpace = 'nowrap';
+            
+            if (direction === 'up' || direction === 'down') {
+                content.style.flexDirection = 'column';
+            }
 
-    // 3. 動態計算動畫路徑
-    const contentWidth = content.offsetWidth;
-    const containerWidth = container.offsetWidth;
-    const contentHeight = content.offsetHeight;
-    const containerHeight = container.offsetHeight;
+            // 3. 動態計算動畫路徑
+            const contentWidth = content.offsetWidth;
+            const containerWidth = container.offsetWidth;
+            const contentHeight = content.offsetHeight;
+            const containerHeight = container.offsetHeight;
 
-    // 定義動畫 Keyframes
-    let keyframes = '';
-    if (direction === 'left') {
-        keyframes = `@keyframes marqueeMove { 
-            0% { transform: translateX(${containerWidth}px); } 
-            100% { transform: translateX(-${contentWidth}px); } 
-        }`;
-    } else if (direction === 'right') {
-        keyframes = `@keyframes marqueeMove { 
-            0% { transform: translateX(-${contentWidth}px); } 
-            100% { transform: translateX(${containerWidth}px); } 
-        }`;
-    } else if (direction === 'up') {
-        keyframes = `@keyframes marqueeMove { 
-            0% { transform: translateY(${containerHeight}px); } 
-            100% { transform: translateY(-${contentHeight}px); } 
-        }`;
-    } else if (direction === 'down') {
-        keyframes = `@keyframes marqueeMove { 
-            0% { transform: translateY(-${contentHeight}px); } 
-            100% { transform: translateY(${containerHeight}px); } 
-        }`;
-    }
+            // 定義動畫 Keyframes
+            let keyframes = '';
+            if (direction === 'left') {
+                keyframes = `@keyframes marqueeMove { 
+                    0% { transform: translateX(${containerWidth}px); } 
+                    100% { transform: translateX(-${contentWidth}px); } 
+                }`;
+            } else if (direction === 'right') {
+                keyframes = `@keyframes marqueeMove { 
+                    0% { transform: translateX(-${contentWidth}px); } 
+                    100% { transform: translateX(${containerWidth}px); } 
+                }`;
+            } else if (direction === 'up') {
+                keyframes = `@keyframes marqueeMove { 
+                    0% { transform: translateY(${containerHeight}px); } 
+                    100% { transform: translateY(-${contentHeight}px); } 
+                }`;
+            } else if (direction === 'down') {
+                keyframes = `@keyframes marqueeMove { 
+                    0% { transform: translateY(-${contentHeight}px); } 
+                    100% { transform: translateY(${containerHeight}px); } 
+                }`;
+            }
 
-    // 注入 CSS
-    const style = document.createElement('style');
-    style.innerHTML = keyframes;
-    document.head.appendChild(style);
+            // 注入 CSS
+            const style = document.createElement('style');
+            style.innerHTML = keyframes;
+            document.head.appendChild(style);
 
-    // 4. 套用動畫效果
-    const duration = (direction === 'left' || direction === 'right') 
-                     ? (contentWidth + containerWidth) / (amount * 10) 
-                     : (contentHeight + containerHeight) / (amount * 5);
+            // 4. 套用動畫效果
+            const duration = (direction === 'left' || direction === 'right') 
+                            ? (contentWidth + containerWidth) / (amount * 10) 
+                            : (contentHeight + containerHeight) / (amount * 5);
 
-    content.style.animation = `marqueeMove ${duration}s linear infinite`;
+            content.style.animation = `marqueeMove ${duration}s linear infinite`;
 
-    // 5. 處理 Behavior
-    if (behavior === 'slide') {
-        content.style.animationIterationCount = '1';
-        content.style.animationFillMode = 'forwards';
-    } else if (behavior === 'alternate') {
-        content.style.animationDirection = 'alternate';
-    }
+            // 5. 處理 Behavior
+            if (behavior === 'slide') {
+                content.style.animationIterationCount = '1';
+                content.style.animationFillMode = 'forwards';
+            } else if (behavior === 'alternate') {
+                content.style.animationDirection = 'alternate';
+            }
 
-    // 滑鼠移入停止 (可選，通常跑馬燈需要這個功能)
-    container.onmouseover = () => content.style.animationPlayState = 'paused';
-    container.onmouseout = () => content.style.animationPlayState = 'running';
-});
-</script>
+            // 滑鼠移入停止 (可選，通常跑馬燈需要這個功能)
+            container.onmouseover = () => content.style.animationPlayState = 'paused';
+            container.onmouseout = () => content.style.animationPlayState = 'running';
+        });
+        </script>
+    @endif
 @endif

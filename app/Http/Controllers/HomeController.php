@@ -404,12 +404,12 @@ class HomeController extends Controller
             $blocks[$setup_col->id] = $bs;
         }
         //跑馬燈css預設設定
-        $marquee_block = Block::where('title', "榮譽榜跑馬燈")
-            ->first();
-        $marquee_css = $marquee_block->content;
-        if (empty($marquee_css)) {
-            $marquee_css = "direction='left' height='30' scrollamount='5' align='midden'";
-        }
+        //$marquee_block = Block::where('title', "榮譽榜跑馬燈")
+        //    ->first();
+        //$marquee_css = $marquee_block->content;
+        //if (empty($marquee_css)) {
+        //    $marquee_css = "direction='left' height='30' scrollamount='5' align='midden'";
+        //}
 
         $post_show_number = ($setup->post_show_number)?$setup->post_show_number:10;
         $posts = Post::where(function ($query) {
@@ -443,14 +443,14 @@ class HomeController extends Controller
                 })->orderBy('top', 'DESC')
                 ->orderBy('created_at', 'DESC')
                 ->paginate(10);
-        //跑馬燈取得榮譽榜資料庫資料
-        $marquee = "";
-        foreach ($honors as $honor) {
-            $href = "../posts/" . $honor->id;
-            $marquee .= "<i class=\"fas fa-crown text-warning\"></i> <a href=" . $href . ">"
-                . $honor->title . "   " .
-                "</a>　　";
-        }
+        //跑馬燈取得榮譽榜資料庫資料  
+        //$marquee = "";
+        //foreach ($honors as $honor) {
+        //    $href = "../posts/" . $honor->id;
+        //    $marquee .= "<i class=\"fas fa-crown text-warning\"></i> <a href=" . $href . ">"
+        //        . $honor->title . "   " .
+        //        "</a>　　";
+        //}
 
 
         //分類公告
@@ -471,8 +471,9 @@ class HomeController extends Controller
             'blocks' => $blocks,
             'posts' => $posts,
             'request' => $request,
-            'marquee' => $marquee,
-            'marquee_css' => $marquee_css,
+            //'marquee' => $marquee,
+            //'marquee_css' => $marquee_css,
+            'honors' => $honors,
             'photo_links' => $photo_links,
             'photo_types'=>$photo_types,
             'post_types' => $post_types,
