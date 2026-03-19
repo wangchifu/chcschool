@@ -438,11 +438,8 @@ class HomeController extends Controller
 
         //榮譽榜資料庫資料
         $honors = Post::where('insite', '2')
-                ->where(function ($query) {
-                    $query->where('die_date',null)->orWhere('die_date','>=',date('Y-m-d'));
-                })->orderBy('top', 'DESC')
                 ->orderBy('created_at', 'DESC')
-                ->paginate(10);
+                ->paginate(10);                
         //跑馬燈取得榮譽榜資料庫資料  
         //$marquee = "";
         //foreach ($honors as $honor) {
