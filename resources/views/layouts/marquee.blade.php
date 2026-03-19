@@ -1,7 +1,7 @@
 <div class="honor-marquee-box" style="
     display: flex; 
     align-items: center; 
-    height: 45px; /* 垂直捲動建議高度大一點，視覺較舒適 */
+    height: 45px; 
     background: #fff5f5; 
     border: 2px solid #e3342f; 
     border-radius: 8px; 
@@ -10,42 +10,25 @@
     box-shadow: 4px 4px 0px #f8d7da;
     margin-bottom: 15px;
 ">
-    <div style="
-        background: #e3342f; 
-        color: white; 
-        padding: 0 20px; 
-        height: 100%; 
-        display: flex; 
-        align-items: center; 
-        font-weight: bold; 
-        font-size: 1.2rem;
-        z-index: 10;
-        white-space: nowrap;
-    ">
+    <div style="background: #e3342f; color: white; padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; font-size: 1.2rem; z-index: 10; white-space: nowrap;">
         🏆 榮譽榜
     </div>
 
-    <div id="honor-container" style="
-        flex: 1; 
-        height: 100%; 
-        position: relative; 
-        overflow: hidden;
-    ">
-        <div id="honor-content" style="
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-start; 
-            padding-left: 15px;
-        ">
+    <div id="honor-container" style="flex: 1; height: 100%; position: relative; overflow: hidden;">
+        <div id="honor-content" style="display: flex; flex-direction: row; align-items: center; height: 100%; white-space: nowrap;">
             @foreach($honors as $honor)
-                <div style="height: 50px; display: flex; align-items: center; white-space: nowrap;">
-                    <a href="../posts/{{ $honor->id }}" style="
-                        text-decoration: none; 
-                        color: #333; 
-                        font-weight: bold; 
-                        font-size: 1.5rem; /* 大字體 */
-                        transition: color 0.2s;
-                    " onmouseover="this.style.color='#e3342f'" onmouseout="this.style.color='#333'">
+                <div style="margin-right: 40px; display: flex; align-items: center;">
+                    <a href="../posts/{{ $honor->id }}" 
+                    style="
+                            text-decoration: none !important; /* 強制不顯示底線 */
+                            color: #333; 
+                            font-weight: bold; 
+                            font-size: 1.5rem; 
+                            white-space: nowrap;
+                            transition: color 0.2s; /* 增加變色平滑感 */
+                    "
+                    onmouseover="this.style.color='#e3342f';" 
+                    onmouseout="this.style.color='#333';">
                         🎉 {{ $honor->title }}
                     </a>
                 </div>
@@ -54,41 +37,40 @@
     </div>
 </div>
 <script>
-// 改用 DOMContentLoaded，這樣 HTML 一出來就立刻動，不會等圖片
 document.addEventListener("DOMContentLoaded", function() {
-    const direction = "up";
-    const amount = 0.8; 
+    const direction = "left"; // 改為向左
+    const amount = 1.2;       // 向左滑動時，1.2 左右的速度比較順手
 
     const container = document.getElementById('honor-container');
     const content = document.getElementById('honor-content');
 
     if (!container || !content) return;
 
-    // --- 優化點 1: 在計算前先給予基本樣式，避免閃爍 ---
+    // --- 設定基礎樣式 ---
     content.style.position = 'absolute';
-    content.style.width = '100%';
     content.style.display = 'flex';
-    content.style.flexDirection = 'column';
+    content.style.flexDirection = 'row'; // 確保是橫向
+    content.style.whiteSpace = 'nowrap';
 
-    // --- 優化點 2: 使用 offsetHeight 抓取當前高度 ---
-    // 如果這裡抓不到高度，通常是因為裡面的 div 還沒撐開
-    const containerHeight = container.offsetHeight || 45; // 沒抓到就用預設 45
-    const contentHeight = content.offsetHeight;
+    // --- 抓取寬度 ---
+    const containerWidth = container.offsetWidth;
+    const contentWidth = content.offsetWidth;
 
-    const animName = 'marqueeMoveHonorUp';
+    const animName = 'marqueeMoveHonorLeft';
+    
+    // 使用 translateX 進行水平位移
     const keyframes = `@keyframes ${animName} { 
-        0% { transform: translateY(${containerHeight}px); } 
-        100% { transform: translateY(-${contentHeight}px); } 
+        0% { transform: translateX(${containerWidth}px); } 
+        100% { transform: translateX(-${contentWidth}px); } 
     }`;
 
     const style = document.createElement('style');
     style.innerHTML = keyframes;
     document.head.appendChild(style);
 
-    // --- 優化點 3: 確保速度穩定 ---
-    const duration = (contentHeight + containerHeight) / (amount * 20);
+    // --- 計算時間 (水平捲動公式) ---
+    const duration = (contentWidth + containerWidth) / (amount * 50);
 
-    // 立刻套用動畫
     content.style.animation = `${animName} ${duration}s linear infinite`;
 
     // 滑鼠移入停止
