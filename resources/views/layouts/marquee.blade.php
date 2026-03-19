@@ -54,9 +54,9 @@
     </div>
 </div>
 <script>
-window.onload = function() {
+// 改用 DOMContentLoaded，這樣 HTML 一出來就立刻動，不會等圖片
+document.addEventListener("DOMContentLoaded", function() {
     const direction = "up";
-    // 垂直捲動時，amount 要設得很小 (例如 0.5 ~ 1)，否則會像閃電一樣快
     const amount = 0.8; 
 
     const container = document.getElementById('honor-container');
@@ -64,14 +64,17 @@ window.onload = function() {
 
     if (!container || !content) return;
 
-    // 基礎設定
+    // --- 優化點 1: 在計算前先給予基本樣式，避免閃爍 ---
     content.style.position = 'absolute';
     content.style.width = '100%';
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
 
-    const containerHeight = container.offsetHeight;
+    // --- 優化點 2: 使用 offsetHeight 抓取當前高度 ---
+    // 如果這裡抓不到高度，通常是因為裡面的 div 還沒撐開
+    const containerHeight = container.offsetHeight || 45; // 沒抓到就用預設 45
     const contentHeight = content.offsetHeight;
 
-    // 定義垂直動畫
     const animName = 'marqueeMoveHonorUp';
     const keyframes = `@keyframes ${animName} { 
         0% { transform: translateY(${containerHeight}px); } 
@@ -82,13 +85,14 @@ window.onload = function() {
     style.innerHTML = keyframes;
     document.head.appendChild(style);
 
-    // 垂直速度公式：(總高度) / (較小的倍率)
+    // --- 優化點 3: 確保速度穩定 ---
     const duration = (contentHeight + containerHeight) / (amount * 20);
 
+    // 立刻套用動畫
     content.style.animation = `${animName} ${duration}s linear infinite`;
 
     // 滑鼠移入停止
     container.onmouseover = () => content.style.animationPlayState = 'paused';
     container.onmouseout = () => content.style.animationPlayState = 'running';
-};
+});
 </script>
