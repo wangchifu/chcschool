@@ -83,7 +83,7 @@
                                 }
                                 function check_today(){                               
                                     check_date();         
-                                    if('{{ date('Y-m-d') }}'>= $('#live_date').val()){
+                                    if('{{ date('Y-m-d') }}'> $('#live_date').val()){
                                         $('#live_date').val("");
                                         alert('不能選今天以前的日子！');
                                     }
