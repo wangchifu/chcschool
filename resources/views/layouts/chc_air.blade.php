@@ -1,4 +1,10 @@
 <?php
+
+//$url = "http://opendata.epa.gov.tw/ws/Data/AQI/?\$format=json";
+//$url = "http://opendata.epa.gov.tw/webapi/Data/REWIQA/?\$orderby=SiteName&\$skip=0&\$top=1000&format=json";
+//$url = "http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json";
+//$url = "http://opendata2.epa.gov.tw/AQI.json";
+//curl -X GET "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=ab9e1a2c-b503-4a4f-a369-b1b5a7b24938" -H "accept: */*"
 @file_get_contents("https://chcschool.chc.edu.tw/chc_air/");
 @file_get_contents("https://chcschool2.chc.edu.tw/chc_air/");
 
@@ -14,8 +20,8 @@ if(date('i')>10){
     
 }
 
-if(file_exists('https://chcschool.chc.edu.tw/chc_air/download/'.$chk_file.'.txt')){
-    $air_data = unserialize(file_get_contents('https://chcschool.chc.edu.tw/chc_air/download/'.$chk_file.'.txt'));
+if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
+    $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$chk_file.'.txt'));
 }elseif($chk_file=="nothing"){
     $air_data = [];
 }else{
@@ -31,13 +37,13 @@ if(file_exists('https://chcschool.chc.edu.tw/chc_air/download/'.$chk_file.'.txt'
     curl_close($ch);
     $data = json_decode($html);
 
-    if(file_exists('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt')){
-        $count = file_get_contents('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt');
+    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
+        $count = file_get_contents('../../service/chc_air/download/'.date('Ymd').'.txt');
     }else{
         $count = 0;
     }
-    if(file_exists('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt')){
-        $file_count = fopen('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt','w');    
+    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
+        $file_count = fopen('../../service/chc_air/download/'.date('Ymd').'.txt','w');    
         $count++;
         fwrite($file_count,$count);
         fclose($file_count);
