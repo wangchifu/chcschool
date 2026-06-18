@@ -100,61 +100,54 @@ foreach($air_data as $k=>$v){
 
 ?>
 
-<div class="container my-3" style="max-width: 420px;">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white py-3">
-            <h5 class="card-title mb-0 font-weight-bold text-center">即時空氣品質監測</h5>
-        </div>
-        
-        <div class="card-body bg-light">
-            <div class="form-group mb-4">
-                <label for="SiteName" class="font-weight-bold text-secondary small">切換監測觀測站：</label>
-                <select name="SiteName" id="SiteName" class="form-control custom-select shadow-sm font-weight-bold text-dark">
+<div class="container-fluid p-0">
+    <div class="card border-0 rounded-0">
+        <div class="card-body p-0">
+            <div class="form-group mb-0">
+                <select name="SiteName" id="SiteName" class="form-control custom-select rounded-0 shadow-sm font-weight-bold text-dark border-top-0 border-left-0 border-right-0">
                     <?php echo $options; ?>
                 </select>
             </div>
 
-            <div class="card bg-white border rounded shadow-sm overflow-hidden mb-3">
-                <div class="card-body text-center py-4">
-                    <p class="text-muted small mb-1 font-weight-bold">空氣品質指標 (AQI)</p>
-                    <h1 class="display-3 font-weight-bold mb-3 text-dark">
-                        <?php
-                            if(isset($air_data[$select_site]['AQI'])){
-                                echo $air_data[$select_site]['AQI'];
-                            } else {
-                                echo '--';
-                            }
-                        ?>
-                    </h1>
-                    
+            <div class="text-center py-3 bg-white">
+                <p class="text-muted small mb-0 font-weight-bold">空氣品質指標 (AQI)</p>
+                <h1 class="display-3 font-weight-bold mb-2 text-dark">
                     <?php
                         if(isset($air_data[$select_site]['AQI'])){
-                            if($air_data[$select_site]['AQI'] <= 50){
-                                $img = "50.jpg";
-                            }
-                            if($air_data[$select_site]['AQI'] >= 51 and $air_data[$select_site]['AQI'] <= 100){
-                                $img = "100.jpg";
-                            }
-                            if($air_data[$select_site]['AQI'] >= 101 and $air_data[$select_site]['AQI'] <= 150){
-                                $img = "150.jpg";
-                            }
-                            if($air_data[$select_site]['AQI'] >= 151 and $air_data[$select_site]['AQI'] <= 200){
-                                $img = "200.jpg";
-                            }
-                            if($air_data[$select_site]['AQI'] >= 201){
-                                $img = "300.jpg";
-                            }
-                        }else{
-                            $img = "000.jpg";
+                            echo $air_data[$select_site]['AQI'];
+                        } else {
+                            echo '--';
                         }
                     ?>
-                    <div class="px-2">
-                        <img src="{{ asset('images/chc_air/'.$img) }}" class="img-fluid rounded shadow-sm border" alt="AQI 狀況圖" style="width: 100%;">
-                    </div>
+                </h1>
+                
+                <?php
+                    if(isset($air_data[$select_site]['AQI'])){
+                        if($air_data[$select_site]['AQI'] <= 50){
+                            $img = "50.jpg";
+                        }
+                        if($air_data[$select_site]['AQI'] >= 51 and $air_data[$select_site]['AQI'] <= 100){
+                            $img = "100.jpg";
+                        }
+                        if($air_data[$select_site]['AQI'] >= 101 and $air_data[$select_site]['AQI'] <= 150){
+                            $img = "150.jpg";
+                        }
+                        if($air_data[$select_site]['AQI'] >= 151 and $air_data[$select_site]['AQI'] <= 200){
+                            $img = "200.jpg";
+                        }
+                        if($air_data[$select_site]['AQI'] >= 201){
+                            $img = "300.jpg";
+                        }
+                    }else{
+                        $img = "000.jpg";
+                    }
+                ?>
+                <div class="w-100">
+                    <img src="{{ asset('images/chc_air/'.$img) }}" class="w-100 d-block" alt="AQI 狀況圖">
                 </div>
             </div>
 
-            <div class="text-right text-muted px-1">
+            <div class="text-right text-muted pr-2 pb-2 bg-white">
                 <small class="font-italic">
                     觀測發布時間：
                     <?php
