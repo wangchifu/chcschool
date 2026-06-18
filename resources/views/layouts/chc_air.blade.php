@@ -1,117 +1,179 @@
 <?php
-// 1. 使用 Laravel 官方推薦的 base_path() 定義絕對路徑，徹底解決找不到目錄的問題
-$cache_dir = base_path('service/chc_air/download');
-$cache_file = $cache_dir . '/air_latest.txt';
 
-// 自動建立目錄（防呆：若目錄不存在就自動建立，避免再次報錯）
-if (!file_exists($cache_dir)) {
-    mkdir($cache_dir, 0755, true);
-}
+//$url = "http://opendata.epa.gov.tw/ws/Data/AQI/?\$format=json";
+//$url = "http://opendata.epa.gov.tw/webapi/Data/REWIQA/?\$orderby=SiteName&\$skip=0&\$top=1000&format=json";
+//$url = "http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json";
+//$url = "http://opendata2.epa.gov.tw/AQI.json";
+//curl -X GET "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=ab9e1a2c-b503-4a4f-a369-b1b5a7b24938" -H "accept: */*"
+@file_get_contents("https://chcschool.chc.edu.tw/chc_air/");
+@file_get_contents("https://chcschool2.chc.edu.tw/chc_air/");
 
-// 2. 讀取快取
-$air_data = [];
-if (file_exists($cache_file)) {
-    $air_data = unserialize(file_get_contents($cache_file));
-}
-
-// 3. 若沒有快取或快取超過 1 小時，則向 API 抓取新資料
-if (empty($air_data) || (filemtime($cache_file) < (time() - 3600))) {
-    $url = env('AIR_API_URL');
+if(date('i')>10){
+    $chk_file = date('YmdH0000');
+}else{
+    if(date('H') <> '00'){
+        $last = sprintf('%02s',date('H')-1);
+        $chk_file = date('Ymd').$last.'0000';
+    }else{
+        $chk_file = "nothing";
+    }
     
-    if ($url) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        $html = curl_exec($ch);
-        curl_close($ch);
-        
-        $data = json_decode($html);
+}
 
-        if ($data) {
-            $temp_data = [];
-            foreach($data as $v){
-                $temp_data[$v->sitename] = [
-                    'AQI' => $v->aqi,
-                    'Status' => $v->status,
-                    'PublishTime' => $v->publishtime
-                ];
-            }
-            $air_data = $temp_data;
-            file_put_contents($cache_file, serialize($air_data));
+if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
+    $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$chk_file.'.txt'));
+}elseif($chk_file=="nothing"){
+    $air_data = [];
+}else{
+    $url = env('AIR_API_URL');
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT , 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    $html = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($html);
+
+    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
+        $count = file_get_contents('../../service/chc_air/download/'.date('Ymd').'.txt');
+    }else{
+        $count = 0;
+    }
+    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
+        $file_count = fopen('../../service/chc_air/download/'.date('Ymd').'.txt','w');    
+        $count++;
+        fwrite($file_count,$count);
+        fclose($file_count);
+    }
+    
+    
+
+    if(!isset($data)){
+        $data = [];
+        //$select_data=[];
+        $air_data=[];
+    }else{
+        foreach($data as $k=>$v){
+            $select_data[$v->county][] = $v->sitename;
+            $air_data[$v->sitename]['AQI'] = $v->aqi;
+            $air_data[$v->sitename]['Status'] = $v->status;
+            $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
         }
+        if(!isset($v->publishtime)){
+            $fname = "no_publishtime";
+            $air_data = [];
+        }else{
+            $fname = str_replace('/','',$v->publishtime);
+        }        
+        $fname = str_replace(' ','',$fname);
+        $fname = str_replace(':','',$fname);
+        $file = fopen('../../service/chc_air/download/'.$fname.'.txt','w');
+        fwrite($file,serialize($air_data));
     }
 }
 
-// 4. 變數防呆處理，確保後續畫面不會因為沒資料而報錯
-if (empty($air_data)) {
-    $air_data = ['彰化' => ['AQI' => '--', 'Status' => '暫無資料', 'PublishTime' => '尚未取得時間']];
+
+$SiteName = $request->input('SiteName');
+
+$options = "";
+if(!isset($air_data[$SiteName]) and $SiteName != null){
+    $SiteName = "彰化";
+}
+if(empty($_COOKIE['chc_air'])){
+    $select_site = "彰化";
+}else{
+    $select_site = $_COOKIE['chc_air'];
+    if($SiteName) $select_site = $SiteName;
 }
 
-// 5. 處理選單與 Cookie 邏輯 (Laravel 推薦使用 request() 輔助函式)
-$SiteName = request()->input('SiteName');
-$select_site = $_COOKIE['chc_air'] ?? '彰化';
-if ($SiteName) $select_site = $SiteName;
-if (!isset($air_data[$select_site])) $select_site = array_key_first($air_data);
 
-setcookie("chc_air", $select_site, time() + 31556926, "/");
+setcookie("chc_air", $select_site, time()+31556926);
 
-// 6. 決定 AQI 狀態與顏色
-$aqi = $air_data[$select_site]['AQI'];
-if ($aqi === '--' || $aqi <= 0) { $color = "badge-secondary"; $text = "未知"; }
-elseif ($aqi <= 50) { $color = "badge-success"; $text = "良好"; }
-elseif ($aqi <= 100) { $color = "badge-warning"; $text = "普通"; }
-else { $color = "badge-danger"; $text = "不良"; }
+
+foreach($air_data as $k=>$v){
+    $selected = ($k==$select_site)?"selected":"";
+    $options .= "<option value='$k' $selected>$k</option>";
+}
+
 ?>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-
-<div class="container mt-4">
-    <div class="card shadow-sm mx-auto" style="max-width: 400px;">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 font-weight-bold">彰化空品監測</h5>
-            <span class="badge badge-light">即時更新</span>
+<div class="container my-3" style="max-width: 420px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="card-title mb-0 font-weight-bold text-center">即時空氣品質監測</h5>
         </div>
-        <div class="card-body">
-            <div class="form-group">
-                <label for="SiteName" class="font-weight-bold text-muted">切換監測站：</label>
-                <select class="form-control" id="SiteName">
-                    <?php foreach($air_data as $k => $v): ?>
-                        <option value="<?php echo $k; ?>" <?php echo ($k == $select_site) ? 'selected' : ''; ?>>
-                            <?php echo $k; ?>
-                        </option>
-                    <?php endforeach; ?>
+        
+        <div class="card-body bg-light">
+            <div class="form-group mb-4">
+                <label for="SiteName" class="font-weight-bold text-secondary small">切換監測觀測站：</label>
+                <select name="SiteName" id="SiteName" class="form-control custom-select shadow-sm font-weight-bold text-dark">
+                    <?php echo $options; ?>
                 </select>
             </div>
 
-            <div class="text-center my-4">
-                <div class="text-muted small">空氣品質指標 (AQI)</div>
-                <h1 class="display-2 font-weight-bold mb-1 text-dark"><?php echo $aqi; ?></h1>
-                <span class="badge <?php echo $color; ?> p-2 px-4 shadow-sm" style="font-size: 1rem;">
-                    <?php echo $text; ?>
-                </span>
+            <div class="card bg-white border rounded shadow-sm overflow-hidden mb-3">
+                <div class="card-body text-center py-4">
+                    <p class="text-muted small mb-1 font-weight-bold">空氣品質指標 (AQI)</p>
+                    <h1 class="display-3 font-weight-bold mb-3 text-dark">
+                        <?php
+                            if(isset($air_data[$select_site]['AQI'])){
+                                echo $air_data[$select_site]['AQI'];
+                            } else {
+                                echo '--';
+                            }
+                        ?>
+                    </h1>
+                    
+                    <?php
+                        if(isset($air_data[$select_site]['AQI'])){
+                            if($air_data[$select_site]['AQI'] <= 50){
+                                $img = "50.jpg";
+                            }
+                            if($air_data[$select_site]['AQI'] >= 51 and $air_data[$select_site]['AQI'] <= 100){
+                                $img = "100.jpg";
+                            }
+                            if($air_data[$select_site]['AQI'] >= 101 and $air_data[$select_site]['AQI'] <= 150){
+                                $img = "150.jpg";
+                            }
+                            if($air_data[$select_site]['AQI'] >= 151 and $air_data[$select_site]['AQI'] <= 200){
+                                $img = "200.jpg";
+                            }
+                            if($air_data[$select_site]['AQI'] >= 201){
+                                $img = "300.jpg";
+                            }
+                        }else{
+                            $img = "000.jpg";
+                        }
+                    ?>
+                    <div class="px-2">
+                        <img src="{{ asset('images/chc_air/'.$img) }}" class="img-fluid rounded shadow-sm border" alt="AQI 狀況圖" style="width: 100%;">
+                    </div>
+                </div>
             </div>
 
-            <div class="text-center mb-3">
-                <?php
-                    if ($aqi === '--' || $aqi <= 0) $img = "000.jpg";
-                    elseif ($aqi > 200) $img = "300.jpg";
-                    else $img = (ceil($aqi / 50) * 50) . ".jpg";
-                ?>
-                <img src="{{ asset('images/chc_air/'.$img) }}" class="img-fluid rounded border" alt="AQI Indicator" style="width: 100%;">
-            </div>
-
-            <div class="text-right text-muted x-small">
-                <i class="far fa-clock"></i> 觀測時間：<?php echo $air_data[$select_site]['PublishTime']; ?>
+            <div class="text-right text-muted px-1">
+                <small class="font-italic">
+                    觀測發布時間：
+                    <?php
+                        if(isset($air_data[$select_site]['PublishTime'])){
+                            echo $air_data[$select_site]['PublishTime'];
+                        } else {
+                            echo '暫無資料';
+                        }
+                    ?>
+                </small>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $('#SiteName').change(function(){
-        location="?SiteName=" + encodeURIComponent($(this).val());
-    });
+    $('#SiteName').change(
+        function(){
+            location="?SiteName=" + encodeURIComponent($('#SiteName').val());
+        }
+    );
 </script>
