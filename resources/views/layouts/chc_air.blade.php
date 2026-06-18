@@ -1,82 +1,141 @@
 <?php
-// 除錯用：若出現空白，請刪除這兩行；若想看錯誤原因，請保留
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+@file_get_contents("https://chcschool.chc.edu.tw/chc_air/");
+@file_get_contents("https://chcschool2.chc.edu.tw/chc_air/");
 
-// --- 1. 高效讀取邏輯 ---
-// 請確認此路徑在你的伺服器上是真實存在的，且 PHP 有權限讀取/寫入
-$cache_dir = __DIR__ . '/../../service/chc_air/download/';
-$cache_file = $cache_dir . 'air_latest.txt';
-
-$air_data = [];
-if (file_exists($cache_file)) {
-    $air_data = unserialize(file_get_contents($cache_file));
+if(date('i')>10){
+    $chk_file = date('YmdH0000');
+}else{
+    if(date('H') <> '00'){
+        $last = sprintf('%02s',date('H')-1);
+        $chk_file = date('Ymd').$last.'0000';
+    }else{
+        $chk_file = "nothing";
+    }
+    
 }
 
-// 若快取不存在或已過期 (1小時)，則更新
-if (empty($air_data) || (filemtime($cache_file) < (time() - 3600))) {
+if(file_exists('https://chcschool.chc.edu.tw/chc_air/download/'.$chk_file.'.txt')){
+    $air_data = unserialize(file_get_contents('https://chcschool.chc.edu.tw/chc_air/download/'.$chk_file.'.txt'));
+}elseif($chk_file=="nothing"){
+    $air_data = [];
+}else{
     $url = env('AIR_API_URL');
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT , 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     $html = curl_exec($ch);
     curl_close($ch);
     $data = json_decode($html);
 
-    if ($data) {
-        foreach($data as $v){
-            $air_data[$v->sitename] = [
-                'AQI' => $v->aqi,
-                'Status' => $v->status,
-                'PublishTime' => $v->publishtime
-            ];
+    if(file_exists('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt')){
+        $count = file_get_contents('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt');
+    }else{
+        $count = 0;
+    }
+    if(file_exists('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt')){
+        $file_count = fopen('https://chcschool.chc.edu.tw/chc_air/download/'.date('Ymd').'.txt','w');    
+        $count++;
+        fwrite($file_count,$count);
+        fclose($file_count);
+    }
+    
+    
+
+    if(!isset($data)){
+        $data = [];
+        //$select_data=[];
+        $air_data=[];
+    }else{
+        foreach($data as $k=>$v){
+            $select_data[$v->county][] = $v->sitename;
+            $air_data[$v->sitename]['AQI'] = $v->aqi;
+            $air_data[$v->sitename]['Status'] = $v->status;
+            $air_data[$v->sitename]['PublishTime'] = $v->publishtime;
         }
-        file_put_contents($cache_file, serialize($air_data));
+        if(!isset($v->publishtime)){
+            $fname = "no_publishtime";
+            $air_data = [];
+        }else{
+            $fname = str_replace('/','',$v->publishtime);
+        }        
+        $fname = str_replace(' ','',$fname);
+        $fname = str_replace(':','',$fname);
+        $file = fopen('../../service/chc_air/download/'.$fname.'.txt','w');
+        fwrite($file,serialize($air_data));
     }
 }
 
-// --- 2. 變數處理 ---
-$SiteName = isset($_GET['SiteName']) ? $_GET['SiteName'] : null;
-$select_site = isset($_COOKIE['chc_air']) ? $_COOKIE['chc_air'] : '彰化';
-if ($SiteName) $select_site = $SiteName;
-if (!isset($air_data[$select_site])) $select_site = "彰化";
+
+$SiteName = $request->input('SiteName');
+
+$options = "";
+if(!isset($air_data[$SiteName]) and $SiteName != null){
+    $SiteName = "彰化";
+}
+if(empty($_COOKIE['chc_air'])){
+    $select_site = "彰化";
+}else{
+    $select_site = $_COOKIE['chc_air'];
+    if($SiteName) $select_site = $SiteName;
+}
+
 
 setcookie("chc_air", $select_site, time()+31556926);
 
-// --- 3. UI 顯示 (Bootstrap 4) ---
+
+foreach($air_data as $k=>$v){
+    $selected = ($k==$select_site)?"selected":"";
+    $options .= "<option value='$k' $selected>$k</option>";
+}
+
 ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<select name="SiteName" id="SiteName">
+    <?php echo $options; ?>
+</select>
+<small>AQI：
+    <?php
+        if(isset($air_data[$select_site]['AQI'])){
+            echo $air_data[$select_site]['AQI'];
+        }
 
-<div class="container mt-3" style="max-width: 400px;">
-    <div class="card shadow">
-        <div class="card-header bg-info text-white">空氣品質指標</div>
-        <div class="card-body">
-            <select class="form-control mb-3" id="SiteName">
-                <?php foreach($air_data as $k => $v): ?>
-                    <option value="<?php echo $k; ?>" <?php echo ($k == $select_site) ? 'selected' : ''; ?>>
-                        <?php echo $k; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <div class="text-center">
-                <h2 class="display-4"><?php echo $air_data[$select_site]['AQI'] ?? '--'; ?></h2>
-                <?php
-                    $aqi = $air_data[$select_site]['AQI'] ?? 0;
-                    $img = ($aqi > 200) ? "300.jpg" : (ceil($aqi/50)*50).".jpg";
-                    if($aqi == 0) $img = "000.jpg";
-                ?>
-                <img src="{{ asset('images/chc_air/'.$img) }}" class="img-fluid my-2" style="max-height: 200px;">
-                <p class="text-muted small">更新時間：<?php echo $air_data[$select_site]['PublishTime'] ?? '無資料'; ?></p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    ?>
+</small>
+<br>
+<?php
+    if(isset($air_data[$select_site]['AQI'])){
+        if($air_data[$select_site]['AQI'] <= 50){
+            $img = "50.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 51 and $air_data[$select_site]['AQI'] <= 100){
+            $img = "100.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 101 and $air_data[$select_site]['AQI'] <= 150){
+            $img = "150.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 151 and $air_data[$select_site]['AQI'] <= 200){
+            $img = "200.jpg";
+        }
+        if($air_data[$select_site]['AQI'] >= 201){
+            $img = "300.jpg";
+        }
+    }else{
+        $img = "000.jpg";
+    }
+?>
+<img src="{{ asset('images/chc_air/'.$img) }}" width="100%">
+<?php
+    if(isset($air_data[$select_site]['PublishTime'])){
+        echo $air_data[$select_site]['PublishTime'];
+    }
+?>
 <script>
-    $('#SiteName').change(function(){
-        location="?SiteName=" + $(this).val();
-    });
+    $('#SiteName').change(
+        function(){
+            location="?SiteName=" +$('#SiteName').val() ;
+        }
+    );
 </script>
