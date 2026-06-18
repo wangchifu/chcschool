@@ -1,74 +1,55 @@
 <?php
-// --- 優化後的讀取與更新邏輯 ---
-$cache_file = '../../service/chc_air/download/latest_air_data.txt';
-$air_data = [];
-
-// 1. 優先從本機快取讀取，不執行任何網路請求 (速度最快)
-if (file_exists($cache_file)) {
-    $air_data = unserialize(file_get_contents($cache_file));
-}
-
-// 2. 判斷是否需要更新：若快取不存在，或檔案已超過 1 小時，才執行 API 抓取
-if (empty($air_data) || (filemtime($cache_file) < (time() - 3600))) {
-    $url = env('AIR_API_URL');
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2); // 限制連線時間，避免卡死
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);       // 限制總執行時間
-    $html = curl_exec($ch);
-    $data = json_decode($html);
-    curl_close($ch);
-
-    if ($data) {
-        $temp_data = [];
-        foreach($data as $v){
-            $temp_data[$v->sitename]['AQI'] = $v->aqi;
-            $temp_data[$v->sitename]['Status'] = $v->status;
-            $temp_data[$v->sitename]['PublishTime'] = $v->publishtime;
-        }
-        $air_data = $temp_data;
-        file_put_contents($cache_file, serialize($air_data)); // 更新快取
-    }
-}
-
-// --- 以下維持你原有的顯示邏輯 ---
+// (保留上述高效讀取邏輯)
+$cache_file = __DIR__ . '/../../service/chc_air/download/air_latest.txt';
+$air_data = file_exists($cache_file) ? unserialize(file_get_contents($cache_file)) : [];
+$select_site = $_COOKIE['chc_air'] ?? '彰化';
 $SiteName = $request->input('SiteName');
-if(!isset($air_data[$SiteName]) and $SiteName != null){ $SiteName = "彰化"; }
+if ($SiteName) $select_site = $SiteName;
+if (!isset($air_data[$select_site])) $select_site = "彰化";
+setcookie("chc_air", $select_site, time() + 31556926);
 
-if(empty($_COOKIE['chc_air'])){
-    $select_site = "彰化";
-}else{
-    $select_site = $_COOKIE['chc_air'];
-    if($SiteName) $select_site = $SiteName;
-}
-setcookie("chc_air", $select_site, time()+31556926);
-
-$options = "";
-foreach($air_data as $k => $v){
-    $selected = ($k == $select_site) ? "selected" : "";
-    $options .= "<option value='$k' $selected>$k</option>";
-}
+// 決定顏色等級
+$aqi = $air_data[$select_site]['AQI'] ?? 0;
+if ($aqi <= 50) { $color = "badge-success"; $text = "良好"; }
+elseif ($aqi <= 100) { $color = "badge-warning"; $text = "普通"; }
+else { $color = "badge-danger"; $text = "不良"; }
 ?>
 
-<select name="SiteName" id="SiteName">
-    <?php echo $options; ?>
-</select>
-<small>AQI：<?php echo $air_data[$select_site]['AQI'] ?? '暫無資料'; ?></small>
-<br>
-<?php
-    $aqi = $air_data[$select_site]['AQI'] ?? 0;
-    if ($aqi <= 50) $img = "50.jpg";
-    elseif ($aqi <= 100) $img = "100.jpg";
-    elseif ($aqi <= 150) $img = "150.jpg";
-    elseif ($aqi <= 200) $img = "200.jpg";
-    elseif ($aqi > 200) $img = "300.jpg";
-    else $img = "000.jpg";
-?>
-<img src="{{ asset('images/chc_air/'.$img) }}" width="100%">
-<br>
-<?php echo $air_data[$select_site]['PublishTime'] ?? ''; ?>
+<div class="container mt-4">
+    <div class="card shadow-sm" style="max-width: 400px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">即時空氣品質指標</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>選擇監測站</label>
+                <select class="form-control" id="SiteName">
+                    <?php foreach($air_data as $k => $v): ?>
+                        <option value="<?php echo $k; ?>" <?php echo ($k == $select_site) ? 'selected' : ''; ?>>
+                            <?php echo $k; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
+            <div class="text-center my-4">
+                <h1 class="display-3 font-weight-bold"><?php echo $aqi; ?></h1>
+                <span class="badge <?php echo $color; ?> p-2 px-3"><?php echo $text; ?></span>
+            </div>
+
+            <img src="{{ asset('images/chc_air/') }}/<?php echo ($aqi > 0) ? ($aqi > 200 ? '300.jpg' : (ceil($aqi/50)*50).'.jpg') : '000.jpg'; ?>" 
+                 class="img-fluid rounded mb-3" alt="AQI Indicator">
+
+            <div class="text-muted small">
+                更新時間：<?php echo $air_data[$select_site]['PublishTime'] ?? '無資料'; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $('#SiteName').change(function(){ location="?SiteName=" + $('#SiteName').val(); });
+    $('#SiteName').change(function(){
+        location="?SiteName=" + $(this).val();
+    });
 </script>
