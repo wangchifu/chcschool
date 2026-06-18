@@ -23,7 +23,14 @@ if(date('i')>10){
 if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
     $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$chk_file.'.txt'));
 }elseif($chk_file=="nothing"){
-    $air_data = [];
+    // 💡 修正點 1：前 10 分鐘不要直接給空陣列！先試著讀取上一個小時的檔案當備份，避免畫面全白
+    $prev_hour = sprintf('%02s', date('H') - 1);
+    $backup_file = date('Ymd') . $prev_hour . '0000';
+    if(file_exists('../../service/chc_air/download/'.$backup_file.'.txt')){
+        $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$backup_file.'.txt'));
+    } else {
+        $air_data = [];
+    }
 }else{
     $url = env('AIR_API_URL');
 
@@ -31,8 +38,9 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT , 1);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    // 💡 修正點 2：縮短超時時間！連線改 0.5 秒，總等待改 1.5 秒。API 只要超過 1.5 秒沒反應就立刻斷開，不讓使用者轉圈圈
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 500); 
+    curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1500);       
     $html = curl_exec($ch);
     curl_close($ch);
     $data = json_decode($html);
@@ -49,12 +57,14 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
         fclose($file_count);
     }
     
-    
-
-    if(!isset($data)){
-        $data = [];
-        //$select_data=[];
-        $air_data=[];
+    if(!isset($data) || empty($data)){
+        // 💡 修正點 3：萬一 API 真的斷線或超時沒回傳，立刻去抓今天隨便一個現有的快取檔案來頂替，絕對不給空陣列
+        $files = glob('../../service/chc_air/download/' . date('Ymd') . '*.txt');
+        if (!empty($files)) {
+            $air_data = unserialize(file_get_contents(end($files)));
+        } else {
+            $air_data = [];
+        }
     }else{
         foreach($data as $k=>$v){
             $select_data[$v->county][] = $v->sitename;
