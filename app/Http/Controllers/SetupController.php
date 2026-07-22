@@ -164,8 +164,8 @@ class SetupController extends Controller
     }
 
     public function nav_color(Request $request, Setup $setup)
-    {
-        $att = $request->all();
+    {        
+        $att = $request->all();        
         $nav_color = $request->input('color');
         $att['fixed_nav'] = ($request->input('fixed_nav'))?1:null;
 
@@ -188,6 +188,7 @@ class SetupController extends Controller
         $att['department_name'] = null;
         $att['schoolexec_name'] = null;
         $att['setup_name'] = null;
+        $att['login_name'] = null;
         $setup->update($att);
         return redirect()->route('setups.index');
     }

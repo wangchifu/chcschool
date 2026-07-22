@@ -301,7 +301,8 @@
                 @endauth
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('logins') }}">登入</a>
+                        <?php $login_name = ($setup->login_name)?$setup->login_name:"登入"; ?>
+                        <a class="nav-link" href="{{ route('logins') }}">{{ $login_name }}</a>
                     </li>
                 @endguest
             </ul>

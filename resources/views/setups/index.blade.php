@@ -209,6 +209,9 @@
                                 <td>
                                     系統設定
                                 </td>
+                                <td>
+                                    登入
+                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -229,6 +232,9 @@
                                 <td>
                                     {{ Form::text('setup_name',$setup->setup_name,['class' => 'form-control','placeholder'=>'系統設定']) }}
                                 </td>
+                                <td>
+                                    {{ Form::text('login_name',$setup->login_name,['class' => 'form-control','placeholder'=>'登入']) }}
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -236,11 +242,9 @@
                         <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('確定儲存？')">
                             <i class="fas fa-save"></i> 儲存設定
                         </button>
-                        @if(!empty($setup->nav_color))
-                            <a href="{{ route('setups.nav_default') }}" class="btn btn-danger btn-sm" id="default_color" onclick="return confirm('確定還原嗎')">
-                                <i class="fas fa-trash"></i> 還原預設
-                            </a>
-                        @endif
+                        <a href="{{ route('setups.nav_default') }}" class="btn btn-danger btn-sm" id="default_color" onclick="return confirm('確定還原嗎')">
+                            <i class="fas fa-trash"></i> 還原預設
+                        </a>
                     </div>
                 </div>
             </div>
