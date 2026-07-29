@@ -264,8 +264,9 @@ class ChcSchoolController extends Controller
         $data = [
             'school3_1'=> $school3_1,
             'school3_2'=> $school3_2,
+            'schools'=> $schools,
             'townships' => $townships,
-            'schools' => $all_school,
+            'all_school' => $all_school,
         ];
 
         return view('chcschool', $data);

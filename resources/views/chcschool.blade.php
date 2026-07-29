@@ -15,9 +15,8 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="index.php">
-        <img src="../images/school.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-        彰化縣國中小學校首頁連結
+    <a class="navbar-brand" href="index.php">        
+        🏫 彰化縣國中小學校首頁連結
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -66,7 +65,7 @@
     </div>
 </div>
 <br>
-<footer class="py-3 bg-primary" id="footer>
+<footer class="py-3 bg-primary" id="footer">
     <div class="container">
         <p class="m-0 text-center text-white">
             Copyright &copy; 彰化縣教育網路中心 {{ $date('Y') }}
