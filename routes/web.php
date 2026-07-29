@@ -32,6 +32,7 @@ if (isset($_SERVER['HTTP_HOST']) and $_SERVER['HTTP_HOST'] != 'chcschool2.localh
 */
 
 Route::get('pages', 'ChcSchoolController@pages')->name('pages');
+Route::get('chc_air', 'ChcSchoolController@chc_air')->name('chc_air');
 
 //下則到2025年12月底移除
 Route::get('ischool/publish_page/0', function () {

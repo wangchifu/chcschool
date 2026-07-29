@@ -1,37 +1,30 @@
 <?php
 
-//$url = "http://opendata.epa.gov.tw/ws/Data/AQI/?\$format=json";
-//$url = "http://opendata.epa.gov.tw/webapi/Data/REWIQA/?\$orderby=SiteName&\$skip=0&\$top=1000&format=json";
-//$url = "http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json";
-//$url = "http://opendata2.epa.gov.tw/AQI.json";
-//curl -X GET "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=ab9e1a2c-b503-4a4f-a369-b1b5a7b24938" -H "accept: */*"
-@file_get_contents("https://chcschool.chc.edu.tw/chc_air/");
-@file_get_contents("https://chcschool2.chc.edu.tw/chc_air/");
-
 if(date('i')>10){
-    $chk_file = date('YmdH0000');
+    $chk_file = date('YmdH0000').".txt";
 }else{
     if(date('H') <> '00'){
         $last = sprintf('%02s',date('H')-1);
-        $chk_file = date('Ymd').$last.'0000';
+        $chk_file = date('Ymd').$last.'0000.txt';
     }else{
-        $chk_file = "nothing";
+        $chk_file = "nothing.txt";
     }
     
 }
+$save_path = storage_path('app/privacy/chc_air/'); 
 
-if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
-    $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$chk_file.'.txt'));
-}elseif($chk_file=="nothing"){
+if(file_exists($save_path.$chk_file)){    
+    $air_data = unserialize(file_get_contents($save_path.$chk_file));
+}elseif($chk_file=="nothing.txt"){    
     // 💡 修正點 1：前 10 分鐘不要直接給空陣列！先試著讀取上一個小時的檔案當備份，避免畫面全白
     $prev_hour = sprintf('%02s', date('H') - 1);
-    $backup_file = date('Ymd') . $prev_hour . '0000';
-    if(file_exists('../../service/chc_air/download/'.$backup_file.'.txt')){
-        $air_data = unserialize(file_get_contents('../../service/chc_air/download/'.$backup_file.'.txt'));
+    $backup_file = date('Ymd') . $prev_hour . '0000.txt';
+    if(file_exists($save_path.$backup_file)){
+        $air_data = unserialize(file_get_contents($save_path.$backup_file));
     } else {
         $air_data = [];
     }
-}else{
+}else{    
     $url = env('AIR_API_URL');
 
     $ch = curl_init();
@@ -43,15 +36,14 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
     curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1500);       
     $html = curl_exec($ch);
     curl_close($ch);
-    $data = json_decode($html);
-
-    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
-        $count = file_get_contents('../../service/chc_air/download/'.date('Ymd').'.txt');
+    $data = json_decode($html);    
+    if(file_exists($save_path.date('Ymd').'.txt')){
+        $count = file_get_contents($save_path.date('Ymd').'.txt');
     }else{
         $count = 0;
     }
-    if(file_exists('../../service/chc_air/download/'.date('Ymd').'.txt')){
-        $file_count = fopen('../../service/chc_air/download/'.date('Ymd').'.txt','w');    
+    if(file_exists($save_path.date('Ymd').'.txt')){
+        $file_count = fopen($save_path.date('Ymd').'.txt','w');    
         $count++;
         fwrite($file_count,$count);
         fclose($file_count);
@@ -59,7 +51,7 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
     
     if(!isset($data) || empty($data)){
         // 💡 修正點 3：萬一 API 真的斷線或超時沒回傳，立刻去抓今天隨便一個現有的快取檔案來頂替，絕對不給空陣列
-        $files = glob('../../service/chc_air/download/' . date('Ymd') . '*.txt');
+        $files = glob($save_path . date('Ymd') . '*.txt');
         if (!empty($files)) {
             $air_data = unserialize(file_get_contents(end($files)));
         } else {
@@ -80,7 +72,12 @@ if(file_exists('../../service/chc_air/download/'.$chk_file.'.txt')){
         }        
         $fname = str_replace(' ','',$fname);
         $fname = str_replace(':','',$fname);
-        $file = fopen('../../service/chc_air/download/'.$fname.'.txt','w');
+        
+        if(is_dir($save_path)) {        
+            delete_dir($save_path);
+        }
+        mkdir($save_path, 0755, true);
+        $file = fopen($save_path.$fname.'.txt','w');
         fwrite($file,serialize($air_data));
     }
 }

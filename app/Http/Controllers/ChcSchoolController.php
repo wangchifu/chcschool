@@ -305,6 +305,11 @@ class ChcSchoolController extends Controller
         return view('chcschool', $data);
     }
 
+    public function chc_air(){    
+        $data = [
 
+        ];
+        return view('chc_air', $data);
+    }
 
 }
