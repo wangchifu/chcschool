@@ -40,13 +40,13 @@
                 <div class="card-header">
                     <span>圖例：</span>
                     <button class="btn btn-secondary btn-sm">學校名 <span class="badge badge-light">自管</span></button>
-                    <button class="btn btn-info btn-sm">學校名 <span class="badge badge-light">公版-1</span></button>
-		            <button class="btn btn-info btn-sm">學校名 <span class="badge badge-dark">公版-2</span></button>
+                    <button class="btn btn-info btn-sm">學校名 <span class="badge badge-light">公版-1 ({{ $school3_1 }}校)</span></button>
+		            <button class="btn btn-primary btn-sm">學校名 <span class="badge badge-light">公版-2 ({{ $school3_2 }}校)</span></button>
                 </div>
                 <div class="card-body">		                                       
                     @foreach($townships as $k1 => $v1)
                         <h4><i class="fab fa-fort-awesome"></i> {{ $v1 }}</h4>
-                        @if(isset($all_school[$v1]))     
+                        @if(isset($all_school[$v1]))
                             @foreach($all_school[$v1] as $k2 => $v2)    
                                 @if(isset($schools[$v2['school']]))                            
                                     @if($schools[$v2['school']] != "50" and $schools[$v2['school']] != "49")
@@ -56,8 +56,10 @@
                                         <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-light">公版-1</span></a>
                                     @endif
                                     @if($schools[$v2['school']] == "49")
-                                        <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-dark">公版-2</span></a>
-                                    @endif    
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-primary btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-light">公版-2</span></a>
+                                    @endif
+                                @else    
+                                    <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-dark">自管</span></a>
                                 @endif                           
                             @endforeach
                         @endif               
