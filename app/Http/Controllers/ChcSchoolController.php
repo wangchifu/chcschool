@@ -47,6 +47,7 @@ class ChcSchoolController extends Controller
         }
 
         $schools['原斗國中小'] = $schools['原斗國小'];
+        $schools['成功高中'] = "50";
         
         $all_school = [];
         $all_school['彰化市'] = [];
