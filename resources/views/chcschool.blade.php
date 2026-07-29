@@ -43,22 +43,29 @@
                     <button class="btn btn-info btn-sm">學校名 <span class="badge badge-light">公版-1</span></button>
 		            <button class="btn btn-info btn-sm">學校名 <span class="badge badge-dark">公版-2</span></button>
                 </div>
-                <div class="card-body">		                        
+                <div class="card-body">		                                       
                     @foreach($townships as $k1 => $v1)
                         <h4><i class="fab fa-fort-awesome"></i> {{ $v1 }}</h4>
-                        @foreach($all_school[$v1] as $k2 => $v2)
-                            @if($schools[$v2['school']] != "50" and $schools[$v2['school']] != "49")
-                                <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-light">自管</span></a>
-                            @endif                            
-                            @if($schools[$v2['school']] == "50")
-                                <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-light">公版-1</span></a>
-                            @endif
-                            @if($schools[$v2['school']] == "49")
-                                <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-dark">公版-2</span></a>
-                            @endif
-                        @endforeach
+                        @if(isset($all_school[$v1]))     
+                            @foreach($all_school[$v1] as $k2 => $v2)    
+                                <?php 
+                                    $schools['原斗國小'] = $schools['原斗國中小'];
+                                ?>
+                                @if(isset($schools[$v2['school']]))                            
+                                    @if($schools[$v2['school']] != "50" and $schools[$v2['school']] != "49")
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-light">自管</span></a>
+                                    @endif                            
+                                    @if($schools[$v2['school']] == "50")
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-light">公版-1</span></a>
+                                    @endif
+                                    @if($schools[$v2['school']] == "49")
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-dark">公版-2</span></a>
+                                    @endif    
+                                @endif                           
+                            @endforeach
+                        @endif               
                     <hr>
-                    @endforeach                    		    
+                    @endforeach                         		    
                 </div>
             </div>
         </div>
@@ -68,7 +75,7 @@
 <footer class="py-3 bg-primary" id="footer">
     <div class="container">
         <p class="m-0 text-center text-white">
-            Copyright &copy; 彰化縣教育網路中心 {{ $date('Y') }}
+            Copyright &copy; 彰化縣教育網路中心 {{ date('Y') }}
         </p>
     </div>
 </footer>
