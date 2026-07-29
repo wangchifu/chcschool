@@ -80,7 +80,7 @@ class ChcSchoolController extends Controller
         $all_school['二水鄉']['074529'] = ['school' => '二水國中', 'website' => 'esjh.chc.edu.tw'];
         $all_school['和美鎮']['074323'] = ['school' => '和美高中', 'website' => 'hmjh.chc.edu.tw'];
         $all_school['田中鎮']['074328'] = ['school' => '田中高中', 'website' => 'tcjh.chc.edu.tw'];
-        $all_school['溪湖鎮']['074339'] = ['school' => '成功高中', 'website' => 'ckjh.chc.edu.tw'];
+        $all_school['溪湖鎮']['074339'] = ['school' => '成功高中', 'website' => 'cksh.chc.edu.tw'];
         $all_school['北斗鎮']['074501'] = ['school' => '北斗國中', 'website' => 'ptjhs.chc.edu.tw'];
         $all_school['鹿港鎮']['074502'] = ['school' => '鹿港國中', 'website' => 'lkjh.chc.edu.tw'];
         $all_school['鹿港鎮']['074503'] = ['school' => '鹿鳴國中', 'website' => 'lmjh.chc.edu.tw'];

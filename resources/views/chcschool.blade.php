@@ -15,7 +15,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="index.php">        
+    <a class="navbar-brand" href="http://chcschool.chc.edu.tw">
         🏫 彰化縣國中小學校首頁連結
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
