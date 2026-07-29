@@ -41,6 +41,8 @@ class ChcSchoolController extends Controller
             $schools[$row['brief']]="49";            
             $school3_2++;
         }
+
+        $schools['原斗國中小'] = $schools['原斗國小'];
         
         $all_school = [];
 

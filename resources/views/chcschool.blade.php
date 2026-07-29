@@ -48,9 +48,6 @@
                         <h4><i class="fab fa-fort-awesome"></i> {{ $v1 }}</h4>
                         @if(isset($all_school[$v1]))     
                             @foreach($all_school[$v1] as $k2 => $v2)    
-                                <?php 
-                                    $schools['原斗國小'] = $schools['原斗國中小'];
-                                ?>
                                 @if(isset($schools[$v2['school']]))                            
                                     @if($schools[$v2['school']] != "50" and $schools[$v2['school']] != "49")
                                         <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm" style="margin:3px" target="_blank">{{ $v2['school'] }} <span class="badge badge-light">自管</span></a>
