@@ -257,8 +257,8 @@ class ChcSchoolController extends Controller
         $all_school['溪湖鎮']['074777'] = ['school' => '湖北國小', 'website' => 'hbps.chc.edu.tw'];
 
         $townships = [];
-        foreach($all_school as $town => $schools) {
-            $townships[] = $town;
+        foreach($all_school as $k => $v) {
+            $townships[] = $k;
         }
 
         $data = [
