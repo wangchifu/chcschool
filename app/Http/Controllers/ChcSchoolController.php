@@ -267,9 +267,7 @@ class ChcSchoolController extends Controller
             'schools'=> $schools,
             'townships' => $townships,
             'all_school' => $all_school,
-        ];
-
-        dd($data);
+        ];        
 
         return view('chcschool', $data);
     }
