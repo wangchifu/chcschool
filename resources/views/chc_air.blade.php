@@ -63,24 +63,23 @@ if(file_exists($save_path.$chk_file)){
     fclose($file);    
   }
 }
-$SiteName = $_REQUEST['SiteName'] ?? null;
+// 1. 取得使用者選擇的站點，若沒有選擇則預設為 "彰化"
+$SiteName = $_REQUEST['SiteName'] ?? "彰化";
 
-$options = "";
-if(!isset($air_data[$SiteName]) and $SiteName != null){
-    $SiteName = "彰化";
-}
-if(empty($_COOKIE['chc_air'])){
+// 2. 檢查該站點是否存在於 API 資料中，若不存在（或資料有誤）也強制預設為 "彰化"
+if (!isset($air_data[$SiteName])) {
     $select_site = "彰化";
-}else{
-    $select_site = $_COOKIE['chc_air'];
-    if($SiteName) $select_site = $SiteName;
+} else {
+    $select_site = $SiteName;
 }
 
-
+// 3. 寫入 Cookie 紀錄
 setcookie("chc_air", $select_site, time()+31556926);
 
+// 4. 產生下拉選單選項
+$options = "";
 foreach($air_data as $k=>$v){
-  $selected = ($k==$select_site)?"selected":"";
+  $selected = ($k == $select_site) ? "selected" : "";
   $options .= "<option value='$k' $selected>$k</option>";
 }
 
