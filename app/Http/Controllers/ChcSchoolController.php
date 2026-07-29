@@ -49,7 +49,32 @@ class ChcSchoolController extends Controller
         $schools['原斗國中小'] = $schools['原斗國小'];
         
         $all_school = [];
-
+        $all_school['彰化市'] = [];
+        $all_school['芬園鄉'] = [];
+        $all_school['花壇鄉'] = [];
+        $all_school['秀水鄉'] = [];
+        $all_school['鹿港鎮'] = [];
+        $all_school['福興鄉'] = [];
+        $all_school['線西鄉'] = [];
+        $all_school['和美鎮'] = [];
+        $all_school['伸港鄉'] = [];
+        $all_school['員林市'] = [];
+        $all_school['社頭鄉'] = [];
+        $all_school['永靖鄉'] = [];
+        $all_school['埔心鄉'] = [];
+        $all_school['溪湖鎮'] = [];
+        $all_school['大村鄉'] = [];
+        $all_school['埔鹽鄉'] = [];
+        $all_school['田中鎮'] = [];
+        $all_school['北斗鎮'] = [];
+        $all_school['田尾鄉'] = [];
+        $all_school['埤頭鄉'] = [];
+        $all_school['溪州鄉'] = [];
+        $all_school['竹塘鄉'] = [];
+        $all_school['二林鎮'] = [];
+        $all_school['大城鄉'] = [];
+        $all_school['芳苑鄉'] = [];
+        $all_school['二水鄉'] = [];
         $all_school['彰化市']['074308'] = ['school' => '彰化藝術高中', 'website' => 'chash.chc.edu.tw'];
         $all_school['二林鎮']['074313'] = ['school' => '二林高中', 'website' => 'elsh.chc.edu.tw'];
         $all_school['二水鄉']['074529'] = ['school' => '二水國中', 'website' => 'esjh.chc.edu.tw'];
