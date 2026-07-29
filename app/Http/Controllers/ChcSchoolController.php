@@ -28,18 +28,22 @@ class ChcSchoolController extends Controller
         $schools = [];
         $school3_1 = 0;
         $school3_2 = 0;
-        $sql = "select distinct(u.brief) from RR r, unit u  where  CONCAT(r.fqdn,'.chc','.edu','.tw') = u.domain and r.rdata = '163.23.200.50';";
-        $result=$dbh->query($sql);
-        foreach ($result as $row) {
-            $schools[$row['brief']]="50";            
-            $school3_1++;         
-        }
+        // 使用 IN 一次查詢兩種 rdata，並將 rdata 一併選出
+        $sql = "SELECT DISTINCT u.brief, r.rdata 
+                FROM RR r, unit u 
+                WHERE CONCAT(r.fqdn, '.chc', '.edu', '.tw') = u.domain 
+                AND r.rdata IN ('163.23.200.50', '163.23.200.49');";
 
-        $sql = "select distinct(u.brief) from RR r, unit u  where  CONCAT(r.fqdn,'.chc','.edu','.tw') = u.domain and r.rdata = '163.23.200.49';";
-        $result=$dbh->query($sql);
+        $result = $dbh->query($sql);
+
         foreach ($result as $row) {
-            $schools[$row['brief']]="49";            
-            $school3_2++;
+            if ($row['rdata'] === '163.23.200.50') {
+                $schools[$row['brief']] = "50";
+                $school3_1++;
+            } elseif ($row['rdata'] === '163.23.200.49') {
+                $schools[$row['brief']] = "49";
+                $school3_2++;
+            }
         }
 
         $schools['原斗國中小'] = $schools['原斗國小'];
