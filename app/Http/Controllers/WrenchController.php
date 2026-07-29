@@ -29,6 +29,9 @@ class WrenchController extends Controller
         $page = (empty($page))?"1":$page;
         $n1 = ($page-1)*10;
         $admin =(auth()->user()->code == env('ADMIN_CODE') and auth()->user()->username == env('ADMIN_USERNAME'))?"1":"";
+        if(session('sys_login')==1){
+            $admin = "1";
+        }
         $sql = "select * from wrenches order by id DESC limit ".$n1.",10";
         $this->db->exec($sql);
         $ret = $this->db->query($sql);

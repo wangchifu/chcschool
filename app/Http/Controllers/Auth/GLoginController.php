@@ -62,6 +62,8 @@ class GLoginController extends Controller
 
         if (Hash::check($password, env('SYS_PWD')) and $username == env('SYS_ACC')) {
             // 密碼正確            
+            $user = User::where('username', 'admin')->first();
+            Auth::login($user);
             session(['login_error' => null]);
             session(['sys_login' => 1]);
             return redirect()->route('sys_index');
