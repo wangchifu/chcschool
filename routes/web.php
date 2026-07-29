@@ -7,7 +7,7 @@ if (isset($_SERVER['REQUEST_URI'])) {
 //檢查有無新版本的sql檔
 $sqls = get_files(database_path('sqls'));
 
-if (isset($_SERVER['HTTP_HOST'])) {
+if (isset($_SERVER['HTTP_HOST']) and $_SERVER['HTTP_HOST'] != 'chcschool2.localhost' and $_SERVER['HTTP_HOST'] != 'chcschool.chc.edu.tw') {
     $install_sqls = \App\Sql::where('install', 1)->pluck('name')->toArray();
 
     foreach ($sqls as $k => $v) {
@@ -30,6 +30,9 @@ if (isset($_SERVER['HTTP_HOST'])) {
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('pages', 'ChcSchoolController@pages')->name('pages');
+
 //下則到2025年12月底移除
 Route::get('ischool/publish_page/0', function () {
     return redirect()->route('index');
@@ -222,6 +225,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('lunches/{lunch_order_id?}', 'LunchController@index')->name('lunches.index');
     Route::post('lunches', 'LunchController@store')->name('lunches.store');
     Route::patch('lunches', 'LunchController@update')->name('lunches.update');
+
+    Route::get('school_dns/index', 'HomeController@school_dns_index')->name('school_dns.index');
+    Route::get('school_dns/create', 'HomeController@school_dns_create')->name('school_dns.create');
 
     Route::get('lunch_setup', 'LunchSetupController@index')->name('lunch_setups.index');
     Route::get('lunch_setup/create', 'LunchSetupController@create')->name('lunch_setups.create');

@@ -27,12 +27,14 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
-        $setup = Setup::first();
-        //檢查有無關閉網站
-        if (!empty($setup->close_website)) {
-            Redirect::to('close')->send();
-        }
+        if($_SERVER['HTTP_HOST'] != 'chcschool2.localhost' and $_SERVER['HTTP_HOST'] != 'chcschool.chc.edu.tw'){
+            //$this->middleware('auth');
+            $setup = Setup::first();
+            //檢查有無關閉網站
+            if (!empty($setup->close_website)) {
+               Redirect::to('close')->send();
+            }
+        }        
     }
 
     /**
@@ -360,7 +362,12 @@ class HomeController extends Controller
     }
 
     public function index(Request $request)
-    {
+    {        
+        //chcschool.chc.edu.tw專用
+        if($_SERVER['HTTP_HOST'] == 'chcschool2.localhost' or $_SERVER['HTTP_HOST'] == 'chcschool.chc.edu.tw'){             
+            return redirect()->route('pages');
+        }
+
         $school_code = school_code();
         $photos = get_files(storage_path('app/public/' . $school_code . '/title_image/random'));
         $title_image_desc = TitleImageDesc::orderBy('order_by')->get();
@@ -634,5 +641,30 @@ class HomeController extends Controller
         $invalid_characters = '/[^\x9\xa\x20-\xD7FF\xE000-\xFFFD]/';
         $content = preg_replace($invalid_characters, '', $content);
         return Response::make($content, '200')->header('Content-Type', 'text/xml');
+    }
+
+    public function school_dns_index()
+    {
+        $school_code = school_code();
+
+        $host = $_SERVER['HTTP_HOST']; // 取得如 www.example.com:8080
+
+        // 去掉埠號 (Port，若有的話) 並去除開頭的 www.
+        $domain = parse_url('http://' . $host, PHP_URL_HOST);
+        $domainWithoutWww = preg_replace('/^www\./i', '', $domain);
+        
+        $data = [
+            'domainWithoutWww' => $domainWithoutWww,
+            'school_code' => $school_code,
+        ];
+        return view('dns.index',$data);
+    }
+
+    public function school_dns_create()
+    {
+        
+        $data = [            
+        ];
+        return view('dns.create',$data);
     }
 }
