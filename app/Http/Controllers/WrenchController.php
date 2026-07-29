@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\Mail;
 class WrenchController extends Controller
 {
     public function __construct()
-    {
-        $this->db = new SQLite3(env('SQLITE'));
+    {        
+        // storage_path() 會自動將相對路徑轉為絕對路徑
+        $dbPath = storage_path(env('SQLITE', 'app/privacy/chcschool_qa.db'));
+        $this->db = new SQLite3($dbPath);        
     }
     public function index($page=null)
     {
@@ -103,9 +105,14 @@ class WrenchController extends Controller
         //line_notify(env('ADMIN_LINE_KEY'),$string);
         
         //send_mail(env('ADMIN_EMAIL'),$subject,$body);
-        Mail::raw($body, function ($body) use ($subject){
-            $body->to(env('ADMIN_EMAIL'))->subject($subject);
-        });
+        $adminEmail = env('ADMIN_EMAIL');
+
+        // 只有在 $adminEmail 有值且不為空時才執行寄信
+        if (!empty($adminEmail)) {
+            Mail::raw($body, function ($message) use ($subject, $adminEmail) {
+                $message->to($adminEmail)->subject($subject);
+            });
+        }        
         return redirect()->route('wrench.index');
     }
 
