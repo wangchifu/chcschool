@@ -42,10 +42,12 @@ if(file_exists($save_path.$chk_file)){
   }else{
     $count = 0;
   }
-  $file_count = fopen($save_path.date('Ymd').".txt","w");
-  $count++;
-  fwrite($file_count,$count);
-  fclose($file_count);
+  if(file_exists($save_path.date('Ymd').".txt")){
+    $file_count = fopen($save_path.date('Ymd').".txt","w");
+    $count++;
+    fwrite($file_count,$count);
+    fclose($file_count);
+  }
   if(!isset($data)){
     $data = [];    
     $air_data=[];
@@ -58,6 +60,11 @@ if(file_exists($save_path.$chk_file)){
     $fname = str_replace("/","",$v->publishtime);
     $fname = str_replace(" ","",$fname);
     $fname = str_replace(":","",$fname);
+    if(is_dir($save_path)) {        
+        delete_dir($save_path);
+    }
+    mkdir($save_path, 0755, true);
+
     $file = fopen($save_path.$fname.".txt","w");
     fwrite($file,serialize($air_data));
     fclose($file);    
