@@ -71,15 +71,17 @@
                                     <td class="fw-bold">{{ $admin['username'] }}</td>
                                     <td class="text-center">
                                         <!-- 刪除按鈕表單 -->
-                                        <form action="{{ route('dns_admin.delete') }}" method="POST" onsubmit="return confirm('確定要刪除這筆管理員資料嗎？');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="code" value="{{ $admin['code'] }}">
-                                            <input type="hidden" name="username" value="{{ $admin['username'] }}">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
-                                                <i class="bi bi-trash-fill me-1"></i>刪除
-                                            </button>
-                                        </form>
+                                        @if(session('dns_username') != $admin['username'] || session('dns_code') != $admin['code'])
+                                            <form action="{{ route('dns_admin.delete') }}" method="POST" onsubmit="return confirm('確定要刪除這筆管理員資料嗎？');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="code" value="{{ $admin['code'] }}">
+                                                <input type="hidden" name="username" value="{{ $admin['username'] }}">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                                                    <i class="bi bi-trash-fill me-1"></i>刪除
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

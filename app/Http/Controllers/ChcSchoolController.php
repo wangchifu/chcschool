@@ -200,6 +200,7 @@ class ChcSchoolController extends Controller
             session()->forget('dns_code');
             session()->forget('dns_name');
             session()->forget('dns_title');
+            session()->forget('dns_username');
 
             // 3. 檢查檔案是否存在
             if (Storage::exists($this->csvPath)) {
@@ -227,6 +228,7 @@ class ChcSchoolController extends Controller
                             session(['dns_code' => $user_obj['code']]);
                             session(['dns_title' => $user_obj['title']]);
                             session(['dns_name' => $user_obj['name']]);                            
+                            session(['dns_username' => $user_obj['username']]);  
                             break; // 找到了就可以中斷迴圈
                         }
                     }
@@ -249,6 +251,7 @@ class ChcSchoolController extends Controller
         session()->forget('dns_code');
         session()->forget('dns_name');
         session()->forget('dns_title');
+        session()->forget('dns_username');
         $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
         $post_logout_redirect_uri = url('index');        
         $id_token_hint = session('id_token');
