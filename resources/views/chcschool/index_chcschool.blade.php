@@ -57,7 +57,30 @@
                     </div>
                 </div>
             </div>            
-
+            @if(session('dns_admin') == 1)
+                <!-- 按鈕：DNS 管理 -->
+                <div class="col-md-4">
+                    <div class="card action-card shadow-sm h-100 p-4 text-center">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="icon-box bg-info bg-opacity-10 text-info">
+                                    <i class="bi bi-hdd-network-fill"></i>
+                                </div>
+                                <h3 class="h5 card-title fw-bold mb-3">DNS 管理</h3>
+                                <p class="card-text text-muted small">
+                                    管理與設定校園網域名稱解析 (DNS) 紀錄與相關網路組態。
+                                </p>
+                            </div>
+                            <div class="mt-4">
+                                <!-- 請將 route('dns_index') 替換為您實際的 DNS 管理路由名稱 -->
+                                <a href="{{ route('dns_admin') }}" class="btn btn-info text-white w-100 py-2 rounded-pill fw-bold">
+                                    進入管理 <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+            @endif
         </div>
     </main>
 
