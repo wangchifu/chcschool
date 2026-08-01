@@ -12,7 +12,6 @@
     <style>
         /* Hero 大橫幅背景樣式 */
         .hero-header {
-            /* 預設為優雅的深色漸層背景，也可更換下方 url 的圖片網址 */
             background: linear-gradient(135deg, rgba(15, 32, 67, 0.85), rgba(39, 110, 144, 0.85)), 
                         url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
             color: #ffffff;
@@ -21,7 +20,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
-        /* 按鈕卡片懸浮效果 */
         .action-card {
             transition: all 0.3s ease;
             border: none;
@@ -67,9 +65,9 @@
     <!-- 上方大橫幅 (Hero Banner) -->
     <header class="hero-header text-center">
         <div class="container">            
-            <h1 class="display-4 fw-bold mb-3">歡迎光臨彰化縣學校網站代管中心</h1>
+            <h1 class="display-4 fw-bold mb-3">彰化縣學校網站代管中心</h1>
             <p class="lead col-lg-8 mx-auto text-light opacity-75">
-                提供穩定、安全、便捷的學校網站託管與校園資訊整合服務
+                為減輕各校自管官方網站(首頁)的壓力及符合資安法D級單位規定！由縣網中心提供公版首頁，讓國中小各校申請代管！
             </p>
         </div>
     </header>
@@ -78,49 +76,41 @@
     <main class="container my-5" style="margin-top: -50px !important;">
         <div class="row g-4 justify-content-center">
             
-            <!-- 按鈕 1：所有代管學校 -->
-            <div class="col-md-4">
-                <div class="card action-card shadow-sm h-100 p-4 text-center">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="icon-box bg-primary bg-opacity-10 text-primary">
-                                <i class="bi bi-houses-fill"></i>
-                            </div>
-                            <h3 class="h5 card-title fw-bold mb-3">所有代管學校</h3>
-                            <p class="card-text text-muted small">
-                                快速查詢與瀏覽彰化縣內所有委託代管網站之學校清單。
-                            </p>
-                        </div>
-                        <div class="mt-4">
-                            <a href="{{ route('pages') }}" class="btn btn-primary w-100 py-2 rounded-pill fw-bold">
-                                前往查看 <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
+            <div class="card mt-4 border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <span class="fw-bold me-2">圖例：</span>
+                    <button class="btn btn-secondary btn-sm me-1" type="button">學校名 <span class="badge bg-light text-dark">自管</span></button>
+                    <button class="btn btn-info btn-sm me-1 text-white" type="button">學校名 <span class="badge bg-light text-dark">公版-1 ({{ $school3_1 }}校)</span></button>
+                    <button class="btn btn-primary btn-sm" type="button">學校名 <span class="badge bg-light text-dark">公版-2 ({{ $school3_2 }}校)</span></button>
                 </div>
-            </div>
-
-            <!-- 按鈕 2：彰化縣空汙旗 -->
-            <div class="col-md-4">
-                <div class="card action-card shadow-sm h-100 p-4 text-center">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="icon-box bg-success bg-opacity-10 text-success">
-                                <i class="bi bi-flag-fill"></i>
+                <div class="card-body">                                            
+                    @foreach($townships as $k1 => $v1)
+                        <h4 class="h5 fw-bold text-primary mt-2"><i class="bi bi-geo-alt-fill me-1"></i> {{ $v1 }}</h4>
+                        @if(isset($all_school[$v1]))
+                            <div class="mb-2">
+                            @foreach($all_school[$v1] as $k2 => $v2)    
+                                @if(isset($schools[$v2['school']]))                            
+                                    @if($schools[$v2['school']] != "50" and $schools[$v2['school']] != "49")
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">自管</span></a>
+                                    @endif                            
+                                    @if($schools[$v2['school']] == "50")
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm text-white m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">公版-1</span></a>
+                                    @endif
+                                    @if($schools[$v2['school']] == "49")
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-primary btn-sm m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">公版-2</span></a>
+                                    @endif
+                                @else    
+                                    <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-dark">自管</span></a>
+                                @endif                           
+                            @endforeach
                             </div>
-                            <h3 class="h5 card-title fw-bold mb-3">彰化縣空汙旗</h3>
-                            <p class="card-text text-muted small">
-                                即時掌握彰化縣各校區空氣品質指標與空汙旗懸掛資訊。
-                            </p>
-                        </div>
-                        <div class="mt-4">
-                            <a href="{{ route('chc_air') }}" class="btn btn-success w-100 py-2 rounded-pill fw-bold">
-                                即時查詢 <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
+                        @endif               
+                        @if(!$loop->last)
+                            <hr class="my-3 opacity-25">
+                        @endif
+                    @endforeach                                     
                 </div>
-            </div>            
+            </div>                       
 
         </div>
     </main>

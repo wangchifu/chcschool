@@ -302,7 +302,7 @@ class ChcSchoolController extends Controller
             'all_school' => $all_school,
         ];        
 
-        return view('chcschool', $data);
+        return view('pages', $data);
     }
 
     public function chc_air(){    
