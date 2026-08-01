@@ -7,7 +7,7 @@ if (isset($_SERVER['REQUEST_URI'])) {
 //檢查有無新版本的sql檔
 $sqls = get_files(database_path('sqls'));
 
-if (isset($_SERVER['HTTP_HOST']) and $_SERVER['HTTP_HOST'] != 'chcschool2.localhost' and $_SERVER['HTTP_HOST'] != 'chcschool.chc.edu.tw') {
+if (isset($_SERVER['HTTP_HOST']) and $_SERVER['HTTP_HOST'] != 'chcschool.localhost' and $_SERVER['HTTP_HOST'] != 'chcschool.chc.edu.tw') {
     $install_sqls = \App\Sql::where('install', 1)->pluck('name')->toArray();
 
     foreach ($sqls as $k => $v) {

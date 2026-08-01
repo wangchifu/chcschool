@@ -27,7 +27,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        if($_SERVER['HTTP_HOST'] != 'chcschool2.localhost' and $_SERVER['HTTP_HOST'] != 'chcschool.chc.edu.tw'){
+        if($_SERVER['HTTP_HOST'] != 'chcschool.localhost' and $_SERVER['HTTP_HOST'] != 'chcschool.chc.edu.tw'){
             //$this->middleware('auth');
             $setup = Setup::first();
             //檢查有無關閉網站
@@ -41,97 +41,7 @@ class HomeController extends Controller
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
-     */
-    /**
-    public function index(Request $request,$insite=null)
-    {
-        if(is_null($insite)) $insite="index";
-
-        $school_code = school_code();
-        $files = get_files(storage_path('app/public/'.$school_code.'/title_image/random'));
-        if($files) {
-            foreach ($files as $k=>$v) {
-                $photos[$k] = asset('storage/'.$school_code.'/title_image/random/'.$v);
-            }
-        }else{
-            $photos = [
-                '0'=>asset('images/top0.svg'),
-                '1'=>asset('images/top1.svg'),
-                '2'=>asset('images/top2.svg'),
-            ];
-        }
-
-        $setup = \App\Setup::find(1);
-        $setup_cols = SetupCol::orderBy('order_by')->get();
-        foreach($setup_cols as $setup_col){
-            $bs = Block::where('setup_col_id',$setup_col->id)
-                ->orderBy('order_by')
-                ->get();
-
-            $blocks[$setup_col->id] = $bs;
-
-            //跑馬燈css設定
-            if($setup_col->title == "榮譽榜跑馬燈") {
-                $marquee_css = $bs[0]->content;
-            }
-        }
-        //跑馬燈css預設設定
-        if(empty($marquee_css)) {
-            $marquee_css = "direction='left' height='30' scrollamount='5' align='midden'";
-        }
-        if($insite=="insite"){
-            $posts = Post::where('insite','1')
-                ->orderBy('top','DESC')
-                ->orderBy('created_at','DESC')
-                ->paginate(10);
-        }elseif($insite=="honor"){
-            $posts = Post::where('insite','2')
-                ->orderBy('top','DESC')
-                ->orderBy('created_at','DESC')
-                ->paginate(10);
-        }elseif($insite=="index"){
-            $posts = Post::where('insite',null)
-                ->orderBy('top','DESC')
-                ->orderBy('created_at','DESC')
-                ->paginate(10);
-        }
-        //榮譽榜資料庫資料
-        $honors = Post::where('insite','2')
-            ->orderBy('top','DESC')
-            ->orderBy('created_at','DESC')
-            ->paginate(10);
-        //跑馬燈取得榮譽榜資料庫資料
-        $marquee = "";
-        foreach($honors as $honor) {
-            $href = "../posts/".$honor->id;
-            $marquee .= "<a href=".$href.">"
-                .$honor->title."   ".
-                "</a>";
-        }
-
-
-        //分類公告
-        $post_types = PostType::orderBy('order_by')->get();
-
-        $photo_links = PhotoLink::orderBy('order_by')->paginate(24);
-
-        $data = [
-            'school_code'=>$school_code,
-            'photos'=>$photos,
-            'setup'=>$setup,
-            'setup_cols'=>$setup_cols,
-            'blocks'=>$blocks,
-            'posts'=>$posts,
-            'insite'=>$insite,
-            'request'=>$request,
-            'marquee' =>$marquee,
-            'marquee_css'=>$marquee_css,
-            'photo_links'=>$photo_links,
-            'post_types'=>$post_types,
-        ];
-        return view('index',$data);
-    }
-     * */
+     */    
 
     public $school_check_file = [
         'www.bcses.chc.edu.tw'=>'A',
@@ -364,8 +274,8 @@ class HomeController extends Controller
     public function index(Request $request)
     {        
         //chcschool.chc.edu.tw專用
-        if($_SERVER['HTTP_HOST'] == 'chcschool2.localhost' or $_SERVER['HTTP_HOST'] == 'chcschool.chc.edu.tw'){             
-            return redirect()->route('pages');
+        if($_SERVER['HTTP_HOST'] == 'chcschool.localhost' or $_SERVER['HTTP_HOST'] == 'chcschool.chc.edu.tw'){             
+            return view('index_chcschool');
         }
 
         $school_code = school_code();

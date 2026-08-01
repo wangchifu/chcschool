@@ -36,7 +36,7 @@ if(file_exists($save_path.$chk_file)){
     curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1500);       
     $html = curl_exec($ch);
     curl_close($ch);
-    $data = json_decode($html);    
+    $data = json_decode($html);        
     if(file_exists($save_path.date('Ymd').'.txt')){
         $count = file_get_contents($save_path.date('Ymd').'.txt');
     }else{
