@@ -70,6 +70,8 @@ Route::get('chcschool_sso', 'ChcSchoolController@chcschool_sso')->name('chcschoo
 Route::get('chcschool_auth/callback', 'ChcSchoolController@chcschool_callback')->name('chcschool_callback');
 Route::get('chcschool_logout', 'ChcSchoolController@chcschool_logout')->name('chcschool_logout');
 Route::get('dns_admin', 'ChcSchoolController@dns_admin')->name('dns_admin');
+Route::post('dns_admin/add', 'ChcSchoolController@addAdmin')->name('dns_admin.add');
+Route::delete('dns_admin/delete', 'ChcSchoolController@deleteAdmin')->name('dns_admin.delete');
 
 //總系統管理員登入
 Route::get('sys', 'Auth\GLoginController@sys')->name('sys');

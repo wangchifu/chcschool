@@ -130,6 +130,8 @@ class ChcSchoolController extends Controller
         return redirect($link);
     }
 
+    private $csvPath = 'privacy/dns_admin.csv';
+
     public function chcschool_callback(){
         $code= $_GET['code'];
         $state= $_GET['state'];
@@ -191,7 +193,7 @@ class ChcSchoolController extends Controller
             $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
             return redirect($link);
         }else{
-            $csvPath = 'privacy/dns_admin.csv'; 
+            //$csvPath = 'privacy/dns_admin.csv'; 
 
             // 預設將 session 設為 0 或清除
             session()->forget('dns_admin');
@@ -200,9 +202,9 @@ class ChcSchoolController extends Controller
             session()->forget('dns_title');
 
             // 3. 檢查檔案是否存在
-            if (Storage::exists($csvPath)) {
+            if (Storage::exists($this->csvPath)) {
                 // 讀取 CSV 內容
-                $fileContent = Storage::get($csvPath);
+                $fileContent = Storage::get($this->csvPath);
                 
                 // 按行拆分 CSV
                 $lines = explode("\n", str_replace("\r", "", $fileContent));
@@ -256,11 +258,96 @@ class ChcSchoolController extends Controller
 
     public function dns_admin(){
         if(session('dns_admin') == 1){
-            return view('chcschool.dns_admin');
+            $admin_list = $this->getAdminList();
+            return view('chcschool.dns_admin', compact('admin_list'));
         }else{
             return redirect()->route('index');
         }
     }
+
+// 2. 新增管理員
+    public function addAdmin(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+            'username' => 'required|string',
+        ]);
+
+        $code = trim($request->input('code'));
+        $username = trim($request->input('username'));
+
+        $list = $this->getAdminList();
+
+        // 檢查是否已存在相同資料
+        foreach ($list as $item) {
+            if ($item['code'] === $code && strtolower($item['username']) === strtolower($username)) {
+                return back()->with('error', '該管理員已存在！');
+            }
+        }
+
+        // 寫入新資料
+        $list[] = ['code' => $code, 'username' => $username];
+        $this->saveAdminList($list);
+
+        return back()->with('success', '新增管理員成功！');
+    }
+
+    // 3. 刪除管理員
+    public function deleteAdmin(Request $request)
+    {
+        $code = trim($request->input('code'));
+        $username = trim($request->input('username'));
+
+        $list = $this->getAdminList();
+
+        // 陣列過濾：移除吻合的列
+        $newList = array_filter($list, function ($item) use ($code, $username) {
+            return !($item['code'] === $code && strtolower($item['username']) === strtolower($username));
+        });
+
+        $this->saveAdminList(array_values($newList));
+
+        return back()->with('success', '刪除成功！');
+    }    
+
+// Helper: 讀取 CSV 轉成陣列
+    private function getAdminList()
+    {
+        $list = [];
+
+        if (Storage::exists($this->csvPath)) {
+            $content = Storage::get($this->csvPath);
+            $content = preg_replace('/[\x{EF}\x{BB}\x{BF}]/u', '', $content); // 去除 BOM
+            $lines = explode("\n", str_replace("\r", "", $content));
+
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if ($line === '') continue;
+
+                $data = str_getcsv($line);
+                if (count($data) >= 2) {
+                    $list[] = [
+                        'code' => trim($data[0]),
+                        'username' => trim($data[1])
+                    ];
+                }
+            }
+        }
+
+        return $list;
+    }
+
+    // Helper: 將陣列重寫回 CSV 檔
+    private function saveAdminList(array $list)
+    {
+        $lines = [];
+        foreach ($list as $item) {
+            $lines[] = $item['code'] . ',' . $item['username'];
+        }
+
+        $content = implode("\n", $lines);
+        Storage::put($this->csvPath, $content);
+    }    
 
     public function pages(){        
         ///////////////////////////////連接資料庫
