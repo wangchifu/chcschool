@@ -68,6 +68,7 @@ Route::get('auth/callback', 'OpenIDController@callback')->name('callback');
 //chcschool openid登入
 Route::get('chcschool_sso', 'ChcSchoolController@chcschool_sso')->name('chcschool_sso');
 Route::get('chcschool_auth/callback', 'ChcSchoolController@chcschool_callback')->name('chcschool_callback');
+Route::get('chcschool_logout', 'ChcSchoolController@chcschool_logout')->name('chcschool_logout');
 
 //總系統管理員登入
 Route::get('sys', 'Auth\GLoginController@sys')->name('sys');

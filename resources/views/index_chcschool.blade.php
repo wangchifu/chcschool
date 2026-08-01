@@ -56,11 +56,21 @@
                 <i class="bi bi-building-fill-gear me-2"></i>彰化縣學校網站代管中心
             </a>
             <!-- 右上角登入按鈕 -->
-            <div class="ms-auto">                
-                <a href="{{ route('chcschool_sso') }}" class="btn btn-outline-light rounded-pill px-3 py-1 btn-sm fw-bold">
-                    <i class="bi bi-person-fill-lock me-1"></i>縣網中心DNS管理者登入
-                </a>
-            </div>
+            <div class="ms-auto">
+                @if(session('dns_admin') == 1)
+                    <!-- 已登入狀態：顯示 學校代碼 + 職稱 + 姓名 (若無設定姓名預設顯示帳號) -->
+                    <span class="btn btn-outline-light rounded-pill px-3 py-1 btn-sm fw-bold disabled border-0">
+                        <i class="bi bi-person-check-fill me-1"></i>
+                        {{ session('code') }} {{ session('title') ?? session('job_title') }} {{ session('name') ?? session('username') }}
+                    </span>                    
+                    <a href="{{ route('chcschool_logout') }}" class="btn btn-sm btn-danger rounded-pill ms-1">登出</a>
+                @else
+                    <!-- 未登入狀態：顯示登入按鈕 -->
+                    <a href="{{ route('chcschool_sso') }}" class="btn btn-outline-light rounded-pill px-3 py-1 btn-sm fw-bold">
+                        <i class="bi bi-person-fill-lock me-1"></i>縣網中心DNS管理者登入
+                    </a>
+                @endif
+            </div>            
         </div>
     </nav>
 

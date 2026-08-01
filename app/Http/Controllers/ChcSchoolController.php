@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use PDO;          // 引入原生的 PDO
 use PDOException; // 引入原生的 PDOException
 
@@ -182,6 +183,7 @@ class ChcSchoolController extends Controller
         $user_obj['username'] = $userinfo['sub'];
         $user_obj['code'] = $edufile['schoolid'];
         $user_obj['title'] = $edufile['titles'][0]['titles'][0];
+        $user_obj['name'] = $userinfo['name'];     
         if ($user_obj['title'] == "學生") {
             $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
             $post_logout_redirect_uri = url('index');        
@@ -189,7 +191,54 @@ class ChcSchoolController extends Controller
             $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
             return redirect($link);
         }else{
-            dd($user_obj);
+            $csvPath = 'privacy/db_admin.csv'; 
+
+            // 預設將 session 設為 0 或清除
+            session()->forget('dns_admin');
+            session()->forget('dns_code');
+            session()->forget('dns_name');
+            session()->forget('dns_title');
+
+            // 3. 檢查檔案是否存在
+            if (Storage::exists($csvPath)) {
+                // 讀取 CSV 內容
+                $fileContent = Storage::get($csvPath);
+                
+                // 按行拆分 CSV
+                $lines = explode("\n", str_replace("\r", "", $fileContent));
+                
+                foreach ($lines as $line) {
+                    if (trim($line) === '') continue; // 跳過空行
+                    
+                    // 解析每一列 (預設逗號分隔)
+                    $data = str_getcsv($line); 
+                    
+                    // 確保至少有兩欄 (Index 0: 學校代碼, Index 1: Username)
+                    if (count($data) >= 2) {
+                        $csvCode = trim($data[0]);
+                        $csvUsername = trim($data[1]);
+                        
+                        // 比對兩欄是否皆符合
+                        if ($csvCode === (string)$user_obj['code'] && $csvUsername === (string)$user_obj['username']) {
+                            // 符合條件，寫入 Session
+                            session(['dns_admin' => 1]);
+                            session(['dns_code' => $user_obj['code']]);
+                            session(['dns_title' => $user_obj['title']]);
+                            session(['dns_name' => $user_obj['name']]);                            
+                            break; // 找到了就可以中斷迴圈
+                        }
+                    }
+                }
+            }
+        }
+        if(session('dns_admin') == 1){
+            return redirect()->route('school_dns.index');
+        }else{
+            echo "帳號:".$user_obj['username']."<br>";
+            echo "學校代碼:".$user_obj['code']."<br>";
+            echo "職稱:".$user_obj['title']."<br>";
+            echo "姓名:".$user_obj['name']."<br>";
+            echo "您不是本系統管理員，請 <a href='https://chcschool.chc.edu.tw/chcschool_logout'>[ 離開 ]</a> 。<br>";
         }
     }
 
