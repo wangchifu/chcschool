@@ -44,6 +44,7 @@ Route::post('webhook', 'HomeController@webhook')->name('webhook');
 Route::get('close', 'SetupController@close')->name('close');
 
 Route::get('/', 'HomeController@index')->name('index');
+Route::get('/index', 'HomeController@index')->name('index');
 //DNS驗證檔案
 Route::get('.well-known/pki-validation/DN_CHECK_FILE.htm', 'HomeController@check_file')->name('check_file');
 Route::get('.well-known/pki-validation/whois.txt', 'HomeController@whois')->name('check_file');

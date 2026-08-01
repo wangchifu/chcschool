@@ -179,7 +179,18 @@ class ChcSchoolController extends Controller
         if( !$userinfo) {
             die ("無法取得 USER INFO");
         }
-        dd($userinfo);
+        $user_obj['username'] = $userinfo['sub'];
+        $user_obj['code'] = $edufile['schoolid'];
+        $user_obj['title'] = $edufile['titles'][0]['titles'][0];
+        if ($user_obj['title'] == "學生") {
+            $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+            $post_logout_redirect_uri = url('index');        
+            $id_token_hint = session('id_token');
+            $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+            return redirect($link);
+        }else{
+            dd($user_obj);
+        }
     }
 
     public function pages(){        
