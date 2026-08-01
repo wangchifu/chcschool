@@ -275,7 +275,7 @@ class HomeController extends Controller
     {        
         //chcschool.chc.edu.tw專用
         if($_SERVER['HTTP_HOST'] == 'chcschool.localhost' or $_SERVER['HTTP_HOST'] == 'chcschool.chc.edu.tw'){             
-            return view('index_chcschool');
+            return view('chcschool.index_chcschool');
         }
 
         $school_code = school_code();

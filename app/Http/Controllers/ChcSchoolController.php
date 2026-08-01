@@ -191,7 +191,7 @@ class ChcSchoolController extends Controller
             $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
             return redirect($link);
         }else{
-            $csvPath = 'privacy/db_admin.csv'; 
+            $csvPath = 'privacy/dns_admin.csv'; 
 
             // 預設將 session 設為 0 或清除
             session()->forget('dns_admin');
@@ -232,7 +232,7 @@ class ChcSchoolController extends Controller
             }
         }
         if(session('dns_admin') == 1){
-            return redirect()->route('school_dns.index');
+            return redirect()->route('dns_admin');
         }else{
             echo "帳號:".$user_obj['username']."<br>";
             echo "學校代碼:".$user_obj['code']."<br>";
@@ -252,6 +252,14 @@ class ChcSchoolController extends Controller
         $id_token_hint = session('id_token');
         $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
         return redirect($link);
+    }
+
+    public function dns_admin(){
+        if(session('dns_admin') == 1){
+            return view('chcschool.dns_admin');
+        }else{
+            return redirect()->route('index');
+        }
     }
 
     public function pages(){        
@@ -548,14 +556,14 @@ class ChcSchoolController extends Controller
             'all_school' => $all_school,
         ];        
 
-        return view('pages', $data);
+        return view('chcschool.pages', $data);
     }
 
     public function chc_air(){    
         $data = [
 
         ];
-        return view('chc_air', $data);
+        return view('chcschool.chc_air', $data);
     }
 
     public function school_dns_index()
