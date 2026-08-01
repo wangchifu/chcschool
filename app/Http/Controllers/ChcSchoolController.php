@@ -242,6 +242,18 @@ class ChcSchoolController extends Controller
         }
     }
 
+    public function chcschool_logout(){
+        session()->forget('dns_admin');
+        session()->forget('dns_code');
+        session()->forget('dns_name');
+        session()->forget('dns_title');
+        $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+        $post_logout_redirect_uri = url('index');        
+        $id_token_hint = session('id_token');
+        $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+        return redirect($link);
+    }
+
     public function pages(){        
         ///////////////////////////////連接資料庫
         $dbms='mysql';     //数据库类型
