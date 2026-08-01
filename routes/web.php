@@ -64,6 +64,10 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('sso', 'OpenIDController@sso')->name('sso');
 Route::get('auth/callback', 'OpenIDController@callback')->name('callback');
 
+//chcschool openid登入
+Route::get('chcschool_sso', 'ChcSchoolController@chcschool_sso')->name('chcschool_sso');
+Route::get('chcschool_auth/callback', 'ChcSchoolController@chcschool_callback')->name('chcschool_callback');
+
 //總系統管理員登入
 Route::get('sys', 'Auth\GLoginController@sys')->name('sys');
 Route::post('sys_auth', 'Auth\GLoginController@sys_auth')->name('sys_auth');
@@ -227,8 +231,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('lunches', 'LunchController@store')->name('lunches.store');
     Route::patch('lunches', 'LunchController@update')->name('lunches.update');
 
-    Route::get('school_dns/index', 'HomeController@school_dns_index')->name('school_dns.index');
-    Route::get('school_dns/create', 'HomeController@school_dns_create')->name('school_dns.create');
+    Route::get('school_dns/index', 'ChcSchoolController@school_dns_index')->name('school_dns.index');
+    Route::get('school_dns/create', 'ChcSchoolController@school_dns_create')->name('school_dns.create');
 
     Route::get('lunch_setup', 'LunchSetupController@index')->name('lunch_setups.index');
     Route::get('lunch_setup/create', 'LunchSetupController@create')->name('lunch_setups.create');

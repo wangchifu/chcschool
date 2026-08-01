@@ -57,7 +57,7 @@
             </a>
             <!-- 右上角登入按鈕 -->
             <div class="ms-auto">                
-                <a href="#" class="btn btn-outline-light rounded-pill px-3 py-1 btn-sm fw-bold">
+                <a href="{{ route('chcschool_sso') }}" class="btn btn-outline-light rounded-pill px-3 py-1 btn-sm fw-bold">
                     <i class="bi bi-person-fill-lock me-1"></i>縣網中心DNS管理者登入
                 </a>
             </div>
@@ -128,7 +128,7 @@
     <!-- 頁尾 -->
     <footer class="bg-white py-4 mt-auto border-top">
         <div class="container text-center text-muted small">
-            <p class="mb-0">© 彰化縣學校網站代管中心 版權所有</p>
+            <p class="mb-0">© 彰化縣教育處縣網中心 版權所有</p>
         </div>
     </footer>
 
