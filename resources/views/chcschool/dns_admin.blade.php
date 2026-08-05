@@ -43,6 +43,9 @@
                             <div class="col-md-5">
                                 <input type="text" name="username" class="form-control form-control-sm" placeholder="帳號 Username (例如: wangchifu)" required>
                             </div>
+                            <div class="col-md-5">
+                                <input type="text" name="name" class="form-control form-control-sm" placeholder="姓名 Name (例如: 王志福)" required>
+                            </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">
                                     <i class="bi bi-plus-lg me-1"></i>新增
@@ -58,8 +61,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th scope="col" class="text-center" style="width: 10%;">#</th>
-                                <th scope="col" style="width: 35%;">學校代碼 (Code)</th>
-                                <th scope="col" style="width: 35%;">帳號 (Username)</th>
+                                <th scope="col" style="width: 25%;">學校代碼 (Code)</th>
+                                <th scope="col" style="width: 25%;">帳號 (Username)</th>
+                                <th scope="col" style="width: 20%;">姓名 (Name)</th>
                                 <th scope="col" class="text-center" style="width: 20%;">操作</th>
                             </tr>
                         </thead>
@@ -69,6 +73,7 @@
                                     <td class="text-center text-muted">{{ $loop->iteration }}</td>
                                     <td><span class="badge bg-secondary font-monospace fs-6">{{ $admin['code'] }}</span></td>
                                     <td class="fw-bold">{{ $admin['username'] }}</td>
+                                    <td class="fw-bold">{{ $admin['name'] }}</td>
                                     <td class="text-center">
                                         <!-- 刪除按鈕表單 -->
                                         @if(session('dns_username') != $admin['username'] || session('dns_code') != $admin['code'])

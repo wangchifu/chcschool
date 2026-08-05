@@ -274,10 +274,12 @@ class ChcSchoolController extends Controller
         $request->validate([
             'code' => 'required|string',
             'username' => 'required|string',
+            'name' => 'required|string',
         ]);
 
         $code = trim($request->input('code'));
         $username = trim($request->input('username'));
+        $name = trim($request->input('name'));
 
         $list = $this->getAdminList();
 
@@ -289,7 +291,7 @@ class ChcSchoolController extends Controller
         }
 
         // 寫入新資料
-        $list[] = ['code' => $code, 'username' => $username];
+        $list[] = ['code' => $code, 'username' => $username, 'name' => $name]; 
         $this->saveAdminList($list);
 
         return back()->with('success', '新增管理員成功！');
@@ -333,7 +335,8 @@ class ChcSchoolController extends Controller
                 if (count($data) >= 2) {
                     $list[] = [
                         'code' => trim($data[0]),
-                        'username' => trim($data[1])
+                        'username' => trim($data[1]),
+                        'name' => trim($data[2])
                     ];
                 }
             }
@@ -347,7 +350,7 @@ class ChcSchoolController extends Controller
     {
         $lines = [];
         foreach ($list as $item) {
-            $lines[] = $item['code'] . ',' . $item['username'];
+            $lines[] = $item['code'] . ',' . $item['username']. ',' . $item['name'];
         }
 
         $content = implode("\n", $lines);
