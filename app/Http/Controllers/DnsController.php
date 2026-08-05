@@ -173,7 +173,7 @@ class DnsController extends Controller
             return redirect()->route('index')->with('success', "成功新增紀錄：{$saveKey} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
-            return redirect()->route('index')->with('error', "新增失敗: " . $e->getMessage());
+            return redirect()->route('dns.index')->with('error', "新增失敗: " . $e->getMessage());
         }
     }
 
@@ -217,7 +217,7 @@ class DnsController extends Controller
             return redirect()->route('index')->with('success', "成功刪除紀錄：{$name} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
-            return redirect()->route('index')->with('error', "刪除失敗: " . $e->getMessage());
+            return redirect()->route('dns.index')->with('error', "刪除失敗: " . $e->getMessage());
         }
     }
 
