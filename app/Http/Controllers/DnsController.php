@@ -192,6 +192,11 @@ class DnsController extends Controller
         $type  = strtoupper($request->input('type'));
         $value = trim($request->input('value'));
 
+        // 💡 關鍵安全防護：禁止刪除根網域 (@) 的 NS 紀錄，避免 Zone 崩潰
+        if (($name === '@' || $name === $this->zoneDomain) && $type === 'NS') {
+            return redirect()->back()->with('error', '刪除失敗：系統保護中，禁止刪除根網域 (@) 的 NS 名稱伺服器紀錄！');
+        }
+
         try {
             $updater = new Net_DNS2_Updater($this->zoneDomain, [
                 'nameservers' => [$this->dnsServer],
@@ -214,10 +219,11 @@ class DnsController extends Controller
             $updater->delete($rr);
             $updater->update();
 
-            return redirect()->route('dns.index')->with('success', "成功刪除紀錄：{$name} ({$type})");
+            // 💡 使用 back() 可自動彈回上一頁並帶入成功訊息（避免路由命名為 index 或 dns.index 造成錯亂）
+            return redirect()->back()->with('success', "成功刪除紀錄：{$name} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
-            return redirect()->route('dns.index')->with('error', "刪除失敗: " . $e->getMessage());
+            return redirect()->back()->with('error', "刪除失敗: " . $e->getMessage());
         }
     }
 
