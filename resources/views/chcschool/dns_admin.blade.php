@@ -37,13 +37,13 @@
                         <h6 class="fw-bold mb-3"><i class="bi bi-person-plus-fill me-1"></i>新增管理員</h6>
                         <form action="{{ route('dns_admin.add') }}" method="POST" class="row g-2 align-items-center">
                             @csrf
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <input type="text" name="code" class="form-control form-control-sm" placeholder="學校代碼 (例如: 074628)" required>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <input type="text" name="username" class="form-control form-control-sm" placeholder="帳號 Username (例如: wangchifu)" required>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <input type="text" name="name" class="form-control form-control-sm" placeholder="姓名 Name (例如: 王志福)" required>
                             </div>
                             <div class="col-md-2">
