@@ -170,7 +170,7 @@ class DnsController extends Controller
             $recentAdded[$saveKey] = now()->toDateTimeString();
             Cache::put('recent_dns_records', $recentAdded, 10800);
 
-            return redirect()->route('index')->with('success', "成功新增紀錄：{$saveKey} ({$type})");
+            return redirect()->route('dns.index')->with('success', "成功新增紀錄：{$saveKey} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
             return redirect()->route('dns.index')->with('error', "新增失敗: " . $e->getMessage());
@@ -214,7 +214,7 @@ class DnsController extends Controller
             $updater->delete($rr);
             $updater->update();
 
-            return redirect()->route('index')->with('success', "成功刪除紀錄：{$name} ({$type})");
+            return redirect()->route('dns.index')->with('success', "成功刪除紀錄：{$name} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
             return redirect()->route('dns.index')->with('error', "刪除失敗: " . $e->getMessage());
