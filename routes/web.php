@@ -234,10 +234,7 @@ Route::group(['middleware' => 'auth'], function () {
     //午餐系統
     Route::get('lunches/{lunch_order_id?}', 'LunchController@index')->name('lunches.index');
     Route::post('lunches', 'LunchController@store')->name('lunches.store');
-    Route::patch('lunches', 'LunchController@update')->name('lunches.update');
-
-    Route::get('school_dns/index', 'ChcSchoolController@school_dns_index')->name('school_dns.index');
-    Route::get('school_dns/create', 'ChcSchoolController@school_dns_create')->name('school_dns.create');
+    Route::patch('lunches', 'LunchController@update')->name('lunches.update');    
 
     Route::get('lunch_setup', 'LunchSetupController@index')->name('lunch_setups.index');
     Route::get('lunch_setup/create', 'LunchSetupController@create')->name('lunch_setups.create');
@@ -774,6 +771,12 @@ Route::group(['middleware' => 'admin'], function () {
 
     //系統教學
     Route::get('teach_system', 'HomeController@teach_system')->name('teach_system');
+
+    //DNS設定    
+    Route::get('/dns/index', 'DnsController@index')->name('dns.index');    
+    Route::delete('/dns/delete', 'DnsController@destroy')->name('dns.destroy');
+    Route::post('/dns/store', 'DnsController@store')->name('dns.store'); // 新增這行
+    Route::post('/dns/check', 'DnsController@check')->name('dns.check');
 });
 
 Route::group(['middleware' => 'local'], function () {

@@ -259,7 +259,7 @@
                                 -->
                                 <a class="dropdown-item" href="{{ route('rss_feeds.index') }}"><i class="fas fa-rss"></i> RSS 訊息</a>
                                 <a class="dropdown-item" href="{{ route('setups.index') }}"><i class="fas fa-desktop"></i> 網站設定</a>
-                                <a class="dropdown-item" href="{{ route('school_dns.index') }}"><i class="fas fa-route text-success"></i> DNS 網域設定</a>                                
+                                <a class="dropdown-item" href="{{ route('dns.index') }}" target="_blank"><i class="fas fa-route"></i> DNS 網域設定</a>                                
                             </div>
                         </li>
                     @endif

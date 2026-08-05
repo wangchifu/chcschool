@@ -661,31 +661,4 @@ class ChcSchoolController extends Controller
         return view('chcschool.chc_air', $data);
     }
 
-    public function school_dns_index()
-    {
-        $school_code = school_code();
-
-        $host = $_SERVER['HTTP_HOST']; // 取得如 www.example.com:8080
-
-        // 去掉埠號 (Port，若有的話) 並去除開頭的 www.
-        $domain = parse_url('http://' . $host, PHP_URL_HOST);
-        $domainWithoutWww = preg_replace('/^www\./i', '', $domain);
-        
-        $data = [
-            'domainWithoutWww' => $domainWithoutWww,
-            'school_code' => $school_code,
-        ];
-        return view('dns.index',$data);
-    }
-
-    public function school_dns_create()
-    {
-        
-        $data = [            
-        ];
-        return view('dns.create',$data);
-    }
-
-    
-
 }
