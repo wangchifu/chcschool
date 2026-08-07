@@ -20,13 +20,13 @@
             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                 <div class="d-flex align-items-center gap-3">
                     <h5 class="m-0 font-weight-bold text-primary">
-                        Zone: <code>{{ $zoneDomain }}</code> （Server: {{ $dnsServer }}）
+                        PTR 反解 Zone: <code>{{ $ptrZoneDomain }}</code> （網段: {{ $networkSubnet }}.x / Server: {{ $dnsServer }}）
                     </h5>
-                    <span class="badge bg-secondary">共 {{ count($records) }} 筆記錄</span>
+                    <span class="badge bg-secondary">共 {{ count($records) }} 筆紀錄</span>
                 </div>
                 <!-- 浮動面板按鈕 -->
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRecordModal">
-                    + 新增紀錄
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPtrRecordModal">
+                    + 新增 PTR 紀錄
                 </button>
             </div>
             <div class="card-body p-0">
@@ -34,10 +34,10 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-dark">
                             <tr>
-                                <th class="ps-3" style="min-width: 150px;">域名 (Name)</th>
+                                <th class="ps-3" style="width: 180px;">IP 位址 (IP)</th>
                                 <th style="width: 100px;">類型 (Type)</th>
                                 <th style="width: 90px;">TTL</th>
-                                <th>記錄值 (Value / IP)</th>
+                                <th>指向域名 (PTR Domain Name)</th>
                                 <th class="text-center" style="width: 130px; min-width: 130px;">操作</th>
                             </tr>
                         </thead>
@@ -46,54 +46,49 @@
                                 {{-- 判斷是否有 created_at，若有代表在 3 小時內，套用高亮綠色 --}}
                                 <tr class="{{ !empty($record['created_at']) ? 'table-success' : '' }}">
                                     <td class="ps-3">
-                                        <code>{{ $record['name'] }}</code>
+                                        <code>{{ $record['ip_full'] }}</code>
                                         @if(!empty($record['created_at']))
                                             <span class="badge bg-success ms-1">新增</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <span class="badge {{ $record['type'] === 'A' ? 'bg-primary' : 'bg-info' }}">
+                                        <span class="badge bg-warning text-dark">
                                             {{ $record['type'] }}
                                         </span>
                                     </td>
                                     <td>{{ $record['ttl'] }}s</td>
-                                    {{-- 💡 完整顯示資料庫/DNS 查出來的 value（包含結尾點號） --}}
+                                    {{-- 完整顯示指向的完整域名（包含結尾點號） --}}
                                     <td style="word-break: break-all;">
-                                        <code>{{ $record['value'] }}</code>
+                                        <code>{{ $record['domain'] }}</code>
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-1">
                                             <!-- 測試按鈕 -->
                                             <button type="button" 
                                                     class="btn btn-outline-info btn-sm btn-test-dns"
-                                                    data-name="{{ $record['name'] }}"
-                                                    data-type="{{ $record['type'] }}">
+                                                    data-ip="{{ $record['ip_full'] }}"
+                                                    data-type="PTR">
                                                 測試
                                             </button>
 
-                                            {{-- 💡 判斷：當域名為 @ 且類型為 NS 時，禁止刪除 --}}
-                                            @if($record['name'] === '@' && $record['type'] === 'NS')
-                                                <button class="btn btn-secondary btn-sm" disabled title="根網域 NS 記錄保護中，不可刪除">保護中</button>
-                                            @else
-                                                <!-- 刪除表單按鈕 -->
-                                                <form action="{{ route('dns.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除 {{ $record['name'] }} 嗎？');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    
-                                                    <input type="hidden" name="name" value="{{ $record['name'] }}">
-                                                    <input type="hidden" name="type" value="{{ $record['type'] }}">
-                                                    <input type="hidden" name="value" value="{{ $record['value'] }}">
+                                            <!-- 刪除表單按鈕 -->
+                                            <form action="{{ route('dns.ptr.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除 {{ $record['ip_full'] }} 的反解紀錄嗎？');">
+                                                @csrf
+                                                @method('DELETE')
+                                                
+                                                <input type="hidden" name="network_subnet" value="{{ $networkSubnet }}">
+                                                <input type="hidden" name="ip_last" value="{{ $record['ip_last'] }}">
+                                                <input type="hidden" name="domain" value="{{ $record['domain'] }}">
 
-                                                    <button type="submit" class="btn btn-danger btn-sm text-nowrap">刪除</button>
-                                                </form>
-                                            @endif
+                                                <button type="submit" class="btn btn-danger btn-sm text-nowrap">刪除</button>
+                                            </form>
                                         </div>
                                     </td>                               
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="5" class="text-center py-4 text-muted">
-                                        目前沒有找到任何紀錄，或 DNS 伺服器未開放 AXFR 區域轉移。
+                                        目前沒有找到任何 PTR 反解紀錄，或 DNS 伺服器未開放 AXFR 區域轉移。
                                     </td>
                                 </tr>
                             @endforelse
@@ -104,42 +99,30 @@
         </div>
     </div>
 
-    <!-- 新增紀錄浮動 Modal 視窗 -->
-    <div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
+    <!-- 新增 PTR 紀錄浮動 Modal 視窗 -->
+    <div class="modal fade" id="addPtrRecordModal" tabindex="-1" aria-labelledby="addPtrRecordModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="addRecordModalLabel">新增 DNS 正解記錄</h5>
+                    <h5 class="modal-title" id="addPtrRecordModalLabel">新增 PTR 反解記錄</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('dns.store') }}" method="POST">
+                <form action="{{ route('dns.ptr.store') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="network_subnet" value="{{ $networkSubnet }}">
+
                     <div class="modal-body">
-                        <!-- 主機名稱 -->
+                        <!-- IP 最後一碼 -->
                         <div class="mb-3">
-                            <label for="name" class="form-label font-weight-bold">主機名稱 (Name)</label>
+                            <label for="ip_last" class="form-label font-weight-bold">IP 位址 (IP Last Octet)</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="例如: pc1" required>
-                                <span class="input-group-text">.{{ $zoneDomain }}</span>
+                                <span class="input-group-text">{{ $networkSubnet }}.</span>
+                                <input type="number" class="form-control" id="ip_last" name="ip_last" placeholder="例如: 10" min="1" max="254" required>
                             </div>
-                            <div class="form-text">只需填寫名稱，系統會自動補上 <code>.{{ $zoneDomain }}</code></div>
+                            <div class="form-text">只需填寫 IP 最後一碼數字（例如：填入 <code>10</code> 代表 <code>{{ $networkSubnet }}.10</code>）</div>
                         </div>
 
-                        <!-- 記錄類型 -->
-                        <div class="mb-3">
-                            <label for="type" class="form-label font-weight-bold">記錄類型 (Type)</label>
-                            <select class="form-select" id="type" name="type" required>
-                                <option value="A" selected>A (IPv4 位址)</option>
-                                <option value="AAAA">AAAA (IPv6 位址)</option>
-                                <option value="CNAME">CNAME (別名)</option>
-                                <option value="TXT">TXT (文字記錄)</option>
-                                <option value="MX">MX (郵件伺服器 - 優先權固定 20)</option>
-                                <option value="SRV">SRV (服務紀錄)</option>
-                                <option value="CAA">CAA (憑證授權)</option>
-                            </select>
-                        </div>
-
-                        <!-- TTL 選項 -->
+                        <!-- 快取時間 (TTL) -->
                         <div class="mb-3">
                             <label for="ttl_option" class="form-label font-weight-bold">快取時間 (TTL)</label>
                             <select class="form-select" id="ttl_option" name="ttl_option" required>
@@ -154,10 +137,11 @@
                             </select>
                         </div>
 
-                        <!-- 記錄值 / IP -->
+                        <!-- 指向完整域名 -->
                         <div class="mb-3">
-                            <label for="value" class="form-label font-weight-bold">記錄值 (Value / IP)</label>
-                            <input type="text" class="form-control" id="value" name="value" placeholder="例如: 163.23.200.10 或 mail.chc.edu.tw." required>
+                            <label for="domain" class="form-label font-weight-bold">指向域名 (PTR Domain Name)</label>
+                            <input type="text" class="form-control" id="domain" name="domain" placeholder="例如: pc1.chc.edu.tw." required>
+                            <div class="form-text">請輸入完整 FQDN 域名，末端建議加上點號（例如：<code>pc1.chc.edu.tw.</code>）</div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -174,7 +158,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" id="testModalHeader">
-                    <h5 class="modal-title" id="testModalTitle">DNS 解析測試</h5>
+                    <h5 class="modal-title" id="testModalTitle">PTR 反解測試</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -183,7 +167,7 @@
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <p class="mt-2 text-muted mb-0">正在向 DNS 伺服器發送查詢...</p>
+                        <p class="mt-2 text-muted mb-0">正在向 DNS 伺服器發送反解查詢...</p>
                     </div>
 
                     <!-- 測試結果文字區 -->
@@ -214,17 +198,17 @@
             // 監聽所有測試按鈕點擊事件
             document.querySelectorAll('.btn-test-dns').forEach(button => {
                 button.addEventListener('click', function () {
-                    const name = this.getAttribute('data-name');
+                    const ip   = this.getAttribute('data-ip');
                     const type = this.getAttribute('data-type');
 
                     // 初始化 Modal 狀態 (顯示 Loading)
                     modalHeader.className = 'modal-header bg-primary text-white';
-                    modalTitle.textContent = `測試中：${name} (${type})`;
+                    modalTitle.textContent = `反解測試中：${ip}`;
                     loadingDiv.style.display = 'block';
                     bodyDiv.style.display = 'none';
                     testModal.show();
 
-                    // 發送 AJAX POST 請求
+                    // 發送 AJAX POST 請求到 dns.check (傳送 IP 與 PTR 類型)
                     fetch("{{ route('dns.check') }}", {
                         method: 'POST',
                         headers: {
@@ -232,7 +216,7 @@
                             'Accept': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({ name: name, type: type })
+                        body: JSON.stringify({ name: ip, type: type })
                     })
                     .then(async response => {
                         const contentType = response.headers.get("content-type");
@@ -240,7 +224,7 @@
                             return response.json();
                         } else {
                             const text = await response.text();
-                            throw new Error(`伺服器回應異常 (HTTP ${response.status})。請確認路由 /dns/check 是否正確。`);
+                            throw new Error(`伺服器回應異常 (HTTP ${response.status})。`);
                         }
                     })
                     .then(data => {

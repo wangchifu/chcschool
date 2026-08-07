@@ -773,10 +773,14 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('teach_system', 'HomeController@teach_system')->name('teach_system');
 
     //DNS設定    
-    Route::get('/dns/index', 'DnsController@index')->name('dns.index');    
+    Route::get('/dns/index', 'DnsController@index')->name('dns.index');        
     Route::delete('/dns/delete', 'DnsController@destroy')->name('dns.destroy');
     Route::post('/dns/store', 'DnsController@store')->name('dns.store'); // 新增這行
     Route::post('/dns/check', 'DnsController@check')->name('dns.check');
+    Route::get('/dns/ptr', 'DnsController@ptr')->name('dns.ptr');    
+    Route::post('/dns/ptr/store', 'DnsController@ptr_store')->name('dns.ptr.store');
+
+    Route::get('/dns/ptr6', 'DnsController@ptr6')->name('dns.ptr6');    
 });
 
 Route::group(['middleware' => 'local'], function () {

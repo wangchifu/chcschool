@@ -301,4 +301,81 @@ class DnsController extends Controller
 
         return $ttls[$option] ?? 86400;
     }    
+
+    public function ptr(Request $request, $networkSubnet = '163.23.200')
+    {
+        $records = [];
+        $error = null;
+
+        // 1. 將 IP 網段轉為 PTR 專用的 Zone 名稱
+        // 例如 "163.23.200" -> "200.23.163.in-addr.arpa"
+        $ipParts = explode('.', $networkSubnet);
+        if (count($ipParts) !== 3) {
+            return redirect()->back()->with('error', 'PTR 網段格式錯誤，需為三組數字（例如：163.23.200）');
+        }
+        $ptrZoneDomain = sprintf('%s.%s.%s.in-addr.arpa', $ipParts[2], $ipParts[1], $ipParts[0]);
+
+        // 取得持久化快取中 3 小時內新增的紀錄清單
+        $recentAdded = Cache::get('recent_ptr_records', []);
+
+        try {
+            $resolver = new Net_DNS2_Resolver([
+                'nameservers' => [$this->dnsServer],
+                'timeout'     => 5,
+            ]);
+
+            // 發送 AXFR 抓取 PTR Zone 內的所有紀錄
+            $response = $resolver->query($ptrZoneDomain, 'AXFR');
+
+            foreach ($response->answer as $rr) {
+                // 過濾 SOA 與 NS 紀錄，只保留真正的 PTR 紀錄
+                if ($rr->type === 'PTR') {
+                    $rawName = rtrim($rr->name, '.'); // 例如: 2.200.23.163.in-addr.arpa
+                    
+                    // 抓出 IP 最後一碼主機號 (例如: "2")
+                    $lastOctet = str_replace('.' . $ptrZoneDomain, '', $rawName);
+                    
+                    // 組裝成完整的 IPv4 位址 (例如: "163.23.200.2")
+                    $fullIp = "{$networkSubnet}.{$lastOctet}";
+
+                    // 處理 PTR 指向的主機域名 (ptrdname)
+                    $ptrdname = $rr->ptrdname ?? ($rr->rdata ?? '');
+                    if (!empty($ptrdname)) {
+                        $ptrdname = rtrim($ptrdname, '.') . '.';
+                    }
+
+                    // 判斷是否為 3 小時內新增
+                    $createdAt = isset($recentAdded[$fullIp]) ? Carbon::parse($recentAdded[$fullIp]) : null;
+
+                    $records[] = [
+                        'ip_last'    => $lastOctet,   // 最後一碼 IP (如 2)
+                        'ip_full'    => $fullIp,      // 完整 IP (如 163.23.200.2)
+                        'type'       => $rr->type,    // PTR
+                        'ttl'        => $rr->ttl,     // TTL 秒數
+                        'domain'     => $ptrdname,    // 指向的完整域名 (如 pc1.chc.edu.tw.)
+                        'created_at' => $createdAt,
+                    ];
+                }
+            }
+
+            // 依 IP 最後一碼由小到大排序 (例如 .1, .2, .10)
+            usort($records, function ($a, $b) {
+                return (int)$a['ip_last'] <=> (int)$b['ip_last'];
+            });
+
+        } catch (Net_DNS2_Exception $e) {
+            $error = "無法抓取 PTR 反解記錄 ({$ptrZoneDomain}): " . $e->getMessage();
+        }
+
+        $schools = config('chcschool.schools', []);
+
+        return view('dns.ptr', [
+            'dnsServer'     => $this->dnsServer,
+            'networkSubnet' => $networkSubnet,
+            'ptrZoneDomain' => $ptrZoneDomain,
+            'records'       => $records,
+            'error'         => $error,
+            'schools'       => $schools,
+        ]);
+    }
 }

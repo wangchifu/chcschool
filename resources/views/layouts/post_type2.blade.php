@@ -44,6 +44,8 @@
         @auth
             @can('create',\App\Post::class)
                 <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
+            @else
+                <a href="#!" class="btn btn-success btn-sm" onclick="alert('請學校管理者加你進去校網行政人員群組')"><i class="fas fa-plus"></i> 我想公告</a>
             @endauth
         @endauth
         <table class="table table-striped" style="word-break: break-all;">
