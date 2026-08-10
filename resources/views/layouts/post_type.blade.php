@@ -26,7 +26,15 @@
                 @can('create',\App\Post::class)
                     <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
                 @else
-                    <a href="#!" class="btn btn-success btn-sm" onclick="alert('請學校管理者加你進去校網行政人員群組')"><i class="fas fa-plus"></i> 我想公告</a>
+                    <?php 
+                        $users = \App\User::where('admin',1)->get();
+                        $user_name = '';
+                        foreach($users as $user){
+                            $user_name .= $user->title ." ".$user->name.'\n\r';
+                        }
+                        $msg = '請\n\r'.$user_name.'加你進去校網行政人員群組';
+                    ?>
+                    <a href="#!" class="btn btn-success btn-sm" onclick="alert('{{ $msg }}')"><i class="fas fa-plus"></i> 我想公告</a>
                 @endcan
             @endauth
             <table class="table table-striped" style="word-break:break-all;">
