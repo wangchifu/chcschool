@@ -3,7 +3,7 @@
         <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
     @else
         <?php 
-            $users = \App\User::where('admin',1)->get();
+            $users = \App\User::where('admin',1)->whereNull('disable')->get();
             $user_name = '';
             foreach($users as $user){
                 $user_name .= $user->title ." ".$user->name.'\n\r';
