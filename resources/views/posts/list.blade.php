@@ -24,25 +24,25 @@
                         @endforeach
                 </select>
                 </form>                
-            </td>            
-            @can('create',\App\Post::class)
-                <td>
-                    <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
-                </td>
-            @else
-                <td>
-                    <?php 
-                        $users = \App\User::where('admin',1)->whereNull('disable')->get();
-                        $user_name = '';
-                        foreach($users as $user){
-                            $user_name .= $user->title ." ".$user->name.'\n\r';
-                        }
-                        $msg = '請\n\r'.$user_name.'加你進去校網行政人員群組';
-                    ?>
-                    <a href="#!" class="btn btn-success btn-sm" onclick="alert('{{ $msg }}')"><i class="fas fa-plus"></i> 我想公告</a>
-                </td>        
-            @endcan
-            @auth
+            </td>
+            @auth            
+                @can('create',\App\Post::class)
+                    <td>
+                        <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增公告</a>
+                    </td>
+                @else                
+                    <td>
+                        <?php 
+                            $users = \App\User::where('admin',1)->whereNull('disable')->get();
+                            $user_name = '';
+                            foreach($users as $user){
+                                $user_name .= $user->title ." ".$user->name.'\n\r';
+                            }
+                            $msg = '請\n\r'.$user_name.'加你進去校網行政人員群組';
+                        ?>
+                        <a href="#!" class="btn btn-success btn-sm" onclick="alert('{{ $msg }}')"><i class="fas fa-plus"></i> 我想公告</a>
+                    </td>                        
+                @endcan
                 @if(auth()->user()->admin==1)
                     <td>
                         <a href="javascript:open_window('{{ route('posts.show_type') }}','新視窗')" class="btn btn-success btn-sm"><i class="fas fa-cog"></i> 類別管理</a>
