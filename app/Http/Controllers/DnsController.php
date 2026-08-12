@@ -387,6 +387,8 @@ class DnsController extends Controller
     private function getDnsData()
     {
         $userCode = auth()->user()->code ?? null;
+        //原斗
+        if($userCode=="074537") $userCode = "074745";
 
         $result = [
             'code' => $userCode,
