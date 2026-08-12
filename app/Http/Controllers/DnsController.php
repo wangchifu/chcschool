@@ -249,14 +249,23 @@ class DnsController extends Controller
         $type = strtoupper($request->input('type'));
         $zoneDomain = $request->input('zoneDomain');
 
-        // 💡 判斷是否為 PTR 反解查詢
-        if ($type === 'PTR') {
-            // 如果傳入的是標準 IPv4 (例如: 163.23.200.10)，自動翻轉為 10.200.23.163.in-addr.arpa
+        // 💡 判斷是否為 PTR 反解查詢 (包含 PTR 與前端帶來的 PTR6)
+        if ($type === 'PTR' || $type === 'PTR6') {
+            $type = 'PTR'; // Net_DNS2 的標準查詢類型名稱皆為 PTR
+
+            // 1. 傳入標準 IPv4 (例: 163.23.200.10)
             if (filter_var($name, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                 $ipParts = explode('.', $name);
-                $fqdn = sprintf('%s.%s.%s.%s.in-addr.arpa', $ipParts[3], $ipParts[2], $ipParts[1], $ipParts[0]);
-            } else {
-                // 若傳入的已經是 in-addr.arpa 格式，確保末端有點號
+                $fqdn = sprintf('%s.%s.%s.%s.in-addr.arpa.', $ipParts[3], $ipParts[2], $ipParts[1], $ipParts[0]);
+            } 
+            // 2. 傳入標準 IPv6 (例: 2001:288:5637::1) -> 補滿 32 位元並倒轉為 ip6.arpa
+            elseif (filter_var($name, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                $bin = inet_pton($name);
+                $hex = unpack('H*', $bin)[1];
+                $fqdn = implode('.', array_reverse(str_split($hex))) . '.ip6.arpa.';
+            } 
+            // 3. 傳入的已經是 in-addr.arpa 或 ip6.arpa 完整 FQDN 格式
+            else {
                 $fqdn = rtrim($name, '.') . '.';
             }
         } else {
@@ -281,7 +290,7 @@ class DnsController extends Controller
             if (!empty($response->answer)) {
                 $answers = [];
                 foreach ($response->answer as $rr) {
-                    // 💡 針對不同 RR 類型精準抓取值
+                    // 💡 PTR 紀錄精準讀取 ptrdname 欄位
                     if ($type === 'PTR') {
                         $val = $rr->ptrdname ?? ($rr->rdata ?? '');
                     } elseif ($type === 'TXT' && !empty($rr->text)) {
@@ -291,7 +300,6 @@ class DnsController extends Controller
                     }
 
                     if (!empty($val)) {
-                        // 💡 強制清理為標準 UTF-8，剔除不可見或非法位元組
                         $cleanVal = mb_convert_encoding($val, 'UTF-8', 'UTF-8');
                         $answers[] = in_array($type, ['CNAME', 'NS', 'MX', 'SRV', 'PTR']) ? (rtrim($cleanVal, '.') . '.') : $cleanVal;
                     }
@@ -299,7 +307,6 @@ class DnsController extends Controller
 
                 $message = "DNS 伺服器 ({$this->dnsServer}) 已順利解析到記錄：\n" . implode("\n", $answers);
 
-                // 💡 加上 JSON_INVALID_UTF8_SUBSTITUTE 確保 json_encode 不會崩潰
                 return response()->json([
                     'success' => true,
                     'title'   => '解析成功！',
@@ -309,7 +316,7 @@ class DnsController extends Controller
                 return response()->json([
                     'success' => false,
                     'title'   => '解析失敗',
-                    'message' => "DNS 伺服器回應了查詢，但找不到 {$fqdn} 的 {$type} 紀錄。",
+                    'message' => "DNS 伺服器回應了查詢，但找不到 {$fqdn} 的 PTR 紀錄。",
                 ]);
             }
 
