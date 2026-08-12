@@ -761,8 +761,12 @@ Route::group(['middleware' => 'admin'], function () {
     Route::delete('/dns/delete', 'DnsController@destroy')->name('dns.destroy');
     Route::post('/dns/store', 'DnsController@store')->name('dns.store'); // 新增這行
     Route::post('/dns/check', 'DnsController@check')->name('dns.check');
-    Route::get('/dns/ptr', 'DnsController@ptr')->name('dns.ptr');    
+    Route::get('/dns/ptr/{networkSubnet?}', 'DnsController@ptr')->name('dns.ptr');    
     Route::post('/dns/ptr/store', 'DnsController@ptr_store')->name('dns.ptr.store');
+    Route::delete('/dns/ptr/destroy', 'DnsController@ptr_destroy')->name('dns.ptr.destroy');
+    Route::get('/dns/ptr6/{networkSubnet?}', 'DnsController@ptr6')->name('dns.ptr6');    
+    Route::post('/dns/ptr6/store', 'DnsController@ptr6_store')->name('dns.ptr6.store');
+    Route::delete('/dns/ptr6/destroy', 'DnsController@ptr6_destroy')->name('dns.ptr6.destroy');
 
     Route::get('/dns/ptr6', 'DnsController@ptr6')->name('dns.ptr6');    
 });
