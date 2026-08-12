@@ -24,8 +24,7 @@ class DnsController extends Controller
     public function index(Request $request,$my_zoneDomain = null)
     {                
         $dns_data = $this->getDnsData();
-        $this->zoneDomain = (empty($my_zoneDomain)) ? $dns_data['ipv4'][0] : $my_zoneDomain;
-        $this->zoneDomain = "hdes.chc.edu.tw";
+        $this->zoneDomain = (empty($my_zoneDomain)) ? $dns_data['ipv4'][0] : $my_zoneDomain;        
         if(!in_array($this->zoneDomain, $dns_data['ipv4'])){
             return redirect()->route('index')->with('error', '您無權限管理此網域的 DNS 記錄！');
         }        
