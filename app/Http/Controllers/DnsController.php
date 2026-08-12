@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Net_DNS2_Resolver;
 use Net_DNS2_Updater;
@@ -10,21 +11,23 @@ use Net_DNS2_RR;
 use Net_DNS2_Exception;
 use Carbon\Carbon;
 
-class DnsController extends Controller
+class DnsController extends Controller 
 {   
+    private $dns_data;    
     private $dnsServer;
     private $zoneDomain;
     public function __construct()
     {
-        $this->dnsServer = env('DDNS_SERVER', '127.0.0.1');        
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $domain = parse_url('http://' . $host, PHP_URL_HOST);
-        
-        $this->zoneDomain = preg_replace('/^www\./i', '', $domain);
+        $this->dnsServer = env('DDNS_SERVER', '127.0.0.1');            
     }
 
-    public function index(Request $request)
-    {        
+    public function index(Request $request,$my_zoneDomain = null)
+    {                
+        $dns_data = $this->getDnsData();
+        $this->zoneDomain = $my_zoneDomain ?: $dns_data['ipv4'][0];
+        if(!in_array($this->zoneDomain, $dns_data['ipv4'])){
+            return redirect()->route('index')->with('error', '您無權限管理此網域的 DNS 記錄！');
+        }        
         $records = [];
         $error = null;
 
@@ -108,6 +111,7 @@ class DnsController extends Controller
         $schools = config('chcschool.schools', []);
 
         return view('dns.index', [
+            'dns_data'   => $dns_data,
             'dnsServer'  => $this->dnsServer,
             'zoneDomain' => $this->zoneDomain,
             'records'    => $records,
@@ -378,4 +382,44 @@ class DnsController extends Controller
             'schools'       => $schools,
         ]);
     }
+
+
+    private function getDnsData()
+    {
+        $userCode = auth()->user()->code ?? null;
+
+        $result = [
+            'code' => $userCode,
+            'name' => '',
+            'ipv4' => [],
+            'ipv4_ptr' => [],
+            'ipv6_ptr' => [],
+        ];
+
+        $csvPath = 'privacy/dns_data.csv';
+
+        if ($userCode && Storage::exists($csvPath)) {
+            $stream = Storage::readStream($csvPath);
+
+            while (($data = fgetcsv($stream)) !== false) {
+                if (count($data) >= 4) {
+                    $code = trim($data[0]);
+                    $name = trim($data[1]);
+                    $type = trim($data[2]);
+                    $value = trim($data[3]);
+
+                    if ($code === $userCode) {
+                        $result['name'] = $name;
+
+                        if (array_key_exists($type, $result)) {
+                            $result[$type][] = $value;
+                        }
+                    }
+                }
+            }
+            fclose($stream);
+        }
+
+        return $result;
+    }    
 }

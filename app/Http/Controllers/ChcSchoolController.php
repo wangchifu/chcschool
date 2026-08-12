@@ -260,14 +260,14 @@ class ChcSchoolController extends Controller
     }
 
     public function dns_admin(){
-        if(session('dns_admin') != 1) return redirect()->route('index');
+        //if(session('dns_admin') != 1) return redirect()->route('index');
         
         $admin_list = $this->getAdminList();
         return view('chcschool.dns_admin', compact('admin_list'));
     }
 
 // 2. 新增管理員
-    public function addAdmin(Request $request)
+    public function add_admin(Request $request)
     {
         if(session('dns_admin') != 1) return redirect()->route('index');
 
@@ -298,7 +298,7 @@ class ChcSchoolController extends Controller
     }
 
     // 3. 刪除管理員
-    public function deleteAdmin(Request $request)
+    public function delete_admin(Request $request)
     {
         if(session('dns_admin') != 1) return redirect()->route('index');
         

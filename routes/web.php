@@ -31,14 +31,6 @@ if (isset($_SERVER['HTTP_HOST']) and $_SERVER['HTTP_HOST'] != 'chcschool.localho
 |
 */
 
-Route::get('pages', 'ChcSchoolController@pages')->name('pages');
-Route::get('chc_air', 'ChcSchoolController@chc_air')->name('chc_air');
-
-//下則到2025年12月底移除
-Route::get('ischool/publish_page/0', function () {
-    return redirect()->route('index');
-});
-
 Route::post('webhook', 'HomeController@webhook')->name('webhook');
 
 Route::get('close', 'SetupController@close')->name('close');
@@ -66,12 +58,18 @@ Route::get('sso', 'OpenIDController@sso')->name('sso');
 Route::get('auth/callback', 'OpenIDController@callback')->name('callback');
 
 //chcschool openid登入
+Route::get('pages', 'ChcSchoolController@pages')->name('pages');
+Route::get('chc_air', 'ChcSchoolController@chc_air')->name('chc_air');
 Route::get('chcschool_sso', 'ChcSchoolController@chcschool_sso')->name('chcschool_sso');
 Route::get('chcschool_auth/callback', 'ChcSchoolController@chcschool_callback')->name('chcschool_callback');
-Route::get('chcschool_logout', 'ChcSchoolController@chcschool_logout')->name('chcschool_logout');
-Route::get('dns_admin', 'ChcSchoolController@dns_admin')->name('dns_admin');
-Route::post('dns_admin/add', 'ChcSchoolController@addAdmin')->name('dns_admin.add');
-Route::delete('dns_admin/delete', 'ChcSchoolController@deleteAdmin')->name('dns_admin.delete');
+
+//縣網DNS管理員
+Route::group(['middleware' => 'dns_admin'], function () {    
+    Route::get('chcschool_logout', 'ChcSchoolController@chcschool_logout')->name('chcschool_logout');
+    Route::get('dns_admin', 'ChcSchoolController@dns_admin')->name('dns_admin');
+    Route::post('dns_admin/add', 'ChcSchoolController@add_admin')->name('dns_admin.add');
+    Route::delete('dns_admin/delete', 'ChcSchoolController@delete_admin')->name('dns_admin.delete');
+});
 
 //總系統管理員登入
 Route::get('sys', 'Auth\GLoginController@sys')->name('sys');
@@ -79,20 +77,6 @@ Route::post('sys_auth', 'Auth\GLoginController@sys_auth')->name('sys_auth');
 Route::get('sys_logout', 'Auth\GLoginController@sys_logout')->name('sys_logout');
 Route::get('sys_index', 'Auth\GLoginController@sys_index')->name('sys_index');
 Route::get('sys_sim/{user}', 'Auth\GLoginController@sys_sim')->name('sys_sim');
-
-#註冊
-//Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-//Route::post('register', 'Auth\RegisterController@register')->name('register.post');
-
-#忘記密碼
-//Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-//Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-//Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-//Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-
-//gsuite登入
-//Route::get('glogin', 'Auth\GLoginController@showLoginForm')->name('login');
-//Route::post('glogin', 'Auth\GLoginController@auth')->name('gauth');
 
 Route::get('pic', 'SetupController@pic')->name('pic');
 Route::get('voice', 'SetupController@voice')->name('voice');
@@ -773,7 +757,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('teach_system', 'HomeController@teach_system')->name('teach_system');
 
     //DNS設定    
-    Route::get('/dns/index', 'DnsController@index')->name('dns.index');        
+    Route::get('/dns/index/{my_zoneDomain?}', 'DnsController@index')->name('dns.index');        
     Route::delete('/dns/delete', 'DnsController@destroy')->name('dns.destroy');
     Route::post('/dns/store', 'DnsController@store')->name('dns.store'); // 新增這行
     Route::post('/dns/check', 'DnsController@check')->name('dns.check');
