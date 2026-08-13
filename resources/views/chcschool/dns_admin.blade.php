@@ -20,15 +20,25 @@
     <main class="container my-5" style="margin-top: -30px !important;">
         
         @php
-            // 計算各種類型的總筆數
+            // 計算各種類型的總筆數與縣網中心 (079998) 筆數
             $totalIpv4    = 0;
             $totalIpv4Ptr = 0;
             $totalIpv6Ptr = 0;
+            $totalChcnet  = 0;
 
             foreach($dns_data as $school) {
-                $totalIpv4    += count($school['ipv4'] ?? []);
-                $totalIpv4Ptr += count($school['ipv4_ptr'] ?? []);
-                $totalIpv6Ptr += count($school['ipv6_ptr'] ?? []);
+                $ipv4Count  = count($school['ipv4'] ?? []);
+                $ptrCount   = count($school['ipv4_ptr'] ?? []);
+                $ptr6Count  = count($school['ipv6_ptr'] ?? []);
+
+                $totalIpv4    += $ipv4Count;
+                $totalIpv4Ptr += $ptrCount;
+                $totalIpv6Ptr += $ptr6Count;
+
+                // 若學校代碼為 079998 (縣網中心)，累加筆數
+                if (($school['code'] ?? '') === '079998') {
+                    $totalChcnet += ($ipv4Count + $ptrCount + $ptr6Count);
+                }
             }
             $totalAll = $totalIpv4 + $totalIpv4Ptr + $totalIpv6Ptr;
         @endphp
@@ -39,6 +49,10 @@
                 <div class="d-flex justify-content-center flex-wrap gap-2" id="dns-filter-buttons">
                     <button type="button" class="btn btn-dark active rounded-pill px-4" data-filter="all">
                         🌐 全部 <span class="badge bg-white text-dark ms-1">{{ $totalAll }}</span>
+                    </button>
+                    <!-- 💡 新增：縣網中心按鈕 (放全部後面) -->
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-filter="chcnet">
+                        🏛️ 縣網中心 <span class="badge bg-secondary ms-1">{{ $totalChcnet }}</span>
                     </button>
                     <button type="button" class="btn btn-outline-primary rounded-pill px-4" data-filter="ipv4">
                         🌐 正解網域 <span class="badge bg-primary ms-1">{{ $totalIpv4 }}</span>
@@ -60,7 +74,7 @@
                     
                     {{-- 1. 正解 Zone (ipv4) --}}
                     @foreach($school['ipv4'] ?? [] as $domain)
-                        <div class="col-md-6 dns-card-item" data-type="ipv4">
+                        <div class="col-md-6 dns-card-item" data-type="ipv4" data-code="{{ $school['code'] }}">
                             <a href="{{ route('dns_admin.forward', ['domain' => $domain]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-primary-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                                     <div class="text-truncate">
@@ -76,7 +90,7 @@
 
                     {{-- 2. IPv4 反解 Zone (ipv4_ptr) --}}
                     @foreach($school['ipv4_ptr'] ?? [] as $ptrZone)
-                        <div class="col-md-6 dns-card-item" data-type="ipv4_ptr">
+                        <div class="col-md-6 dns-card-item" data-type="ipv4_ptr" data-code="{{ $school['code'] }}">
                             <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $ptrZone]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-success-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                                     <div class="text-truncate">
@@ -92,7 +106,7 @@
 
                     {{-- 3. IPv6 反解 Zone (ipv6_ptr) --}}
                     @foreach($school['ipv6_ptr'] ?? [] as $ptr6Zone)
-                        <div class="col-md-6 dns-card-item" data-type="ipv6_ptr">
+                        <div class="col-md-6 dns-card-item" data-type="ipv6_ptr" data-code="{{ $school['code'] }}">
                             <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $ptr6Zone]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-info-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                                     <div class="text-truncate">
@@ -244,6 +258,7 @@
                     filterButtons.forEach(btn => {
                         btn.classList.remove('active');
                         if(btn.dataset.filter === 'all') btn.className = 'btn btn-outline-dark rounded-pill px-4';
+                        if(btn.dataset.filter === 'chcnet') btn.className = 'btn btn-outline-secondary rounded-pill px-4';
                         if(btn.dataset.filter === 'ipv4') btn.className = 'btn btn-outline-primary rounded-pill px-4';
                         if(btn.dataset.filter === 'ipv4_ptr') btn.className = 'btn btn-outline-success rounded-pill px-4';
                         if(btn.dataset.filter === 'ipv6_ptr') btn.className = 'btn btn-outline-info rounded-pill px-4';
@@ -251,6 +266,7 @@
 
                     this.classList.add('active');
                     if(filter === 'all') this.className = 'btn btn-dark active rounded-pill px-4';
+                    if(filter === 'chcnet') this.className = 'btn btn-secondary active rounded-pill px-4';
                     if(filter === 'ipv4') this.className = 'btn btn-primary active rounded-pill px-4';
                     if(filter === 'ipv4_ptr') this.className = 'btn btn-success active rounded-pill px-4';
                     if(filter === 'ipv6_ptr') this.className = 'btn btn-info active text-white rounded-pill px-4';
@@ -258,7 +274,22 @@
                     // 過濾卡片顯示
                     let visibleCount = 0;
                     dnsItems.forEach(item => {
-                        if (filter === 'all' || item.getAttribute('data-type') === filter) {
+                        const itemType = item.getAttribute('data-type');
+                        const itemCode = item.getAttribute('data-code');
+
+                        let isMatch = false;
+
+                        if (filter === 'all') {
+                            isMatch = true;
+                        } else if (filter === 'chcnet') {
+                            // 縣網中心條件：代碼為 079998
+                            isMatch = (itemCode === '079998');
+                        } else {
+                            // 其它按鈕條件：類型比對
+                            isMatch = (itemType === filter);
+                        }
+
+                        if (isMatch) {
                             item.style.display = 'block';
                             visibleCount++;
                         } else {
