@@ -76,7 +76,7 @@ Route::group(['middleware' => 'dns_admin'], function () {
     Route::post('/dns_admin/check', 'ChcSchoolController@check')->name('dns_admin.check');
     Route::get('/dns_admin/ptr/{networkSubnet?}', 'ChcSchoolController@ptr')->name('dns_admin.ptr');    
     Route::post('/dns_admin/ptr/store', 'ChcSchoolController@ptr_store')->name('dns_admin.ptr.store');
-    Route::delete('/dns_admin/ptr/destroy', 'ChcSchoolController@ptr_destroy')->name('dns.ptr.destroy');
+    Route::delete('/dns_admin/ptr/destroy', 'ChcSchoolController@ptr_destroy')->name('dns_admin.ptr.destroy');
     Route::get('/dns_admin/ptr6/{networkSubnet?}', 'ChcSchoolController@ptr6')->name('dns_admin.ptr6');    
     Route::post('/dns_admin/ptr6/store', 'ChcSchoolController@ptr6_store')->name('dns_admin.ptr6.store');
     Route::delete('/dns_admin/ptr6/destroy', 'ChcSchoolController@ptr6_destroy')->name('dns_admin.ptr6.destroy');    
