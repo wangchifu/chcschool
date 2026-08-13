@@ -47,63 +47,57 @@
             </div>
         </div>
 
-        <!-- DNS 資料列表區 (採用一列兩筆/兩欄網格) -->
+        <!-- DNS 資料列表區 (一列兩筆 + 可點擊卡片) -->
         <div id="dns-card-container">
             <div class="row g-3">
                 @forelse($dns_data as $item)
                     @if($item['type'] === 'ipv4')
                         {{-- 1. 正解 Zone --}}
                         <div class="col-md-6 dns-card-item" data-type="ipv4">
-                            <div class="card shadow-sm h-100">
+                            <a href="{{ route('dns_admin.forward', ['domain' => $item['value']]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-primary-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
-                                    <div class="text-truncate me-2">
+                                    <div class="text-truncate">
                                         <span class="badge bg-primary me-2">正解 Zone</span>
-                                        <strong class="fs-6 text-dark d-inline-block text-truncate" style="max-width: 180px;" title="{{ $item['value'] }}">
+                                        <strong class="fs-6 text-dark" title="{{ $item['value'] }}">
                                             {{ $item['value'] }}
                                         </strong>
                                         <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
                                     </div>
-                                    <a href="{{ route('dns_admin.forward', ['domain' => $item['value']]) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3 text-nowrap">
-                                        管理 &rarr;
-                                    </a>
+                                    <i class="bi bi-chevron-right text-primary fs-5 ms-2"></i>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @elseif($item['type'] === 'ipv4_ptr')
                         {{-- 2. IPv4 反解 Zone --}}
                         <div class="col-md-6 dns-card-item" data-type="ipv4_ptr">
-                            <div class="card shadow-sm h-100">
+                            <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $item['value']]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-success-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
-                                    <div class="text-truncate me-2">
+                                    <div class="text-truncate">
                                         <span class="badge bg-success me-2">IPv4 反解</span>
-                                        <strong class="fs-6 text-dark d-inline-block text-truncate" style="max-width: 180px;" title="{{ $item['value'] }}">
+                                        <strong class="fs-6 text-dark" title="{{ $item['value'] }}">
                                             {{ $item['value'] }}
                                         </strong>
                                         <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
                                     </div>
-                                    <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-success btn-sm rounded-pill px-3 text-nowrap">
-                                        管理 &rarr;
-                                    </a>
+                                    <i class="bi bi-chevron-right text-success fs-5 ms-2"></i>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @elseif($item['type'] === 'ipv6_ptr')
                         {{-- 3. IPv6 反解 Zone --}}
                         <div class="col-md-6 dns-card-item" data-type="ipv6_ptr">
-                            <div class="card shadow-sm h-100">
+                            <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $item['value']]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-info-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
-                                    <div class="text-truncate me-2">
+                                    <div class="text-truncate">
                                         <span class="badge bg-info me-2">IPv6 反解</span>
-                                        <strong class="fs-6 text-dark d-inline-block text-truncate" style="max-width: 180px;" title="{{ $item['value'] }}">
+                                        <strong class="fs-6 text-dark" title="{{ $item['value'] }}">
                                             {{ $item['value'] }}
                                         </strong>
                                         <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
                                     </div>
-                                    <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-info btn-sm rounded-pill px-3 text-nowrap">
-                                        管理 &rarr;
-                                    </a>
+                                    <i class="bi bi-chevron-right text-info fs-5 ms-2"></i>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @endif
                 @empty
@@ -209,7 +203,27 @@
         </div>
     </div>
 
-    <!-- JS 按鈕切換邏輯 -->
+    <!-- 自訂 Hover 效果與 JS 邏輯 -->
+    <style>
+        .dns-clickable-card {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .dns-clickable-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+        }
+        .border-primary-hover:hover {
+            border-color: #0d6efd !important;
+        }
+        .border-success-hover:hover {
+            border-color: #198754 !important;
+        }
+        .border-info-hover:hover {
+            border-color: #0dcaf0 !important;
+        }
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const filterButtons = document.querySelectorAll('#dns-filter-buttons button');
