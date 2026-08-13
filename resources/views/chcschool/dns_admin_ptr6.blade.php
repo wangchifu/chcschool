@@ -190,7 +190,7 @@
                         bodyDiv.style.display = 'none';
                         testModal.show();
 
-                        fetch("{{ route('dns.check') }}", {
+                        fetch("{{ route('dns_admin.check') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

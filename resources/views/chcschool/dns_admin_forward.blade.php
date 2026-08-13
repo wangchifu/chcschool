@@ -231,7 +231,7 @@
                         testModal.show();
 
                         // 發送 AJAX POST 請求
-                        fetch("{{ route('dns.check') }}", {
+                        fetch("{{ route('dns_admin.check') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

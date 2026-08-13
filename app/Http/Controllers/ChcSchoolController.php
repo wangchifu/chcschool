@@ -762,8 +762,7 @@ class ChcSchoolController extends Controller
         }        
         $schools = config('chcschool.schools', []);
 
-        return view('chcschool.dns_admin_forward', [
-            'dns_data'   => $dns_data,
+        return view('chcschool.dns_admin_forward', [            
             'dnsServer'  => $this->dnsServer,
             'zoneDomain' => $this->zoneDomain,
             'records'    => $records,
@@ -1088,8 +1087,7 @@ class ChcSchoolController extends Controller
             'ptrZoneDomain' => $ptrZoneDomain,
             'records'       => $records,
             'error'         => $error,
-            'schools'       => $schools,
-            'dns_data'      => $this->getDnsData(), // 傳入 view 供上方按鈕列繪製切換選單
+            'schools'       => $schools,            
         ]);
     }    
 
@@ -1289,8 +1287,7 @@ class ChcSchoolController extends Controller
             'ptrZoneDomain' => $ptrZoneDomain,
             'records'       => $records,
             'error'         => $error,
-            'schools'       => config('chcschool.schools', []),
-            'dns_data'      => $this->getDnsData(),
+            'schools'       => config('chcschool.schools', []),            
         ]);
     }
 

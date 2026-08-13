@@ -210,7 +210,7 @@
                         testModal.show();
 
                         // 發送 AJAX POST 請求到 dns.check (傳送 IP 與 PTR 類型)
-                        fetch("{{ route('dns.check') }}", {
+                        fetch("{{ route('dns_admin.check') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
