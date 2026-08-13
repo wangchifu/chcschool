@@ -1426,7 +1426,7 @@ class ChcSchoolController extends Controller
 
         $csvPath = 'privacy/dns_data.csv';
 
-        if ($userCode && Storage::exists($csvPath)) {
+        if (Storage::exists($csvPath)) {
             $stream = Storage::readStream($csvPath);
 
             while (($data = fgetcsv($stream)) !== false) {
