@@ -47,60 +47,76 @@
             </div>
         </div>
 
-        <!-- DNS 資料列表區 -->
+        <!-- DNS 資料列表區 (採用一列兩筆/兩欄網格) -->
         <div id="dns-card-container">
-            @forelse($dns_data as $item)
-                @if($item['type'] === 'ipv4')
-                    {{-- 1. 正解 Zone --}}
-                    <div class="card shadow-sm mb-3 dns-card-item" data-type="ipv4">
-                        <div class="card-body d-flex justify-content-between align-items-center py-3">
-                            <div>
-                                <span class="badge bg-primary me-2">正解 Zone</span>
-                                <strong class="fs-5 text-dark">{{ $item['value'] }}</strong>
-                                <span class="text-muted ms-2">({{ $item['name'] }} - {{ $item['code'] }})</span>
+            <div class="row g-3">
+                @forelse($dns_data as $item)
+                    @if($item['type'] === 'ipv4')
+                        {{-- 1. 正解 Zone --}}
+                        <div class="col-md-6 dns-card-item" data-type="ipv4">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-body d-flex justify-content-between align-items-center py-3">
+                                    <div class="text-truncate me-2">
+                                        <span class="badge bg-primary me-2">正解 Zone</span>
+                                        <strong class="fs-6 text-dark d-inline-block text-truncate" style="max-width: 180px;" title="{{ $item['value'] }}">
+                                            {{ $item['value'] }}
+                                        </strong>
+                                        <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
+                                    </div>
+                                    <a href="{{ route('dns_admin.forward', ['domain' => $item['value']]) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3 text-nowrap">
+                                        管理 &rarr;
+                                    </a>
+                                </div>
                             </div>
-                            <a href="{{ route('dns_admin.forward', ['domain' => $item['value']]) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                                前往管理 &rarr;
-                            </a>
+                        </div>
+                    @elseif($item['type'] === 'ipv4_ptr')
+                        {{-- 2. IPv4 反解 Zone --}}
+                        <div class="col-md-6 dns-card-item" data-type="ipv4_ptr">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-body d-flex justify-content-between align-items-center py-3">
+                                    <div class="text-truncate me-2">
+                                        <span class="badge bg-success me-2">IPv4 反解</span>
+                                        <strong class="fs-6 text-dark d-inline-block text-truncate" style="max-width: 180px;" title="{{ $item['value'] }}">
+                                            {{ $item['value'] }}
+                                        </strong>
+                                        <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
+                                    </div>
+                                    <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-success btn-sm rounded-pill px-3 text-nowrap">
+                                        管理 &rarr;
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif($item['type'] === 'ipv6_ptr')
+                        {{-- 3. IPv6 反解 Zone --}}
+                        <div class="col-md-6 dns-card-item" data-type="ipv6_ptr">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-body d-flex justify-content-between align-items-center py-3">
+                                    <div class="text-truncate me-2">
+                                        <span class="badge bg-info me-2">IPv6 反解</span>
+                                        <strong class="fs-6 text-dark d-inline-block text-truncate" style="max-width: 180px;" title="{{ $item['value'] }}">
+                                            {{ $item['value'] }}
+                                        </strong>
+                                        <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
+                                    </div>
+                                    <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-info btn-sm rounded-pill px-3 text-nowrap">
+                                        管理 &rarr;
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-warning text-center py-4 shadow-sm">
+                            ⚠️ 目前未找到任何 DNS 設定資料，請確認 <code>privacy/dns_data.csv</code> 檔案內容。
                         </div>
                     </div>
-                @elseif($item['type'] === 'ipv4_ptr')
-                    {{-- 2. IPv4 反解 Zone --}}
-                    <div class="card shadow-sm mb-3 dns-card-item" data-type="ipv4_ptr">
-                        <div class="card-body d-flex justify-content-between align-items-center py-3">
-                            <div>
-                                <span class="badge bg-success me-2">IPv4 反解</span>
-                                <strong class="fs-5 text-dark">{{ $item['value'] }}</strong>
-                                <span class="text-muted ms-2">({{ $item['name'] }} - {{ $item['code'] }})</span>
-                            </div>
-                            <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
-                                前往管理 &rarr;
-                            </a>
-                        </div>
-                    </div>
-                @elseif($item['type'] === 'ipv6_ptr')
-                    {{-- 3. IPv6 反解 Zone --}}
-                    <div class="card shadow-sm mb-3 dns-card-item" data-type="ipv6_ptr">
-                        <div class="card-body d-flex justify-content-between align-items-center py-3">
-                            <div>
-                                <span class="badge bg-info me-2">IPv6 反解</span>
-                                <strong class="fs-5 text-dark">{{ $item['value'] }}</strong>
-                                <span class="text-muted ms-2">({{ $item['name'] }} - {{ $item['code'] }})</span>
-                            </div>
-                            <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-info btn-sm rounded-pill px-3">
-                                前往管理 &rarr;
-                            </a>
-                        </div>
-                    </div>
-                @endif
-            @empty
-                <div class="alert alert-warning text-center py-4 shadow-sm">
-                    ⚠️ 目前未找到任何 DNS 設定資料，請確認 <code>privacy/dns_data.csv</code> 檔案內容。
-                </div>
-            @endforelse
+                @endforelse
+            </div>
 
             <!-- 無搜尋結果提示 -->
-            <div id="no-dns-data" class="alert alert-secondary text-center py-4 shadow-sm d-none">
+            <div id="no-dns-data" class="alert alert-secondary text-center py-4 shadow-sm mt-3 d-none">
                 📭 該分類下目前沒有任何資料。
             </div>
         </div>
