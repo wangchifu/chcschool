@@ -69,6 +69,19 @@ Route::group(['middleware' => 'dns_admin'], function () {
     Route::get('dns_admin', 'ChcSchoolController@dns_admin')->name('dns_admin');
     Route::post('dns_admin/add', 'ChcSchoolController@add_admin')->name('dns_admin.add');
     Route::delete('dns_admin/delete', 'ChcSchoolController@delete_admin')->name('dns_admin.delete');
+
+    Route::get('/dns_admin/forward/{my_zoneDomain?}', 'ChcSchoolController@forward')->name('dns_admin.forward');        
+    Route::delete('/dns_admin/delete', 'ChcSchoolController@destroy')->name('dns_admin.destroy');
+    Route::post('/dns_admin/store', 'ChcSchoolController@store')->name('dns_admin.store'); // 新增這行
+    Route::post('/dns_admin/check', 'ChcSchoolController@check')->name('dns_admin.check');
+    Route::get('/dns_admin/ptr/{networkSubnet?}', 'ChcSchoolController@ptr')->name('dns_admin.ptr');    
+    Route::post('/dns_admin/ptr/store', 'ChcSchoolController@ptr_store')->name('dns_admin.ptr.store');
+    Route::delete('/dns_admin/ptr/destroy', 'ChcSchoolController@ptr_destroy')->name('dns.ptr.destroy');
+    Route::get('/dns_admin/ptr6/{networkSubnet?}', 'ChcSchoolController@ptr6')->name('dns_admin.ptr6');    
+    Route::post('/dns_admin/ptr6/store', 'ChcSchoolController@ptr6_store')->name('dns_admin.ptr6.store');
+    Route::delete('/dns_admin/ptr6/destroy', 'ChcSchoolController@ptr6_destroy')->name('dns_admin.ptr6.destroy');    
+
+
 });
 
 //總系統管理員登入
@@ -766,9 +779,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::delete('/dns/ptr/destroy', 'DnsController@ptr_destroy')->name('dns.ptr.destroy');
     Route::get('/dns/ptr6/{networkSubnet?}', 'DnsController@ptr6')->name('dns.ptr6');    
     Route::post('/dns/ptr6/store', 'DnsController@ptr6_store')->name('dns.ptr6.store');
-    Route::delete('/dns/ptr6/destroy', 'DnsController@ptr6_destroy')->name('dns.ptr6.destroy');
-
-    Route::get('/dns/ptr6', 'DnsController@ptr6')->name('dns.ptr6');    
+    Route::delete('/dns/ptr6/destroy', 'DnsController@ptr6_destroy')->name('dns.ptr6.destroy');    
 });
 
 Route::group(['middleware' => 'local'], function () {

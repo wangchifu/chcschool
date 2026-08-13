@@ -12,7 +12,7 @@ use Net_DNS2_Exception;
 use Carbon\Carbon;
 
 class DnsController extends Controller 
-{   
+{    
     private $dns_data;    
     private $dnsServer;
     private $zoneDomain;
@@ -748,14 +748,14 @@ class DnsController extends Controller
     }
 
 // ==================== IPv6 轉全展開 PTR FQDN Helper ====================
-private function ipv6ToPtrFqdn($ipv6)
-{
-    $bin = inet_pton($ipv6);
-    if ($bin === false) return $ipv6;
+    private function ipv6ToPtrFqdn($ipv6)
+    {
+        $bin = inet_pton($ipv6);
+        if ($bin === false) return $ipv6;
 
-    $hex = unpack('H*', $bin)[1];
-    return implode('.', array_reverse(str_split($hex))) . '.ip6.arpa.';
-}    
+        $hex = unpack('H*', $bin)[1];
+        return implode('.', array_reverse(str_split($hex))) . '.ip6.arpa.';
+    }    
 
 
     private function getDnsData()
