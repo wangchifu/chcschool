@@ -73,7 +73,7 @@
                                                 </button>
 
                                                 <!-- 刪除表單按鈕 -->
-                                                <form action="{{ route('dns.ptr.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除 {{ $record['ip_full'] }} 的反解紀錄嗎？');">
+                                                <form action="{{ route('dns_admin.ptr.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除 {{ $record['ip_full'] }} 的反解紀錄嗎？');">
                                                     @csrf
                                                     @method('DELETE')
                                                     
@@ -108,7 +108,7 @@
                         <h5 class="modal-title" id="addPtrRecordModalLabel">新增 PTR 反解記錄</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ route('dns.ptr.store') }}" method="POST">
+                    <form action="{{ route('dns_admin.ptr.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="network_subnet" value="{{ $networkSubnet }}">
 

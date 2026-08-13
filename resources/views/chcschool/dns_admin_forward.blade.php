@@ -79,7 +79,7 @@
                                                     <button class="btn btn-secondary btn-sm" disabled title="根網域 NS 記錄保護中，不可刪除">保護中</button>
                                                 @else
                                                     <!-- 刪除表單按鈕 -->
-                                                    <form action="{{ route('dns.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除 {{ $record['name'] }} 嗎？');">
+                                                    <form action="{{ route('dns_admin.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除 {{ $record['name'] }} 嗎？');">
                                                         @csrf
                                                         @method('DELETE')
                                                         
@@ -116,7 +116,7 @@
                         <h5 class="modal-title" id="addRecordModalLabel">新增 DNS 正解記錄</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ route('dns.store') }}" method="POST">
+                    <form action="{{ route('dns_admin.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="zoneDomain" value="{{ $zoneDomain }}">
                         <div class="modal-body">

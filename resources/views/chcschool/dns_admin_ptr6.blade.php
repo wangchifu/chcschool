@@ -68,7 +68,7 @@
                                                 </button>
 
                                                 <!-- 刪除表單按鈕 -->
-                                                <form action="{{ route('dns.ptr6.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除這筆 IPv6 反解紀錄嗎？');">
+                                                <form action="{{ route('dns_admin.ptr6.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除這筆 IPv6 反解紀錄嗎？');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <input type="hidden" name="network_subnet" value="{{ $networkSubnet }}">
@@ -101,7 +101,7 @@
                         <h5 class="modal-title">新增 IPv6 PTR 反解記錄</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ route('dns.ptr6.store') }}" method="POST">
+                    <form action="{{ route('dns_admin.ptr6.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="network_subnet" value="{{ $networkSubnet }}">
 
