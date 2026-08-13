@@ -71,7 +71,7 @@ Route::group(['middleware' => 'dns_admin'], function () {
     Route::delete('dns_admin/delete', 'ChcSchoolController@delete_admin')->name('dns_admin.delete');
 
     Route::get('/dns_admin/forward/{my_zoneDomain?}', 'ChcSchoolController@forward')->name('dns_admin.forward');        
-    Route::delete('/dns_admin/delete', 'ChcSchoolController@destroy')->name('dns_admin.destroy');
+    Route::delete('/dns_admin/destroy', 'ChcSchoolController@destroy')->name('dns_admin.destroy');
     Route::post('/dns_admin/store', 'ChcSchoolController@store')->name('dns_admin.store'); // 新增這行
     Route::post('/dns_admin/check', 'ChcSchoolController@check')->name('dns_admin.check');
     Route::get('/dns_admin/ptr/{networkSubnet?}', 'ChcSchoolController@ptr')->name('dns_admin.ptr');    
