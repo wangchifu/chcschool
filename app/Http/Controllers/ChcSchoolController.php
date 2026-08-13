@@ -827,7 +827,7 @@ class ChcSchoolController extends Controller
             $recentAdded[$saveKey] = now()->toDateTimeString();
             Cache::put('recent_dns_records', $recentAdded, 10800);
 
-            return redirect()->route('dns.index')->with('success', "成功新增紀錄：{$saveKey} ({$type})");
+            return redirect()->back()->with('success', "成功新增紀錄：{$saveKey} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
             return redirect()->back()->with('error', "新增失敗: " . $e->getMessage());
