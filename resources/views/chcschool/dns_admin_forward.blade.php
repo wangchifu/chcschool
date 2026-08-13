@@ -25,10 +25,19 @@
                         </h5>
                         <span class="badge bg-secondary">共 {{ count($records) }} 筆記錄</span>
                     </div>
-                    <!-- 浮動面板按鈕 -->
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRecordModal">
-                        + 新增紀錄
-                    </button>
+
+                    <!-- 頂部按鈕動作區 -->
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- 💡 新增：回到 DNS 管理總頁按鈕 -->
+                        <a href="{{ route('dns_admin') }}" class="btn btn-outline-secondary btn-sm">
+                            &larr; 回管理總頁
+                        </a>
+
+                        <!-- 浮動面板按鈕 -->
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRecordModal">
+                            + 新增紀錄
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
