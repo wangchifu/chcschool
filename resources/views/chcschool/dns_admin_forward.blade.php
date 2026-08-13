@@ -1,288 +1,310 @@
-@include('chcschool.header')    
+@include('chcschool.header')
+    <!-- 上方大橫幅 (Hero Banner) -->
+    <header class="hero-header text-center">
+        <div class="container">            
+            <h1 class="display-4 fw-bold mb-3">DNS管理</h1>
+            <p class="lead col-lg-8 mx-auto text-light opacity-75 mb-3">
+                所有學校 DNS 網域與反解網段管理列表
+            </p>
+            
+            <!-- Hero Banner 內的動作按鈕區 -->
+            <div class="d-flex justify-content-center align-items-center gap-2">
+                <button type="button" class="btn btn-warning rounded-pill px-3 py-1 btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#dnsAdminModal">
+                    <i class="bi bi-gear-fill me-1"></i>DNS 管理員名單
+                </button>
+            </div>
+        </div>
+    </header>
+
     <!-- 主要功能按鈕區域 -->
-    <main class="container my-5">
-        <div class="container mb-5">
-            <!-- 訊息通知 -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+    <main class="container my-5" style="margin-top: -30px !important;">
+        
+        @php
+            // 計算各種類型的總筆數與縣網中心 (079998) 筆數
+            $totalIpv4    = 0;
+            $totalIpv4Ptr = 0;
+            $totalIpv6Ptr = 0;
+            $totalChcnet  = 0;
 
-            @if(session('error') || $error)
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') ?? $error }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif            
+            foreach($dns_data as $school) {
+                $ipv4Count  = count($school['ipv4'] ?? []);
+                $ptrCount   = count($school['ipv4_ptr'] ?? []);
+                $ptr6Count  = count($school['ipv6_ptr'] ?? []);
 
-            <div class="card shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <h5 class="m-0 font-weight-bold text-primary">
-                            Zone: <code>{{ $zoneDomain }}</code> （Server: {{ $dnsServer }}）
-                        </h5>
-                        <span class="badge bg-secondary">共 {{ count($records) }} 筆記錄</span>
+                $totalIpv4    += $ipv4Count;
+                $totalIpv4Ptr += $ptrCount;
+                $totalIpv6Ptr += $ptr6Count;
+
+                // 若學校代碼為 079998 (縣網中心)，累加其筆數
+                if (($school['code'] ?? '') === '079998') {
+                    $totalChcnet += ($ipv4Count + $ptrCount + $ptr6Count);
+                }
+            }
+            $totalAll = $totalIpv4 + $totalIpv4Ptr + $totalIpv6Ptr;
+        @endphp
+
+        <!-- 分類切換按鈕區 -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-2 bg-light rounded">
+                <div class="d-flex justify-content-center flex-wrap gap-2" id="dns-filter-buttons">
+                    <button type="button" class="btn btn-dark active rounded-pill px-4" data-filter="all">
+                        🌐 全部 <span class="badge bg-white text-dark ms-1">{{ $totalAll }}</span>
+                    </button>
+                    <!-- 💡 新增：縣網中心按鈕 -->
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-filter="chcnet">
+                        🏛️ 縣網中心 <span class="badge bg-secondary ms-1">{{ $totalChcnet }}</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary rounded-pill px-4" data-filter="ipv4">
+                        🌐 正解網域 <span class="badge bg-primary ms-1">{{ $totalIpv4 }}</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-success rounded-pill px-4" data-filter="ipv4_ptr">
+                        🔄 IPv4 反解 <span class="badge bg-success ms-1">{{ $totalIpv4Ptr }}</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-info rounded-pill px-4" data-filter="ipv6_ptr">
+                        ⚡ IPv6 反解 <span class="badge bg-info ms-1">{{ $totalIpv6Ptr }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DNS 資料列表區 (一列兩筆) -->
+        <div id="dns-card-container">
+            <div class="row g-3">
+                @forelse($dns_data as $school)
+                    
+                    {{-- 1. 正解 Zone (ipv4) --}}
+                    @foreach($school['ipv4'] ?? [] as $domain)
+                        <div class="col-md-6 dns-card-item" data-type="ipv4" data-code="{{ $school['code'] }}">
+                            <a href="{{ route('dns_admin.forward', ['domain' => $domain]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-primary-hover">
+                                <div class="card-body d-flex justify-content-between align-items-center py-3">
+                                    <div class="text-truncate">
+                                        <span class="badge bg-primary me-2">正解 Zone</span>
+                                        <strong class="fs-6 text-dark" title="{{ $domain }}">{{ $domain }}</strong>
+                                        <div class="small text-muted mt-1">{{ $school['name'] }} ({{ $school['code'] }})</div>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-primary fs-5 ms-2"></i>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+
+                    {{-- 2. IPv4 反解 Zone (ipv4_ptr) --}}
+                    @foreach($school['ipv4_ptr'] ?? [] as $ptrZone)
+                        <div class="col-md-6 dns-card-item" data-type="ipv4_ptr" data-code="{{ $school['code'] }}">
+                            <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $ptrZone]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-success-hover">
+                                <div class="card-body d-flex justify-content-between align-items-center py-3">
+                                    <div class="text-truncate">
+                                        <span class="badge bg-success me-2">IPv4 反解</span>
+                                        <strong class="fs-6 text-dark" title="{{ $ptrZone }}">{{ $ptrZone }}</strong>
+                                        <div class="small text-muted mt-1">{{ $school['name'] }} ({{ $school['code'] }})</div>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-success fs-5 ms-2"></i>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+
+                    {{-- 3. IPv6 反解 Zone (ipv6_ptr) --}}
+                    @foreach($school['ipv6_ptr'] ?? [] as $ptr6Zone)
+                        <div class="col-md-6 dns-card-item" data-type="ipv6_ptr" data-code="{{ $school['code'] }}">
+                            <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $ptr6Zone]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-info-hover">
+                                <div class="card-body d-flex justify-content-between align-items-center py-3">
+                                    <div class="text-truncate">
+                                        <span class="badge bg-info me-2">IPv6 反解</span>
+                                        <strong class="fs-6 text-dark" title="{{ $ptr6Zone }}">{{ $ptr6Zone }}</strong>
+                                        <div class="small text-muted mt-1">{{ $school['name'] }} ({{ $school['code'] }})</div>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-info fs-5 ms-2"></i>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-warning text-center py-4 shadow-sm">
+                            ⚠️ 目前未找到任何 DNS 設定資料，請確認 <code>privacy/dns_data.csv</code> 檔案內容。
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+
+            <!-- 無搜尋結果提示 -->
+            <div id="no-dns-data" class="alert alert-secondary text-center py-4 shadow-sm mt-3 d-none">
+                📭 該分類下目前沒有任何資料。
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 浮動視窗 (Modal) -->
+    <div class="modal fade" id="dnsAdminModal" tabindex="-1" aria-labelledby="dnsAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold" id="dnsAdminModalLabel">
+                        <i class="bi bi-shield-lock-fill me-2"></i>DNS 管理員名單管理 (dns_admin.csv)
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body p-4">
+                    <!-- 新增管理員區塊 (表單) -->
+                    <div class="card bg-light border-0 mb-4">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-person-plus-fill me-1"></i>新增管理員</h6>
+                            <form action="{{ route('dns_admin.add') }}" method="POST" class="row g-2 align-items-center">
+                                @csrf
+                                <div class="col-md-3">
+                                    <input type="text" name="code" class="form-control form-control-sm" placeholder="學校代碼 (例如: 074628)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" name="username" class="form-control form-control-sm" placeholder="帳號 Username (例如: wangchifu)" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" name="name" class="form-control form-control-sm" placeholder="姓名 Name (例如: 王志福)" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">
+                                        <i class="bi bi-plus-lg me-1"></i>新增
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
-                    <!-- 頂部按鈕動作區 -->
-                    <div class="d-flex align-items-center gap-2">
-                        <!-- 💡 新增：回到 DNS 管理總頁按鈕 -->
-                        <a href="{{ route('dns_admin') }}" class="btn btn-outline-secondary btn-sm">
-                            &larr; 回管理總頁
-                        </a>
-
-                        <!-- 浮動面板按鈕 -->
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRecordModal">
-                            + 新增紀錄
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body p-0">
+                    <!-- 名單列表 -->
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-dark">
+                        <table class="table table-hover align-middle border">
+                            <thead class="table-light">
                                 <tr>
-                                    <th class="ps-3" style="min-width: 150px;">域名 (Name)</th>
-                                    <th style="width: 100px;">類型 (Type)</th>
-                                    <th style="width: 90px;">TTL</th>
-                                    <th>記錄值 (Value / IP)</th>
-                                    <th class="text-center" style="width: 130px; min-width: 130px;">操作</th>
+                                    <th scope="col" class="text-center" style="width: 10%;">#</th>
+                                    <th scope="col" style="width: 25%;">學校代碼 (Code)</th>
+                                    <th scope="col" style="width: 25%;">帳號 (Username)</th>
+                                    <th scope="col" style="width: 20%;">姓名 (Name)</th>
+                                    <th scope="col" class="text-center" style="width: 20%;">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($records as $record)
-                                    {{-- 判斷是否有 created_at，若有代表在 3 小時內，套用高亮綠色 --}}
-                                    <tr class="{{ !empty($record['created_at']) ? 'table-success' : '' }}">
-                                        <td class="ps-3">
-                                            <code>{{ $record['name'] }}</code>
-                                            @if(!empty($record['created_at']))
-                                                <span class="badge bg-success ms-1">新增</span>
+                                @forelse($admin_list as $index => $admin)
+                                    <tr>
+                                        <td class="text-center text-muted">{{ $loop->iteration }}</td>
+                                        <td><span class="badge bg-secondary font-monospace fs-6">{{ $admin['code'] }}</span></td>
+                                        <td class="fw-bold">{{ $admin['username'] }}</td>
+                                        <td class="fw-bold">{{ $admin['name'] }}</td>
+                                        <td class="text-center">
+                                            @if(session('dns_username') != $admin['username'] || session('dns_code') != $admin['code'])
+                                                <form action="{{ route('dns_admin.delete') }}" method="POST" onsubmit="return confirm('確定要刪除這筆管理員資料嗎？');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="code" value="{{ $admin['code'] }}">
+                                                    <input type="hidden" name="username" value="{{ $admin['username'] }}">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                                                        <i class="bi bi-trash-fill me-1"></i>刪除
+                                                    </button>
+                                                </form>
                                             @endif
                                         </td>
-                                        <td>
-                                            <span class="badge {{ $record['type'] === 'A' ? 'bg-primary' : 'bg-info' }}">
-                                                {{ $record['type'] }}
-                                            </span>
-                                        </td>
-                                        <td>{{ $record['ttl'] }}s</td>
-                                        {{-- 💡 完整顯示資料庫/DNS 查出來的 value（包含結尾點號） --}}
-                                        <td style="word-break: break-all;">
-                                            <code>{{ $record['value'] }}</code>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center gap-1">
-                                                <!-- 測試按鈕 -->
-                                                <button type="button" 
-                                                        class="btn btn-outline-info btn-sm btn-test-dns"
-                                                        data-name="{{ $record['name'] }}"
-                                                        data-type="{{ $record['type'] }}"
-                                                        data-zone-domain="{{ $zoneDomain }}"
-                                                        >
-                                                    測試
-                                                </button>
-
-                                                {{-- 💡 判斷：當域名為 @ 且類型為 NS 時，禁止刪除 --}}
-                                                @if($record['name'] === '@' && $record['type'] === 'NS')
-                                                    <button class="btn btn-secondary btn-sm" disabled title="根網域 NS 記錄保護中，不可刪除">保護中</button>
-                                                @else
-                                                    <!-- 刪除表單按鈕 -->
-                                                    <form action="{{ route('dns_admin.destroy') }}" method="POST" onsubmit="return confirm('確定要刪除 {{ $record['name'] }} 嗎？');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        
-                                                        <input type="hidden" name="name" value="{{ $record['name'] }}">
-                                                        <input type="hidden" name="type" value="{{ $record['type'] }}">
-                                                        <input type="hidden" name="value" value="{{ $record['value'] }}">
-                                                        <input type="hidden" name="zoneDomain" value="{{ $zoneDomain }}">
-
-                                                        <button type="submit" class="btn btn-danger btn-sm text-nowrap">刪除</button>
-                                                    </form>
-                                                @endif
-                                            </div>
-                                        </td>                               
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-4 text-muted">
-                                            目前沒有找到任何紀錄，或 DNS 伺服器未開放 AXFR 區域轉移。
-                                        </td>
+                                        <td colspan="5" class="text-center text-muted py-4">目前沒有任何管理員資料</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- 新增紀錄浮動 Modal 視窗 -->
-        <div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="addRecordModalLabel">新增 DNS 正解記錄</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="{{ route('dns_admin.store') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="zoneDomain" value="{{ $zoneDomain }}">
-                        <div class="modal-body">
-                            <!-- 主機名稱 -->
-                            <div class="mb-3">
-                                <label for="name" class="form-label font-weight-bold">主機名稱 (Name)</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="例如: pc1" required>
-                                    <span class="input-group-text">.{{ $zoneDomain }}</span>
-                                </div>
-                                <div class="form-text">只需填寫名稱，系統會自動補上 <code>.{{ $zoneDomain }}</code></div>
-                            </div>
-
-                            <!-- 記錄類型 -->
-                            <div class="mb-3">
-                                <label for="type" class="form-label font-weight-bold">記錄類型 (Type)</label>
-                                <select class="form-select" id="type" name="type" required>
-                                    <option value="A" selected>A (IPv4 位址)</option>
-                                    <option value="AAAA">AAAA (IPv6 位址)</option>
-                                    <option value="CNAME">CNAME (別名)</option>
-                                    <option value="TXT">TXT (文字記錄)</option>
-                                    <option value="MX">MX (郵件伺服器 - 優先權固定 20)</option>
-                                    <option value="SRV">SRV (服務紀錄)</option>
-                                    <option value="CAA">CAA (憑證授權)</option>
-                                </select>
-                            </div>
-
-                            <!-- TTL 選項 -->
-                            <div class="mb-3">
-                                <label for="ttl_option" class="form-label font-weight-bold">快取時間 (TTL)</label>
-                                <select class="form-select" id="ttl_option" name="ttl_option" required>
-                                    <option value="1s">1 秒</option>
-                                    <option value="1h">1 小時</option>
-                                    <option value="3h">3 小時</option>
-                                    <option value="6h">6 小時</option>
-                                    <option value="12h">12 小時</option>
-                                    <option value="1d" selected>1 天 (預設)</option>
-                                    <option value="1w">1 週</option>
-                                    <option value="1m">1 個月 (30天)</option>
-                                </select>
-                            </div>
-
-                            <!-- 記錄值 / IP -->
-                            <div class="mb-3">
-                                <label for="value" class="form-label font-weight-bold">記錄值 (Value / IP)</label>
-                                <input type="text" class="form-control" id="value" name="value" placeholder="例如: 163.23.200.10 或 mail.chc.edu.tw." required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-primary">確認新增</button>
-                        </div>
-                    </form>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">關閉</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- 測試結果彈跳視窗 (Modal) -->
-        <div class="modal fade" id="testResultModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header" id="testModalHeader">
-                        <h5 class="modal-title" id="testModalTitle">DNS 解析測試</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- 載入中動畫 -->
-                        <div id="testLoading" class="text-center py-3">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-2 text-muted mb-0">正在向 DNS 伺服器發送查詢...</p>
-                        </div>
+    <!-- 自訂 Hover 效果與 JS 邏輯 -->
+    <style>
+        .dns-clickable-card {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .dns-clickable-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+        }
+        .border-primary-hover:hover {
+            border-color: #0d6efd !important;
+        }
+        .border-success-hover:hover {
+            border-color: #198754 !important;
+        }
+        .border-info-hover:hover {
+            border-color: #0dcaf0 !important;
+        }
+    </style>
 
-                        <!-- 測試結果文字區 -->
-                        <div id="testBody" style="display: none;">
-                            <pre id="testMessage" class="bg-light p-3 rounded mb-0" style="white-space: pre-wrap; font-family: monospace;"></pre>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">關閉</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterButtons = document.querySelectorAll('#dns-filter-buttons button');
+            const dnsItems = document.querySelectorAll('.dns-card-item');
+            const noDataAlert = document.getElementById('no-dns-data');
 
-        <!-- Bootstrap & JavaScript 邏輯 -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const testModalEl = document.getElementById('testResultModal');
-                const testModal = new bootstrap.Modal(testModalEl);
-                
-                const modalHeader = document.getElementById('testModalHeader');
-                const modalTitle  = document.getElementById('testModalTitle');
-                const loadingDiv  = document.getElementById('testLoading');
-                const bodyDiv     = document.getElementById('testBody');
-                const messageEl   = document.getElementById('testMessage');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const filter = this.getAttribute('data-filter');
 
-                // 監聽所有測試按鈕點擊事件
-                document.querySelectorAll('.btn-test-dns').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const name = this.getAttribute('data-name');
-                        const type = this.getAttribute('data-type');
-                        const zoneDomain = this.getAttribute('data-zone-domain');
-
-                        // 初始化 Modal 狀態 (顯示 Loading)
-                        modalHeader.className = 'modal-header bg-primary text-white';
-                        modalTitle.textContent = `測試中：${name} (${type})`;
-                        loadingDiv.style.display = 'block';
-                        bodyDiv.style.display = 'none';
-                        testModal.show();
-
-                        // 發送 AJAX POST 請求
-                        fetch("{{ route('dns_admin.check') }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({ name: name, type: type, zoneDomain: zoneDomain })
-                        })
-                        .then(async response => {
-                            const contentType = response.headers.get("content-type");
-                            if (contentType && contentType.indexOf("application/json") !== -1) {
-                                return response.json();
-                            } else {
-                                const text = await response.text();
-                                throw new Error(`伺服器回應異常 (HTTP ${response.status})。請確認路由 /dns/check 是否正確。`);
-                            }
-                        })
-                        .then(data => {
-                            loadingDiv.style.display = 'none';
-                            bodyDiv.style.display = 'block';
-
-                            if (data.success) {
-                                modalHeader.className = 'modal-header bg-success text-white';
-                                modalTitle.textContent = '✅ ' + data.title;
-                            } else {
-                                modalHeader.className = 'modal-header bg-danger text-white';
-                                modalTitle.textContent = '❌ ' + data.title;
-                            }
-                            messageEl.textContent = data.message;
-                        })
-                        .catch(error => {
-                            loadingDiv.style.display = 'none';
-                            bodyDiv.style.display = 'block';
-                            modalHeader.className = 'modal-header bg-warning text-dark';
-                            modalTitle.textContent = '⚠️ 請求失敗';
-                            messageEl.textContent = error.message;
-                        });
+                    // 切換 Active 樣式
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        if(btn.dataset.filter === 'all') btn.className = 'btn btn-outline-dark rounded-pill px-4';
+                        if(btn.dataset.filter === 'chcnet') btn.className = 'btn btn-outline-secondary rounded-pill px-4';
+                        if(btn.dataset.filter === 'ipv4') btn.className = 'btn btn-outline-primary rounded-pill px-4';
+                        if(btn.dataset.filter === 'ipv4_ptr') btn.className = 'btn btn-outline-success rounded-pill px-4';
+                        if(btn.dataset.filter === 'ipv6_ptr') btn.className = 'btn btn-outline-info rounded-pill px-4';
                     });
+
+                    this.classList.add('active');
+                    if(filter === 'all') this.className = 'btn btn-dark active rounded-pill px-4';
+                    if(filter === 'chcnet') this.className = 'btn btn-secondary active rounded-pill px-4';
+                    if(filter === 'ipv4') this.className = 'btn btn-primary active rounded-pill px-4';
+                    if(filter === 'ipv4_ptr') this.className = 'btn btn-success active rounded-pill px-4';
+                    if(filter === 'ipv6_ptr') this.className = 'btn btn-info active text-white rounded-pill px-4';
+
+                    // 過濾卡片顯示
+                    let visibleCount = 0;
+                    dnsItems.forEach(item => {
+                        const itemType = item.getAttribute('data-type');
+                        const itemCode = item.getAttribute('data-code');
+
+                        let isMatch = false;
+
+                        if (filter === 'all') {
+                            isMatch = true;
+                        } else if (filter === 'chcnet') {
+                            // 💡 縣網中心條件：代碼為 079998
+                            isMatch = (itemCode === '079998');
+                        } else {
+                            // 其它按鈕條件：類型比對
+                            isMatch = (itemType === filter);
+                        }
+
+                        if (isMatch) {
+                            item.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    if (visibleCount === 0) {
+                        noDataAlert.classList.remove('d-none');
+                    } else {
+                        noDataAlert.classList.add('d-none');
+                    }
                 });
             });
-        </script>        
-        
+        });
+    </script>
 
-    </main>
 @include('chcschool.footer')
