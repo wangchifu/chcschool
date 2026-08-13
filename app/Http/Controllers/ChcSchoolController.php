@@ -1416,39 +1416,27 @@ class ChcSchoolController extends Controller
 
     private function getDnsData()
     {        
-        $result = [
-            'code' => '',
-            'name' => '',
-            'ipv4' => [],
-            'ipv4_ptr' => [],
-            'ipv6_ptr' => [],
-        ];
-
+        $results = [];
         $csvPath = 'privacy/dns_data.csv';
 
         if (Storage::exists($csvPath)) {
             $stream = Storage::readStream($csvPath);
 
             while (($data = fgetcsv($stream)) !== false) {
+                // 確保 CSV 欄位至少有 4 個 (0:學校代碼, 1:學校名稱, 2:類型, 3:值)
                 if (count($data) >= 4) {
-                    $code = trim($data[0]);
-                    $name = trim($data[1]);
-                    $type = trim($data[2]);
-                    $value = trim($data[3]);
-
-                    if ($code === $userCode) {
-                        $result['name'] = $name;
-
-                        if (array_key_exists($type, $result)) {
-                            $result[$type][] = $value;
-                        }
-                    }
+                    $results[] = [
+                        'code'  => trim($data[0]),
+                        'name'  => trim($data[1]),
+                        'type'  => trim($data[2]),
+                        'value' => trim($data[3]),
+                    ];
                 }
             }
             fclose($stream);
         }
 
-        return $result;
-    }        
+        return $results;
+    }
 
 }
