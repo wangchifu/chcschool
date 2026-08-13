@@ -20,16 +20,11 @@
     <main class="container my-5" style="margin-top: -30px !important;">
         
         @php
-            // 計算各種類別的總數量
-            $totalIpv4 = 0;
-            $totalIpv4Ptr = 0;
-            $totalIpv6Ptr = 0;
-            foreach($dns_data as $school) {
-                $totalIpv4 += count($school['ipv4'] ?? []);
-                $totalIpv4Ptr += count($school['ipv4_ptr'] ?? []);
-                $totalIpv6Ptr += count($school['ipv6_ptr'] ?? []);
-            }
-            $totalAll = $totalIpv4 + $totalIpv4Ptr + $totalIpv6Ptr;
+            // 針對一維陣列計算各種類型的數量
+            $totalIpv4    = collect($dns_data)->where('type', 'ipv4')->count();
+            $totalIpv4Ptr = collect($dns_data)->where('type', 'ipv4_ptr')->count();
+            $totalIpv6Ptr = collect($dns_data)->where('type', 'ipv6_ptr')->count();
+            $totalAll     = count($dns_data);
         @endphp
 
         <!-- 分類切換按鈕區 -->
@@ -54,54 +49,50 @@
 
         <!-- DNS 資料列表區 -->
         <div id="dns-card-container">
-            @forelse($dns_data as $school)
-                {{-- 1. 正解 Zone --}}
-                @foreach($school['ipv4'] ?? [] as $domain)
+            @forelse($dns_data as $item)
+                @if($item['type'] === 'ipv4')
+                    {{-- 1. 正解 Zone --}}
                     <div class="card shadow-sm mb-3 dns-card-item" data-type="ipv4">
                         <div class="card-body d-flex justify-content-between align-items-center py-3">
                             <div>
                                 <span class="badge bg-primary me-2">正解 Zone</span>
-                                <strong class="fs-5 text-dark">{{ $domain }}</strong>
-                                <span class="text-muted ms-2">({{ $school['name'] }} - {{ $school['code'] }})</span>
+                                <strong class="fs-5 text-dark">{{ $item['value'] }}</strong>
+                                <span class="text-muted ms-2">({{ $item['name'] }} - {{ $item['code'] }})</span>
                             </div>
-                            <a href="{{ route('dns_admin.forward', ['domain' => $domain]) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                            <a href="{{ route('dns_admin.forward', ['domain' => $item['value']]) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
                                 前往管理 &rarr;
                             </a>
                         </div>
                     </div>
-                @endforeach
-
-                {{-- 2. IPv4 反解 Zone --}}
-                @foreach($school['ipv4_ptr'] ?? [] as $ptrZone)
+                @elseif($item['type'] === 'ipv4_ptr')
+                    {{-- 2. IPv4 反解 Zone --}}
                     <div class="card shadow-sm mb-3 dns-card-item" data-type="ipv4_ptr">
                         <div class="card-body d-flex justify-content-between align-items-center py-3">
                             <div>
                                 <span class="badge bg-success me-2">IPv4 反解</span>
-                                <strong class="fs-5 text-dark">{{ $ptrZone }}</strong>
-                                <span class="text-muted ms-2">({{ $school['name'] }} - {{ $school['code'] }})</span>
+                                <strong class="fs-5 text-dark">{{ $item['value'] }}</strong>
+                                <span class="text-muted ms-2">({{ $item['name'] }} - {{ $item['code'] }})</span>
                             </div>
-                            <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $ptrZone]) }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                            <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
                                 前往管理 &rarr;
                             </a>
                         </div>
                     </div>
-                @endforeach
-
-                {{-- 3. IPv6 反解 Zone --}}
-                @foreach($school['ipv6_ptr'] ?? [] as $ptr6Zone)
+                @elseif($item['type'] === 'ipv6_ptr')
+                    {{-- 3. IPv6 反解 Zone --}}
                     <div class="card shadow-sm mb-3 dns-card-item" data-type="ipv6_ptr">
                         <div class="card-body d-flex justify-content-between align-items-center py-3">
                             <div>
                                 <span class="badge bg-info me-2">IPv6 反解</span>
-                                <strong class="fs-5 text-dark">{{ $ptr6Zone }}</strong>
-                                <span class="text-muted ms-2">({{ $school['name'] }} - {{ $school['code'] }})</span>
+                                <strong class="fs-5 text-dark">{{ $item['value'] }}</strong>
+                                <span class="text-muted ms-2">({{ $item['name'] }} - {{ $item['code'] }})</span>
                             </div>
-                            <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $ptr6Zone]) }}" class="btn btn-outline-info btn-sm rounded-pill px-3">
+                            <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $item['value']]) }}" class="btn btn-outline-info btn-sm rounded-pill px-3">
                                 前往管理 &rarr;
                             </a>
                         </div>
                     </div>
-                @endforeach
+                @endif
             @empty
                 <div class="alert alert-warning text-center py-4 shadow-sm">
                     ⚠️ 目前未找到任何 DNS 設定資料，請確認 <code>privacy/dns_data.csv</code> 檔案內容。
@@ -213,17 +204,15 @@
                 button.addEventListener('click', function () {
                     const filter = this.getAttribute('data-filter');
 
-                    // 更新按鈕樣式 (Active 狀態切換)
+                    // 切換 Active 樣式
                     filterButtons.forEach(btn => {
                         btn.classList.remove('active');
-                        // 恢復外框按鈕樣式
                         if(btn.dataset.filter === 'all') btn.className = 'btn btn-outline-dark rounded-pill px-4';
                         if(btn.dataset.filter === 'ipv4') btn.className = 'btn btn-outline-primary rounded-pill px-4';
                         if(btn.dataset.filter === 'ipv4_ptr') btn.className = 'btn btn-outline-success rounded-pill px-4';
                         if(btn.dataset.filter === 'ipv6_ptr') btn.className = 'btn btn-outline-info rounded-pill px-4';
                     });
 
-                    // 為被點擊的按鈕加上 active 與實心背景
                     this.classList.add('active');
                     if(filter === 'all') this.className = 'btn btn-dark active rounded-pill px-4';
                     if(filter === 'ipv4') this.className = 'btn btn-primary active rounded-pill px-4';
@@ -241,7 +230,6 @@
                         }
                     });
 
-                    // 如果該條件下完全沒資料，顯示無資料提示
                     if (visibleCount === 0) {
                         noDataAlert.classList.remove('d-none');
                     } else {
