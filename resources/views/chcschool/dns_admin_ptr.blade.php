@@ -1,6 +1,6 @@
 @include('chcschool.header')    
     <!-- 主要功能按鈕區域 -->
-    <main class="container my-5" style="margin-top: -30px !important;">
+    <main class="container my-5">
         <div class="container mb-5">
             <!-- 訊息通知 -->
             @if(session('success'))
