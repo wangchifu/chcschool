@@ -17,19 +17,6 @@
                 </div>
             @endif
 
-            <!-- 💡 IPv4 PTR 網段切換按鈕群組 -->
-            @if(!empty($dns_data['ipv4_ptr']) && count($dns_data['ipv4_ptr']) > 0)
-                <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
-                    <span class="fw-bold text-secondary">選擇管理的 PTR 網段：</span>
-                    @foreach($dns_data['ipv4_ptr'] as $ptrZone)
-                        <a href="{{ route('dns.ptr', ['networkSubnet' => $ptrZone]) }}" 
-                        class="btn btn-sm {{ ($networkSubnet === $ptrZone) ? 'btn-primary' : 'btn-outline-primary' }}">
-                            🔄 {{ $ptrZone }}
-                        </a>
-                    @endforeach
-                </div>
-            @endif
-
             <div class="card shadow-sm">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                     <div class="d-flex align-items-center gap-3">

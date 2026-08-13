@@ -15,20 +15,7 @@
                     {{ session('error') ?? $error }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-            @endif
-
-            <!-- 💡 新增：切換 IPv4 網域按鈕群組 -->
-            @if(!empty($dns_data['ipv4']) && count($dns_data['ipv4']) > 0)
-                <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
-                    <span class="fw-bold text-secondary">選擇管理的網域：</span>
-                    @foreach($dns_data['ipv4'] as $domain)
-                        <a href="{{ route('dns.index', ['domain' => $domain]) }}" 
-                        class="btn btn-sm {{ (request('domain') === $domain || $zoneDomain === $domain) ? 'btn-primary' : 'btn-outline-primary' }}">
-                            🌐 {{ $domain }}
-                        </a>
-                    @endforeach
-                </div>
-            @endif
+            @endif            
 
             <div class="card shadow-sm">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
