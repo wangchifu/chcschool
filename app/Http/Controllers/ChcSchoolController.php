@@ -1416,27 +1416,41 @@ class ChcSchoolController extends Controller
 
     private function getDnsData()
     {        
-        $results = [];
+        $schools = [];
         $csvPath = 'privacy/dns_data.csv';
 
         if (Storage::exists($csvPath)) {
             $stream = Storage::readStream($csvPath);
 
             while (($data = fgetcsv($stream)) !== false) {
-                // 確保 CSV 欄位至少有 4 個 (0:學校代碼, 1:學校名稱, 2:類型, 3:值)
                 if (count($data) >= 4) {
-                    $results[] = [
-                        'code'  => trim($data[0]),
-                        'name'  => trim($data[1]),
-                        'type'  => trim($data[2]),
-                        'value' => trim($data[3]),
-                    ];
+                    $code  = trim($data[0]);
+                    $name  = trim($data[1]);
+                    $type  = trim($data[2]);
+                    $value = trim($data[3]);
+
+                    // 若該學校代碼尚未建立，初始化學校結構
+                    if (!isset($schools[$code])) {
+                        $schools[$code] = [
+                            'code'     => $code,
+                            'name'     => $name,
+                            'ipv4'     => [],
+                            'ipv4_ptr' => [],
+                            'ipv6_ptr' => [],
+                        ];
+                    }
+
+                    // 根據 type 分類塞入對應陣列
+                    if (isset($schools[$code][$type])) {
+                        $schools[$code][$type][] = $value;
+                    }
                 }
             }
             fclose($stream);
         }
 
-        return $results;
+        // 重設索引陣列回傳 (從關聯陣列轉為純索引陣列)
+        return array_values($schools);
     }
 
 }

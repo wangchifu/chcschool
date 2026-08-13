@@ -4,7 +4,7 @@
         <div class="container">            
             <h1 class="display-4 fw-bold mb-3">DNS管理</h1>
             <p class="lead col-lg-8 mx-auto text-light opacity-75 mb-3">
-                所有 DNS 網域與反解網段管理列表
+                所有學校 DNS 網域與反解網段管理列表
             </p>
             
             <!-- Hero Banner 內的動作按鈕區 -->
@@ -20,11 +20,17 @@
     <main class="container my-5" style="margin-top: -30px !important;">
         
         @php
-            // 針對一維陣列計算各種類型的數量
-            $totalIpv4    = collect($dns_data)->where('type', 'ipv4')->count();
-            $totalIpv4Ptr = collect($dns_data)->where('type', 'ipv4_ptr')->count();
-            $totalIpv6Ptr = collect($dns_data)->where('type', 'ipv6_ptr')->count();
-            $totalAll     = count($dns_data);
+            // 計算各種類型的總筆數
+            $totalIpv4    = 0;
+            $totalIpv4Ptr = 0;
+            $totalIpv6Ptr = 0;
+
+            foreach($dns_data as $school) {
+                $totalIpv4    += count($school['ipv4'] ?? []);
+                $totalIpv4Ptr += count($school['ipv4_ptr'] ?? []);
+                $totalIpv6Ptr += count($school['ipv6_ptr'] ?? []);
+            }
+            $totalAll = $totalIpv4 + $totalIpv4Ptr + $totalIpv6Ptr;
         @endphp
 
         <!-- 分類切換按鈕區 -->
@@ -47,59 +53,59 @@
             </div>
         </div>
 
-        <!-- DNS 資料列表區 (一列兩筆 + 可點擊卡片) -->
+        <!-- DNS 資料列表區 (一列兩筆) -->
         <div id="dns-card-container">
             <div class="row g-3">
-                @forelse($dns_data as $item)
-                    @if($item['type'] === 'ipv4')
-                        {{-- 1. 正解 Zone --}}
+                @forelse($dns_data as $school)
+                    
+                    {{-- 1. 正解 Zone (ipv4) --}}
+                    @foreach($school['ipv4'] ?? [] as $domain)
                         <div class="col-md-6 dns-card-item" data-type="ipv4">
-                            <a href="{{ route('dns_admin.forward', ['domain' => $item['value']]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-primary-hover">
+                            <a href="{{ route('dns_admin.forward', ['domain' => $domain]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-primary-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                                     <div class="text-truncate">
                                         <span class="badge bg-primary me-2">正解 Zone</span>
-                                        <strong class="fs-6 text-dark" title="{{ $item['value'] }}">
-                                            {{ $item['value'] }}
-                                        </strong>
-                                        <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
+                                        <strong class="fs-6 text-dark" title="{{ $domain }}">{{ $domain }}</strong>
+                                        <div class="small text-muted mt-1">{{ $school['name'] }} ({{ $school['code'] }})</div>
                                     </div>
                                     <i class="bi bi-chevron-right text-primary fs-5 ms-2"></i>
                                 </div>
                             </a>
                         </div>
-                    @elseif($item['type'] === 'ipv4_ptr')
-                        {{-- 2. IPv4 反解 Zone --}}
+                    @endforeach
+
+                    {{-- 2. IPv4 反解 Zone (ipv4_ptr) --}}
+                    @foreach($school['ipv4_ptr'] ?? [] as $ptrZone)
                         <div class="col-md-6 dns-card-item" data-type="ipv4_ptr">
-                            <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $item['value']]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-success-hover">
+                            <a href="{{ route('dns_admin.ptr', ['networkSubnet' => $ptrZone]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-success-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                                     <div class="text-truncate">
                                         <span class="badge bg-success me-2">IPv4 反解</span>
-                                        <strong class="fs-6 text-dark" title="{{ $item['value'] }}">
-                                            {{ $item['value'] }}
-                                        </strong>
-                                        <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
+                                        <strong class="fs-6 text-dark" title="{{ $ptrZone }}">{{ $ptrZone }}</strong>
+                                        <div class="small text-muted mt-1">{{ $school['name'] }} ({{ $school['code'] }})</div>
                                     </div>
                                     <i class="bi bi-chevron-right text-success fs-5 ms-2"></i>
                                 </div>
                             </a>
                         </div>
-                    @elseif($item['type'] === 'ipv6_ptr')
-                        {{-- 3. IPv6 反解 Zone --}}
+                    @endforeach
+
+                    {{-- 3. IPv6 反解 Zone (ipv6_ptr) --}}
+                    @foreach($school['ipv6_ptr'] ?? [] as $ptr6Zone)
                         <div class="col-md-6 dns-card-item" data-type="ipv6_ptr">
-                            <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $item['value']]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-info-hover">
+                            <a href="{{ route('dns_admin.ptr6', ['networkSubnet' => $ptr6Zone]) }}" class="card shadow-sm h-100 text-decoration-none dns-clickable-card border-info-hover">
                                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                                     <div class="text-truncate">
                                         <span class="badge bg-info me-2">IPv6 反解</span>
-                                        <strong class="fs-6 text-dark" title="{{ $item['value'] }}">
-                                            {{ $item['value'] }}
-                                        </strong>
-                                        <div class="small text-muted mt-1">{{ $item['name'] }} ({{ $item['code'] }})</div>
+                                        <strong class="fs-6 text-dark" title="{{ $ptr6Zone }}">{{ $ptr6Zone }}</strong>
+                                        <div class="small text-muted mt-1">{{ $school['name'] }} ({{ $school['code'] }})</div>
                                     </div>
                                     <i class="bi bi-chevron-right text-info fs-5 ms-2"></i>
                                 </div>
                             </a>
                         </div>
-                    @endif
+                    @endforeach
+
                 @empty
                     <div class="col-12">
                         <div class="alert alert-warning text-center py-4 shadow-sm">
