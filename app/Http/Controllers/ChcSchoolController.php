@@ -678,12 +678,8 @@ class ChcSchoolController extends Controller
     }        
 
     public function forward(Request $request,$my_zoneDomain = null)
-    {                
-        $dns_data = $this->getDnsData();
-        $this->zoneDomain = (empty($my_zoneDomain)) ? $dns_data['ipv4'][0] : $my_zoneDomain;        
-        if(!in_array($this->zoneDomain, $dns_data['ipv4'])){
-            return redirect()->route('index')->with('error', '您無權限管理此網域的 DNS 記錄！');
-        }        
+    {                        
+        $this->zoneDomain = $my_zoneDomain;                
         $records = [];
         $error = null;
 
@@ -766,7 +762,7 @@ class ChcSchoolController extends Controller
         }        
         $schools = config('chcschool.schools', []);
 
-        return view('dns.index', [
+        return view('chcschool.dns_admin_forward', [
             'dns_data'   => $dns_data,
             'dnsServer'  => $this->dnsServer,
             'zoneDomain' => $this->zoneDomain,
@@ -835,7 +831,7 @@ class ChcSchoolController extends Controller
             return redirect()->route('dns.index')->with('success', "成功新增紀錄：{$saveKey} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
-            return redirect()->route('dns.index')->with('error', "新增失敗: " . $e->getMessage());
+            return redirect()->back()->with('error', "新增失敗: " . $e->getMessage());
         }
     }
 
@@ -1086,7 +1082,7 @@ class ChcSchoolController extends Controller
 
         $schools = config('chcschool.schools', []);
 
-        return view('dns.ptr', [
+        return view('chcschool.dns_admin_ptr', [
             'dnsServer'     => $this->dnsServer,
             'networkSubnet' => $networkSubnet,
             'ptrZoneDomain' => $ptrZoneDomain,
@@ -1159,11 +1155,11 @@ class ChcSchoolController extends Controller
             $recentAdded[$fullIp] = now()->toDateTimeString();
             Cache::put('recent_ptr_records', $recentAdded, 10800);
 
-            return redirect()->route('dns.ptr', ['networkSubnet' => $networkSubnet])
+            return redirect()->route('dns_admin.ptr', ['networkSubnet' => $networkSubnet])
                             ->with('success', "成功新增 PTR 反解紀錄：{$fullIp} -> {$targetDomain}");
 
         } catch (Net_DNS2_Exception $e) {
-            return redirect()->route('dns.ptr', ['networkSubnet' => $networkSubnet])
+            return redirect()->route('dns_admin.ptr', ['networkSubnet' => $networkSubnet])
                             ->with('error', "新增 PTR 失敗: " . mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8'));
         }
     }
@@ -1287,7 +1283,7 @@ class ChcSchoolController extends Controller
             }
         }
 
-        return view('dns.ptr6', [
+        return view('chcschool.dns_admin_ptr6', [
             'dnsServer'     => $this->dnsServer,
             'networkSubnet' => $networkSubnet,
             'ptrZoneDomain' => $ptrZoneDomain,
@@ -1350,11 +1346,11 @@ class ChcSchoolController extends Controller
             $recentAdded[$rawName] = now()->toDateTimeString();
             Cache::put('recent_ptr6_records', $recentAdded, 10800);
 
-            return redirect()->route('dns.ptr6', ['networkSubnet' => $networkSubnet])
+            return redirect()->route('dns_admin.ptr6', ['networkSubnet' => $networkSubnet])
                             ->with('success', "成功新增 IPv6 PTR 紀錄：{$targetDomain}");
 
         } catch (Net_DNS2_Exception $e) {
-            return redirect()->route('dns.ptr6', ['networkSubnet' => $networkSubnet])
+            return redirect()->route('dns_admin.ptr6', ['networkSubnet' => $networkSubnet])
                             ->with('error', "新增失敗: " . mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8'));
         }
     }
