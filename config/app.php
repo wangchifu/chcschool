@@ -224,7 +224,8 @@ return [
     ],
     'database'=>[
         //網址轉換資料庫代碼        
-        's074999.localhost'=>'s074999',//開發機                
+        's079999.localhost:8080'=>'s079999',//開發機
+        's079999.localhost'=>'s079999',//開發機
         'www.chash.chc.edu.tw'=>'s074308',
         'www.smes.chc.edu.tw'=>'s074608',
         'www.dches.chc.edu.tw'=>'s074775',

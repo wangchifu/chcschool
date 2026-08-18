@@ -587,36 +587,33 @@ class SetupController extends Controller
         $key = session('chaptcha');
         $back = rand(0, 9);
         $r = rand(0, 255);
-        //$r = 0;
         $g = rand(0, 255);
-        //$g = 0;
         $b = rand(0, 255);
-        //$b = 0;
-        
 
-        //$cht = array(0 => "零", 1 => "壹", 2 => "貳", 3 => "參", 4 => "肆", 5 => "伍", 6 => "陸", 7 => "柒", 8 => "捌", 9 => "玖");
-        //$cht = array(0=>"0",1=>"1",2=>"2",3=>"3",4=>"4",5=>"5",6=>"6",7=>"7",8=>"8",9=>"9");
-        //$cht_key = "";
-        //for ($i = 0; $i < 5; $i++) $cht_key .= $cht[substr($key, $i, 1)];
-
-        //session(['cht_chaptcha' => $cht_key]);
         $cht_key = session('cht_chaptcha');
 
-        header("Content-type: image/gif");
-        $images = asset('images/captcha_bk' . $back . '.gif');
+        // 1. 使用 public_path() 取得本地背景圖片的實體檔案路徑
+        $imagePath = public_path('images/captcha_bk' . $back . '.gif');
 
-        $context = stream_context_create([
-            "ssl" => [
-                "verify_peer"      => false,
-                "verify_peer_name" => false
-            ]
-        ]);
+        // 2. 檢查檔案是否存在，避免路徑錯誤產生 Fatal Error
+        if (!file_exists($imagePath)) {
+            // 若找不到背景圖，可自訂預設圖片或報錯處理
+            abort(404, 'Captcha background image not found.');
+        }
 
-        $fileContent = file_get_contents($images, false, $context);
-        $im = imagecreatefromstring($fileContent);
+        // 3. 直接從 GIF 檔案建立畫布資源（比 file_get_contents + imagecreatefromstring 更快）
+        $im = imagecreatefromgif($imagePath);
+
+        // 4. 設定文字顏色
         $text_color = imagecolorallocate($im, $r, $g, $b);
 
+        // 5. 設定 HTTP Header 宣吿為 GIF 圖片
+        header("Content-type: image/gif");
+
+        // 6. 繪製驗證碼文字
         imagettftext($im, 50, 0, 50, 50, $text_color, public_path('font/wt071.ttf'), $cht_key);
+
+        // 7. 輸出圖片並釋放記憶體
         imagegif($im);
         imagedestroy($im);
     }
