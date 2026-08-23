@@ -793,7 +793,7 @@ class ChcSchoolController extends Controller
         }        
         $schools = config('chcschool.schools', []);        
 
-        return view('dns.index', [
+        return view('chcschool.dns_admin_forward', [
             'dns_data'   => $dns_data,
             'dnsServer'  => $this->dnsServer,
             'zoneDomain' => $this->zoneDomain,
@@ -1185,7 +1185,7 @@ class ChcSchoolController extends Controller
 
         $schools = config('chcschool.schools', []);
 
-        return view('dns.ptr', [
+        return view('chcschool.dns_admin_ptr', [
             'dnsServer'     => $this->dnsServer,
             'networkSubnet' => $networkSubnet,
             'ptrZoneDomain' => $ptrZoneDomain,
@@ -1459,7 +1459,7 @@ class ChcSchoolController extends Controller
             }
         }
 
-        return view('dns.ptr6', [
+        return view('chcschool.dns_admin_ptr6', [
             'dnsServer'     => $this->dnsServer,
             'networkSubnet' => $networkSubnet,
             'ptrZoneDomain' => $ptrZoneDomain,
