@@ -888,19 +888,23 @@ public function ptr6(Request $request, $networkSubnet = null)
         $domain        = trim($request->input('domain'));
         $note          = $request->input('note');
 
-        $ptrZoneDomain = rtrim($networkSubnet, '.');
+        // 💡 修正 1： Zone 統一轉小寫，確保與比對、DNS 更新、SQLite 的格式一致
+        $ptrZoneDomain = strtolower(rtrim($networkSubnet, '.'));
         $ttlSeconds    = $this->convertTtlToSeconds($ttlOption);
         $targetDomain  = rtrim($domain, '.') . '.';
 
         // 處理 host_part
         if (filter_var($hostPart, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $ptrFqdn = $this->ipv6ToPtrFqdn($hostPart);
+            // 💡 修正 2：產生的 PTR FQDN 統一轉小寫
+            $ptrFqdn = strtolower($this->ipv6ToPtrFqdn($hostPart));
+            $cleanPtrFqdn = rtrim($ptrFqdn, '.');
             
-            if (!str_ends_with(rtrim($ptrFqdn, '.'), $ptrZoneDomain)) {
+            // 兩邊都是小寫，str_ends_with 就能精準比對 (解決 A 與 a 不相符的問題)
+            if (!str_ends_with($cleanPtrFqdn, $ptrZoneDomain)) {
                 return redirect()->back()->with('error', "新增失敗：輸入的 IPv6 位址與目前的 Zone 網段 ({$ptrZoneDomain}) 不符！");
             }
         } else {
-            $cleanHost = rtrim($hostPart, '.');
+            $cleanHost = strtolower(rtrim($hostPart, '.'));
             $ptrFqdn   = "{$cleanHost}.{$ptrZoneDomain}.";
         }
 
@@ -916,8 +920,8 @@ public function ptr6(Request $request, $networkSubnet = null)
             $updater->add($rr);
             $updater->update();
 
-            // 💡 修正點 1：快取的讀取、過濾舊資料與更新寫回
-            $rawName = rtrim($ptrFqdn, '.');
+            // 快取的讀取、過濾舊資料與更新寫回 (統一為小寫名稱)
+            $rawName = strtolower(rtrim($ptrFqdn, '.'));
             $recentAdded = Cache::get('recent_ptr6_records', []);
             $now = now();
 
@@ -937,11 +941,10 @@ public function ptr6(Request $request, $networkSubnet = null)
                 $dbPath = storage_path('app/privacy/dns_records.db');
                 $db = new \SQLite3($dbPath);
 
-                // 建議將 :ip 改為 $rawName 以配合 ptr6() 的查詢比對
                 $stmt = $db->prepare("INSERT INTO ptr6 (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)");
-                $stmt->bindValue(':ip', $rawName, SQLITE3_TEXT);           // 完整反解名稱
+                $stmt->bindValue(':ip', $rawName, SQLITE3_TEXT);           // 完整反解名稱 (小寫)
                 $stmt->bindValue(':name', $targetDomain, SQLITE3_TEXT);   // 目標域名
-                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT); // Zone 網段
+                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT); // Zone 網段 (小寫)
                 $stmt->bindValue(':note', $note, SQLITE3_TEXT);
                 $stmt->execute();
                 $db->close();

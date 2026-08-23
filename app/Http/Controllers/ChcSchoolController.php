@@ -1488,19 +1488,24 @@ class ChcSchoolController extends Controller
         $domain        = trim($request->input('domain'));
         $note          = $request->input('note');
 
-        $ptrZoneDomain = rtrim($networkSubnet, '.');
+        // 💡 修改點 1：將 ptrZoneDomain 統一轉為「小寫」，確保比對與資料庫寫入一致
+        $ptrZoneDomain = strtolower(rtrim($networkSubnet, '.'));
         $ttlSeconds    = $this->convertTtlToSeconds($ttlOption);
         $targetDomain  = rtrim($domain, '.') . '.';
 
         // 處理 host_part
         if (filter_var($hostPart, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $ptrFqdn = $this->ipv6ToPtrFqdn($hostPart);
+            // 轉出小寫 Nibbles 反解名稱
+            $ptrFqdn = strtolower($this->ipv6ToPtrFqdn($hostPart));
             
-            if (!str_ends_with(rtrim($ptrFqdn, '.'), $ptrZoneDomain)) {
+            // 💡 修改點 2：兩邊統一轉小寫再比對 (避免 A 與 a 判定不同的問題)
+            $cleanPtrFqdn = strtolower(rtrim($ptrFqdn, '.'));
+            
+            if (!str_ends_with($cleanPtrFqdn, $ptrZoneDomain)) {
                 return redirect()->back()->with('error', "新增失敗：輸入的 IPv6 位址與目前的 Zone 網段 ({$ptrZoneDomain}) 不符！");
             }
         } else {
-            $cleanHost = rtrim($hostPart, '.');
+            $cleanHost = strtolower(rtrim($hostPart, '.'));
             $ptrFqdn   = "{$cleanHost}.{$ptrZoneDomain}.";
         }
 
@@ -1516,8 +1521,8 @@ class ChcSchoolController extends Controller
             $updater->add($rr);
             $updater->update();
 
-            // 💡 修正點 1：快取的讀取、過濾舊資料與更新寫回
-            $rawName = rtrim($ptrFqdn, '.');
+            // 快取的讀取與更新
+            $rawName = strtolower(rtrim($ptrFqdn, '.'));
             $recentAdded = Cache::get('recent_ptr6_records', []);
             $now = now();
 
@@ -1528,20 +1533,19 @@ class ChcSchoolController extends Controller
                 }
             }
 
-            // 寫入本次新增的紀錄並重新存入 Cache
+            // 寫入本次新增的紀錄並存入 Cache
             $recentAdded[$rawName] = $now->toDateTimeString();
             Cache::put('recent_ptr6_records', $recentAdded, 10800);
             
             // 寫入 SQLite 資料庫
-            if (!empty($note)) { // 💡 有填備註才會寫入
+            if (!empty($note)) {
                 $dbPath = storage_path('app/privacy/dns_records.db');
                 $db = new \SQLite3($dbPath);
 
-                // 建議將 :ip 改為 $rawName 以配合 ptr6() 的查詢比對
                 $stmt = $db->prepare("INSERT INTO ptr6 (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)");
                 $stmt->bindValue(':ip', $rawName, SQLITE3_TEXT);           // 完整反解名稱
                 $stmt->bindValue(':name', $targetDomain, SQLITE3_TEXT);   // 目標域名
-                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT); // Zone 網段
+                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT); // Zone 網段 (小寫)
                 $stmt->bindValue(':note', $note, SQLITE3_TEXT);
                 $stmt->execute();
                 $db->close();
