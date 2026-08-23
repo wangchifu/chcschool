@@ -678,7 +678,8 @@ class ChcSchoolController extends Controller
     }        
 
     public function forward(Request $request,$my_zoneDomain = null)
-    {                        
+    {          
+        $dns_data = $this->getDnsData();              
         $this->zoneDomain = $my_zoneDomain;                
         $records = [];
         $error = null;
