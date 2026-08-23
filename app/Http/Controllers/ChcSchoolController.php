@@ -1674,12 +1674,16 @@ class ChcSchoolController extends Controller
         $dnsData = $this->getDnsData();
 
         foreach ($dnsData as $school) {
-            // 檢查該學校的 ipv4 列表中是否包含指定的 zone
-            if (isset($school['ipv4']) && is_array($school['ipv4'])) {
-                foreach ($school['ipv4'] as $zone) {
-                    if (strtolower(trim($zone)) === $targetZone) {
-                        return $school['name']; // 找到匹配，回傳學校名稱
-                    }
+            // 合併檢查 ipv4, ipv4_ptr, ipv6_ptr 三種類型
+            $allZones = array_merge(
+                $school['ipv4'] ?? [],
+                $school['ipv4_ptr'] ?? [],
+                $school['ipv6_ptr'] ?? []
+            );
+
+            foreach ($allZones as $zone) {
+                if (strtolower(trim($zone)) === $targetZone) {
+                    return $school['name']; // 找到匹配，回傳學校名稱
                 }
             }
         }
