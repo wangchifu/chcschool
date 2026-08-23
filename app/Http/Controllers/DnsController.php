@@ -10,6 +10,7 @@ use Net_DNS2_Updater;
 use Net_DNS2_RR;
 use Net_DNS2_Exception;
 use Carbon\Carbon;
+Use SQLite3;
 
 class DnsController extends Controller 
 {    
@@ -17,12 +18,59 @@ class DnsController extends Controller
     private $dnsServer;
     private $zoneDomain;
     public function __construct()
-    {
-        $this->dnsServer = env('DDNS_SERVER', '127.0.0.1');            
+    {        
+        $this->dnsServer = env('DDNS_SERVER', '127.0.0.1');               
     }
 
-    public function index(Request $request,$my_zoneDomain = null)
-    {                
+    public function index(Request $request, $my_zoneDomain = null)
+    {        
+        /**         
+         */
+        // 1. 確保目錄存在，若不存在則自動建立
+        $directory = storage_path('app/privacy');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // 2. 建立/連接 SQLite 資料庫檔
+        $dbPath = storage_path('app/privacy/dns_records.db');
+        $this->db = new \SQLite3($dbPath);
+
+        // 3. 建立三個 資料表 (Tables)
+        $sql = "
+        CREATE TABLE IF NOT EXISTS forward (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(191) NOT NULL,
+            type VARCHAR(191) NOT NULL,
+            value VARCHAR(191) NOT NULL,
+            zone VARCHAR(191) NOT NULL,
+            note VARCHAR(191) NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS ptr (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip VARCHAR(191) NOT NULL,
+            name VARCHAR(191) NOT NULL,
+            zone VARCHAR(191) NOT NULL,
+            note VARCHAR(191) NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS ptr6 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip VARCHAR(191) NOT NULL,
+            name VARCHAR(191) NOT NULL,
+            zone VARCHAR(191) NOT NULL,
+            note VARCHAR(191) NOT NULL
+        );
+        ";
+
+        // 執行 SQL 建立資料表
+        $this->db->exec($sql);
+
+
+        if (!str_contains(auth()->user()->kind ?? '', '資訊')) {
+            return redirect()->route('index');
+        }                
         $dns_data = $this->getDnsData();
         $this->zoneDomain = (empty($my_zoneDomain)) ? $dns_data['ipv4'][0] : $my_zoneDomain;        
         if(!in_array($this->zoneDomain, $dns_data['ipv4'])){
@@ -33,6 +81,27 @@ class DnsController extends Controller
 
         // 取得持久化快取中 3 小時內新增的紀錄清單
         $recentAdded = Cache::get('recent_dns_records', []);
+
+        // 💡 1. 讀取 SQLite 備註資料並建立關聯索引陣列
+        $notesMap = [];
+        $dbPath = storage_path('app/privacy/dns_records.db');
+        if (file_exists($dbPath)) {
+            $db = new \SQLite3($dbPath);
+            $stmt = $db->prepare("SELECT name, type, value, note FROM forward WHERE zone = :zone");
+            $stmt->bindValue(':zone', $this->zoneDomain, SQLITE3_TEXT);
+            $result = $stmt->execute();
+
+            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                // 標準化 Key：字串轉小寫並去末端點，確保比對精準
+                $keyName  = strtolower(rtrim($row['name'], '.'));
+                $keyType  = strtoupper($row['type']);
+                $keyValue = strtolower(rtrim($row['value'], '.'));
+
+                $mapKey = "{$keyName}|{$keyType}|{$keyValue}";
+                $notesMap[$mapKey] = $row['note'];
+            }
+            $db->close();
+        }
 
         try {
             $resolver = new Net_DNS2_Resolver([
@@ -53,7 +122,7 @@ class DnsController extends Controller
                         $displayName = str_replace('.' . $this->zoneDomain, '', $rawName);
                     }
 
-                    // 2. 💡 修正點：針對 NS、CNAME、MX、A/AAAA 精確拿取原始紀錄值（保留真實點號）
+                    // 2. 針對 NS、CNAME、MX、A/AAAA 精確拿取原始紀錄值（保留真實點號）
                     $value = '';
                     switch ($rr->type) {
                         case 'A':
@@ -95,11 +164,20 @@ class DnsController extends Controller
                     // 判斷該名稱是否在 3 小時內新增過
                     $createdAt = isset($recentAdded[$displayName]) ? Carbon::parse($recentAdded[$displayName]) : null;
 
+                    // 💡 2. 進行 SQLite 備註比對
+                    $cleanName  = strtolower(rtrim($displayName, '.'));
+                    $cleanType  = strtoupper($rr->type);
+                    $cleanValue = strtolower(rtrim($value, '.'));
+                    $lookupKey  = "{$cleanName}|{$cleanType}|{$cleanValue}";
+
+                    $note = $notesMap[$lookupKey] ?? null;
+
                     $records[] = [
                         'name'       => $displayName,
                         'type'       => $rr->type,
                         'ttl'        => $rr->ttl,
                         'value'      => trim($value),
+                        'note'       => $note, // 💡 帶入備註內容
                         'created_at' => $createdAt,
                     ];
                 }
@@ -108,7 +186,7 @@ class DnsController extends Controller
         } catch (Net_DNS2_Exception $e) {
             $error = '無法抓取 Zone 記錄 (請確認 163.23.200.6 是否有開啟 allow-transfer): ' . $e->getMessage();
         }        
-        $schools = config('chcschool.schools', []);
+        $schools = config('chcschool.schools', []);        
 
         return view('dns.index', [
             'dns_data'   => $dns_data,
@@ -116,7 +194,7 @@ class DnsController extends Controller
             'zoneDomain' => $this->zoneDomain,
             'records'    => $records,
             'error'      => $error,
-            'schools' => $schools,
+            'schools'    => $schools,
         ]);
     }
 
@@ -130,6 +208,7 @@ class DnsController extends Controller
             'type'       => 'required|string|in:A,AAAA,CNAME,TXT,MX,SRV,CAA,NS',
             'ttl_option' => 'required|string',
             'value'      => 'required|string',
+            'note'       => 'nullable|string|max:255', // 可為空值，最多 255 字元
         ]);
 
         $this->zoneDomain = $request->input('zoneDomain');
@@ -138,6 +217,7 @@ class DnsController extends Controller
         $type      = strtoupper($request->input('type'));
         $ttlOption = $request->input('ttl_option');
         $value     = trim($request->input('value'));
+        $note = $request->input('note'); // 取得備註內容 (未填則為 null)
 
         $ttlSeconds = $this->convertTtlToSeconds($ttlOption);
 
@@ -171,10 +251,36 @@ class DnsController extends Controller
             $updater->add($rr);
             $updater->update();
 
-            // 寫入持久化 Cache (保存 3 小時)
+            // 寫入持久化 Cache (僅保留 3 小時內的紀錄)
             $recentAdded = Cache::get('recent_dns_records', []);
-            $recentAdded[$saveKey] = now()->toDateTimeString();
-            Cache::put('recent_dns_records', $recentAdded, 10800);
+
+            // 💡 1. 清理超過 3 小時 (10800 秒) 的舊資料
+            $now = now();
+            foreach ($recentAdded as $key => $timeStr) {
+                if ($now->diffInSeconds(\Carbon\Carbon::parse($timeStr)) > 10800) {
+                    unset($recentAdded[$key]);
+                }
+            }
+
+            // 💡 2. 寫入本次新新增的紀錄
+            $recentAdded[$saveKey] = $now->toDateTimeString();
+
+            // 💡 3. 重新寫回 Cache (保存 3 小時)
+            Cache::put('recent_dns_records', $recentAdded, 10800);            
+
+            //寫入資料庫
+            if(!empty($note)){
+                // 建立/連接 SQLite 資料庫檔
+                $dbPath = storage_path('app/privacy/dns_records.db');
+                $this->db = new \SQLite3($dbPath);
+                $stmt = $this->db->prepare("INSERT INTO forward (name, type, value, zone, note) VALUES (:name, :type, :value, :zone, :note)");
+                $stmt->bindValue(':name', $saveKey, SQLITE3_TEXT);
+                $stmt->bindValue(':type', $type, SQLITE3_TEXT);
+                $stmt->bindValue(':value', $value, SQLITE3_TEXT);
+                $stmt->bindValue(':zone', $this->zoneDomain, SQLITE3_TEXT);
+                $stmt->bindValue(':note', $note, SQLITE3_TEXT);
+                $stmt->execute();
+            }
 
             return redirect()->route('dns.index')->with('success', "成功新增紀錄：{$saveKey} ({$type})");
 
@@ -227,7 +333,23 @@ class DnsController extends Controller
             $updater->delete($rr);
             $updater->update();
 
-            // 💡 使用 back() 可自動彈回上一頁並帶入成功訊息（避免路由命名為 index 或 dns.index 造成錯亂）
+            // 💡 刪除 BIND9 紀錄成功後，同步刪除 SQLite forward 資料表中的備註
+            $dbPath = storage_path('app/privacy/dns_records.db');
+            if (file_exists($dbPath)) {
+                $db = new \SQLite3($dbPath);
+
+                // 準備查詢條件：與寫入時的格式保持一致
+                // 註：若你的 forward 資料表 name 欄位存的是 displayName (如 '@' 或 'www')，則直接傳入 $name
+                $stmt = $db->prepare("DELETE FROM forward WHERE zone = :zone AND name = :name AND type = :type");
+                $stmt->bindValue(':zone', $this->zoneDomain, SQLITE3_TEXT);
+                $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+                $stmt->bindValue(':type', $type, SQLITE3_TEXT);
+                
+                $stmt->execute();
+                $db->close();
+            }
+
+            // 💡 使用 back() 可自動彈回上一頁並帶入成功訊息
             return redirect()->back()->with('success', "成功刪除紀錄：{$name} ({$type})");
 
         } catch (Net_DNS2_Exception $e) {
@@ -347,6 +469,9 @@ class DnsController extends Controller
 
     public function ptr(Request $request, $networkSubnet = null)
     {
+        if (!str_contains(auth()->user()->kind ?? '', '資訊')) {
+            return redirect()->route('index');
+        }
         // 1. 若網址未帶入 $networkSubnet 參數，自動抓取目前登入學校的第一組 ipv4_ptr 網段
         if (empty($networkSubnet)) {
             $dns_data = $this->getDnsData(); // 呼叫先前讀取 CSV 的私有方法
@@ -376,6 +501,26 @@ class DnsController extends Controller
 
         // 3. 取得持久化快取中 3 小時內新增的紀錄清單
         $recentAdded = Cache::get('recent_ptr_records', []);
+
+        // 💡 4. 讀取 SQLite 的 ptr 資料表備註資料並建立關聯索引陣列
+        $notesMap = [];
+        $dbPath = storage_path('app/privacy/dns_records.db');
+        if (file_exists($dbPath)) {
+            $db = new \SQLite3($dbPath);
+            $stmt = $db->prepare("SELECT ip, name, note FROM ptr WHERE zone = :zone");
+            $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
+            $result = $stmt->execute();
+
+            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                // 標準化 Key：IP 去空白，域名轉小寫並去除末端的點
+                $keyIp   = trim($row['ip']);
+                $keyName = strtolower(rtrim($row['name'], '.'));
+
+                $mapKey = "{$keyIp}|{$keyName}";
+                $notesMap[$mapKey] = $row['note'];
+            }
+            $db->close();
+        }
 
         try {
             $resolver = new Net_DNS2_Resolver([
@@ -408,12 +553,20 @@ class DnsController extends Controller
                     // 判斷是否為 3 小時內新增
                     $createdAt = isset($recentAdded[$fullIp]) ? Carbon::parse($recentAdded[$fullIp]) : null;
 
+                    // 💡 5. 進行 SQLite 備註比對
+                    $cleanIp   = trim($fullIp);
+                    $cleanName = strtolower(rtrim($ptrdname, '.'));
+                    $lookupKey = "{$cleanIp}|{$cleanName}";
+
+                    $note = $notesMap[$lookupKey] ?? null;
+
                     $records[] = [
                         'ip_last'    => $lastOctet,   // 最後一碼 IP (如 100)
                         'ip_full'    => $fullIp,      // 完整 IP (如 163.23.93.100)
                         'type'       => $rr->type,    // PTR
                         'ttl'        => $rr->ttl,     // TTL 秒數
                         'domain'     => $ptrdname,    // 指向的完整域名 (如 pc1.chc.edu.tw.)
+                        'note'       => $note,        // 💡 帶入備註內容
                         'created_at' => $createdAt,
                     ];
                 }
@@ -439,7 +592,7 @@ class DnsController extends Controller
             'schools'       => $schools,
             'dns_data'      => $this->getDnsData(), // 傳入 view 供上方按鈕列繪製切換選單
         ]);
-    }    
+    }
 
     public function ptr_store(Request $request)
     {
@@ -448,12 +601,14 @@ class DnsController extends Controller
             'ip_last'        => 'required|integer|between:1,254',
             'ttl_option'     => 'required|string',
             'domain'         => 'required|string',
+            'note'       => 'nullable|string|max:255', // 可為空值，最多 255 字元
         ]);
 
         $networkSubnet = trim($request->input('network_subnet'));
         $ipLast        = (int)$request->input('ip_last');
         $ttlOption     = $request->input('ttl_option');
         $domain        = trim($request->input('domain'));
+        $note = $request->input('note'); // 取得備註內容 (未填則為 null)
 
         $ttlSeconds = $this->convertTtlToSeconds($ttlOption);
 
@@ -489,26 +644,56 @@ class DnsController extends Controller
         $rrString = "{$ptrFqdn} {$ttlSeconds} IN PTR {$targetDomain}";
 
         try {
-            $updater = new Net_DNS2_Updater($ptrZoneDomain, [
+            // 💡 1. 類別名稱加上全域反斜線 \
+            $updater = new \Net_DNS2_Updater($ptrZoneDomain, [
                 'nameservers' => [$this->dnsServer],
                 'timeout'     => 5,
             ]);
 
-            $rr = Net_DNS2_RR::fromString($rrString);
+            $rr = \Net_DNS2_RR::fromString($rrString);
             $updater->add($rr);
             $updater->update();
 
-            // 寫入持久化 Cache (保存 3 小時，鍵名使用完整 IP)
+            // 💡 2. 讀取 PTR 快取並進行超過 3 小時 (10800 秒) 的舊資料清理
             $recentAdded = Cache::get('recent_ptr_records', []);
-            $recentAdded[$fullIp] = now()->toDateTimeString();
+            $now = now();
+
+            foreach ($recentAdded as $key => $timeStr) {
+                if ($now->diffInSeconds(\Carbon\Carbon::parse($timeStr)) > 10800) {
+                    unset($recentAdded[$key]);
+                }
+            }
+
+            // 寫入本次新增的 PTR 紀錄 (鍵名為完整 IP)
+            $recentAdded[$fullIp] = $now->toDateTimeString();
             Cache::put('recent_ptr_records', $recentAdded, 10800);
+
+            // 寫入 SQLite 資料庫
+            if (!empty($note)) {
+                $dbPath = storage_path('app/privacy/dns_records.db');
+                $db = new \SQLite3($dbPath);
+
+                // 使用 REPLACE INTO 或 INSERT INTO
+                // 此處使用 fullIp 作為 ip，domain/targetDomain 作為 name
+                $stmt = $db->prepare("INSERT INTO ptr (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)");
+                $stmt->bindValue(':ip', $fullIp, SQLITE3_TEXT);             // 例如: "163.23.200.10"
+                $stmt->bindValue(':name', $targetDomain, SQLITE3_TEXT);     // 例如: "pc1.chc.edu.tw."
+                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);   // 例如: "200.23.163.in-addr.arpa"
+                $stmt->bindValue(':note', $note, SQLITE3_TEXT);
+                $stmt->execute();
+                $db->close();
+            }
 
             return redirect()->route('dns.ptr', ['networkSubnet' => $networkSubnet])
                             ->with('success', "成功新增 PTR 反解紀錄：{$fullIp} -> {$targetDomain}");
 
-        } catch (Net_DNS2_Exception $e) {
+        } catch (\Net_DNS2_Exception $e) {
+            // 💡 3. Exception 加上反斜線，並解析標準錯誤碼
+            $rcodeName = \Net_DNS2_Lookups::$rcode_name[$e->getCode()] ?? '';
+            $extraMsg = $rcodeName ? " (錯誤碼: {$rcodeName})" : '';
+
             return redirect()->route('dns.ptr', ['networkSubnet' => $networkSubnet])
-                            ->with('error', "新增 PTR 失敗: " . mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8'));
+                            ->with('error', "新增 PTR 失敗: " . $e->getMessage() . $extraMsg);
         }
     }
 
@@ -532,7 +717,7 @@ class DnsController extends Controller
             // PTR 左側 FQDN (例: "100.64-26.93.23.163.in-addr.arpa.")
             $ptrFqdn = "{$ipLast}.{$ptrZoneDomain}.";
 
-            // 計算完整 IP (供訊息顯示)
+            // 計算完整 IP (供訊息顯示與資料庫比對)
             $zoneParts = explode('.', $ptrZoneDomain);
             $baseSubnet = sprintf('%s.%s.%s', $zoneParts[3] ?? '', $zoneParts[2] ?? '', $zoneParts[1] ?? '');
             $fullIp = "{$baseSubnet}.{$ipLast}";
@@ -573,16 +758,32 @@ class DnsController extends Controller
                 Cache::put('recent_ptr_records', $recentAdded, 10800);
             }
 
+            // 💡 2. 同步刪除 SQLite ptr 資料表中的備註紀錄
+            $dbPath = storage_path('app/privacy/dns_records.db');
+            if (file_exists($dbPath)) {
+                $db = new \SQLite3($dbPath);
+                
+                $stmt = $db->prepare("DELETE FROM ptr WHERE zone = :zone AND ip = :ip");
+                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
+                $stmt->bindValue(':ip', $fullIp, SQLITE3_TEXT);
+                
+                $stmt->execute();
+                $db->close();
+            }
+
             return redirect()->back()->with('success', "成功刪除 PTR 反解紀錄：{$fullIp}");
 
         } catch (Net_DNS2_Exception $e) {
             return redirect()->back()->with('error', "刪除 PTR 失敗: " . mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8'));
         }
-    }    
+    } 
 
     // ==================== IPv6 PTR 列表頁面 ====================
-    public function ptr6(Request $request, $networkSubnet = null)
+public function ptr6(Request $request, $networkSubnet = null)
     {
+        if (!str_contains(auth()->user()->kind ?? '', '資訊')) {
+            return redirect()->route('index');
+        }
         if (empty($networkSubnet)) {
             $dnsData = $this->getDnsData();
             $networkSubnet = $dnsData['ipv6_ptr'][0] ?? null;
@@ -595,6 +796,26 @@ class DnsController extends Controller
         if (!empty($ptrZoneDomain)) {
             $recentAdded = Cache::get('recent_ptr6_records', []);
 
+            // 💡 1. 讀取 SQLite ptr6 資料表備註資料並建立關聯索引陣列
+            $notesMap = [];
+            $dbPath = storage_path('app/privacy/dns_records.db');
+            if (file_exists($dbPath)) {
+                $db = new \SQLite3($dbPath);
+                $stmt = $db->prepare("SELECT ip, name, note FROM ptr6 WHERE zone = :zone");
+                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
+                $result = $stmt->execute();
+
+                while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                    // 標準化 Key：IP (raw_fqdn) 與域名皆轉小寫並去除尾端的點
+                    $keyIp   = strtolower(rtrim($row['ip'], '.'));
+                    $keyName = strtolower(rtrim($row['name'], '.'));
+
+                    $mapKey = "{$keyIp}|{$keyName}";
+                    $notesMap[$mapKey] = $row['note'];
+                }
+                $db->close();
+            }
+
             try {
                 $resolver = new Net_DNS2_Resolver([
                     'nameservers' => [$this->dnsServer],
@@ -605,7 +826,7 @@ class DnsController extends Controller
 
                 foreach ($response->answer as $rr) {
                     if ($rr->type === 'PTR') {
-                        $rawName = rtrim($rr->name, '.'); // 例如: 1.0.0.0.0.0.0.0...ip6.arpa
+                        $rawName = rtrim($rr->name, '.'); // 例如: 1.0.0.0...ip6.arpa
                         $hostPart = str_replace('.' . $ptrZoneDomain, '', $rawName);
 
                         $ptrdname = $rr->ptrdname ?? ($rr->rdata ?? '');
@@ -616,12 +837,20 @@ class DnsController extends Controller
 
                         $createdAt = isset($recentAdded[$rawName]) ? Carbon::parse($recentAdded[$rawName]) : null;
 
+                        // 💡 2. 進行 SQLite 備註比對
+                        $cleanIp   = strtolower(rtrim($rawName, '.'));
+                        $cleanName = strtolower(rtrim($ptrdname, '.'));
+                        $lookupKey = "{$cleanIp}|{$cleanName}";
+
+                        $note = $notesMap[$lookupKey] ?? null;
+
                         $records[] = [
                             'host_part'  => $hostPart,
                             'raw_fqdn'   => $rawName,
                             'type'       => 'PTR',
                             'ttl'        => $rr->ttl,
                             'domain'     => $ptrdname,
+                            'note'       => $note, // 💡 帶入備註內容
                             'created_at' => $createdAt,
                         ];
                     }
@@ -650,29 +879,27 @@ class DnsController extends Controller
             'host_part'      => 'required|string',
             'ttl_option'     => 'required|string',
             'domain'         => 'required|string',
+            'note'           => 'nullable|string|max:255',
         ]);
 
         $networkSubnet = trim($request->input('network_subnet'));
         $hostPart      = trim($request->input('host_part'));
         $ttlOption     = $request->input('ttl_option');
         $domain        = trim($request->input('domain'));
+        $note          = $request->input('note');
 
         $ptrZoneDomain = rtrim($networkSubnet, '.');
         $ttlSeconds    = $this->convertTtlToSeconds($ttlOption);
         $targetDomain  = rtrim($domain, '.') . '.';
 
-        // 💡 關鍵修正：處理 host_part
-        // 情況 A：傳入的是標準 IPv6 位址 (例如 2001:288:5863:3700::1)
+        // 處理 host_part
         if (filter_var($hostPart, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             $ptrFqdn = $this->ipv6ToPtrFqdn($hostPart);
             
-            // 安全檢查：確認轉換後的 FQDN 是否真的以當前 Zone 結尾
             if (!str_ends_with(rtrim($ptrFqdn, '.'), $ptrZoneDomain)) {
                 return redirect()->back()->with('error', "新增失敗：輸入的 IPv6 位址與目前的 Zone 網段 ({$ptrZoneDomain}) 不符！");
             }
-        } 
-        // 情況 B：傳入的是主機末端前綴 (例如輸入 "1" 或 "1.0.0.0.0.0.0.0")
-        else {
+        } else {
             $cleanHost = rtrim($hostPart, '.');
             $ptrFqdn   = "{$cleanHost}.{$ptrZoneDomain}.";
         }
@@ -680,27 +907,56 @@ class DnsController extends Controller
         $rrString = "{$ptrFqdn} {$ttlSeconds} IN PTR {$targetDomain}";
 
         try {
-            $updater = new Net_DNS2_Updater($ptrZoneDomain, [
+            $updater = new \Net_DNS2_Updater($ptrZoneDomain, [
                 'nameservers' => [$this->dnsServer],
                 'timeout'     => 5,
             ]);
 
-            $rr = Net_DNS2_RR::fromString($rrString);
+            $rr = \Net_DNS2_RR::fromString($rrString);
             $updater->add($rr);
             $updater->update();
 
+            // 💡 修正點 1：快取的讀取、過濾舊資料與更新寫回
             $rawName = rtrim($ptrFqdn, '.');
             $recentAdded = Cache::get('recent_ptr6_records', []);
-            $recentAdded[$rawName] = now()->toDateTimeString();
+            $now = now();
+
+            // 清理超過 3 小時 (10800 秒) 的舊紀錄
+            foreach ($recentAdded as $key => $timeStr) {
+                if ($now->diffInSeconds(\Carbon\Carbon::parse($timeStr)) > 10800) {
+                    unset($recentAdded[$key]);
+                }
+            }
+
+            // 寫入本次新增的紀錄並重新存入 Cache
+            $recentAdded[$rawName] = $now->toDateTimeString();
             Cache::put('recent_ptr6_records', $recentAdded, 10800);
+            
+            // 寫入 SQLite 資料庫
+            if (!empty($note)) { // 💡 有填備註才會寫入
+                $dbPath = storage_path('app/privacy/dns_records.db');
+                $db = new \SQLite3($dbPath);
+
+                // 建議將 :ip 改為 $rawName 以配合 ptr6() 的查詢比對
+                $stmt = $db->prepare("INSERT INTO ptr6 (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)");
+                $stmt->bindValue(':ip', $rawName, SQLITE3_TEXT);           // 完整反解名稱
+                $stmt->bindValue(':name', $targetDomain, SQLITE3_TEXT);   // 目標域名
+                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT); // Zone 網段
+                $stmt->bindValue(':note', $note, SQLITE3_TEXT);
+                $stmt->execute();
+                $db->close();
+            }            
 
             return redirect()->route('dns.ptr6', ['networkSubnet' => $networkSubnet])
                             ->with('success', "成功新增 IPv6 PTR 紀錄：{$targetDomain}");
 
-        } catch (Net_DNS2_Exception $e) {
+        } catch (\Net_DNS2_Exception $e) {
+            $rcodeName = \Net_DNS2_Lookups::$rcode_name[$e->getCode()] ?? '';
+            $extraMsg = $rcodeName ? " (錯誤碼: {$rcodeName})" : '';
+
             return redirect()->route('dns.ptr6', ['networkSubnet' => $networkSubnet])
-                            ->with('error', "新增失敗: " . mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8'));
-        }
+                            ->with('error', "新增失敗: " . $e->getMessage() . $extraMsg);
+        }        
     }
 
     // ==================== IPv6 PTR 刪除邏輯 ====================
@@ -738,6 +994,19 @@ class DnsController extends Controller
             if (isset($recentAdded[$rawFqdn])) {
                 unset($recentAdded[$rawFqdn]);
                 Cache::put('recent_ptr6_records', $recentAdded, 10800);
+            }
+
+            // 💡 同步刪除 SQLite ptr6 資料表中的備註紀錄
+            $dbPath = storage_path('app/privacy/dns_records.db');
+            if (file_exists($dbPath)) {
+                $db = new \SQLite3($dbPath);
+
+                $stmt = $db->prepare("DELETE FROM ptr6 WHERE zone = :zone AND ip = :ip");
+                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
+                $stmt->bindValue(':ip', rtrim($rawFqdn, '.'), SQLITE3_TEXT);
+
+                $stmt->execute();
+                $db->close();
             }
 
             return redirect()->back()->with('success', "成功刪除 IPv6 PTR 反解紀錄！");

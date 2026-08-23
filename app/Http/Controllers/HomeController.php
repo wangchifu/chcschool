@@ -27,7 +27,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        if($_SERVER['HTTP_HOST'] != 'chcschool.localhost' and $_SERVER['HTTP_HOST'] != 'chcschool.chc.edu.tw'){
+        $host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) ?? $_SERVER['HTTP_HOST'];
+        if($host != 'chcschool.localhost' and $host != 'chcschool.chc.edu.tw'){
             //$this->middleware('auth');
             $setup = Setup::first();
             //檢查有無關閉網站
@@ -273,8 +274,9 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {        
+        $host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) ?? $_SERVER['HTTP_HOST'];
         //chcschool.chc.edu.tw專用
-        if($_SERVER['HTTP_HOST'] == 'chcschool.localhost' or $_SERVER['HTTP_HOST'] == 'chcschool.chc.edu.tw'){             
+        if($host == 'chcschool.localhost' or $host == 'chcschool.chc.edu.tw'){             
             return view('chcschool.index_chcschool');
         }
 

@@ -14,7 +14,7 @@ class WrenchController extends Controller
     {        
         // storage_path() 會自動將相對路徑轉為絕對路徑
         $dbPath = storage_path(env('SQLITE', 'app/privacy/chcschool_qa.db'));
-        $this->db = new SQLite3($dbPath);        
+        $this->db = new SQLite3($dbPath);
     }
     public function index($page=null)
     {

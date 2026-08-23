@@ -66,6 +66,11 @@
                                         <td>{{ $record['ttl'] }}s</td>
                                         <td style="word-break: break-all;">
                                             <code>{{ $record['domain'] }}</code>
+                                            <!-- 漂亮輕量化的備註樣式 -->
+                                            <div class="small text-muted mt-1 d-flex align-items-center" style="font-size: 0.8rem;">
+                                                <i class="bi bi-chat-left-text me-1 text-secondary"></i>
+                                                <span>{{ $record['note'] ?? '-' }}</span>
+                                            </div>
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-1">
@@ -140,6 +145,12 @@
                                 <label for="domain" class="form-label font-weight-bold">記錄資料 (指向域名) *</label>
                                 <input type="text" class="form-control" id="domain" name="domain" placeholder="例如: host.example.com." required>
                                 <div class="form-text">請輸入完整域名，末端建議加上點號（例如：<code>host.example.com.</code>）</div>
+                            </div>
+                            <!-- 備註 (選填) -->
+                            <div class="mb-3">
+                                <label for="note" class="form-label font-weight-bold">備註 (Note)</label>
+                                <input type="text" class="form-control" id="note" name="note">
+                                <div class="form-text">可填寫此筆紀錄的用途說明，方便日後管理</div>
                             </div>
                         </div>
                         <div class="modal-footer">
