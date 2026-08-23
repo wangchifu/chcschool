@@ -1288,16 +1288,14 @@ class ChcSchoolController extends Controller
                 $db->close();
             }
 
-            return redirect()->route('dns.ptr', ['networkSubnet' => $networkSubnet])
-                            ->with('success', "成功新增 PTR 反解紀錄：{$fullIp} -> {$targetDomain}");
+            return redirect()->back()->with('success', "成功新增 PTR 反解紀錄：{$fullIp} -> {$targetDomain}");
 
         } catch (\Net_DNS2_Exception $e) {
             // 💡 3. Exception 加上反斜線，並解析標準錯誤碼
             $rcodeName = \Net_DNS2_Lookups::$rcode_name[$e->getCode()] ?? '';
             $extraMsg = $rcodeName ? " (錯誤碼: {$rcodeName})" : '';
 
-            return redirect()->route('dns.ptr', ['networkSubnet' => $networkSubnet])
-                            ->with('error', "新增 PTR 失敗: " . $e->getMessage() . $extraMsg);
+            return redirect()->back()->with('error', "新增 PTR 失敗: " . $e->getMessage() . $extraMsg);
         }
     }
 
