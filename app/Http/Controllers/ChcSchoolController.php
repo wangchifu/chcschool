@@ -1390,7 +1390,9 @@ class ChcSchoolController extends Controller
 
         $records = [];
         $error = null;
-        $ptrZoneDomain = $networkSubnet ? rtrim($networkSubnet, '.') : '';
+        
+        // 💡 修正點：統一強制轉為小寫，確保與 SQLite、Cache 以及 DNS 比對格式一致
+        $ptrZoneDomain = $networkSubnet ? strtolower(rtrim($networkSubnet, '.')) : '';
 
         if (!empty($ptrZoneDomain)) {
             $recentAdded = Cache::get('recent_ptr6_records', []);
@@ -1400,7 +1402,8 @@ class ChcSchoolController extends Controller
             $dbPath = storage_path('app/privacy/dns_records.db');
             if (file_exists($dbPath)) {
                 $db = new \SQLite3($dbPath);
-                $stmt = $db->prepare("SELECT ip, name, note FROM ptr6 WHERE zone = :zone");
+                // $ptrZoneDomain 已經是小寫，能精準 matches SQLite 中的小寫 zone 欄位
+                $stmt = $db->prepare("SELECT ip, name, note FROM ptr6 WHERE LOWER(zone) = :zone");
                 $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
                 $result = $stmt->execute();
 
@@ -1425,7 +1428,8 @@ class ChcSchoolController extends Controller
 
                 foreach ($response->answer as $rr) {
                     if ($rr->type === 'PTR') {
-                        $rawName = rtrim($rr->name, '.'); // 例如: 1.0.0.0...ip6.arpa
+                        // 轉小寫以利比對
+                        $rawName = strtolower(rtrim($rr->name, '.')); // 例如: 1.0.0.0...ip6.arpa
                         $hostPart = str_replace('.' . $ptrZoneDomain, '', $rawName);
 
                         $ptrdname = $rr->ptrdname ?? ($rr->rdata ?? '');
@@ -1449,7 +1453,7 @@ class ChcSchoolController extends Controller
                             'type'       => 'PTR',
                             'ttl'        => $rr->ttl,
                             'domain'     => $ptrdname,
-                            'note'       => $note, // 💡 帶入備註內容
+                            'note'       => $note, // 帶入備註內容
                             'created_at' => $createdAt,
                         ];
                     }
@@ -1467,7 +1471,7 @@ class ChcSchoolController extends Controller
             'error'         => $error,
             'schools'       => config('chcschool.schools', []),
             'dns_data'      => $this->getDnsData(),
-            'schoolName' => $this->getSchoolNameByZone($ptrZoneDomain),
+            'schoolName'    => $this->getSchoolNameByZone($ptrZoneDomain),
         ]);
     }
 

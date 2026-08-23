@@ -779,7 +779,7 @@ class DnsController extends Controller
     } 
 
     // ==================== IPv6 PTR 列表頁面 ====================
-public function ptr6(Request $request, $networkSubnet = null)
+    public function ptr6(Request $request, $networkSubnet = null)
     {
         if (!str_contains(auth()->user()->kind ?? '', '資訊')) {
             return redirect()->route('index');
@@ -791,17 +791,19 @@ public function ptr6(Request $request, $networkSubnet = null)
 
         $records = [];
         $error = null;
-        $ptrZoneDomain = $networkSubnet ? rtrim($networkSubnet, '.') : '';
+        
+        // 💡 修正 1： Zone 域名統一強制轉為「小寫」
+        $ptrZoneDomain = $networkSubnet ? strtolower(rtrim($networkSubnet, '.')) : '';
 
         if (!empty($ptrZoneDomain)) {
             $recentAdded = Cache::get('recent_ptr6_records', []);
 
-            // 💡 1. 讀取 SQLite ptr6 資料表備註資料並建立關聯索引陣列
+            // 💡 2. 讀取 SQLite ptr6 資料表備註資料 (使用 LOWER(zone) 確保大小寫無縫匹配)
             $notesMap = [];
             $dbPath = storage_path('app/privacy/dns_records.db');
             if (file_exists($dbPath)) {
                 $db = new \SQLite3($dbPath);
-                $stmt = $db->prepare("SELECT ip, name, note FROM ptr6 WHERE zone = :zone");
+                $stmt = $db->prepare("SELECT ip, name, note FROM ptr6 WHERE LOWER(zone) = :zone");
                 $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
                 $result = $stmt->execute();
 
@@ -826,7 +828,8 @@ public function ptr6(Request $request, $networkSubnet = null)
 
                 foreach ($response->answer as $rr) {
                     if ($rr->type === 'PTR') {
-                        $rawName = rtrim($rr->name, '.'); // 例如: 1.0.0.0...ip6.arpa
+                        // 💡 修正 3：從 Bind9 抓出的紀錄名稱轉為小寫
+                        $rawName = strtolower(rtrim($rr->name, '.')); // 例如: 1.0.0.0...ip6.arpa
                         $hostPart = str_replace('.' . $ptrZoneDomain, '', $rawName);
 
                         $ptrdname = $rr->ptrdname ?? ($rr->rdata ?? '');
@@ -837,7 +840,7 @@ public function ptr6(Request $request, $networkSubnet = null)
 
                         $createdAt = isset($recentAdded[$rawName]) ? Carbon::parse($recentAdded[$rawName]) : null;
 
-                        // 💡 2. 進行 SQLite 備註比對
+                        // 💡 4. 進行 SQLite 備註比對 (雙方 Key 均為小寫)
                         $cleanIp   = strtolower(rtrim($rawName, '.'));
                         $cleanName = strtolower(rtrim($ptrdname, '.'));
                         $lookupKey = "{$cleanIp}|{$cleanName}";
@@ -850,7 +853,7 @@ public function ptr6(Request $request, $networkSubnet = null)
                             'type'       => 'PTR',
                             'ttl'        => $rr->ttl,
                             'domain'     => $ptrdname,
-                            'note'       => $note, // 💡 帶入備註內容
+                            'note'       => $note, // 帶入備註內容
                             'created_at' => $createdAt,
                         ];
                     }
