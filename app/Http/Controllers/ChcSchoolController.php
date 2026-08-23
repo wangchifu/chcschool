@@ -1194,7 +1194,7 @@ class ChcSchoolController extends Controller
             'error'         => $error,
             'schools'       => $schools,
             'dns_data'      => $this->getDnsData(), // 傳入 view 供上方按鈕列繪製切換選單
-            'schoolName' => $this->getSchoolNameByZone($this->zoneDomain),
+            'schoolName' => $this->getSchoolNameByZone($ptrZoneDomain),
         ]);
     }    
 
@@ -1469,7 +1469,7 @@ class ChcSchoolController extends Controller
             'error'         => $error,
             'schools'       => config('chcschool.schools', []),
             'dns_data'      => $this->getDnsData(),
-            'schoolName' => $this->getSchoolNameByZone($this->zoneDomain),
+            'schoolName' => $this->getSchoolNameByZone($ptrZoneDomain),
         ]);
     }
 
