@@ -78,11 +78,13 @@
                                         {{-- 💡 完整顯示資料庫/DNS 查出來的 value（包含結尾點號） --}}
                                         <td style="word-break: break-all;">
                                             <code>{{ $record['value'] }}</code>
-                                            <!-- 漂亮的備註樣式 -->
-                                            <div class="small text-muted mt-1 d-flex align-items-center" style="font-size: 0.8rem;">
-                                                <i class="bi bi-chat-left-text me-1 text-secondary"></i>
-                                                <span>{{ $record['note'] ?? '-' }}</span>
-                                            </div>
+                                            <!-- 漂亮的備註樣式（有值才顯示） -->
+                                            @if(!empty($record['note']))
+                                                <div class="small text-muted mt-1 d-flex align-items-center" style="font-size: 0.8rem;">
+                                                    <i class="bi bi-chat-left-text me-1 text-secondary"></i>
+                                                    <span>{{ $record['note'] }}</span>
+                                                </div>
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-1">
