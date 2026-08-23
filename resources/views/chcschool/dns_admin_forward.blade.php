@@ -1,5 +1,4 @@
-@include('chcschool.header')    
-    <h1>{{ $schoolName }}</h1>
+@include('chcschool.header')        
     <!-- 主要功能按鈕區域 -->
     <main class="container my-5">
         <div class="container mb-5">
@@ -19,27 +18,35 @@
             @endif            
 
             <div class="card shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-building fs-3"></i>
+                        <h2 class="h3 m-0 fw-bold">{{ $schoolName }}</h2>
+                    </div>
+                </div>
+
+                <!-- 2. 原本的 Zone 資訊與動作按鈕區 (標題改為小字/副標樣式) -->
+                <div class="card-header bg-light d-flex justify-content-between align-items-center py-2">
                     <div class="d-flex align-items-center gap-3">
-                        <h5 class="m-0 font-weight-bold text-primary">
-                            Zone: <code>{{ $zoneDomain }}</code> （Server: {{ $dnsServer }}）
-                        </h5>
+                        <span class="text-secondary font-weight-bold">
+                            Zone: <code class="fs-6 text-dark">{{ $zoneDomain }}</code>
+                        </span>
+                        <span class="badge bg-outline-secondary text-dark border">
+                            Server: {{ $dnsServer }}
+                        </span>
                         <span class="badge bg-secondary">共 {{ count($records) }} 筆記錄</span>
                     </div>
 
                     <!-- 頂部按鈕動作區 -->
                     <div class="d-flex align-items-center gap-2">
-                        <!-- 💡 新增：回到 DNS 管理總頁按鈕 -->
                         <a href="{{ route('dns_admin') }}" class="btn btn-outline-secondary btn-sm">
                             &larr; 回管理總頁
                         </a>
-
-                        <!-- 浮動面板按鈕 -->
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRecordModal">
                             + 新增紀錄
                         </button>
                     </div>
-                </div>
+                </div>                
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
