@@ -1551,15 +1551,13 @@ class ChcSchoolController extends Controller
                 $db->close();
             }      
 
-            return redirect()->route('dns.ptr6', ['networkSubnet' => $networkSubnet])
-                            ->with('success', "成功新增 IPv6 PTR 紀錄：{$targetDomain}");
+            return redirect()->back()->with('success', "成功新增 IPv6 PTR 紀錄：{$targetDomain}");
 
         } catch (\Net_DNS2_Exception $e) {
             $rcodeName = \Net_DNS2_Lookups::$rcode_name[$e->getCode()] ?? '';
             $extraMsg = $rcodeName ? " (錯誤碼: {$rcodeName})" : '';
 
-            return redirect()->route('dns.ptr6', ['networkSubnet' => $networkSubnet])
-                            ->with('error', "新增失敗: " . $e->getMessage() . $extraMsg);
+            return redirect()->back()->with('error', "新增失敗: " . $e->getMessage() . $extraMsg);
         }        
     }
 
