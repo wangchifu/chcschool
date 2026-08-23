@@ -1,4 +1,6 @@
 @include('chcschool.header')    
+    <h1>{{ $schoolName }}</h1>
+    <h1>{{ $schoolName }}</h1>
     <!-- 主要功能按鈕區域 -->
     <main class="container my-5">
         <div class="container mb-5">

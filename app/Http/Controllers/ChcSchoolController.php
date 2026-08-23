@@ -800,6 +800,7 @@ class ChcSchoolController extends Controller
             'records'    => $records,
             'error'      => $error,
             'schools'    => $schools,
+            'schoolName' => $this->getSchoolNameByZone($this->zoneDomain),
         ]);
     }
 
@@ -1193,6 +1194,7 @@ class ChcSchoolController extends Controller
             'error'         => $error,
             'schools'       => $schools,
             'dns_data'      => $this->getDnsData(), // 傳入 view 供上方按鈕列繪製切換選單
+            'schoolName' => $this->getSchoolNameByZone($this->zoneDomain),
         ]);
     }    
 
@@ -1467,6 +1469,7 @@ class ChcSchoolController extends Controller
             'error'         => $error,
             'schools'       => config('chcschool.schools', []),
             'dns_data'      => $this->getDnsData(),
+            'schoolName' => $this->getSchoolNameByZone($this->zoneDomain),
         ]);
     }
 
@@ -1663,6 +1666,25 @@ class ChcSchoolController extends Controller
 
         // 重設索引陣列回傳 (從關聯陣列轉為純索引陣列)
         return array_values($schools);
+    }
+
+    private function getSchoolNameByZone($targetZone)
+    {
+        $targetZone = strtolower(trim($targetZone));
+        $dnsData = $this->getDnsData();
+
+        foreach ($dnsData as $school) {
+            // 檢查該學校的 ipv4 列表中是否包含指定的 zone
+            if (isset($school['ipv4']) && is_array($school['ipv4'])) {
+                foreach ($school['ipv4'] as $zone) {
+                    if (strtolower(trim($zone)) === $targetZone) {
+                        return $school['name']; // 找到匹配，回傳學校名稱
+                    }
+                }
+            }
+        }
+
+        return '未知學校'; // 若找不到傳回預設值
     }
 
 }
