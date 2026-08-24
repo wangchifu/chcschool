@@ -22,18 +22,25 @@ class DnsController extends Controller
         $this->dnsServer = env('DDNS_SERVER', '127.0.0.1');               
         // 遠端資料庫設定
         $host     = $this->dnsServer;
-        $port     = 3306;             // 預設 3306
-        $dbName   = 'dns_records';      // 例如: 'dns_db'
-        $username = 'chcschool';           // 例如: 'root'
-        $password = 'chang1421';
+        $port     = 3306;             
+        $dbName   = 'dns_records';      
+        $username = env('DDNS_DB_USER');           
+        $password = env('DDNS_DB_PASS');
 
         // 設定 DSN (Data Source Name)
         $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset=utf8mb4";
-        $this->pdo = new \PDO($dsn, $username, $password, [
-        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-        \PDO::ATTR_TIMEOUT            => 5,
-        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-        ]);
+        
+        try {
+            $this->pdo = new \PDO($dsn, $username, $password, [
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_TIMEOUT            => 3, // 建議超時設為 3 秒，避免遠端 DB 沒通時讓網頁卡死太久
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            ]);
+        } catch (\PDOException $e) {
+            // 連線失敗時設為 null，讓後續的 if ($this->pdo) 判斷式能優雅地略過 DB 操作，不會讓整頁爛掉
+            $this->pdo = null;
+            \Log::error("MySQL 連線失敗: " . $e->getMessage());
+        }
     }
 
     public function index(Request $request, $my_zoneDomain = null)
