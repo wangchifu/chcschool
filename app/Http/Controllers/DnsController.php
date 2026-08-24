@@ -20,54 +20,24 @@ class DnsController extends Controller
     public function __construct()
     {        
         $this->dnsServer = env('DDNS_SERVER', '127.0.0.1');               
+        // 遠端資料庫設定
+        $host     = $this->dnsServer;
+        $port     = 3306;             // 預設 3306
+        $dbName   = 'dns_records';      // 例如: 'dns_db'
+        $username = 'chcschool';           // 例如: 'root'
+        $password = 'chang1421';
+
+        // 設定 DSN (Data Source Name)
+        $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset=utf8mb4";
+        $this->pdo = new \PDO($dsn, $username, $password, [
+        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+        \PDO::ATTR_TIMEOUT            => 5,
+        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+        ]);
     }
 
     public function index(Request $request, $my_zoneDomain = null)
-    {        
-        /**         
-         */
-        // 1. 確保目錄存在，若不存在則自動建立
-        $directory = storage_path('app/privacy');
-        if (!file_exists($directory)) {
-            mkdir($directory, 0755, true);
-        }
-
-        // 2. 建立/連接 SQLite 資料庫檔
-        $dbPath = storage_path('app/privacy/dns_records.db');
-        $this->db = new \SQLite3($dbPath);
-
-        // 3. 建立三個 資料表 (Tables)
-        $sql = "
-        CREATE TABLE IF NOT EXISTS forward (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name VARCHAR(191) NOT NULL,
-            type VARCHAR(191) NOT NULL,
-            value VARCHAR(191) NOT NULL,
-            zone VARCHAR(191) NOT NULL,
-            note VARCHAR(191) NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS ptr (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ip VARCHAR(191) NOT NULL,
-            name VARCHAR(191) NOT NULL,
-            zone VARCHAR(191) NOT NULL,
-            note VARCHAR(191) NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS ptr6 (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ip VARCHAR(191) NOT NULL,
-            name VARCHAR(191) NOT NULL,
-            zone VARCHAR(191) NOT NULL,
-            note VARCHAR(191) NOT NULL
-        );
-        ";
-
-        // 執行 SQL 建立資料表
-        $this->db->exec($sql);
-
-
+    {                
         if (!str_contains(auth()->user()->kind ?? '', '資訊')) {
             return redirect()->route('index');
         }                
@@ -82,17 +52,14 @@ class DnsController extends Controller
         // 取得持久化快取中 3 小時內新增的紀錄清單
         $recentAdded = Cache::get('recent_dns_records', []);
 
-        // 💡 1. 讀取 SQLite 備註資料並建立關聯索引陣列
+        // 💡 1. 從 MySQL 讀取備註並建立對應表（放在迴圈外，只查一次資料庫）
         $notesMap = [];
-        $dbPath = storage_path('app/privacy/dns_records.db');
-        if (file_exists($dbPath)) {
-            $db = new \SQLite3($dbPath);
-            $stmt = $db->prepare("SELECT name, type, value, note FROM forward WHERE zone = :zone");
-            $stmt->bindValue(':zone', $this->zoneDomain, SQLITE3_TEXT);
-            $result = $stmt->execute();
+        if ($this->pdo) {
+            $sql = "SELECT name, type, value, note FROM forward WHERE zone = :zone";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':zone' => $this->zoneDomain]);
 
-            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-                // 標準化 Key：字串轉小寫並去末端點，確保比對精準
+            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $keyName  = strtolower(rtrim($row['name'], '.'));
                 $keyType  = strtoupper($row['type']);
                 $keyValue = strtolower(rtrim($row['value'], '.'));
@@ -100,7 +67,6 @@ class DnsController extends Controller
                 $mapKey = "{$keyName}|{$keyType}|{$keyValue}";
                 $notesMap[$mapKey] = $row['note'];
             }
-            $db->close();
         }
 
         try {
@@ -164,7 +130,7 @@ class DnsController extends Controller
                     // 判斷該名稱是否在 3 小時內新增過
                     $createdAt = isset($recentAdded[$displayName]) ? Carbon::parse($recentAdded[$displayName]) : null;
 
-                    // 💡 2. 進行 SQLite 備註比對
+                    // 💡 2. 進行 MySQL 備註比對（直接利用迴圈外整理好的 $notesMap）
                     $cleanName  = strtolower(rtrim($displayName, '.'));
                     $cleanType  = strtoupper($rr->type);
                     $cleanValue = strtolower(rtrim($value, '.'));
@@ -177,7 +143,7 @@ class DnsController extends Controller
                         'type'       => $rr->type,
                         'ttl'        => $rr->ttl,
                         'value'      => trim($value),
-                        'note'       => $note, // 💡 帶入備註內容
+                        'note'       => $note, // 成功帶入備註
                         'created_at' => $createdAt,
                     ];
                 }
@@ -268,18 +234,19 @@ class DnsController extends Controller
             // 💡 3. 重新寫回 Cache (保存 3 小時)
             Cache::put('recent_dns_records', $recentAdded, 10800);            
 
-            //寫入資料庫
-            if(!empty($note)){
-                // 建立/連接 SQLite 資料庫檔
-                $dbPath = storage_path('app/privacy/dns_records.db');
-                $this->db = new \SQLite3($dbPath);
-                $stmt = $this->db->prepare("INSERT INTO forward (name, type, value, zone, note) VALUES (:name, :type, :value, :zone, :note)");
-                $stmt->bindValue(':name', $saveKey, SQLITE3_TEXT);
-                $stmt->bindValue(':type', $type, SQLITE3_TEXT);
-                $stmt->bindValue(':value', $value, SQLITE3_TEXT);
-                $stmt->bindValue(':zone', $this->zoneDomain, SQLITE3_TEXT);
-                $stmt->bindValue(':note', $note, SQLITE3_TEXT);
-                $stmt->execute();
+            // 寫入 MySQL 資料庫
+            if (!empty($note)) {
+                $sql = "INSERT INTO forward (name, type, value, zone, note) 
+                        VALUES (:name, :type, :value, :zone, :note)";
+                
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':name'  => $saveKey,
+                    ':type'  => $type,
+                    ':value' => $value,
+                    ':zone'  => $this->zoneDomain,
+                    ':note'  => $note,
+                ]);
             }
 
             return redirect()->route('dns.index')->with('success', "成功新增紀錄：{$saveKey} ({$type})");
@@ -333,20 +300,16 @@ class DnsController extends Controller
             $updater->delete($rr);
             $updater->update();
 
-            // 💡 刪除 BIND9 紀錄成功後，同步刪除 SQLite forward 資料表中的備註
-            $dbPath = storage_path('app/privacy/dns_records.db');
-            if (file_exists($dbPath)) {
-                $db = new \SQLite3($dbPath);
-
-                // 準備查詢條件：與寫入時的格式保持一致
-                // 註：若你的 forward 資料表 name 欄位存的是 displayName (如 '@' 或 'www')，則直接傳入 $name
-                $stmt = $db->prepare("DELETE FROM forward WHERE zone = :zone AND name = :name AND type = :type");
-                $stmt->bindValue(':zone', $this->zoneDomain, SQLITE3_TEXT);
-                $stmt->bindValue(':name', $name, SQLITE3_TEXT);
-                $stmt->bindValue(':type', $type, SQLITE3_TEXT);
+            // 💡 刪除 BIND9 紀錄成功後，同步刪除 MySQL forward 資料表中的備註
+            if ($this->pdo) {
+                $sql = "DELETE FROM forward WHERE zone = :zone AND name = :name AND type = :type";
                 
-                $stmt->execute();
-                $db->close();
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':zone' => $this->zoneDomain,
+                    ':name' => $name,
+                    ':type' => $type,
+                ]);
             }
 
             // 💡 使用 back() 可自動彈回上一頁並帶入成功訊息
@@ -502,16 +465,14 @@ class DnsController extends Controller
         // 3. 取得持久化快取中 3 小時內新增的紀錄清單
         $recentAdded = Cache::get('recent_ptr_records', []);
 
-        // 💡 4. 讀取 SQLite 的 ptr 資料表備註資料並建立關聯索引陣列
+        // 💡 4. 讀取 MySQL 的 ptr 資料表備註資料並建立關聯索引陣列
         $notesMap = [];
-        $dbPath = storage_path('app/privacy/dns_records.db');
-        if (file_exists($dbPath)) {
-            $db = new \SQLite3($dbPath);
-            $stmt = $db->prepare("SELECT ip, name, note FROM ptr WHERE zone = :zone");
-            $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
-            $result = $stmt->execute();
+        if ($this->pdo) {
+            $sql = "SELECT ip, name, note FROM ptr WHERE zone = :zone";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':zone' => $ptrZoneDomain]);
 
-            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 // 標準化 Key：IP 去空白，域名轉小寫並去除末端的點
                 $keyIp   = trim($row['ip']);
                 $keyName = strtolower(rtrim($row['name'], '.'));
@@ -519,7 +480,6 @@ class DnsController extends Controller
                 $mapKey = "{$keyIp}|{$keyName}";
                 $notesMap[$mapKey] = $row['note'];
             }
-            $db->close();
         }
 
         try {
@@ -668,20 +628,17 @@ class DnsController extends Controller
             $recentAdded[$fullIp] = $now->toDateTimeString();
             Cache::put('recent_ptr_records', $recentAdded, 10800);
 
-            // 寫入 SQLite 資料庫
-            if (!empty($note)) {
-                $dbPath = storage_path('app/privacy/dns_records.db');
-                $db = new \SQLite3($dbPath);
-
-                // 使用 REPLACE INTO 或 INSERT INTO
-                // 此處使用 fullIp 作為 ip，domain/targetDomain 作為 name
-                $stmt = $db->prepare("INSERT INTO ptr (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)");
-                $stmt->bindValue(':ip', $fullIp, SQLITE3_TEXT);             // 例如: "163.23.200.10"
-                $stmt->bindValue(':name', $targetDomain, SQLITE3_TEXT);     // 例如: "pc1.chc.edu.tw."
-                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);   // 例如: "200.23.163.in-addr.arpa"
-                $stmt->bindValue(':note', $note, SQLITE3_TEXT);
-                $stmt->execute();
-                $db->close();
+            // 寫入 MySQL 資料庫
+            if (!empty($note) && $this->pdo) {
+                $sql = "INSERT INTO ptr (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)";
+                
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':ip'   => $fullIp,          // 例如: "163.23.200.10"
+                    ':name' => $targetDomain,    // 例如: "pc1.chc.edu.tw."
+                    ':zone' => $ptrZoneDomain,  // 例如: "200.23.163.in-addr.arpa"
+                    ':note' => $note,
+                ]);
             }
 
             return redirect()->route('dns.ptr', ['networkSubnet' => $networkSubnet])
@@ -758,17 +715,15 @@ class DnsController extends Controller
                 Cache::put('recent_ptr_records', $recentAdded, 10800);
             }
 
-            // 💡 2. 同步刪除 SQLite ptr 資料表中的備註紀錄
-            $dbPath = storage_path('app/privacy/dns_records.db');
-            if (file_exists($dbPath)) {
-                $db = new \SQLite3($dbPath);
+            // 💡 2. 同步刪除 MySQL ptr 資料表中的備註紀錄
+            if ($this->pdo) {
+                $sql = "DELETE FROM ptr WHERE zone = :zone AND ip = :ip";
                 
-                $stmt = $db->prepare("DELETE FROM ptr WHERE zone = :zone AND ip = :ip");
-                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
-                $stmt->bindValue(':ip', $fullIp, SQLITE3_TEXT);
-                
-                $stmt->execute();
-                $db->close();
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':zone' => $ptrZoneDomain,
+                    ':ip'   => $fullIp,
+                ]);
             }
 
             return redirect()->back()->with('success', "成功刪除 PTR 反解紀錄：{$fullIp}");
@@ -798,16 +753,14 @@ class DnsController extends Controller
         if (!empty($ptrZoneDomain)) {
             $recentAdded = Cache::get('recent_ptr6_records', []);
 
-            // 💡 2. 讀取 SQLite ptr6 資料表備註資料 (使用 LOWER(zone) 確保大小寫無縫匹配)
+            // 💡 2. 讀取 MySQL ptr6 資料表備註資料 (使用 LOWER(zone) 確保大小寫無縫匹配)
             $notesMap = [];
-            $dbPath = storage_path('app/privacy/dns_records.db');
-            if (file_exists($dbPath)) {
-                $db = new \SQLite3($dbPath);
-                $stmt = $db->prepare("SELECT ip, name, note FROM ptr6 WHERE LOWER(zone) = :zone");
-                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
-                $result = $stmt->execute();
+            if ($this->pdo) {
+                $sql = "SELECT ip, name, note FROM ptr6 WHERE LOWER(zone) = :zone";
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([':zone' => $ptrZoneDomain]);
 
-                while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                     // 標準化 Key：IP (raw_fqdn) 與域名皆轉小寫並去除尾端的點
                     $keyIp   = strtolower(rtrim($row['ip'], '.'));
                     $keyName = strtolower(rtrim($row['name'], '.'));
@@ -815,7 +768,6 @@ class DnsController extends Controller
                     $mapKey = "{$keyIp}|{$keyName}";
                     $notesMap[$mapKey] = $row['note'];
                 }
-                $db->close();
             }
 
             try {
@@ -939,19 +891,18 @@ class DnsController extends Controller
             $recentAdded[$rawName] = $now->toDateTimeString();
             Cache::put('recent_ptr6_records', $recentAdded, 10800);
             
-            // 寫入 SQLite 資料庫
-            if (!empty($note)) { // 💡 有填備註才會寫入
-                $dbPath = storage_path('app/privacy/dns_records.db');
-                $db = new \SQLite3($dbPath);
-
-                $stmt = $db->prepare("INSERT INTO ptr6 (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)");
-                $stmt->bindValue(':ip', $rawName, SQLITE3_TEXT);           // 完整反解名稱 (小寫)
-                $stmt->bindValue(':name', $targetDomain, SQLITE3_TEXT);   // 目標域名
-                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT); // Zone 網段 (小寫)
-                $stmt->bindValue(':note', $note, SQLITE3_TEXT);
-                $stmt->execute();
-                $db->close();
-            }            
+            // 寫入 MySQL 資料庫
+            if (!empty($note) && $this->pdo) { // 💡 有填備註且 PDO 連線存在才會寫入
+                $sql = "INSERT INTO ptr6 (ip, name, zone, note) VALUES (:ip, :name, :zone, :note)";
+                
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':ip'   => $rawName,       // 完整反解名稱 (小寫)
+                    ':name' => $targetDomain,  // 目標域名
+                    ':zone' => $ptrZoneDomain, // Zone 網段 (小寫)
+                    ':note' => $note,
+                ]);
+            }           
 
             return redirect()->route('dns.ptr6', ['networkSubnet' => $networkSubnet])
                             ->with('success', "成功新增 IPv6 PTR 紀錄：{$targetDomain}");
@@ -1002,17 +953,15 @@ class DnsController extends Controller
                 Cache::put('recent_ptr6_records', $recentAdded, 10800);
             }
 
-            // 💡 同步刪除 SQLite ptr6 資料表中的備註紀錄
-            $dbPath = storage_path('app/privacy/dns_records.db');
-            if (file_exists($dbPath)) {
-                $db = new \SQLite3($dbPath);
-
-                $stmt = $db->prepare("DELETE FROM ptr6 WHERE zone = :zone AND ip = :ip");
-                $stmt->bindValue(':zone', $ptrZoneDomain, SQLITE3_TEXT);
-                $stmt->bindValue(':ip', rtrim($rawFqdn, '.'), SQLITE3_TEXT);
-
-                $stmt->execute();
-                $db->close();
+            // 💡 同步刪除 MySQL ptr6 資料表中的備註紀錄
+            if ($this->pdo) {
+                $sql = "DELETE FROM ptr6 WHERE zone = :zone AND ip = :ip";
+                
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':zone' => $ptrZoneDomain,
+                    ':ip'   => rtrim($rawFqdn, '.'),
+                ]);
             }
 
             return redirect()->back()->with('success', "成功刪除 IPv6 PTR 反解紀錄！");
