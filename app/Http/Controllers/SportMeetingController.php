@@ -126,10 +126,10 @@ class SportMeetingController extends Controller
             $studentsToUpdate = [];
             $classTeachers = [];
 
-            // 1. 一次性取出該學期所有學生，載入記憶體進行 Key-Value 快速比對
+            // 1. 一次取出該學期所有的學生完整資料 (載入記憶體做快速比對)
             $existingStudents = ClubStudent::where('semester', $semester)
-                ->pluck('id', 'no') // 建立 ['學號' => 'ID'] 對照表
-                ->toArray();
+                ->get()
+                ->keyBy('no'); // 以學號做為 Key
 
             foreach ($collection as $line) {
                 // 欄位檢查
@@ -147,10 +147,11 @@ class SportMeetingController extends Controller
                 // 日期與班級編號處理
                 $birthday = $line['生日(西元)']->format('Ymd');
                 $classNum = $line['年級(數字)'] . sprintf("%02s", $line['班序(數字)']) . sprintf("%02s", $line['座號']);
+                $studentNo = (string)$line['學號'];
 
                 $data = [
                     'semester' => $semester,
-                    'no' => $line['學號'],
+                    'no' => $studentNo,
                     'name' => $line['姓名'],
                     'pwd' => $birthday,
                     'class_num' => $classNum,
@@ -160,35 +161,42 @@ class SportMeetingController extends Controller
                 ];
 
                 // 比對學生是否存在
-                $studentNo = $line['學號'];
                 if (isset($existingStudents[$studentNo])) {
-                    // 已存在：附帶主鍵 id 進入更新陣列
-                    $data['id'] = $existingStudents[$studentNo];
-                    $studentsToUpdate[] = $data;
+                    $old = $existingStudents[$studentNo];
+
+                    // 2. 關鍵優化：只有資料真正「有變更」時才放入更新陣列
+                    if (
+                        $old->name !== $data['name'] ||
+                        $old->pwd !== $data['pwd'] ||
+                        $old->class_num !== $data['class_num'] ||
+                        $old->birthday !== $data['birthday'] ||
+                        $old->sex !== $data['sex']
+                    ) {
+                        $data['id'] = $old->id;
+                        $studentsToUpdate[] = $data;
+                    }
                 } else {
-                    // 不存在：進入新增陣列
+                    // 不存在，放入新增陣列
                     $data['created_at'] = now();
                     $studentsToInsert[] = $data;
                 }
             }
 
-            // 2. 批量寫入新增學生 (每 500 筆分批寫入)
+            // 3. 批量寫入新增學生 (每 500 筆一包)
             if (!empty($studentsToInsert)) {
                 foreach (array_chunk($studentsToInsert, 500) as $chunk) {
                     ClubStudent::insert($chunk);
                 }
             }
 
-            // 3. 批量更新舊有學生 (相容 Laravel 7 以下)
+            // 4. 只更新資料有變動的學生
             if (!empty($studentsToUpdate)) {
-                foreach (array_chunk($studentsToUpdate, 500) as $chunk) {
-                    foreach ($chunk as $studentData) {
-                        ClubStudent::where('id', $studentData['id'])->update($studentData);
-                    }
+                foreach ($studentsToUpdate as $studentData) {
+                    ClubStudent::where('id', $studentData['id'])->update($studentData);
                 }
             }
 
-            // 4. 批量處理導師與班級資料
+            // 5. 處理導師與班級資料 (加上變更比對)
             if (!empty($classTeachers)) {
                 $existingClasses = StudentClass::where('semester', $semester)
                     ->get()
@@ -203,13 +211,15 @@ class SportMeetingController extends Controller
                         $key = $year . '_' . $classNum;
 
                         if ($existingClasses->has($key)) {
-                            // 班級已存在：更新導師
-                            $existingClasses[$key]->update([
-                                'user_names' => $teacherName,
-                                'user_ids' => null,
-                            ]);
+                            $oldClass = $existingClasses[$key];
+                            // 導師姓名有變動才更新 DB
+                            if ($oldClass->user_names !== $teacherName || !is_null($oldClass->user_ids)) {
+                                $oldClass->update([
+                                    'user_names' => $teacherName,
+                                    'user_ids' => null,
+                                ]);
+                            }
                         } else {
-                            // 班級不存在：收集準備批量新增
                             $classesToInsert[] = [
                                 'semester' => $semester,
                                 'student_year' => $year,
