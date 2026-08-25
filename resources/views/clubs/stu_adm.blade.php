@@ -59,7 +59,9 @@
                               {{ $semester }}
                             </td>
                             <td>
-                                {{ $class_num }} <a href="{{ route('clubs.stu_adm_more',['semester'=>$semester,'student_class_id'=>null]) }}" class="btn btn-info btn-sm">詳細資料</a>
+                                @if($class_num > 0)
+                                    {{ $class_num }} <a href="{{ route('clubs.stu_adm_more',['semester'=>$semester,'student_class_id'=>null]) }}" class="btn btn-info btn-sm">詳細資料</a>
+                                @endif
                             </td>
                             <td>
                                 {{ $club_student_num }}   

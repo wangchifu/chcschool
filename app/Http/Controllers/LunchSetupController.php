@@ -263,59 +263,114 @@ class LunchSetupController extends Controller
     public function stu_store(Request $request)
     {
         $semester = $request->input('semester');
-        //處理檔案上傳
-        if ($request->hasFile('file')) {
 
+        // 處理檔案上傳
+        if ($request->hasFile('file')) {
             $file = $request->file('file');
             $collection = (new FastExcel)->import($file);
-            //dd($collection);
-            foreach ($collection as $line) {
 
-                if (!isset($line['姓名']) or !isset($line['性別']) or !isset($line['年級(數字)']) or !isset($line['班序(數字)']) or !isset($line['班序(數字)']) or !isset($line['生日(西元)']) or !isset($line['學號']) or !isset($line['座號']) or !isset($line['導師姓名'])) {
+            $studentsToInsert = [];
+            $studentsToUpdate = [];
+            $classTeachers = [];
+
+            // 1. 一次性取出該學期所有學生，載入記憶體進行 Key-Value 快速比對
+            $existingStudents = ClubStudent::where('semester', $semester)
+                ->pluck('id', 'no') // 建立 ['學號' => 'ID'] 對照表
+                ->toArray();
+
+            foreach ($collection as $line) {
+                // 欄位檢查
+                if (!isset($line['姓名'], $line['性別'], $line['年級(數字)'], $line['班序(數字)'], $line['生日(西元)'], $line['學號'], $line['座號'], $line['導師姓名'])) {
                     return back()->withErrors(['欄位有錯，請檢查 excel 檔']);
                 }
 
-                if (empty($line['姓名']) and empty($line['年級(數字)'])) {
+                if (empty($line['姓名']) && empty($line['年級(數字)'])) {
                     break;
                 }
-                $class_teacher[$line['年級(數字)']][$line['班序(數字)']] = $line['導師姓名'];
 
-                $att['semester'] = $semester;
-                $att['no'] = $line['學號'];
-                $att['name'] = $line['姓名'];
-                $b = explode('/', $line['生日(西元)']->format('Y/m/d'));
-                $att['pwd'] = $b[0] . sprintf("%02s", $b[1]) . sprintf("%02s", $b[2]);
-                $att['class_num'] = $line['年級(數字)'] . sprintf("%02s", $line['班序(數字)']) . sprintf("%02s", $line['座號']);
-                $att['birthday'] = $att['pwd'];
-                $att['sex'] = $line['性別'];
+                // 收集導師資料
+                $classTeachers[$line['年級(數字)']][$line['班序(數字)']] = $line['導師姓名'];
 
-                $student = ClubStudent::where('semester', $att['semester'])
-                    ->where('no', $att['no'])
-                    ->first();
-                if (empty($student)) {
-                    ClubStudent::create($att);
+                // 日期與班級編號處理
+                $birthday = $line['生日(西元)']->format('Ymd');
+                $classNum = $line['年級(數字)'] . sprintf("%02s", $line['班序(數字)']) . sprintf("%02s", $line['座號']);
+
+                $data = [
+                    'semester' => $semester,
+                    'no' => $line['學號'],
+                    'name' => $line['姓名'],
+                    'pwd' => $birthday,
+                    'class_num' => $classNum,
+                    'birthday' => $birthday,
+                    'sex' => $line['性別'],
+                    'updated_at' => now(),
+                ];
+
+                // 比對學生是否存在
+                $studentNo = $line['學號'];
+                if (isset($existingStudents[$studentNo])) {
+                    // 已存在：附帶主鍵 id 進入更新陣列
+                    $data['id'] = $existingStudents[$studentNo];
+                    $studentsToUpdate[] = $data;
                 } else {
-                    $student->update($att);
+                    // 不存在：進入新增陣列
+                    $data['created_at'] = now();
+                    $studentsToInsert[] = $data;
                 }
             }
-            foreach ($class_teacher as $k => $v) {
-                foreach ($v as $k1 => $v1) {
-                    $att2['semester'] = $semester;
-                    $att2['student_year'] = $k;
-                    $att2['student_class'] = $k1;
-                    $att2['user_names'] = $v1;
 
-                    $student_class = StudentClass::where('semester', $att2['semester'])
-                        ->where('student_year', $att2['student_year'])
-                        ->where('student_class', $att2['student_class'])
-                        ->first();
-                    if (empty($student_class)) {
-                        StudentClass::create($att2);
-                    } else {
-                        //避免先前拉過API 已經有導師了
-                        $att2['user_ids'] = null;
-                        $student_class->update($att2);
+            // 2. 批量寫入新增學生 (每 500 筆一包)
+            if (!empty($studentsToInsert)) {
+                foreach (array_chunk($studentsToInsert, 500) as $chunk) {
+                    ClubStudent::insert($chunk);
+                }
+            }
+
+            // 3. 批量更新舊有學生 (相容 Laravel 7 以下，避免呼叫 upsert)
+            if (!empty($studentsToUpdate)) {
+                foreach ($studentsToUpdate as $studentData) {
+                    ClubStudent::where('id', $studentData['id'])->update($studentData);
+                }
+            }
+
+            // 4. 批量處理導師與班級資料
+            if (!empty($classTeachers)) {
+                // 使用傳統閉包語法，相容舊版 PHP
+                $existingClasses = StudentClass::where('semester', $semester)
+                    ->get()
+                    ->keyBy(function ($item) {
+                        return $item->student_year . '_' . $item->student_class;
+                    });
+
+                $classesToInsert = [];
+
+                foreach ($classTeachers as $year => $classes) {
+                    foreach ($classes as $classNum => $teacherName) {
+                        $key = $year . '_' . $classNum;
+
+                        if ($existingClasses->has($key)) {
+                            // 班級已存在：更新導師
+                            $existingClasses[$key]->update([
+                                'user_names' => $teacherName,
+                                'user_ids' => null,
+                            ]);
+                        } else {
+                            // 班級不存在：收集準備批量新增
+                            $classesToInsert[] = [
+                                'semester' => $semester,
+                                'student_year' => $year,
+                                'student_class' => $classNum,
+                                'user_names' => $teacherName,
+                                'user_ids' => null,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                        }
                     }
+                }
+
+                if (!empty($classesToInsert)) {
+                    StudentClass::insert($classesToInsert);
                 }
             }
         }
