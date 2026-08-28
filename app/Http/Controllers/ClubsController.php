@@ -758,7 +758,7 @@ class ClubsController extends Controller
                     return back()->withErrors(['error' => ['密碼錯誤！若系統生日登記錯誤，請洽學校管理者！']]);
                 } else {
                     session(['parents_test_error' => 0]);   
-                    return back()->withErrors(['error' => ['密碼正確！請放心等待正式開放！']]);
+                    return back()->withErrors(['error' => [$check->name.' 密碼正確！請放心等待正式開放！']]);
                 };
             }
         }

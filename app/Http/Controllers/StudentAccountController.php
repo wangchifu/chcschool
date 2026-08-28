@@ -143,9 +143,9 @@ class StudentAccountController extends Controller
          if (isset($stu_data[$classnum][$birthday])) {
                 session(['student_check_error' => 0]); // 成功找到帳號，重置錯誤計數
                 $account = $stu_data[$classnum][$birthday];
-                return redirect()->route('student_account.check')->withErrors(['message' => ['找到帳號：'.$account]]);                                
+                return redirect()->route('student_account.check')->withErrors(['message' => [$classnum.' 找到帳號：'.$account]]);                                
           } else {
-                return redirect()->route('student_account.check')->withErrors(['message' => ['查無此帳號，請確認班級座號和生日是否正確。']]);                
+                return redirect()->route('student_account.check')->withErrors(['message' => [$classnum.' 查無此帳號，請確認班級座號和生日是否正確。']]);                
           }
         
     }
