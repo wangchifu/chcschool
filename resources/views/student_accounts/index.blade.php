@@ -38,7 +38,21 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $student['classnum'] ?? '--' }}</td>
-                                        <td>{{ $student['birthday'] ?? '--' }}</td>
+                                        
+                                        {{-- 西元生日顯示區塊 --}}
+                                        <td>
+                                            @if(!empty($student['is_invalid_birthday']))
+                                                {{-- 格式錯誤：顯示原本輸入的內容，並加上紅字提示 --}}
+                                                <span class="text-danger fw-bold">
+                                                    {{ $student['birthday'] }}
+                                                </span>
+                                                <span class="badge bg-danger ms-1">格式錯誤 (需為8碼數字)</span>
+                                            @else
+                                                {{-- 格式正確：正常顯示 --}}
+                                                {{ $student['birthday'] ?? '--' }}
+                                            @endif
+                                        </td>
+
                                         <td>
                                             <code class="fw-bold">{{ $student['account'] ?? '未設定' }}</code>
                                         </td>

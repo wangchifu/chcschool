@@ -31,34 +31,34 @@ class StudentAccountController extends Controller
             $file = storage_path('app/privacy/'.$school_code.'/student_account/'.$files[0]);            
             $collection = (new FastExcel)->import($file);                        
             foreach ($collection as $line) {
-                // 1. 先去除欄位前後空白（避免使用者打了空白鍵）
+                // 1. 取得原始內容並清除前後空白
                 $classnum = isset($line['學生班級座號']) ? trim((string)$line['學生班級座號']) : '';
                 $rawBirthday = $line['西元生日'] ?? null;
                 $account  = isset($line['帳號']) ? trim((string)$line['帳號']) : '';
 
-                // 2. 檢查是否為「空白行」：當所有關鍵欄位皆無內容時跳過
+                // 2. 忽略完全空白的列
                 if ($classnum === '' && empty($rawBirthday) && $account === '') {
-                    continue; // 忽略此空白行
+                    continue;
                 }
 
-                // 3. 處理生日格式（兼顧 DateTime 物件與手打字串/數字）
+                // 3. 處理生日：保留原始格式（物件則轉成 Y/m/d 字串）
                 if ($rawBirthday instanceof \DateTimeInterface) {
-                    $birthday = $rawBirthday->format('Ymd'); // 或改為 'Y-m-d'
-                } elseif (is_string($rawBirthday) || is_numeric($rawBirthday)) {
-                    // 清除可能輸入的斜線、橫線或空白
-                    $birthday = str_replace(['/', '-', ' '], '', trim((string)$rawBirthday));
+                    $birthdayStr = $rawBirthday->format('Y/m/d'); // Excel 自動產生的日期物件
                 } else {
-                    $birthday = null;
+                    $birthdayStr = trim((string)$rawBirthday);
                 }
 
-                // 4. 裝入結果陣列
+                // 4. 驗證是否為「標準 8 碼純數字」格式
+                // 恰好 8 碼數字（例：20160626）為合法，否則標記為格式錯誤
+                $isValidBirthday = (bool)preg_match('/^\d{8}$/', $birthdayStr);
+
                 $stu_data['classnum'] = $classnum ?: null;
-                $stu_data['birthday'] = $birthday ?: null;
+                $stu_data['birthday'] = $birthdayStr ?: null;
+                $stu_data['is_invalid_birthday'] = !$isValidBirthday && $birthdayStr !== ''; // 是否需要警告
                 $stu_data['account']  = $account ?: null;                      
                 
                 $all_students[] = $stu_data;          
-            }            
-        }        
+            }              
         $data = [   
             'admin'=>$admin,
             'school_code'=>$school_code,         
