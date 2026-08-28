@@ -25,11 +25,23 @@ class StudentAccountController extends Controller
     {
         $admin = check_power('學生帳號', 'A', auth()->user()->id);        
         $school_code = school_code();
-        $files = get_files(storage_path('app/privacy/' . $school_code . '/student_account'));  
-        $all_students = []; // 建議先建立一個容器存結果    
-        if(!empty($files)){
+        
+        // 取得檔案列表
+        $raw_files = get_files(storage_path('app/privacy/' . $school_code . '/student_account'));  
+        
+        $files = [];
+        $all_students = [];    
+
+        if (!empty($raw_files)) {
+            // 確保 $files 陣列傳給 View 時都是「純字串檔名」
+            foreach ($raw_files as $f) {
+                $files[] = is_object($f) ? $f->getFilename() : (string)$f;
+            }
+
+            // 讀取第一個檔案
             $file = storage_path('app/privacy/'.$school_code.'/student_account/'.$files[0]);            
             $collection = (new FastExcel)->import($file);                        
+
             foreach ($collection as $line) {
                 // 1. 取得原始內容並清除前後空白
                 $classnum = isset($line['學生班級座號']) ? trim((string)$line['學生班級座號']) : '';
@@ -49,24 +61,26 @@ class StudentAccountController extends Controller
                 }
 
                 // 4. 驗證是否為「標準 8 碼純數字」格式
-                // 恰好 8 碼數字（例：20160626）為合法，否則標記為格式錯誤
                 $isValidBirthday = (bool)preg_match('/^\d{8}$/', $birthdayStr);
 
                 $stu_data['classnum'] = $classnum ?: null;
                 $stu_data['birthday'] = $birthdayStr ?: null;
-                $stu_data['is_invalid_birthday'] = !$isValidBirthday && $birthdayStr !== ''; // 是否需要警告
+                $stu_data['is_invalid_birthday'] = !$isValidBirthday && $birthdayStr !== '';
                 $stu_data['account']  = $account ?: null;                      
                 
                 $all_students[] = $stu_data;          
-            }              
+            }
+        } // <-- 修正點：補上此處關閉 if(!empty(...)) 的括號
+
         $data = [   
-            'admin'=>$admin,
-            'school_code'=>$school_code,         
-            'files'=>$files,
-            'all_students'=>$all_students,
+            'admin' => $admin,
+            'school_code' => $school_code,         
+            'files' => $files,
+            'all_students' => $all_students,
         ];
-        return view('student_accounts.index',$data);
-    }   
+
+        return view('student_accounts.index', $data);
+    }
     
     public function upload(Request $request)
     {
