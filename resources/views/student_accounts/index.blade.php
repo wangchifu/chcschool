@@ -20,17 +20,8 @@
                         <hr>
                         已上傳檔案，只能存在一個，其餘請刪除：<br>
                         @foreach($files as $file)
-                            @php
-                                // 如果 $file 是物件則取出檔名，如果是字串則直接使用
-                                $fileName = is_object($file) ? $file->getFilename() : $file;
-                            @endphp
-                            <a href="{{ route('student_account.delete', ['file' => $fileName]) }}" onclick="return confirm('確定要刪除這個檔案嗎？')">
-                                <i class="fas fa-times-circle text-danger"></i>
-                            </a> 
-                            <a href="{{ asset('storage/'.$school_code.'/student_account/'.$fileName) }}" target="_blank">
-                                {{ $fileName }}
-                            </a><br>
-                        @endforeach                        
+                            <a href="{{ route('student_account.delete', ['file' => $file]) }}" onclick="return confirm('確定要刪除這個檔案嗎？')"><i class="fas fa-times-circle text-danger"></i></a> <a href="{{ asset('storage/'.$school_code.'/student_account/'.$file) }}" target="_blank">{{ $file }}</a><br>
+                        @endforeach
                         <hr>
                         學生帳號清單：<br>
                         <table class="table table-hover table-bordered align-middle">

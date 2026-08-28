@@ -31,9 +31,24 @@ class StudentAccountController extends Controller
             $file = storage_path('app/privacy/'.$school_code.'/student_account/'.$files[0]);            
             $collection = (new FastExcel)->import($file);                        
             foreach ($collection as $line) {
-                $stu_data['classnum'] = (isset($line['學生班級座號']))?$line['學生班級座號']:null;
-                $stu_data['birthday'] = (isset($line['西元生日']))?$line['西元生日']:null;
-                $stu_data['account'] = (isset($line['帳號']))?$line['帳號']:null;                      
+                // 1. 抓取原始資料
+                $rawBirthday = $line['西元生日'] ?? null;
+                
+                // 2. 判斷型態並統一轉換為字串
+                if ($rawBirthday instanceof \DateTimeInterface) {
+                    // 如果 Excel 把它自動轉成了 DateTime 物件
+                    $birthday = $rawBirthday->format('YMD'); // 轉為 20160612 (或 'Y-m-d' 視你的需求而定)
+                } elseif (is_string($rawBirthday) || is_numeric($rawBirthday)) {
+                    // 如果是使用者手打的字串或純數字，移除不必要的符號或空白
+                    $birthday = str_replace(['/', '-', ' '], '', trim((string)$rawBirthday));
+                } else {
+                    $birthday = null;
+                }
+
+                $stu_data['classnum'] = (string)($line['學生班級座號'] ?? '');
+                $stu_data['birthday'] = $birthday ?? '--';
+                $stu_data['account']  = (string)($line['帳號'] ?? '');                      
+                
                 $all_students[] = $stu_data;          
             }
         }        
