@@ -31,26 +31,33 @@ class StudentAccountController extends Controller
             $file = storage_path('app/privacy/'.$school_code.'/student_account/'.$files[0]);            
             $collection = (new FastExcel)->import($file);                        
             foreach ($collection as $line) {
-                // 1. 抓取原始資料
+                // 1. 先去除欄位前後空白（避免使用者打了空白鍵）
+                $classnum = isset($line['學生班級座號']) ? trim((string)$line['學生班級座號']) : '';
                 $rawBirthday = $line['西元生日'] ?? null;
-                
-                // 2. 判斷型態並統一轉換為字串
+                $account  = isset($line['帳號']) ? trim((string)$line['帳號']) : '';
+
+                // 2. 檢查是否為「空白行」：當所有關鍵欄位皆無內容時跳過
+                if ($classnum === '' && empty($rawBirthday) && $account === '') {
+                    continue; // 忽略此空白行
+                }
+
+                // 3. 處理生日格式（兼顧 DateTime 物件與手打字串/數字）
                 if ($rawBirthday instanceof \DateTimeInterface) {
-                    // 如果 Excel 把它自動轉成了 DateTime 物件
-                    $birthday = $rawBirthday->format('YMD'); // 轉為 20160612 (或 'Y-m-d' 視你的需求而定)
+                    $birthday = $rawBirthday->format('Ymd'); // 或改為 'Y-m-d'
                 } elseif (is_string($rawBirthday) || is_numeric($rawBirthday)) {
-                    // 如果是使用者手打的字串或純數字，移除不必要的符號或空白
+                    // 清除可能輸入的斜線、橫線或空白
                     $birthday = str_replace(['/', '-', ' '], '', trim((string)$rawBirthday));
                 } else {
                     $birthday = null;
                 }
 
-                $stu_data['classnum'] = (string)($line['學生班級座號'] ?? '');
-                $stu_data['birthday'] = $birthday ?? '--';
-                $stu_data['account']  = (string)($line['帳號'] ?? '');                      
+                // 4. 裝入結果陣列
+                $stu_data['classnum'] = $classnum ?: null;
+                $stu_data['birthday'] = $birthday ?: null;
+                $stu_data['account']  = $account ?: null;                      
                 
                 $all_students[] = $stu_data;          
-            }
+            }            
         }        
         $data = [   
             'admin'=>$admin,
