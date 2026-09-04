@@ -16,8 +16,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::where('disable',null)
-            ->orderBy('order_by')                        
+        $users = User::where('disable',null)            
+            ->orderBy('order_by')           
+            ->orderBy('name')             
             ->get();
 
         $data = [

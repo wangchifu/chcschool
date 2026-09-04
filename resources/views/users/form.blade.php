@@ -1,7 +1,8 @@
 <div class="card my-4">
     <h3 class="card-header">列表</h3>
     <div class="card-body">
-        <a href="javascript:open_window('{{ route('users.create') }}','新視窗')" class="btn btn-success btn-sm">新增本機帳號</a>
+        <a href="javascript:open_window('{{ route('users.create') }}','新視窗')" class="btn btn-success btn-sm">新增本機帳號</a><br>
+        <span class="text-danger">以下如果有相同姓名的帳號，請離職 gsuite 的舊帳號</span>
         <table class="table table-striped" style="word-break:break-all;">
             <thead class="thead-light">
             <tr>
@@ -10,7 +11,8 @@
                 <th>職稱</th>
                 <th>群組</th>
                 <th>類別</th>
-                <th>動作</th>
+                <th>最後登入</th>
+                <th>動作</th>                
             </tr>
             </thead>
             <tbody>
@@ -48,6 +50,9 @@
                         @endif
                     </td>
                     <td>
+                        {{ $user->updated_at }}
+                    </td>
+                    <td>
                         <a href="javascript:open_window('{{ route('users.edit',$user->id) }}','新視窗')" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i> 修改</a>
                         @if($user->login_type=="local")
                             <a href="{{ route('users.back_pwd',$user->id) }}" class="btn btn-warning" onclick="return confirm('確定？')">還原密碼</a>
@@ -55,7 +60,7 @@
                         @if($user->id != auth()->user()->id)
                             <a href="{{ route('sims.impersonate',$user->id) }}" class="btn btn-secondary btn-sm" onclick="return confirm('確定模擬？')"><i class="fas fa-user-ninja"></i> 模擬登入</a>
                         @endif
-                    </td>
+                    </td>                    
                 </tr>
             @endforeach
             </tbody>
