@@ -33,13 +33,13 @@
     @if($setup->title_image)
         @if(!empty($photo_data))
             <?php $carousel_fade =($setup->title_image_style ==2 )?"carousel-fade":""; ?>
-            <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade  }}" data-ride="carousel">
+            <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }}" data-ride="carousel" role="region" aria-label="焦點新聞輪播圖">
                 <ol class="carousel-indicators">
                     <?php $n=0; ?>
                     @foreach($photo_data as $k1=>$v1)
                         @foreach($v1 as $k2=>$v2)
                         <?php $active = ($n==0)?"active":""; ?>
-                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $n }}" class="{{ $active }}"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $n }}" class="{{ $active }}" aria-label="切換至第 {{ $n + 1 }} 張投影片"></li>
                         <?php $n++; ?>
                         @endforeach
                     @endforeach
@@ -48,18 +48,22 @@
                     <?php $n=0; ?>
                     @foreach($photo_data as $k1=>$v1)
                         @foreach($v1 as $k2=>$v2)
-                            <?php $active = ($n==0)?"active":""; ?>
+                            <?php 
+                                $active = ($n==0)?"active":""; 
+                                $img_alt = !empty($v2['title']) ? $v2['title'] : (!empty($v2['desc']) ? $v2['desc'] : '橫幅圖片 '.$k1);
+                            ?>
                             <div class="carousel-item {{ $active }}">
                                 @if($v2['link'] != null)
-                                    <a href="{{ $v2['link'] }}" target="_blank">
-                                        <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" alt="有連結的橫幅{{ $k1 }}">
+                                    <a href="{{ $v2['link'] }}" target="_blank" title="{{ $img_alt }} (另開新視窗)">
+                                        <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" alt="{{ $img_alt }}">
                                     </a>
                                 @else
-                                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" alt="橫幅{{ $k1 }}">
+                                    <img class="d-block w-100" src="{{ asset('storage/'.$school_code.'/title_image/random/'.$k2) }}" alt="{{ $img_alt }}">
                                 @endif
                                 <div class="carousel-caption d-none d-md-block">
+                                    {{-- 無障礙 HM1130100C 修正：將 h1 改為 p 標籤加粗，避免輪播圖破壞全頁唯一 h1 的階層結構 --}}
                                     @if($v2['title'] != null)
-                                        <h1>{{ $v2['title'] }}</h1>
+                                        <p class="h3 font-weight-bold">{{ $v2['title'] }}</p>
                                     @endif
                                     @if($v2['desc'] != null)
                                         <p><strong>{{ $v2['desc'] }}</strong></p>
@@ -70,13 +74,13 @@
                         @endforeach
                     @endforeach
                 </div>
-                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev" aria-label="上一張投影片">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
+                    <span class="sr-only">上一張投影片</span>
                 </a>
-                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next" aria-label="下一張投影片">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
+                    <span class="sr-only">下一張投影片</span>
                 </a>
             </div>
         @endif
@@ -84,6 +88,9 @@
 @endsection
 
 @section('content')
+    {{-- 無障礙 HM1130100C 修正：提供網頁全頁唯一的最高層級 h1 標題 --}}
+    <h1 class="sr-only">{{ $setup->site_name }} - 首頁主要內容區</h1>
+
     <link href="{{ asset('css/block_style.css') }}" rel="stylesheet">
     <?php $module_setup = get_module_setup(); ?>
     @if(isset($module_setup['校園跑馬燈']))
@@ -97,15 +104,15 @@
         @if($school_marquees->count()>0)
             <div class="row justify-content-center">
                 <div class="col-lg-{{ $school_marquee_width }}">
-                    <div class="alert alert-{{ $school_marquee_color }} p-1" style="margin-top: -15px; overflow: hidden;">
+                    <div class="alert alert-{{ $school_marquee_color }} p-1" style="margin-top: -15px; overflow: hidden;" role="region" aria-label="最新消息跑馬燈">
                         
-                        <div class="marquee-wrapper" id="marquee-container" 
+                        <div class="marquee-wrapper" id="marquee-container" tabindex="0"
                             style="height: 25px; overflow: hidden; position: relative; background: transparent;">                            
                             
                             <div class="marquee-inner" id="marquee-content">
                                 @foreach($school_marquees as $school_marquee)
                                     <span class="marquee-item" style="margin-right: 50px; display: inline-block;">
-                                        📣 {{ $school_marquee->title }}
+                                        <span aria-hidden="true">📣</span> {{ $school_marquee->title }}
                                     </span>
                                 @endforeach
                             </div>
@@ -150,18 +157,19 @@
                                 $block_position = ($block->block_position==null)?"text-left":$block->block_position;
                                 if($block->block_position=="disable") $block_position = null;
                             ?>
-                            <h5 class="{{ $block_position }}">
+                            {{-- 第二層標題 h2：維持全頁區塊標題統一性 --}}
+                            <h2 class="h5 {{ $block_position }}">
                                 @if($block_position) 
                                     {{ $title }}
                                 @endif
                                 @auth
                                     @if(auth()->user()->admin==1)
                                         <div style="float: right;padding-right:10px">
-                                            <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')">📝</a>
+                                            <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')" title="編輯區塊：{{ $title }}" aria-label="編輯區塊：{{ $title }}">📝</a>
                                         </div>
                                     @endif
                                 @endauth
-                            </h5>
+                            </h2>
                         </div>
                         @endif
                         <div class="content2" id="block{{ $block->id }}" style="margin-bottom: 5px;">
@@ -228,16 +236,17 @@
     @if(!empty($setup->footer))
         <style>
             #footer{background-color:#f8f9fa;}
-            #footer_bottom{background-color: #CCCCCC;}
+            #footer_bottom{background-color: #6c757d; color: #ffffff;}
+            #footer_bottom a{color: #ffffff; text-decoration: underline;}
         </style>
-        <footer class="font-small py-4" id="footer">
+        <footer class="font-small py-4" id="footer" role="contentinfo" aria-label="頁尾資訊區">
             <div class="container-fluid text-center text-md-left">
                     <div class="row justify-content-center">
                         <div class="col-md-11">                            
                             @auth
                                 @if(auth()->user()->admin==1)  
                                     <div style="float: right;">
-                                        <a href="javascript:open_window('{{ route('setups.edit_footer') }}','新視窗')">📝</a>
+                                        <a href="javascript:open_window('{{ route('setups.edit_footer') }}','新視窗')" title="編輯頁尾內容" aria-label="編輯頁尾內容">📝</a>
                                     </div>
                                 @endif
                             @endauth
@@ -248,14 +257,11 @@
         </footer>
     @endif
     @if($setup->disable_right==null)
-        <div class="footer-copyright text-center text-black-50 py-3" id="footer_bottom">
-            {{ date('Y') }} Copyright ©　<a href="{{ route('index','index') }}">{{ $setup->site_name }}</a>　訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
+        <div class="footer-copyright text-center py-3" id="footer_bottom">
+            {{ date('Y') }} Copyright © <a href="{{ route('index','index') }}" title="返回網站首頁">{{ $setup->site_name }}</a> 訪客人次:{{ $setup->views }} 訪客IP：{{ GetIP() }}
         </div>
     @endif
 
-    <!-- 
-    警告
-    -->
     <?php $admin = \App\User::where('username','admin')->first(); ?>
     @auth
         @if(auth()->user()->admin==1)
@@ -265,12 +271,12 @@
                   $("#myModal").modal('show');
                 });
               </script>
-            <div class="modal" tabindex="-1" id="myModal">
-                <div class="modal-dialog">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title text-danger">嚴重資安危險!</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <h5 class="modal-title text-danger" id="myModalLabel">嚴重資安危險!</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="關閉對話視窗">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
@@ -278,7 +284,7 @@
                         請你立即變更本機帳號 admin 的密碼，不得使用預設密碼。若未變更而發生資安事件，貴校須負相關責任！
                         <br>步驟為：
                         <br>1.本機登入 admin 帳號
-                        <br>2.右上角 <i class="fas fa-user"></i> 符號按一下，選擇「更改密碼」
+                        <br>2.右上角 <i class="fas fa-user" aria-hidden="true"></i> 符號按一下，選擇「更改密碼」
                         <br>3.輸入舊密碼，與兩次新密碼，「送出」完成變更。
                     </div>
                     <div class="modal-footer">
@@ -291,80 +297,77 @@
         @endif
     @endauth    
 @endsection
+
 @if(isset($module_setup['校園跑馬燈']))
     @if($school_marquees->count()>0)
         <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. 取得後端傳入的參數 (若變數名稱不同請自行調整)
-            const behavior = "{{ $school_marquee_behavior }}";     // scroll, slide, alternate
-            const direction = "{{ $school_marquee_direction }}";   // left, right, up, down
+            const behavior = "{{ $school_marquee_behavior }}";     
+            const direction = "{{ $school_marquee_direction }}";   
             const amount = parseInt("{{ $school_marquee_scrollamount }}") || 6;
 
             const container = document.getElementById('marquee-container');
             const content = document.getElementById('marquee-content');
 
-            // 2. 基礎樣式設定
-            content.style.position = 'absolute';
-            content.style.display = 'flex';
-            content.style.whiteSpace = 'nowrap';
-            
-            if (direction === 'up' || direction === 'down') {
-                content.style.flexDirection = 'column';
+            if (container && content) {
+                content.style.position = 'absolute';
+                content.style.display = 'flex';
+                content.style.whiteSpace = 'nowrap';
+                
+                if (direction === 'up' || direction === 'down') {
+                    content.style.flexDirection = 'column';
+                }
+
+                const contentWidth = content.offsetWidth;
+                const containerWidth = container.offsetWidth;
+                const contentHeight = content.offsetHeight;
+                const containerHeight = container.offsetHeight;
+
+                let keyframes = '';
+                if (direction === 'left') {
+                    keyframes = `@keyframes marqueeMove { 
+                        0% { transform: translateX(${containerWidth}px); } 
+                        100% { transform: translateX(-${contentWidth}px); } 
+                    }`;
+                } else if (direction === 'right') {
+                    keyframes = `@keyframes marqueeMove { 
+                        0% { transform: translateX(-${contentWidth}px); } 
+                        100% { transform: translateX(${containerWidth}px); } 
+                    }`;
+                } else if (direction === 'up') {
+                    keyframes = `@keyframes marqueeMove { 
+                        0% { transform: translateY(${containerHeight}px); } 
+                        100% { transform: translateY(-${contentHeight}px); } 
+                    }`;
+                } else if (direction === 'down') {
+                    keyframes = `@keyframes marqueeMove { 
+                        0% { transform: translateY(-${containerHeight}px); } 
+                        100% { transform: translateY(${containerHeight}px); } 
+                    }`;
+                }
+
+                const style = document.createElement('style');
+                style.innerHTML = keyframes;
+                document.head.appendChild(style);
+
+                const duration = (direction === 'left' || direction === 'right') 
+                                ? (contentWidth + containerWidth) / (amount * 10) 
+                                : (contentHeight + containerHeight) / (amount * 5);
+
+                content.style.animation = `marqueeMove ${duration}s linear infinite`;
+
+                if (behavior === 'slide') {
+                    content.style.animationIterationCount = '1';
+                    content.style.animationFillMode = 'forwards';
+                } else if (behavior === 'alternate') {
+                    content.style.animationDirection = 'alternate';
+                }
+
+                container.onmouseover = () => content.style.animationPlayState = 'paused';
+                container.onmouseout = () => content.style.animationPlayState = 'running';
+                container.onfocusin = () => content.style.animationPlayState = 'paused';
+                container.onfocusout = () => content.style.animationPlayState = 'running';
             }
-
-            // 3. 動態計算動畫路徑
-            const contentWidth = content.offsetWidth;
-            const containerWidth = container.offsetWidth;
-            const contentHeight = content.offsetHeight;
-            const containerHeight = container.offsetHeight;
-
-            // 定義動畫 Keyframes
-            let keyframes = '';
-            if (direction === 'left') {
-                keyframes = `@keyframes marqueeMove { 
-                    0% { transform: translateX(${containerWidth}px); } 
-                    100% { transform: translateX(-${contentWidth}px); } 
-                }`;
-            } else if (direction === 'right') {
-                keyframes = `@keyframes marqueeMove { 
-                    0% { transform: translateX(-${contentWidth}px); } 
-                    100% { transform: translateX(${containerWidth}px); } 
-                }`;
-            } else if (direction === 'up') {
-                keyframes = `@keyframes marqueeMove { 
-                    0% { transform: translateY(${containerHeight}px); } 
-                    100% { transform: translateY(-${contentHeight}px); } 
-                }`;
-            } else if (direction === 'down') {
-                keyframes = `@keyframes marqueeMove { 
-                    0% { transform: translateY(-${contentHeight}px); } 
-                    100% { transform: translateY(${containerHeight}px); } 
-                }`;
-            }
-
-            // 注入 CSS
-            const style = document.createElement('style');
-            style.innerHTML = keyframes;
-            document.head.appendChild(style);
-
-            // 4. 套用動畫效果
-            const duration = (direction === 'left' || direction === 'right') 
-                            ? (contentWidth + containerWidth) / (amount * 10) 
-                            : (contentHeight + containerHeight) / (amount * 5);
-
-            content.style.animation = `marqueeMove ${duration}s linear infinite`;
-
-            // 5. 處理 Behavior
-            if (behavior === 'slide') {
-                content.style.animationIterationCount = '1';
-                content.style.animationFillMode = 'forwards';
-            } else if (behavior === 'alternate') {
-                content.style.animationDirection = 'alternate';
-            }
-
-            // 滑鼠移入停止 (可選，通常跑馬燈需要這個功能)
-            container.onmouseover = () => content.style.animationPlayState = 'paused';
-            container.onmouseout = () => content.style.animationPlayState = 'running';
         });
         </script>
     @endif

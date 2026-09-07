@@ -2,21 +2,42 @@
 
 @section('nav_post_active', 'active')
 
-@section('title', '關鍵字搜尋 | ')
+@section('title', '搜尋「'.$search.'」公告 | ')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-11">
-            <h1>搜尋「{{ $search }}」公告</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('posts.index') }}">公告列表</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">關鍵字搜尋</li>
-                </ol>
-            </nav>
+<style>
+    /* 無障礙 HM1020401C 修正：麵包屑與分頁 Focus 高對比視覺提示 */
+    .breadcrumb a:focus-visible,
+    .pagination .page-link:focus-visible {
+        outline: 3px solid #0056b3 !important;
+        outline-offset: 2px !important;
+        z-index: 5;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-11">
+        <!-- 無障礙 HM1010301C 修正：語意化頁面主標題 -->
+        <h1 class="h2 mb-3">搜尋「{{ $search }}」公告</h1>
+
+        <!-- 麵包屑導覽列 -->
+        <nav aria-label="麵包屑導覽">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('posts.index') }}">公告列表</a></li>
+                <li class="breadcrumb-item active" aria-current="page">關鍵字搜尋</li>
+            </ol>
+        </nav>
+
+        <!-- 主要搜尋結果清單區塊 -->
+        <main aria-label="關鍵字「{{ $search }}」的公告搜尋結果">
             @include('posts.list')
+        </main>
+
+        <!-- 無障礙 HM1150100C 修正：分頁導覽區塊無障礙包裹 -->
+        <nav aria-label="關鍵字「{{ $search }}」搜尋結果頁碼分頁導覽" class="d-flex justify-content-center mt-3">
             {{ $posts->appends(['search'=>$search])->links() }}
-        </div>
+        </nav>
     </div>
+</div>
 @endsection

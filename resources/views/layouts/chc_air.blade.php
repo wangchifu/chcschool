@@ -1,22 +1,20 @@
 <?php
 
-if(date('i')>10){
+if(date('i') > 10){
     $chk_file = date('YmdH0000').".txt";
 }else{
     if(date('H') <> '00'){
-        $last = sprintf('%02s',date('H')-1);
+        $last = sprintf('%02s', date('H') - 1);
         $chk_file = date('Ymd').$last.'0000.txt';
     }else{
         $chk_file = "nothing.txt";
     }
-    
 }
 $save_path = storage_path('app/privacy/chc_air/'); 
 
 if(file_exists($save_path.$chk_file)){    
     $air_data = unserialize(file_get_contents($save_path.$chk_file));
-}elseif($chk_file=="nothing.txt"){    
-    // 💡 修正點 1：前 10 分鐘不要直接給空陣列！先試著讀取上一個小時的檔案當備份，避免畫面全白
+}elseif($chk_file == "nothing.txt"){    
     $prev_hour = sprintf('%02s', date('H') - 1);
     $backup_file = date('Ymd') . $prev_hour . '0000.txt';
     if(file_exists($save_path.$backup_file)){
@@ -31,7 +29,6 @@ if(file_exists($save_path.$chk_file)){
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    // 💡 修正點 2：縮短超時時間！連線改 0.5 秒，總等待改 1.5 秒。API 只要超過 1.5 秒沒反應就立刻斷開，不讓使用者轉圈圈
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 500); 
     curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1500);       
     $html = curl_exec($ch);
@@ -50,7 +47,6 @@ if(file_exists($save_path.$chk_file)){
     }
     
     if(!isset($data) || empty($data)){
-        // 💡 修正點 3：萬一 API 真的斷線或超時沒回傳，立刻去抓今天隨便一個現有的快取檔案來頂替，絕對不給空陣列
         $files = glob($save_path . date('Ymd') . '*.txt');
         if (!empty($files)) {
             $air_data = unserialize(file_get_contents(end($files)));
@@ -82,7 +78,6 @@ if(file_exists($save_path.$chk_file)){
     }
 }
 
-
 $SiteName = $request->input('SiteName');
 
 $options = "";
@@ -96,22 +91,46 @@ if(empty($_COOKIE['chc_air'])){
     if($SiteName) $select_site = $SiteName;
 }
 
-
 setcookie("chc_air", $select_site, time()+31556926);
 
-
 foreach($air_data as $k=>$v){
-    $selected = ($k==$select_site)?"selected":"";
+    $selected = ($k == $select_site) ? "selected" : "";
     $options .= "<option value='$k' $selected>$k</option>";
 }
 
+// 判斷 AQI 與對應圖示/無障礙替代文字
+$aqi_status_text = "未知";
+if(isset($air_data[$select_site]['AQI'])){
+    $aqi_val = $air_data[$select_site]['AQI'];
+    if($aqi_val <= 50){
+        $img = "50.jpg";
+        $aqi_status_text = "良好 (AQI ".$aqi_val.")";
+    } elseif($aqi_val >= 51 && $aqi_val <= 100){
+        $img = "100.jpg";
+        $aqi_status_text = "普通 (AQI ".$aqi_val.")";
+    } elseif($aqi_val >= 101 && $aqi_val <= 150){
+        $img = "150.jpg";
+        $aqi_status_text = "對敏感族群不健康 (AQI ".$aqi_val.")";
+    } elseif($aqi_val >= 151 && $aqi_val <= 200){
+        $img = "200.jpg";
+        $aqi_status_text = "對所有族群不健康 (AQI ".$aqi_val.")";
+    } elseif($aqi_val >= 201){
+        $img = "300.jpg";
+        $aqi_status_text = "非常不健康至危害 (AQI ".$aqi_val.")";
+    }
+} else {
+    $img = "000.jpg";
+    $aqi_status_text = "暫無資料";
+}
 ?>
 
 <div class="container-fluid p-0">
     <div class="card border-0 rounded-0">
         <div class="card-body p-0">
             <div class="form-group mb-0">
-                <select name="SiteName" id="SiteName" class="form-control custom-select rounded-0 shadow-sm font-weight-bold text-dark border-top-0 border-left-0 border-right-0">
+                {{-- 無障礙 HM1130100C 修正：新增對應標籤以利螢幕閱讀器辨識 --}}
+                <label for="SiteName" class="sr-only">選擇空氣品質測站</label>
+                <select name="SiteName" id="SiteName" class="form-control custom-select rounded-0 shadow-sm font-weight-bold text-dark border-top-0 border-left-0 border-right-0" title="請選擇空氣品質測站" aria-label="選擇空氣品質測站">
                     <?php echo $options; ?>
                 </select>
             </div>
@@ -128,29 +147,9 @@ foreach($air_data as $k=>$v){
                     ?>
                 </h1>
                 
-                <?php
-                    if(isset($air_data[$select_site]['AQI'])){
-                        if($air_data[$select_site]['AQI'] <= 50){
-                            $img = "50.jpg";
-                        }
-                        if($air_data[$select_site]['AQI'] >= 51 and $air_data[$select_site]['AQI'] <= 100){
-                            $img = "100.jpg";
-                        }
-                        if($air_data[$select_site]['AQI'] >= 101 and $air_data[$select_site]['AQI'] <= 150){
-                            $img = "150.jpg";
-                        }
-                        if($air_data[$select_site]['AQI'] >= 151 and $air_data[$select_site]['AQI'] <= 200){
-                            $img = "200.jpg";
-                        }
-                        if($air_data[$select_site]['AQI'] >= 201){
-                            $img = "300.jpg";
-                        }
-                    }else{
-                        $img = "000.jpg";
-                    }
-                ?>
                 <div class="w-100">
-                    <img src="{{ asset('images/chc_air/'.$img) }}" class="w-100 d-block" alt="AQI 狀況圖">
+                    {{-- 無障礙 HM1240401C 修正：替圖片加上具體反映空氣品質狀態的 alt 文字 --}}
+                    <img src="{{ asset('images/chc_air/'.$img) }}" class="w-100 d-block" alt="空氣品質等級圖示：目前狀態為{{ $aqi_status_text }}">
                 </div>
             </div>
 
@@ -173,7 +172,7 @@ foreach($air_data as $k=>$v){
 <script>
     $('#SiteName').change(
         function(){
-            location="?SiteName=" + encodeURIComponent($('#SiteName').val());
+            location = "?SiteName=" + encodeURIComponent($('#SiteName').val());
         }
     );
 </script>

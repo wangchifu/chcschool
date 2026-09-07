@@ -26,11 +26,45 @@
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
+
+    <style>
+        /* 無障礙 HM1020401C 修正：鍵盤 Focus 視覺高對比提示 */
+        a:focus-visible, 
+        button:focus-visible {
+            outline: 3px solid #0056b3 !important;
+            outline-offset: 2px !important;
+        }
+
+        /* 列印專用樣式優化 */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+        }
+    </style>
 </head>
 
-<body id="page-top" onload='window.print();'>
-<div class="container-fluid">
-    @yield('content')
+{{-- 無障礙 HM1220200C 修正：移除 onload="window.print();" 強制彈出，避免中斷螢幕閱讀器操作 --}}
+<body id="page-top" style="background-color: {{ $bg_color }}; font-family: 'Arial', 'Microsoft JhengHei', '微軟正黑體', sans-serif;">
+
+<!-- 無障礙友善列印控制區塊（列印時自動隱藏） -->
+<div class="container-fluid no-print py-3 bg-light border-bottom">
+    <div class="d-flex justify-content-between align-items-center">
+        <span class="text-secondary small">若要列印此頁面，請點選右側按鈕或使用鍵盤快捷鍵 (Ctrl + P)</span>
+        <button type="button" class="btn btn-primary btn-sm font-weight-bold" onclick="window.print();" aria-label="點擊此處開啟列印功能視窗">
+            <i class="fas => print" aria-hidden="true"></i> 列印此頁
+        </button>
+    </div>
 </div>
+
+<!-- 無障礙 HM1110100C 修正：使用語意化 <main> 標籤包覆頁面主要內容 -->
+<main id="main-content" class="container-fluid pt-3" role="main" tabindex="-1">
+    @yield('content')
+</main>
+
 </body>
 </html>

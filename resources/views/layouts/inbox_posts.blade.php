@@ -7,20 +7,22 @@ $inbox_posts = \App\Post::where('inbox',1)
                 ->get();
 ?>
 <div class="table-responsive">
-    <table class="table table-striped" style="word-break:break-all;">
+    {{-- 無障礙表格結構修正：加入 aria-label 描述表格用途 --}}
+    <table class="table table-striped" style="word-break:break-all;" aria-label="常駐公告列表">
         <thead class="thead-light">
         <tr>
-            <th nowrap width="120px">
+            {{-- 無障礙 CS2140401C 修正：將 120px, 100px, 250px, 80px 全數改為 rem 相對單位 --}}
+            <th scope="col" class="text-nowrap" style="width: 7.5rem;">
                 日期
             </th>
-            <th nowrap width="100px">
+            <th scope="col" class="text-nowrap" style="width: 6.25rem;">
                 類別
             </th>
-            <th nowrap style="min-width:250px;">
+            <th scope="col" class="text-nowrap" style="min-width: 15.625rem;">
                 標題
             </th>
-            <th nowrap width="100px">發佈者</th>
-            <th nowrap width="80px">點閱</th>
+            <th scope="col" class="text-nowrap" style="width: 6.25rem;">發佈者</th>
+            <th scope="col" class="text-nowrap" style="width: 5rem;">點閱</th>
         </tr>
         </thead>
         <tbody>
@@ -37,10 +39,10 @@ $inbox_posts = \App\Post::where('inbox',1)
             </td>
             <td>
                 @if($post->top)
-                    <p class="badge badge-danger">置頂</p>
+                    <span class="badge badge-danger">置頂</span>
                 @endif
                 @if($post->inbox)
-                    <p class="badge badge-warning">常駐</p>
+                    <span class="badge badge-warning">常駐</span>
                 @endif
                 <?php
                 if($post->insite==1){
@@ -61,21 +63,31 @@ $inbox_posts = \App\Post::where('inbox',1)
                 @if($post->insite==1)
                     <span class="text-danger">[ 內部公告 ]</span>
                 @endif
-                @if($can_see)
-                    <a href="{{ route('posts.show',$post->id) }}">{{ $title }}</a>
-                @else
 
+                {{-- 無障礙 HM1240401C 修正：補上完整標題提示說明 --}}
+                @if($can_see)
+                    <a href="{{ route('posts.show',$post->id) }}" title="閱讀公告：{{ $post->title }}" aria-label="閱讀公告：{{ $post->title }}">{{ $title }}</a>
+                @else
                     {{ $title }}
                 @endif
+
+                {{-- 無障礙 1.1.1 修正：圖示補上 aria-hidden 與隱藏朗讀文字 --}}
                 @if(!empty($photos))
-                    <span class="text-success"><i class="fas fa-image"></i></span>
+                    <span class="text-success ml-1" title="附有圖片檔">
+                        <i class="fas fa-image" aria-hidden="true"></i>
+                        <span class="sr-only">（附有圖片檔）</span>
+                    </span>
                 @endif
                 @if(!empty($files))
-                    <span class="text-info"><i class="fas fa-download"></i></span>
+                    <span class="text-info ml-1" title="附有附件下載">
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        <span class="sr-only">（附有附件下載）</span>
+                    </span>
                 @endif
             </td>
             <td>
-                <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                {{-- 無障礙 HM1240401C 修正：補上 title 與 aria-label --}}
+                <a href="{{ route('posts.job_title',$post->job_title) }}" title="查看發佈者 {{ $post->job_title }} 的所有公告" aria-label="查看發佈者 {{ $post->job_title }} 的所有公告">{{ $post->job_title }}</a>
             </td>
             <td>
                 {{ $post->views }}

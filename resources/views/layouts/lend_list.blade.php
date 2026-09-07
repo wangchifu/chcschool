@@ -2,257 +2,184 @@
 $lend_orders = \App\LendOrder::orderBy('id','DESC')
             ->paginate(10);
         
-        $lend_orders2 = \App\LendOrder::where('lend_date',date('Y-m-d'))
+$lend_orders2 = \App\LendOrder::where('lend_date',date('Y-m-d'))
             ->get();
 
-        $lend_orders3 = \App\LendOrder::where('back_date',date('Y-m-d'))
+$lend_orders3 = \App\LendOrder::where('back_date',date('Y-m-d'))
             ->get();     
-        $lend_sections = config('chcschool.lend_sections');
-        $sections_array = config('chcschool.lend_sections');
+$lend_sections = config('chcschool.lend_sections');
+$sections_array = config('chcschool.lend_sections');
 ?>
 
-<a href="{{ route('lends.index') }}" class="btn btn-primary btn-sm">我要借用</a><br><br>
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">今日要借出</a>
+{{-- 無障礙 HM1240401C 修正：按鈕補上完整的 title 與 aria-label --}}
+<a href="{{ route('lends.index') }}" class="btn btn-primary btn-sm mb-3" title="前往申請物品借用頁面" aria-label="前往申請物品借用頁面">我要借用</a>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist" aria-label="物品借用記錄頁籤">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true" title="切換至今日要借出列表">今日要借出</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">今日要歸還</a>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false" title="切換至今日要歸還列表">今日要歸還</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">近十筆借單</a>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false" title="切換至近十筆借單記錄">近十筆借單</a>
     </li>
-  </ul>
-  <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <br>
-        <table>
-            <tr>
-                <td>
-                    <a href="#!" onclick="change_date(-1,'last_lend','lend_date')">
-                    <i class="fas fa-angle-left"></i>往前
-                    </a>
-                </td>
-                <td>
-                    <input type="date" value="{{ date('Y-m-d') }}" class="form-control" id="this_date1" readonly style="font-size:20px;font-weight:bold;color:black">
-                </td>
-                <td>
-                    <a href="#!" onclick="change_date(1,'last_lend','lend_date')">
-                    往後<i class="fas fa-angle-right"></i>
-                    </a>
-                </td>
-            </tr>
-        </table>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    {{-- 頁籤一：今日要借出 --}}
+    <div class="tab-pane fade show active py-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="d-flex align-items-center mb-3">
+            {{-- 無障礙 HM1240401C 修正：改用標準 button 並提供明確 title/aria-label --}}
+            <button type="button" class="btn btn-outline-secondary mr-2" onclick="change_date(-1,'last_lend','lend_date')" title="查詢前一天的借出記錄" aria-label="查詢前一天的借出記錄">
+                <i class="fas fa-angle-left" aria-hidden="true"></i> 往前一天
+            </button>
+            
+            {{-- 無障礙 HM1130100C 修正：輸入框補上輔助 label --}}
+            <label for="this_date1" class="sr-only">選擇借出日期</label>
+            <input type="date" value="{{ date('Y-m-d') }}" class="form-control w-auto font-weight-bold text-dark mr-2" id="this_date1" readonly aria-readonly="true">
+            
+            <button type="button" class="btn btn-outline-secondary" onclick="change_date(1,'last_lend','lend_date')" title="查詢後一天的借出記錄" aria-label="查詢後一天的借出記錄">
+                往後一天 <i class="fas fa-angle-right" aria-hidden="true"></i>
+            </button>
+        </div>
+
         <div class="table-responsive">
             <div id="last_lend">
-                <table class="table table-border table-striped">
-                    <tr>
-                        <th>
-                            填寫時間
-                        </th>
-                        <th>
-                            借用人
-                        </th>
-                        <th>
-                            借用物品
-                        </th>
-                        <th>
-                            借用時間
-                        </th>
-                        <th>
-                            歸還時間
-                        </th>
-                        <th>
-                            備註
-                        </th>
-                    </tr>                                    
+                <table class="table table-bordered table-striped" aria-label="今日借出物品列表">
+                    <caption class="sr-only">今日借出物品明細清單</caption>
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">填寫時間</th>
+                            <th scope="col">借用人</th>
+                            <th scope="col">借用物品</th>
+                            <th scope="col">借用時間</th>
+                            <th scope="col">歸還時間</th>
+                            <th scope="col">備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @foreach($lend_orders2 as $lend_order)
                         <tr>
-                            <td>
-                                {{ $lend_order->created_at }}
-                            </td>
-                            <td>
-                                {{ $lend_order->user->name }}
-                            </td>
-                            <td>
-                                {{ $lend_order->lend_item->name }}<br>{{ $lend_order->num }}
-                            </td>
-                            <td>
-                                {{ $lend_order->lend_date }}<br>{{ $sections_array[$lend_order->lend_section] }}
-                            </td>
-                            <td>
-                                {{ $lend_order->back_date }}<br>{{ $sections_array[$lend_order->back_section] }}
-                            </td>
-                            <td>
-                                {{ $lend_order->ps }}
-                            </td>
+                            <td>{{ $lend_order->created_at }}</td>
+                            <td>{{ $lend_order->user->name }}</td>
+                            <td>{{ $lend_order->lend_item->name }}<br>數量：{{ $lend_order->num }}</td>
+                            <td>{{ $lend_order->lend_date }}<br>{{ $sections_array[$lend_order->lend_section] }}</td>
+                            <td>{{ $lend_order->back_date }}<br>{{ $sections_array[$lend_order->back_section] }}</td>
+                            <td>{{ $lend_order->ps }}</td>
                         </tr>
-                        @endforeach                                    
+                        @endforeach
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <br>
-        <table>
-            <tr>
-                <td>
-                    <a href="#!" onclick="change_date(-1,'next_lend','back_date')">
-                    <i class="fas fa-angle-left"></i>往前
-                    </a>
-                </td>
-                <td>
-                    <input type="date" value="{{ date('Y-m-d') }}" class="form-control" id="this_date2" readonly style="font-size:20px;font-weight:bold;color:black">
-                </td>
-                <td>
-                    <a href="#!" onclick="change_date(1,'next_lend','back_date')">
-                    往後<i class="fas fa-angle-right"></i>
-                    </a>
-                </td>
-            </tr>
-        </table>
+
+    {{-- 頁籤二：今日要歸還 --}}
+    <div class="tab-pane fade py-3" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="d-flex align-items-center mb-3">
+            <button type="button" class="btn btn-outline-secondary mr-2" onclick="change_date(-1,'next_lend','back_date')" title="查詢前一天的歸還記錄" aria-label="查詢前一天的歸還記錄">
+                <i class="fas fa-angle-left" aria-hidden="true"></i> 往前一天
+            </button>
+            
+            <label for="this_date2" class="sr-only">選擇歸還日期</label>
+            <input type="date" value="{{ date('Y-m-d') }}" class="form-control w-auto font-weight-bold text-dark mr-2" id="this_date2" readonly aria-readonly="true">
+            
+            <button type="button" class="btn btn-outline-secondary" onclick="change_date(1,'next_lend','back_date')" title="查詢後一天的歸還記錄" aria-label="查詢後一天的歸還記錄">
+                往後一天 <i class="fas fa-angle-right" aria-hidden="true"></i>
+            </button>
+        </div>
+
         <div class="table-responsive">
             <div id="next_lend">
-            <table class="table table-border table-striped">
-                <tr>
-                    <th>
-                        填寫時間
-                    </th>
-                    <th>
-                        借用人
-                    </th>
-                    <th>
-                        借用物品
-                    </th>
-                    <th>
-                        借用時間
-                    </th>
-                    <th>
-                        歸還時間
-                    </th>
-                    <th>
-                        備註
-                    </th>
-                </tr>
-                <div id="today_back">
-                    @foreach($lend_orders3 as $lend_order)
-                    <tr>
-                        <td>                                        
-                            {{ $lend_order->created_at }}
-                        </td>
-                        <td>
-                            {{ $lend_order->user->name }}
-                        </td>
-                        <td>
-                            {{ $lend_order->lend_item->name }}<br>{{ $lend_order->num }}
-                        </td>
-                        <td>
-                            {{ $lend_order->lend_date }}<br>{{ $sections_array[$lend_order->lend_section] }}
-                        </td>
-                        <td>
-                            {{ $lend_order->back_date }}<br>{{ $sections_array[$lend_order->back_section] }}
-                        </td>
-                        <td>
-                            {{ $lend_order->ps }}
-                        </td>
-                    </tr>
-                    @endforeach
-                </div>
-            </table>
+                <table class="table table-bordered table-striped" aria-label="今日歸還物品列表">
+                    <caption class="sr-only">今日歸還物品明細清單</caption>
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">填寫時間</th>
+                            <th scope="col">借用人</th>
+                            <th scope="col">借用物品</th>
+                            <th scope="col">借用時間</th>
+                            <th scope="col">歸還時間</th>
+                            <th scope="col">備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($lend_orders3 as $lend_order)
+                        <tr>
+                            <td>{{ $lend_order->created_at }}</td>
+                            <td>{{ $lend_order->user->name }}</td>
+                            <td>{{ $lend_order->lend_item->name }}<br>數量：{{ $lend_order->num }}</td>
+                            <td>{{ $lend_order->lend_date }}<br>{{ $sections_array[$lend_order->lend_section] }}</td>
+                            <td>{{ $lend_order->back_date }}<br>{{ $sections_array[$lend_order->back_section] }}</td>
+                            <td>{{ $lend_order->ps }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-        <br>
+
+    {{-- 頁籤三：近十筆借單 --}}
+    <div class="tab-pane fade py-3" id="contact" role="tabpanel" aria-labelledby="contact-tab">
         <div class="table-responsive">
-            <table class="table table-border table-striped">
-                <tr>
-                    <th>
-                        填寫時間
-                    </th>
-                    <th>
-                        借用人
-                    </th>
-                    <th>
-                        借用物品
-                    </th>
-                    <th>
-                        借用時間
-                    </th>
-                    <th>
-                        歸還時間
-                    </th>
-                    <th>
-                        備註
-                    </th>
-                </tr>
-                @foreach($lend_orders as $lend_order)
-                <?php
-                    $lend_items = \App\LendItem::where('lend_class_id',$lend_order->lend_item->lend_class_id)->get();
-                ?>
-                <tr>
-                    <td>                        
-                        {{ $lend_order->created_at }}
-                    </td>
-                    <td>
-                        {{ $lend_order->user->name }}
-                    </td>
-                    <td>                              
-                        {{ $lend_order->lend_item->name }}<br>                                                                                     
-                        {{ $lend_order->num }}                                                                            
-                    </td>
-                    <td>
-                        {{ $lend_order->lend_date }}<br>
-                        {{ $lend_sections[$lend_order->lend_section] }}
-                    </td>
-                    <td>
-                        {{ $lend_order->back_date }}<br>
-                        {{ $lend_sections[$lend_order->back_section] }}
-                    </td>
-                    <td>
-                        {{ $lend_order->ps }}
-                    </td>
-                </tr>
-                @endforeach
+            <table class="table table-bordered table-striped" aria-label="最近十筆借用記錄列表">
+                <caption class="sr-only">最近十筆借用記錄清單</caption>
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">填寫時間</th>
+                        <th scope="col">借用人</th>
+                        <th scope="col">借用物品</th>
+                        <th scope="col">借用時間</th>
+                        <th scope="col">歸還時間</th>
+                        <th scope="col">備註</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($lend_orders as $lend_order)
+                    <tr>
+                        <td>{{ $lend_order->created_at }}</td>
+                        <td>{{ $lend_order->user->name }}</td>
+                        <td>{{ $lend_order->lend_item->name }}<br>數量：{{ $lend_order->num }}</td>
+                        <td>{{ $lend_order->lend_date }}<br>{{ $lend_sections[$lend_order->lend_section] }}</td>
+                        <td>{{ $lend_order->back_date }}<br>{{ $lend_sections[$lend_order->back_section] }}</td>
+                        <td>{{ $lend_order->ps }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
             </table>
-            {{  $lend_orders->links() }}
+            {{ $lend_orders->links() }}
         </div>
     </div>
-  </div>
+</div>
 
-  <script>
+<script>
     function change_date(n,id,action){
-        if(action == 'lend_date'){
-            var this_date = $('#this_date1').val();
-        }
-        if(action == 'back_date'){
-            var this_date = $('#this_date2').val();
-        }
+        var this_date = (action == 'lend_date') ? $('#this_date1').val() : $('#this_date2').val();
         var date = new Date(this_date);
         date.setDate(date.getDate() + n );
         date = formatDate(date);    
+        
         if(action == 'lend_date'){
             $('#this_date1').val(date);
-        }
-        if(action == 'back_date'){
+        } else {
             $('#this_date2').val(date); 
         }
                
-        //alert(date);
         $.ajax({
             url: 'https://{{ $_SERVER['HTTP_HOST'] }}'+'/lends/check_order_out_clean/'+date+'/'+action,
             type : 'get',
             dataType : 'json',
-            //data : $('#sunday_form').serialize(),
             success : function(result) {
                 if(result != 'failed') {
                     document.getElementById(id).innerHTML = get_table(result);
                 }
             },
             error: function(result) {
-                alert('失敗');
+                alert('載入失敗，請稍後再試');
             }
-        })
+        });
     }
 
     function formatDate(date) {
@@ -261,25 +188,20 @@ $lend_orders = \App\LendOrder::orderBy('id','DESC')
             day = '' + d.getDate(),
             year = d.getFullYear();
 
-        if (month.length < 2) 
-            month = '0' + month;
-        if (day.length < 2) 
-            day = '0' + day;
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
 
         return [year, month, day].join('-');
     }
 
-    
-
     function get_table(result){
-        data = "<table class='table table-border table-striped'><tr><th>填寫時間</th><th>借用人</th><th>借用物品</th><th>借用時間</th><th>歸還時間</th><th>備註</th></tr>";
+        var data = "<table class='table table-bordered table-striped' aria-label='動態載入的借用記錄列表'><thead class='thead-light'><tr><th scope='col'>填寫時間</th><th scope='col'>借用人</th><th scope='col'>借用物品</th><th scope='col'>借用時間</th><th scope='col'>歸還時間</th><th scope='col'>備註</th></tr></thead><tbody>";
         for(var k in result){
             var d = new Date(result[k]['created_at']);            
-            dt = d.toLocaleString('sv');
-            data = data+"<tr><td>"+dt+"</td><td>"+result[k]['user']+"</td><td>"+result[k]['lend_item']+"<br>"+result[k]['num']+"</td><td>"+result[k]['lend_date']+"<br>"+result[k]['lend_section']+"</td><td>"+result[k]['back_date']+"<br>"+result[k]['back_section']+"</td><td>"+result[k]['ps']+"</td></tr>";
+            var dt = d.toLocaleString('sv');
+            data += "<tr><td>"+dt+"</td><td>"+result[k]['user']+"</td><td>"+result[k]['lend_item']+"<br>數量："+result[k]['num']+"</td><td>"+result[k]['lend_date']+"<br>"+result[k]['lend_section']+"</td><td>"+result[k]['back_date']+"<br>"+result[k]['back_section']+"</td><td>"+result[k]['ps']+"</td></tr>";
         }
-        data = data+"</table>";
+        data += "</tbody></table>";
         return data;
     }
-
-</script>  
+</script>

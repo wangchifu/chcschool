@@ -492,3 +492,55 @@ function line_bot($group_id,$token,$string){
     $result = curl_exec($ch);
     curl_close($ch);
 }
+
+function clean_font_size_units($html)
+{
+    if (empty($html)) return $html;
+
+    // 1. 將 font-size: xxpt 轉為 rem (12pt ~ 0.75rem, 16pt ~ 1rem, 24pt ~ 1.5rem)
+    $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*pt/i', function ($matches) {
+        $rem = round($matches[1] / 12, 2); // 12pt 約等於 1rem
+        return "font-size: {$rem}rem";
+    }, $html);
+
+    // 2. 將 font-size: xxpx 轉為 rem (16px ~ 1rem, 20px ~ 1.25rem)
+    $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*px/i', function ($matches) {
+        $rem = round($matches[1] / 16, 2); // 16px 約等於 1rem
+        return "font-size: {$rem}rem";
+    }, $html);
+
+    // 3. 清理 FCKeditor/Word 產生的舊式標籤 <font size="..." 或 <span font-size="...">
+    $html = preg_replace('/<font[^>]*>(.*?)<\/font>/i', '$1', $html);
+
+    return $html;
+}
+
+function fix_empty_links($html) {
+    if (empty($html)) return $html;
+
+    // 1. 自動修復殘缺的 <p 或 <p<a 標籤
+    $html = preg_replace('/<p(?![a-z>])/i', '<p>', $html);
+
+    // 2. 清除純空白或內文為空的無效 <a> 標籤
+    $pattern = '/<a\b[^>]*>(?:&nbsp;|\s|&#160;)*<\/a>/iu';
+    $html = preg_replace($pattern, '', $html);
+
+    // 3. 自動為「純網址連結」補上 title 屬性 (解決 HM1240401C 規範 requirements)
+    $html = preg_replace_callback(
+        '/<a\b([^>]*?)href=["\']([^"\']+)["\']([^>]*?)>(https?:\/\/[^\s<]+)<\/a>/i',
+        function ($matches) {
+            $attrs = $matches[1] . $matches[3];
+            $url = $matches[2];
+            $text = $matches[4];
+
+            // 若沒有寫 title，自動補上連結目的說明
+            if (!str_contains(strtolower($attrs), 'title=')) {
+                return '<a href="' . $url . '" title="前往連結：' . htmlspecialchars($text) . '" ' . trim($attrs) . '>' . $text . '</a>';
+            }
+            return $matches[0];
+        },
+        $html
+    );
+
+    return $html;
+}

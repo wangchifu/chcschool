@@ -20,25 +20,28 @@ $last_month = $dt->subMonthsNoOverflow(1)->format('Y-m');
 $this_month_date = get_month_date($this_month);
 $first_w = get_date_w($this_month_date[1]);
 ?>
+
 @can('create',\App\Post::class)
     <script src="{{ asset('gijgo/js/gijgo.min.js') }}" type="text/javascript"></script>
     <link href="{{ asset('gijgo/css/gijgo.min.css') }}" rel="stylesheet" type="text/css">
+    
     {{ Form::open(['route' => 'monthly_calendars.block_store', 'method' => 'POST','id'=>'create_calendar_form','onsubmit'=>'return false']) }}
-    <table>
-        <tr>
-            <td>
-                <input id="item_date" name="item_date" required maxlength="10" value="{{ date('Y-m-d') }}">
-            </td>
-            <td>
-                {{ Form::text('item',null,['id'=>'item','class' => 'form-control','required'=>'required', 'placeholder' => '事項']) }}
-            </td>
-            <td>
-                <button type="submit" class="btn btn-success btn-sm" onclick="if(confirm('您確定送出嗎?')) add_item('{{ $this_month }}');else return false">
-                    <i class="fas fa-plus"></i> 新增事項
-                </button>
-            </td>
-        </tr>
-    </table>
+    <div class="form-row align-items-center mb-3">
+        <div class="col-auto">
+            {{-- 無障礙 HM1130100C 修正：補上對應的標籤 --}}
+            <label for="item_date" class="sr-only">選擇日期</label>
+            <input id="item_date" name="item_date" class="form-control" required maxlength="10" value="{{ date('Y-m-d') }}" aria-label="新增事項的日期">
+        </div>
+        <div class="col-auto">
+            <label for="item" class="sr-only">輸入事項內容</label>
+            {{ Form::text('item',null,['id'=>'item','class' => 'form-control','required'=>'required', 'placeholder' => '請輸入事項內容', 'aria-label' => '事項內容']) }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-success" onclick="if(confirm('您確定送出嗎?')) add_item('{{ $this_month }}');else return false">
+                <i class="fas fa-plus" aria-hidden="true"></i> 新增事項
+            </button>
+        </div>
+    </div>
     <script src="{{ asset('gijgo/js/messages/messages.zh-TW.js') }}"></script>
     <script>
         $('#item_date').datepicker({
@@ -50,6 +53,7 @@ $first_w = get_date_w($this_month_date[1]);
     <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
     {{ Form::close() }}
 @endcan
+
 <script>
     function add_item(){
         $.ajax({
@@ -76,17 +80,17 @@ $first_w = get_date_w($this_month_date[1]);
             url: './monthly_calendars/block_destroy/'+id,
             type : 'get',
             dataType : 'json',
-            //data : $('#create_calendar_form').serialize(),
             success : function(result) {
                 if(result != 'failed') {
                     go_submit(this_month);
                 }
             },
             error: function(result) {
-                alert('？！');
+                alert('刪除失敗！');
             }
         })
     }
+
     function go_submit(month){
         $('#item_month').val(month);
         $.ajax({
@@ -101,44 +105,42 @@ $first_w = get_date_w($this_month_date[1]);
                 }
             },
             error: function(result) {
-                alert('失敗！');
+                alert('切換失敗！');
             }
         })
     }
 
     function show_calendar(result){        
-        data = '<a href="#!" style="text-decoration:none;font-size: 24px" onclick="go_submit(\''+result['last_month']+'\')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></a> '+result['this_month']+' <a href="#!" style="text-decoration:none;font-size: 24px" onclick="go_submit(\''+result['next_month']+'\')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></a>';        
-        data = data+'<div class="table-responsive"><table class="table table-bordered table-sm">';
-        data = data+'<thead>';
-        data = data+'<tr style="background-color: #888888">';
-        data = data+'<th class="text-danger">日</th>';
-        data = data+'<th>一</th>';
-        data = data+'<th>二</th>';
-        data = data+'<th>三</th>';
-        data = data+'<th>四</th>';
-        data = data+'<th>五</th>';
-        data = data+'<th class="text-success">六</th>';
-        data = data+'</tr>';
-        data = data+'</thead>';
-        data = data+'<tbody>';
-        data = data+'<tr>';
+        /* 無障礙 HM1120201C 修正：改用具備無障礙標籤的按鈕控制月份切換 */
+        data = '<div class="d-flex align-items-center mb-2">';
+        data += '<button type="button" class="btn btn-link text-primary p-0 border-0" aria-label="切換至上一個月 ('+result['last_month']+')" onclick="go_submit(\''+result['last_month']+'\')"><i class="fas fa-arrow-alt-circle-left fa-2x" aria-hidden="true"></i></button>';
+        data += '<span class="h4 mx-3 mb-0 font-weight-bold">' + result['this_month'] + '</span>';
+        data += '<button type="button" class="btn btn-link text-primary p-0 border-0" aria-label="切換至下一個月 ('+result['next_month']+')" onclick="go_submit(\''+result['next_month']+'\')"><i class="fas fa-arrow-alt-circle-right fa-2x" aria-hidden="true"></i></button>';
+        data += '</div>';
+
+        data += '<div class="table-responsive"><table class="table table-bordered table-sm" aria-label="'+result['this_month']+' 行事曆數據表格">';
+        data += '<thead><tr class="bg-secondary text-white">';
+        data += '<th class="text-danger bg-light">日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th class="text-success bg-light">六</th>';
+        data += '</tr></thead><tbody><tr>';
+
         for(var k in result['this_month_date']){
             if(k==1){
                 for(i=1;i<=result['this_month_date_w'][result['this_month_date'][k]];i++){
-                    data = data+'<td width="14%"></td>';
+                    data += '<td width="14%"></td>';
                 }
             }
+            /* 無障礙 CS2140401C 修正：改用相對單位 font-size: 1.0625rem; */
             if(result['today'] == result['this_month_date'][k]){
-                data = data+'<td width="14%" style="background-color:#FFFFBB;">';
-                data = data+'<div style="font-weight: bold;font-size: 17px;color:green;">';
+                data += '<td width="14%" style="background-color:#FFFFBB;">';
+                data += '<div style="font-weight: bold;font-size: 1.0625rem;color:green;">';
             }else{
-                data = data+'<td width="14%" style="background-color:#FFFFFF;">';
-                data = data+'<div style="font-weight: bold;font-size: 17px;">';
+                data += '<td width="14%" style="background-color:#FFFFFF;">';
+                data += '<div style="font-weight: bold;font-size: 1.0625rem;">';
             }
 
             this_date = result['this_month_date'][k].substring(8,10);
             this_month = result['this_month_date'][k].substring(0,7);
-            data = data + this_date;
+            data += this_date;
 
             var bg_array = ['info','success','warning','primary','secondary','danger'];
             var qq=0;
@@ -147,31 +149,31 @@ $first_w = get_date_w($this_month_date[1]);
                 if(result['item_array'][k1]['item_date'] == [result['this_month_date'][k]]){
                     var cht = cht_str(result['item_array'][k1]['item'],20);
                     var q = qq%6;
-                    data = data+'<div class="bg-'+bg_array[q]+'" style="font-size:16px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="'+result['item_array'][k1]['item']+'" onclick="alert(\''+[result['this_month_date'][k]]+'\\r\\n'+result['item_array'][k1]['item']+'\')">';
-                    data = data+cht;
-                    data = data+'</div>';
+                    
+                    data += '<div class="bg-'+bg_array[q]+' text-white p-1 my-1 rounded" title="'+result['item_array'][k1]['item']+'" tabindex="0" aria-label="事項：'+result['item_array'][k1]['item']+'">';
+                    data += cht;
+                    
                     if(result['user_id'] == result['item_array'][k1]['user_id'] || result['admin'] == "1"){
-                        //data = data + '<a href="./monthly_calendars/destroy/'+k1+'" onclick="return confirm(\'確定刪除嗎？\')">';
-                        data = data + '<img src="{{ asset('images/remove.png') }}" height="15px" onclick="if(confirm(\'確定刪除嗎?\')) del_item(\''+k1+'\',\''+this_month+'\');else return false">';
-                        //data = data + '</a>';
+                        /* 無障礙 HM1240401C 修正：圖片補上 alt 屬性 */
+                        data += ' <button type="button" class="btn btn-sm btn-link p-0 text-white float-right" aria-label="刪除此事項" onclick="if(confirm(\'確定刪除嗎?\')) del_item(\''+k1+'\',\''+this_month+'\');else return false;">';
+                        data += '<img src="{{ asset('images/remove.png') }}" height="15px" alt="刪除事項" title="刪除事項">';
+                        data += '</button>';
                     }
+                    data += '</div>';
                     qq++;
                 }
             }
-            data =data+'</div>';
-            data = data+'</td>';
+            data += '</div></td>';
 
             if(result['this_month_date_w'][result['this_month_date'][k]]==6){
-                data = data+'</tr>';
+                data += '</tr><tr>';
             }
         }
         $nn = 6-result['last_w'];
         for($i=1;$i<=$nn;$i++){
-            data = data + '<td></td>';
+            data += '<td></td>';
         }
-        data = data+'</tr>';
-        data = data+'</tbody>';
-        data = data+'</table></div>';
+        data += '</tr></tbody></table></div>';
 
         return data;
     }
@@ -187,27 +189,38 @@ $first_w = get_date_w($this_month_date[1]);
         }
         return str;
     };
-
 </script>
+
 {{ Form::open(['route' => 'monthly_calendars.return_month', 'method' => 'POST','id'=>'calendar_month','onsubmit'=>'return false']) }}
 <input type="hidden" name="item_month" id="item_month">
 {{ Form::close() }}
+
 <div id="calendar_content">    
-    <a href="#!" style="text-decoration:none;font-size: 24px;" onclick="go_submit('{{ $last_month }}')"><i class="fas fa-arrow-alt-circle-left text-primary"></i></a> {{ $this_month }} <a href="#!" style="text-decoration:none;font-size: 24px" onclick="go_submit('{{ $next_month }}')"><i class="fas fa-arrow-alt-circle-right text-primary"></i></a>    
+    {{-- 無障礙 HM1120201C 修正：補上明確的可朗讀按鈕與區域標示 --}}
+    <div class="d-flex align-items-center mb-2">
+        <button type="button" class="btn btn-link text-primary p-0 border-0" aria-label="切換至上一個月 ({{ $last_month }})" onclick="go_submit('{{ $last_month }}')">
+            <i class="fas fa-arrow-alt-circle-left fa-2x" aria-hidden="true"></i>
+        </button> 
+        <span class="h4 mx-3 mb-0 font-weight-bold">{{ $this_month }}</span>
+        <button type="button" class="btn btn-link text-primary p-0 border-0" aria-label="切換至下一個月 ({{ $next_month }})" onclick="go_submit('{{ $next_month }}')">
+            <i class="fas fa-arrow-alt-circle-right fa-2x" aria-hidden="true"></i>
+        </button>
+    </div>
+
     <div class="table-responsive">
-    <table class="table table-bordered table-sm">
+    <table class="table table-bordered table-sm" aria-label="{{ $this_month }} 行事曆數據表格">
         <thead>
-        <tr style="background-color: #888888">
-            <th class="text-danger">日</th>
+        <tr class="bg-secondary text-white">
+            <th class="text-danger bg-light">日</th>
             <th>一</th>
             <th>二</th>
             <th>三</th>
             <th>四</th>
             <th>五</th>
-            <th class="text-success">六</th>
+            <th class="text-success bg-light">六</th>
         </tr>
         </thead>
-        <tr>
+        <tbody>
         <tr>
             @foreach($this_month_date as $k => $v)
                 <?php
@@ -226,7 +239,8 @@ $first_w = get_date_w($this_month_date[1]);
                     $bg_array = ['info','success','warning','primary','secondary','danger'];
                     $qq = 0;
                     ?>
-                    <div style="font-weight: bold;font-size: 17px;{{ $c }}">
+                    {{-- 無障礙 CS2140401C 修正：改用相對單位 font-size: 1.0625rem; --}}
+                    <div style="font-weight: bold;font-size: 1.0625rem;{{ $c }}">
                         {{ $num }}
                     </div>
                     @foreach($item_array as $k1=>$v1)
@@ -234,27 +248,27 @@ $first_w = get_date_w($this_month_date[1]);
                             $q = $qq%6;
                         ?>
                         @if($v1['item_date'] == $v)
-                            <div class="bg-{{ $bg_array[$q] }}" style="font-size:16px;width: 100%;border-radius: 3px;margin: 2px;color: #FFFFFF;padding: 2px;" data-toggle="tooltip" data-placement="top" title="{{ $v1['item'] }}" onclick="alert('{{ $v }}\r\n{{ $v1['item'] }}')">
+                            <div class="bg-{{ $bg_array[$q] }} text-white p-1 my-1 rounded" title="{{ $v1['item'] }}" tabindex="0" aria-label="事項：{{ $v1['item'] }}">
                                 {{ str_limit($v1['item'],20) }}
+                                @auth
+                                    @if($v1['user_id'] == auth()->user()->id or auth()->user()->admin == 1)
+                                        <button type="button" class="btn btn-sm btn-link p-0 text-white float-right" aria-label="刪除此事項" onclick="if(confirm('確定刪除嗎?')) del_item('{{ $k1 }}','{{ $this_month }}');else return false;">
+                                            <img src="{{ asset('images/remove.png') }}" height="15px" alt="刪除事項" title="刪除事項">
+                                        </button>
+                                    @endif
+                                @endauth
                             </div>
-                            @auth
-                                @if($v1['user_id'] == auth()->user()->id or auth()->user()->admin ==1)
-                                    <img src="{{ asset('images/remove.png') }}" height="15px" onclick="if(confirm('確定刪除嗎?')) del_item('{{ $k1 }}','{{ $this_month }}');else return false">
-                                @endif
-                            @endauth
-                                <?php
-                                $qq++;
-                                ?>
+                            <?php $qq++; ?>
                         @endif
                     @endforeach
                 </td>
                 @if($this_date_w == 6)
-                    </tr>
+                    </tr><tr>
                 @endif
-        @endforeach
-        @for($i=1;$i<=6-$this_date_w;$i++)
-            <td></td>
-        @endfor
+            @endforeach
+            @for($i=1;$i<=6-$this_date_w;$i++)
+                <td></td>
+            @endfor
         </tr>
         </tbody>
     </table>
