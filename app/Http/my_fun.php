@@ -493,26 +493,29 @@ function line_bot($group_id,$token,$string){
     curl_close($ch);
 }
 
-function clean_font_size_units($html)
-{
-    if (empty($html)) return $html;
+if (!function_exists('clean_font_size_units')) {
+    function clean_font_size_units($html) {
+        if (empty($html)) return $html;
 
-    // 1. 將 font-size: xxpt 轉為 rem (12pt ~ 0.75rem, 16pt ~ 1rem, 24pt ~ 1.5rem)
-    $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*pt/i', function ($matches) {
-        $rem = round($matches[1] / 12, 2); // 12pt 約等於 1rem
-        return "font-size: {$rem}rem";
-    }, $html);
+        // 1. 先將 HTML 實體不可見空白 (&nbsp; 或 UTF-8 non-breaking space) 轉為標準空格
+        $html = str_replace(['&nbsp;', "\xC2\xA0"], ' ', $html);
 
-    // 2. 將 font-size: xxpx 轉為 rem (16px ~ 1rem, 20px ~ 1.25rem)
-    $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*px/i', function ($matches) {
-        $rem = round($matches[1] / 16, 2); // 16px 約等於 1rem
-        return "font-size: {$rem}rem";
-    }, $html);
+        // 2. 匹配 font-size: 14px (包含冒號前後各種空格與換行)
+        $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*px/i', function($matches) {
+            $px = floatval($matches[1]);
+            $rem = round($px / 16, 2);
+            return 'font-size: ' . $rem . 'rem';
+        }, $html);
 
-    // 3. 清理 FCKeditor/Word 產生的舊式標籤 <font size="..." 或 <span font-size="...">
-    $html = preg_replace('/<font[^>]*>(.*?)<\/font>/i', '$1', $html);
+        // 3. 匹配 font-size: 14pt (包含冒號前後各種空格與換行)
+        $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*pt/i', function($matches) {
+            $pt = floatval($matches[1]);
+            $rem = round($pt / 12, 2);
+            return 'font-size: ' . $rem . 'rem';
+        }, $html);
 
-    return $html;
+        return $html;
+    }
 }
 
 if (!function_exists('fix_empty_links')) {
