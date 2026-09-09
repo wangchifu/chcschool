@@ -515,32 +515,36 @@ function clean_font_size_units($html)
     return $html;
 }
 
-function fix_empty_links($html) {
-    if (empty($html)) return $html;
+if (!function_exists('fix_empty_links')) {
+    function fix_empty_links($html) {
+        if (empty(trim($html))) return $html;
 
-    // 1. 自動修復殘缺的 <p 或 <p<a 標籤
-    $html = preg_replace('/<p(?![a-z>])/i', '<p>', $html);
+        // 使用 DOMDocument 安全解析，避免 Regex 誤破壞 <p style="..."> 標籤
+        $dom = new \DOMDocument();
+        // 避免 HTML5/UTF-8 解析亂碼與警告
+        libxml_use_internal_errors(true);
+        $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
 
-    // 2. 清除純空白或內文為空的無效 <a> 標籤
-    $pattern = '/<a\b[^>]*>(?:&nbsp;|\s|&#160;)*<\/a>/iu';
-    $html = preg_replace($pattern, '', $html);
+        $links = $dom->getElementsByTagName('a');
+        
+        // 倒序處理節點
+        for ($i = $links->length - 1; $i >= 0; $i--) {
+            $a = $links->item($i);
+            $text = trim($a->textContent);
+            $hasChildImage = $a->getElementsByTagName('img')->length > 0;
 
-    // 3. 自動為「純網址連結」補上 title 屬性 (解決 HM1240401C 規範 requirements)
-    $html = preg_replace_callback(
-        '/<a\b([^>]*?)href=["\']([^"\']+)["\']([^>]*?)>(https?:\/\/[^\s<]+)<\/a>/i',
-        function ($matches) {
-            $attrs = $matches[1] . $matches[3];
-            $url = $matches[2];
-            $text = $matches[4];
-
-            // 若沒有寫 title，自動補上連結目的說明
-            if (!str_contains(strtolower($attrs), 'title=')) {
-                return '<a href="' . $url . '" title="前往連結：' . htmlspecialchars($text) . '" ' . trim($attrs) . '>' . $text . '</a>';
+            // 如果 <a> 內部沒有文字也沒有 <img> 圖片
+            if ($text === '' && !$hasChildImage) {
+                // 若有 href 屬性，自動補上無障礙 aria-label，否則直接移除空標籤
+                if ($a->hasAttribute('href') && !empty($a->getAttribute('href'))) {
+                    $a->setAttribute('aria-label', '相關連結：' . $a->getAttribute('href'));
+                } else {
+                    $a->parentNode->removeChild($a);
+                }
             }
-            return $matches[0];
-        },
-        $html
-    );
+        }
 
-    return $html;
+        return $dom->saveHTML();
+    }
 }
