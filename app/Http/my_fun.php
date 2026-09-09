@@ -497,22 +497,25 @@ if (!function_exists('clean_font_size_units')) {
     function clean_font_size_units($html) {
         if (empty($html)) return $html;
 
-        // 1. 先將 HTML 實體不可見空白 (&nbsp; 或 UTF-8 non-breaking space) 轉為標準空格
-        $html = str_replace(['&nbsp;', "\xC2\xA0"], ' ', $html);
+        // 1. 將各種常見的 HTML 實體空白、全形空白、Non-breaking space 統一轉為標準半形空格
+        $html = str_replace(['&nbsp;', '&amp;nbsp;', "\xC2\xA0"], ' ', $html);
 
-        // 2. 匹配 font-size: 14px (包含冒號前後各種空格與換行)
+        // 2. 匹配 font-size: 14px (支援數字與 px 中間有空格、換行、分號等)
         $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*px/i', function($matches) {
             $px = floatval($matches[1]);
             $rem = round($px / 16, 2);
             return 'font-size: ' . $rem . 'rem';
         }, $html);
 
-        // 3. 匹配 font-size: 14pt (包含冒號前後各種空格與換行)
+        // 3. 匹配 font-size: 14pt
         $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*pt/i', function($matches) {
             $pt = floatval($matches[1]);
             $rem = round($pt / 12, 2);
             return 'font-size: ' . $rem . 'rem';
         }, $html);
+
+        // 【新增無障礙修正】4. 自動清除包含純空白、&nbsp; 的空白標頭標籤 (h1~h6)
+        $html = preg_replace('/<h[1-6]>(?:\s|&nbsp;|\xC2\xA0)*<\/h[1-6]>/i', '', $html);
 
         return $html;
     }
