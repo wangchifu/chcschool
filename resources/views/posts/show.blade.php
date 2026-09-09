@@ -265,7 +265,7 @@
     </main>
 
     <!-- 側邊欄區塊 (無障礙 HM1010301C) -->
-    <aside class="col-lg-4" aria-label="側邊欄資訊">
+    <aside class="col-lg-3" aria-label="側邊欄資訊">
         <div class="card my-4">
             <h2 class="card-header h5">近月內熱門公告</h2>
             <div class="card-body">
