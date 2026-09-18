@@ -7,11 +7,10 @@ if (isset($_SERVER['REQUEST_URI'])) {
 //檢查有無新版本的sql檔
 $sqls = get_files(database_path('sqls'));
 $host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) ?? $_SERVER['HTTP_HOST'];
-if (isset($host) and $host != 'chcschool.localhost' and $host != 'chcschool.chc.edu.tw') {
-    $install_sqls = \App\Sql::where('install', 1)->pluck('name')->toArray();
-
-    foreach ($sqls as $k => $v) {
-        if (!in_array($v, $install_sqls)) {
+if (isset($host) and $host != 'chcschool.localhost' and $host != 'chcschool.chc.edu.tw') {    
+    $install_sqls = \App\Sql::where('install', 1)->pluck('name')->toArray();    
+    foreach ($sqls as $k => $v) {        
+        if (!in_array($v, $install_sqls)) {            
             $file = database_path('sqls') . '/' . $v;
             \Illuminate\Support\Facades\DB::unprepared(file_get_contents($file));
             $att['name'] = $v;
@@ -37,6 +36,9 @@ Route::get('close', 'SetupController@close')->name('close');
 
 Route::get('/', 'HomeController@index')->name('index');
 Route::get('/index', 'HomeController@index')->name('index');
+
+Route::get('/sitemap', 'HomeController@sitemap')->name('sitemap');
+
 //DNS驗證檔案
 Route::get('.well-known/pki-validation/DN_CHECK_FILE.htm', 'HomeController@check_file')->name('check_file');
 Route::get('.well-known/pki-validation/whois.txt', 'HomeController@whois')->name('check_file');
@@ -656,6 +658,10 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('setups/quota', 'SetupController@quota')->name('setups.quota');
     Route::get('setups/batch_delete_posts', 'SetupController@batch_delete_posts')->name('setups.batch_delete_posts');
     Route::delete('delete/batch_delete', 'SetupController@batch_delete')->name('setups.batch_delete');
+    
+    //網站導覽
+    Route::get('setups/sitemap', 'SetupController@sitemap')->name('setups.sitemap');
+    Route::post('setups/sitemap/store', 'SetupController@sitemap_store')->name('setups.sitemap_store');
 
     //使用者權限
     Route::get('user_powers/{module}/{type}', 'UserPowerController@create')->name('user_powers.create');

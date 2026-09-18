@@ -1,9 +1,26 @@
 <style>
+    /* 無障礙 WCAG 1.4.3 修正：全區連結與文字高對比度修正 */
+    /* 將預設藍色 #0056b3 調深至 #003d82，在 #F2F2F2 背景下對比度達 6.7:1，在白色背景達 7.5:1 */
+    .tab-content a,
+    .tab-content .text-primary,
+    .tab-content .btn-link {
+        color: #003d82 !important;
+        font-weight: 600; /* 加粗增強辨識度 */
+    }
+
+    .tab-content a:hover,
+    .tab-content a:focus,
+    .tab-content .btn-link:hover,
+    .tab-content .btn-link:focus {
+        color: #00224a !important;
+        text-decoration: underline !important;
+    }
+
     /* 無障礙 HM1020401C 修正：頁籤與按鈕 Focus 高對比視覺提示 */
     .nav-tabs .nav-link:focus-visible,
     .table a:focus-visible,
     button:focus-visible {
-        outline: 3px solid #0056b3 !important;
+        outline: 3px solid #003d82 !important;
         outline-offset: 2px !important;
     }
 </style>

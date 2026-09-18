@@ -617,4 +617,21 @@ class SetupController extends Controller
         imagegif($im);
         imagedestroy($im);
     }
+
+    public function sitemap()
+    {
+        $setup = Setup::first();        
+        $data = [
+          'setup'=>$setup,
+        ];
+        return view('setups.sitemap',$data);
+    }
+
+    public function sitemap_store(Request $request)    
+    {
+        $att['sitemap'] = $request->input('sitemap');
+        $setup = Setup::first();
+        $setup->update($att);
+        return back();
+    }
 }

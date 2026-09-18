@@ -22,13 +22,35 @@
     box-shadow: 4px 4px 0px #f8d7da;
     margin-bottom: 15px;
 ">
-    <div style="background: #e3342f; color: white; padding: 0 15px; height: 100%; display: flex; align-items: center; font-weight: bold; font-size: 1.1rem; z-index: 10; white-space: nowrap;">
+    <!-- 無障礙 HM1220200C 修正：將暫停按鈕放在組件的最前方，確保鍵盤 Tab 第一個聚焦 -->
+    <button id="honor-toggle-btn" 
+            type="button"
+            aria-label="暫停跑馬燈"
+            style="
+                z-index: 11;
+                background: #e3342f;
+                color: #ffffff;
+                border: none;
+                height: 100%;
+                padding: 0 12px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            ">
+        ⏸ <span class="sr-only">暫停</span>
+    </button>
+
+    <div style="background: #e3342f; color: white; padding: 0 15px 0 5px; height: 100%; display: flex; align-items: center; font-weight: bold; font-size: 1.1rem; z-index: 10; white-space: nowrap; flex-shrink: 0;">
         🏆 榮譽榜
     </div>
 
     <div id="honor-container" style="flex: 1; height: 100%; position: relative; overflow: hidden;">
         <div id="honor-content" style="display: flex; flex-direction: row; align-items: center; height: 100%; white-space: nowrap;">
-            @foreach($honors as $honor)
+            @foreach($honors as$honor)
                 <div style="margin-right: 40px; display: flex; align-items: center;">
                     <a href="../posts/{{ $honor->id }}" 
                        style="
@@ -45,27 +67,6 @@
             @endforeach
         </div>
     </div>
-
-    <!-- 無障礙 HM1220200C 修正：提供實體控制按鈕（支援鍵盤操作與螢幕閱讀器） -->
-    <button id="honor-toggle-btn" 
-            type="button"
-            aria-label="暫停跑馬燈"
-            style="
-                z-index: 10;
-                background: #e3342f;
-                color: #ffffff;
-                border: none;
-                height: 100%;
-                padding: 0 12px;
-                cursor: pointer;
-                font-weight: bold;
-                font-size: 0.9rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">
-        ⏸ <span class="sr-only">暫停</span>
-    </button>
 </div>
 
 <script>

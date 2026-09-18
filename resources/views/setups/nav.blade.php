@@ -17,4 +17,7 @@
     <li class="nav-item">
         <a class="nav-link {{ $active[6] }}" href="{{ route('setups.quota') }}">空間管理</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ $active[7] }}" href="{{ route('setups.sitemap') }}">網站導覽</a>
+    </li>
 </ul>

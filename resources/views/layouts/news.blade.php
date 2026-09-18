@@ -1,3 +1,41 @@
+<style>
+    /* 無障礙 WCAG 1.4.3 修正：全區藍色文字與按鈕高對比度修正 */
+    /* 將預設藍色 #0056b3 調深至 #003d82，在白色背景下對比度達 7.5:1 (標準為 4.5:1) */
+    .text-primary,
+    a.text-primary {
+        color: #003d82 !important;
+    }
+
+    a.text-primary:hover,
+    a.text-primary:focus {
+        color: #00224a !important;
+        text-decoration: underline !important;
+    }
+
+    /* 修正 btn-outline-primary 邊框與文字顏色以符對比度 */
+    .btn-outline-primary {
+        color: #003d82 !important;
+        border-color: #003d82 !important;
+        font-weight: 600;
+    }
+
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary:active {
+        color: #ffffff !important;
+        background-color: #003d82 !important;
+        border-color: #003d82 !important;
+    }
+
+    /* 無障礙 HM1020401C 修正：鍵盤 Focus 高對比視覺提示 */
+    .table a:focus-visible,
+    button:focus-visible,
+    .btn:focus-visible {
+        outline: 3px solid #003d82 !important;
+        outline-offset: 2px !important;
+    }
+</style>
+
 @auth
     @can('create',\App\Post::class)
         <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm">

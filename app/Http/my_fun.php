@@ -554,3 +554,89 @@ if (!function_exists('fix_empty_links')) {
         return $dom->saveHTML();
     }
 }
+
+if (!function_exists('enhance_content_accessibility')) {
+    /**
+     * 自動修正 FCKeditor 內文連結無障礙問題：
+     * 1. 避免純網址作為連結文字 (轉為清晰說明或網域標示)
+     * 2. 自動偵測檔案格式 (pdf, docx, xlsx, txt 等)
+     * 3. 自動補齊 target="_blank" 的 title 與 sr-only (另開新視窗) 提示
+     */
+    function enhance_content_accessibility($content) {
+        if (empty(trim($content))) {
+            return $content;
+        }
+
+        // 避免 HTML 亂碼，加上 UTF-8 header
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+
+        $links = $dom->getElementsByTagName('a');
+
+        foreach ($links as $link) {
+            $href = trim($link->getAttribute('href'));
+            $text = trim($link->textContent);
+
+            if (empty($href)) {
+                continue;
+            }
+
+            // 1. 自動偵測副檔名 (pdf, docx, xlsx, zip, txt 等)
+            $path = parse_url($href, PHP_URL_PATH);
+            $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            $is_file = in_array($extension, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', 'txt', 'csv']);
+
+            // 2. 判斷連結文字是否為純網址 (例如以 http://, https://, www. 開頭)
+            $is_raw_url = preg_match('/^(https?:\/\/|www\.)/i', $text);
+
+            if ($is_raw_url) {
+                if ($is_file) {
+                    // 若為檔案純網址，改顯示「下載附件檔案 (副檔名)」
+                    $text = '下載附件檔案 (' . strtoupper($extension) . ')';
+                } else {
+                    // 若為一般網頁純網址，改顯示「前往相關連結網站」
+                    $text = '前往相關連結網站';
+                }
+                $link->textContent = $text;
+            }
+
+            // 3. 處理另開新視窗 (target="_blank") 的無障礙提示
+            $target = $link->getAttribute('target');
+            if ($target === '_blank') {
+                // 確保包含 rel="noopener noreferrer" 安全屬性
+                $link->setAttribute('rel', 'noopener noreferrer');
+
+                // 設定/補充 title 屬性
+                $title_suffix = $is_file 
+                    ? " (檔案格式：{$extension}，另開新視窗)" 
+                    : " (另開新視窗)";
+
+                $title = $link->getAttribute('title');
+                if (empty($title)) {
+                    $link->setAttribute('title', $text . $title_suffix);
+                } elseif (!str_contains($title, '另開新視窗')) {
+                    $link->setAttribute('title', $title . $title_suffix);
+                }
+
+                // 檢查是否已包含無障礙隱藏標籤，沒有則透過 DOM 補上
+                $has_sr = false;
+                foreach ($link->childNodes as $child) {
+                    if ($child->nodeType === XML_ELEMENT_NODE && str_contains($child->getAttribute('class'), 'sr-only')) {
+                        $has_sr = true;
+                        break;
+                    }
+                }
+
+                if (!$has_sr) {
+                    $srSpan = $dom->createElement('span', $title_suffix);
+                    $srSpan->setAttribute('class', 'sr-only');
+                    $link->appendChild($srSpan);
+                }
+            }
+        }
+
+        return $dom->saveHTML();
+    }
+}

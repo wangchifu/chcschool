@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant-TW">
 
 <head>
     <?php
@@ -42,7 +42,7 @@
         /* 無障礙：鍵盤快速跳至主要內容 */
         .sr-only-focusable {
             position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-            overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+            overflow: hidden;overflow-x: visible; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
         }
         .sr-only-focusable:focus {
             position: fixed; top: 10px; left: 10px; z-index: 9999; width: auto; height: auto;
@@ -50,10 +50,16 @@
             white-space: normal; text-decoration: underline; border-radius: 4px;
         }
 
-        /* 無障礙 WCAG 2.4.7 焦點視覺化指示 */
+        /* 1. 無障礙 WCAG 2.4.7 焦點指示：外框貼合邊界 */
         a:focus, button:focus, input:focus, select:focus, textarea:focus {
             outline: 3px solid #0056b3 !important;
-            outline-offset: 2px !important;
+            outline-offset: 0px !important;
+        }
+
+        /* 2. 核心修正：給連結左側預留 4px 空間，讓 3px 外框有地方畫，完全不切邊、不壓字 */
+        .card a, .list-group a, .sidebar a, main a {
+            display: inline-block;
+            margin-left: 4px !important; /* 往右推 4px，留出空間給左外框 */
         }
 
         .navbar-custom {
@@ -105,5 +111,21 @@
 @if($setup->fixed_nav)
 <link href="{{ asset('css/navbar-top-fixed.css') }}" rel="stylesheet">
 @endif
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 定義匹配 Emoji 的正則表達式
+    var emojiRegex = /([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}])/gu;
+
+    // 抓取跑馬燈或榮譽榜的容器元件（請根據您實際的 CSS Class 或 ID 修改，例如 .marquee 或 #honor-board）
+    var marqueeElements = document.querySelectorAll('.marquee, #honor-board, .marquee-item');
+
+    marqueeElements.forEach(function(element) {
+        // 替換節點內的 HTML，將 Emoji 自動加上 <span aria-hidden="true">
+        element.innerHTML = element.innerHTML.replace(emojiRegex, function(match) {
+            return '<span aria-hidden="true">' + match + '</span>';
+        });
+    });
+});
+</script>
 </body>
 </html>

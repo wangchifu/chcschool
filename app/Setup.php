@@ -18,6 +18,7 @@ class Setup extends Model
         'title_image_style',
         'views',
         'footer',
+        'sitemap',
         'ip1',
         'ip2',
         'ipv6',

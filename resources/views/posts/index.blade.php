@@ -6,10 +6,29 @@
 
 @section('content')
 <style>
+    /* 無障礙 WCAG 1.4.3 對比度修正：分頁與頁籤連結色彩調整 */
+    /* 將分頁連結文字改為深藍色 #003d82，對比度達 7.52:1 (標準 >= 4.5:1) */
+    .pagination .page-link {
+        color: #003d82 !important;
+        font-weight: 600;
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #ffffff !important;
+        background-color: #003d82 !important;
+        border-color: #003d82 !important;
+    }
+
+    .pagination .page-link:hover,
+    .pagination .page-link:focus {
+        color: #00224a !important;
+        background-color: #e9ecef !important;
+    }
+
     /* 無障礙 HM1020401C 修正：頁籤與 Focus 焦點高對比視覺提示 */
     .nav-tabs .nav-link:focus-visible,
     .pagination .page-link:focus-visible {
-        outline: 3px solid #0056b3 !important;
+        outline: 3px solid #003d82 !important;
         outline-offset: 2px !important;
         z-index: 5;
     }

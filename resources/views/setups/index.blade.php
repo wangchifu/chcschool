@@ -23,6 +23,7 @@
             $active[4] = "";
             $active[5] = "";
             $active[6] = "";
+            $active[7] = "";
             $nav_color = explode(',',$setup->nav_color);
             $c1 = (empty($nav_color[0]))?"#DD0F20":$nav_color[0];
             $c2 = (empty($nav_color[1]))?"#F18A31":$nav_color[1];

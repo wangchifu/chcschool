@@ -61,6 +61,19 @@
     .post-content-body h4, 
     .post-content-body h5, 
     .post-content-body h6 { font-size: 1.15rem !important; font-weight: bold; }
+
+    /* 無障礙螢幕閱讀器專用隱藏文字 */
+    .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
 </style>
 
 <div class="row justify-content-center">
@@ -198,10 +211,16 @@
         <p>
             張貼日期： {{ $post->created_at }} 
             點閱：
-            <!-- 無障礙 HM1200101C 修正：另開新視窗說明 -->
-            <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/'.$post->id.'.txt') }}" target="_blank" rel="noopener noreferrer" aria-label="查看點閱數細節 (另開新視窗)">
-                {{ $post->views }} <i class="fas fa-external-link-alt small" aria-hidden="true"></i>
-                <span class="sr-only">(另開新視窗)</span>
+            <!-- 無障礙檢測修正：明確標示檔名、副檔名 (txt) 及另開新視窗資訊 -->
+            <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/'.$post->id.'.txt') }}" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               title="查看點閱記錄檔：{{ $post->id }}.txt (副檔名：txt，另開新視窗)"
+               aria-label="查看點閱記錄檔：{{ $post->id }}.txt (副檔名：txt，另開新視窗)">
+                {{ $post->views }}
+                <span class="small text-muted">({{ $post->id }}.txt)</span>
+                <i class="fas fa-external-link-alt small" aria-hidden="true"></i>
+                <span class="sr-only">(副檔名：txt，另開新視窗)</span>
             </a>
         </p>
 
@@ -217,8 +236,8 @@
         <article class="p-3 mb-4 rounded border" style="background-color: #ffffff; border-style: dotted !important; border-color: #939699 !important;">
             @if($can_see)
                 <!-- 使用 clean_font_size_units 與 fix_empty_links 過濾 px/pt 單位及無效空連結 -->
-                <div class="post-content-body">                                                    
-                    {!! fix_empty_links(clean_font_size_units($post->content)) !!}                                                                                                    
+                <div class="post-content-body">                                                                                                                                             
+                    {!! enhance_content_accessibility(fix_empty_links(clean_font_size_units($post->content))) !!}
                 </div>
             @else
                 @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and $post->created_at < date('Y-m-d H:i:s'))
@@ -253,10 +272,19 @@
                 <h2 class="card-header h5">附件下載</h2>
                 <div class="card-body">
                 @foreach($files as $k => $v)
-                    <!-- 無障礙 HM1200101C 修正：下載連結另開新視窗提示 -->
-                    <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" class="btn btn-outline-primary btn-sm my-1" target="_blank" rel="noopener noreferrer" aria-label="下載附件：{{ $v }} (另開新視窗)">
+                    <?php 
+                        // 自動抓取副檔名 (例如 pdf, docx, txt)
+                        $ext = pathinfo($v, PATHINFO_EXTENSION);
+                    ?>
+                    <!-- 無障礙檢測修正：下載連結明確標示檔名、副檔名及另開新視窗 -->
+                    <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" 
+                       class="btn btn-outline-primary btn-sm my-1" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       title="下載附件：{{ $v }} (副檔名：{{ $ext }}，另開新視窗)"
+                       aria-label="下載附件：{{ $v }} (副檔名：{{ $ext }}，另開新視窗)">
                         <i class="fas fa-download" aria-hidden="true"></i> {{ $v }}
-                        <span class="sr-only">(另開新視窗)</span>
+                        <span class="sr-only">(副檔名：{{ $ext }}，另開新視窗)</span>
                     </a>
                 @endforeach
                 </div>
@@ -325,15 +353,36 @@
         return true;
     }
 
+    // 初始化 VenoBox 並加上無障礙焦點控制 (Focus Management)
     var vb = new VenoBox({
         selector: '.venobox',
         numeration: true,
         infinigall: true,
-        spinner: 'rotating-plane'
+        spinner: 'rotating-plane',
+        onPostOpen: function(content, obj, gallIndex, then) {
+            // 1. 視窗開啟後，補充關閉按鈕的無障礙屬性並將焦點自動移至關閉按鈕
+            setTimeout(function() {
+                var closeBtn = document.querySelector('.vbox-close');
+                if (closeBtn) {
+                    closeBtn.setAttribute('role', 'button');       // 1. 補充按鈕角色
+                    closeBtn.setAttribute('aria-label', '關閉');   // 2. 補充無障礙讀報名稱
+                    closeBtn.setAttribute('title', '關閉');        // 3. 補充滑鼠懸停名稱
+                    closeBtn.setAttribute('tabindex', '0');        // 4. 確保鍵盤可被 Focus
+                    closeBtn.focus();                              // 5. 強制焦點移入
+                }
+            }, 100);
+        },
+        onPreClose: function(content, obj, gallIndex, then) {
+            // 2. 關閉視窗時，焦點會自動回到原本點擊的圖片連結上
+        }
     });
 
-    $(document).on('click', '.vbox-close', function() {
-        vb.close();
-    });
+    // 支援點擊以及鍵盤 (Enter / 空白鍵) 操作關閉燈箱
+    $(document).on('click keydown', '.vbox-close', function(e) {
+        if (e.type === 'click' || (e.type === 'keydown' && (e.key === 'Enter' || e.key === ' '))) {
+            e.preventDefault();
+            vb.close();
+        }
+    });    
 </script>
 @endsection

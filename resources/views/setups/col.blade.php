@@ -17,6 +17,7 @@
             $active[4] = "";
             $active[5] = "";
             $active[6] = "";
+            $active[7] = "";
             ?>
             @include('setups.nav',$active)
             <div class="card my-4">

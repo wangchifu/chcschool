@@ -17,6 +17,7 @@
             $active[4] = "";
             $active[5] = "active";
             $active[6] = "";
+            $active[7] = "";
             $module_setup = get_module_setup();
             ?>
             @include('setups.nav',$active)

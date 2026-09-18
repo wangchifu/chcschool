@@ -1,4 +1,4 @@
-@extends('layouts.master_clean')
+@extends('layouts.master')
 
 @section('nav_school_active', 'active')
 

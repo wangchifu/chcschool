@@ -4,20 +4,31 @@
         margin: 0 5%;
     }
 
-    .image1 {
-        float: right;
+    /* 無障礙 WCAG 1.4.3 對比度修正 (標準 >= 4.5:1) */
+    .tab-content a,
+    .tab-content .text-primary,
+    .tab-content .btn-link {
+        color: #003d82 !important;
+        font-weight: 600;
     }
 
-    .image2 {
-        float: left;
-        margin-right: 20px;
+    .tab-content a:hover,
+    .tab-content a:focus,
+    .tab-content .btn-link:hover,
+    .tab-content .btn-link:focus {
+        color: #00224a !important;
+        text-decoration: underline !important;
+    }
+
+    .tab-content .text-danger {
+        color: #b21f2d !important;
     }
 
     /* 無障礙 HM1020401C 修正：鍵盤 Focus 高對比視覺提示 */
     .nav-tabs .nav-link:focus-visible,
     .table a:focus-visible,
     button:focus-visible {
-        outline: 3px solid #0056b3 !important;
+        outline: 3px solid #003d82 !important;
         outline-offset: 2px !important;
     }
 </style>
@@ -63,95 +74,107 @@
                     }
                     $msg = '請\n\r'.$user_name.'加你進去校網行政人員群組';
                 ?>
-                {{-- 無障礙 HM1020401C 修正：改用 button 元素取代 href="#!" --}}
                 <button type="button" class="btn btn-success btn-sm mb-2" onclick="alert('{{ $msg }}')">
                     <i class="fas fa-plus" aria-hidden="true"></i> 我想公告
                 </button>
             @endcan
         @endauth
 
-        <table class="table table-striped" style="word-break: break-all;" aria-label="全部圖文公告列表">
-            <caption class="sr-only">全部圖文公告列表</caption>
-            <tbody>
-            @foreach($posts as $post)
-                <tr>
-                    <td scope="row">
-                        <div style="font-size: 1.25rem;">
-                            @if($post->top)
-                                <span class="badge badge-danger">置頂</span>
-                            @endif
-                            @if($post->inbox)
-                                <span class="badge badge-warning">常駐</span>
-                            @endif
-                            <?php
-                            if($post->insite==1){
-                                $can_see = (auth()->check() or check_ip()) ? 1 : 0;
-                            }else{
-                                $can_see = 1;
-                            };
-                            $school_code = school_code();                            
-                            $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
-                            $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
-                            ?>
-                            @if($can_see)
-                                @if($post->insite==1)
-                                    <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                @endif
-                                <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
-                            @else
-                                <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                <span class="font-weight-bold">{{ $post->title }}</span>
-                            @endif
-                        </div>
+        <div class="table-responsive">
+            <table class="table table-striped align-middle" style="word-break: break-all;" aria-label="全部圖文公告列表">
+                <caption class="sr-only">全部圖文公告表格列表</caption>
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" style="width: 110px;">日期</th>
+                        <th scope="col" style="width: 100px;">類別</th>
+                        <th scope="col" style="min-width: 300px;">公告內容</th>
+                        <th scope="col" style="width: 120px;">發佈者</th>
+                        <th scope="col" style="width: 80px;" class="text-center">點閱</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($posts as $post)
+                    <?php
+                    if($post->insite==1){
+                        $can_see = (auth()->check() or check_ip()) ? 1 : 0;
+                    }else{
+                        $can_see = 1;
+                    };
+                    $school_code = school_code();                            
+                    $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
+                    $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
+                    $insite = ($post->insite != null)?$post->insite:0;
 
-                        <?php
-                        $content = str_limit(strip_tags($post->content),'150');
-                        $content = str_replace('&nbsp;','',$content);
-                        ?>
+                    $content = str_limit(strip_tags($post->content),'150');
+                    $content = str_replace('&nbsp;','',$content);
+                    ?>
+                    <tr>
+                        <td>{{ substr($post->created_at,0,10) }}</td>
+                        <td>{{ $post_type_array[$insite] }}</td>
                         
-                        <div class="mt-2 clearfix">
-                            @if($can_see && $post->title_image)
-                                <a href="{{ route('posts.show',$post->id) }}" aria-label="查看公告：{{ $post->title }}">
-                                    {{-- 無障礙 HM1240401C 修正：精確化 alt 圖片說明 --}}
-                                    <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100" alt="公告縮圖：{{ $post->title }}">
-                                </a>
-                            @endif
-
-                            <p class="pp1 mb-1">
-                                @if($can_see)
-                                    {{ $content }}
-                                @else
-                                    <span class="text-muted">請登入後再查看完整內容</span>
+                        <!-- 整合「圖片 + 標題 + 摘要」至單一內容欄位 -->
+                        <td>
+                            <div class="d-flex align-items-start py-1">
+                                @if($can_see && $post->title_image)
+                                    <div class="mr-3 flex-shrink-0" style="width: 90px;">
+                                        <a href="{{ route('posts.show',$post->id) }}" aria-label="查看公告：{{ $post->title }}">
+                                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded border shadow-sm" style="object-fit: cover; height: 60px; width: 100%;" alt="公告縮圖：{{ $post->title }}">
+                                        </a>
+                                    </div>
                                 @endif
-                            </p>
-                        </div>
 
-                        <div class="text-secondary small mt-1">
-                            <?php $insite = ($post->insite != null)?$post->insite:0; ?>
-                            {{ $post_type_array[$insite] }} / 
-                            <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a> / 
-                            {{ $post->created_at }} / 
-                            點閱：{{ $post->views }}
+                                <div class="flex-grow-1">
+                                    <div style="font-size: 1.1rem;" class="mb-1">
+                                        @if($post->top)
+                                            <span class="badge badge-danger">置頂</span>
+                                        @endif
+                                        @if($post->inbox)
+                                            <span class="badge badge-warning">常駐</span>
+                                        @endif
+                                        @if($can_see)
+                                            @if($post->insite==1)
+                                                <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                            @endif
+                                            <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
+                                        @else
+                                            <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                            <span class="font-weight-bold">{{ $post->title }}</span>
+                                        @endif
 
-                            {{-- 無障礙 HM1120201C 修正：補充隱藏式文字說明與 aria-hidden --}}
-                            @if(!empty($photos))
-                                <span class="text-success ml-1">
-                                    <i class="fas fa-image" aria-hidden="true"></i>
-                                    <span class="sr-only">（含圖片附件）</span>
-                                </span>
-                            @endif
-                            @if(!empty($files))
-                                <span class="text-info ml-1">
-                                    <i class="fas fa-download" aria-hidden="true"></i>
-                                    <span class="sr-only">（含檔案下載）</span>
-                                </span>
-                            @endif
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+                                        @if(!empty($photos))
+                                            <span class="text-success ml-1">
+                                                <i class="fas fa-image" aria-hidden="true"></i>
+                                                <span class="sr-only">（含圖片附件）</span>
+                                            </span>
+                                        @endif
+                                        @if(!empty($files))
+                                            <span class="text-info ml-1">
+                                                <i class="fas fa-download" aria-hidden="true"></i>
+                                                <span class="sr-only">（含檔案下載）</span>
+                                            </span>
+                                        @endif
+                                    </div>
+                                    
+                                    <p class="mb-0 text-secondary small">
+                                        @if($can_see)
+                                            {{ $content }}
+                                        @else
+                                            <span class="text-muted">請登入後再查看完整內容</span>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                        </td>
+                        <td class="text-center">{{ $post->views }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
         
         <a href="{{ route('posts.index') }}" class="btn btn-link text-primary btn-sm">
             <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多公告...
@@ -193,85 +216,100 @@
                 @endcan
             @endauth
 
-            <table class="table table-striped" style="word-break: break-all;" aria-label="{{ $post_type->name }} 圖文公告列表">
-                <caption class="sr-only">{{ $post_type->name }} 分類圖文公告列表</caption>
-                <tbody>
-                @foreach($posts as $post)
-                    <tr>
-                        <td scope="row">
-                            <div style="font-size: 1.25rem;">
-                                @if($post->top)
-                                    <span class="badge badge-danger">置頂</span>
-                                @endif
-                                @if($post->inbox)
-                                    <span class="badge badge-warning">常駐</span>
-                                @endif
-                                <?php
-                                if($post->insite==1){
-                                    $can_see = (auth()->check() or check_ip()) ? 1 : 0;
-                                }else{
-                                    $can_see = 1;
-                                };
-                                $school_code = school_code();                                
-                                $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
-                                $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
-                                ?>
-                                @if($can_see)
-                                    @if($post->insite==1)
-                                        <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle" style="word-break: break-all;" aria-label="{{ $post_type->name }} 圖文公告列表">
+                    <caption class="sr-only">{{ $post_type->name }} 分類圖文公告表格列表</caption>
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" style="width: 110px;">日期</th>
+                            <th scope="col" style="width: 100px;">類別</th>
+                            <th scope="col" style="min-width: 300px;">公告內容</th>
+                            <th scope="col" style="width: 120px;">發佈者</th>
+                            <th scope="col" style="width: 80px;" class="text-center">點閱</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($posts as $post)
+                        <?php
+                        if($post->insite==1){
+                            $can_see = (auth()->check() or check_ip()) ? 1 : 0;
+                        }else{
+                            $can_see = 1;
+                        };
+                        $school_code = school_code();                                
+                        $files = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/files'));
+                        $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
+
+                        $content = str_limit(strip_tags($post->content),'150');
+                        $content = str_replace('&nbsp;','',$content);
+                        ?>
+                        <tr>
+                            <td>{{ substr($post->created_at,0,10) }}</td>
+                            <td>{{ $post_type->name }}</td>
+
+                            <!-- 整合「圖片 + 標題 + 摘要」至單一內容欄位 -->
+                            <td>
+                                <div class="d-flex align-items-start py-1">
+                                    @if($can_see && $post->title_image)
+                                        <div class="mr-3 flex-shrink-0" style="width: 90px;">
+                                            <a href="{{ route('posts.show',$post->id) }}" aria-label="查看公告：{{ $post->title }}">
+                                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded border shadow-sm" style="object-fit: cover; height: 60px; width: 100%;" alt="公告縮圖：{{ $post->title }}">
+                                            </a>
+                                        </div>
                                     @endif
-                                    <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
-                                @else
-                                    <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                    <span class="font-weight-bold">{{ $post->title }}</span>
-                                @endif
-                            </div>
 
-                            <?php
-                            $content = str_limit(strip_tags($post->content),'150');
-                            $content = str_replace('&nbsp;','',$content);
-                            ?>
+                                    <div class="flex-grow-1">
+                                        <div style="font-size: 1.1rem;" class="mb-1">
+                                            @if($post->top)
+                                                <span class="badge badge-danger">置頂</span>
+                                            @endif
+                                            @if($post->inbox)
+                                                <span class="badge badge-warning">常駐</span>
+                                            @endif
+                                            @if($can_see)
+                                                @if($post->insite==1)
+                                                    <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                                @endif
+                                                <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
+                                            @else
+                                                <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                                <span class="font-weight-bold">{{ $post->title }}</span>
+                                            @endif
 
-                            <div class="mt-2 clearfix">
-                                @if($can_see && $post->title_image)
-                                    <a href="{{ route('posts.show',$post->id) }}" aria-label="查看公告：{{ $post->title }}">
-                                        <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="image2 img-fluid rounded" width="100" alt="公告縮圖：{{ $post->title }}">
-                                    </a>
-                                @endif
+                                            @if(!empty($photos))
+                                                <span class="text-success ml-1">
+                                                    <i class="fas fa-image" aria-hidden="true"></i>
+                                                    <span class="sr-only">（含圖片附件）</span>
+                                                </span>
+                                            @endif
+                                            @if(!empty($files))
+                                                <span class="text-info ml-1">
+                                                    <i class="fas fa-download" aria-hidden="true"></i>
+                                                    <span class="sr-only">（含檔案下載）</span>
+                                                </span>
+                                            @endif
+                                        </div>
 
-                                <p class="pp1 mb-1">
-                                    @if($can_see)
-                                        {{ $content }}
-                                    @else
-                                        <span class="text-muted">請登入後再查看完整內容</span>
-                                    @endif
-                                </p>
-                            </div>
+                                        <p class="mb-0 text-secondary small">
+                                            @if($can_see)
+                                                {{ $content }}
+                                            @else
+                                                <span class="text-muted">請登入後再查看完整內容</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
 
-                            <div class="text-secondary small mt-1">
-                                {{ $post_type->name }} / 
-                                <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a> / 
-                                {{ $post->created_at }} / 
-                                點閱：{{ $post->views }}
-
-                                @if(!empty($photos))
-                                    <span class="text-success ml-1">
-                                        <i class="fas fa-image" aria-hidden="true"></i>
-                                        <span class="sr-only">（含圖片附件）</span>
-                                    </span>
-                                @endif
-                                @if(!empty($files))
-                                    <span class="text-info ml-1">
-                                        <i class="fas fa-download" aria-hidden="true"></i>
-                                        <span class="sr-only">（含檔案下載）</span>
-                                    </span>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+                            <td>
+                                <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                            </td>
+                            <td class="text-center">{{ $post->views }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
             
             <a href="{{ route('posts.type',$post_type->id) }}" class="btn btn-link text-primary btn-sm">
                 <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多 {{ $post_type->name }}...

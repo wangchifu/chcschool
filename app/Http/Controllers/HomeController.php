@@ -260,6 +260,17 @@ class HomeController extends Controller
         'chcschool.localhost'=>'G',
     ];
 
+    public function sitemap()
+    {        
+        $setup = Setup::first();
+        $sitemap = $setup->sitemap;
+        $data = [
+            'sitemap'=>$sitemap,
+        ];
+        // 如果選單資料是存在資料庫，可在此撈出所有分類；若無，可直接在 Blade 硬編碼寫死選單
+        return view('sitemap',$data);
+    }
+
     public function check_file(){
         $check_file = $this->school_check_file[$_SERVER['HTTP_HOST']];        
         $filePath = storage_path('app/public/DNS/'.$check_file.'/DN_CHECK_FILE.htm');
