@@ -2,9 +2,37 @@
 
 @section('nav_home_active', 'active')
 
-@if($setup->title_image_style==2)
-    @section('in_head')
-        <style>
+@section('in_head')
+    <style>
+        /* 無障礙輪播控制按鈕：懸浮於右上角，不佔用版面高度也不與左右箭頭重疊 */
+        .carousel-accessibility-control {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 30; /* 高於 Bootstrap 預設控制箭頭 (z-index: 1) 與字幕 (z-index: 10) */
+        }
+        .carousel-accessibility-control .btn-pause {
+            background-color: rgba(0, 0, 0, 0.85);
+            color: #ffffff !important;
+            border: 1px solid #ffffff;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+        .carousel-accessibility-control .btn-pause:hover {
+            background-color: #000000;
+        }
+        .carousel-accessibility-control .btn-pause:focus-visible,
+        .carousel-accessibility-control .btn-pause:focus {
+            outline: 3px solid #ffc107 !important;
+            outline-offset: 2px !important;
+        }
+
+        @if($setup->title_image_style==2)
             .carousel-fade .carousel-inner .carousel-item {
                 opacity: 0;
                 transition-property: opacity;
@@ -25,29 +53,9 @@
                 -webkit-transform: translateX(0);
                 -ms-transform: translateX(0);
             }
-
-            /* 無障礙輪播控制按鈕樣式 */
-            .carousel-accessibility-control {
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                z-index: 20;
-            }
-            .carousel-accessibility-control .btn-pause {
-                background-color: rgba(0, 0, 0, 0.85);
-                color: #ffffff;
-                border: 2px solid #ffffff;
-                padding: 5px 12px;
-                font-size: 0.9rem;
-                border-radius: 4px;
-            }
-            .carousel-accessibility-control .btn-pause:focus-visible {
-                outline: 3px solid #ffc107 !important;
-                outline-offset: 2px !important;
-            }
-        </style>
-    @endsection
-@endif
+        @endif
+    </style>
+@endsection
 
 {{-- 無障礙 2.4.1 跳過區塊按鈕：採用 Bootstrap 4 原生 sr-only sr-only-focusable --}}
 @section('skip_link')
@@ -61,12 +69,12 @@
     @if($setup->title_image)
         @if(!empty($photo_data))
             <?php $carousel_fade =($setup->title_image_style ==2 )?"carousel-fade":""; ?>
-            <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }}" data-ride="carousel" role="region" aria-label="焦點新聞輪播圖">
+            <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }} position-relative" data-ride="carousel" role="region" aria-label="焦點新聞輪播圖">
                 
-                <!-- 無障礙檢測修正：輪播組件的第一個可 Focus 元素（暫停/播放控制按鈕） -->
+                <!-- 無障礙檢測修正：獨立置於右上角半透明按鈕，不擋住左右按鍵 -->
                 <div class="carousel-accessibility-control">
                     <button type="button" id="carouselToggleBtn" class="btn btn-pause" aria-label="暫停輪播圖片" aria-pressed="false">
-                        <i class="fas fa-pause" aria-hidden="true"></i> <span>暫停輪播</span>
+                        <i class="fas fa-pause me-1" aria-hidden="true"></i> <span>暫停輪播</span>
                     </button>
                 </div>
 
@@ -272,11 +280,7 @@
                 e.preventDefault();
                 var $target =$('#main-content-target');
                 if ($target.length) {
-                    // 強制轉移 DOM 焦點
-                    $target.attr('tabindex', '-1').focus();
-                    
-                    // 平滑滾動畫面至主要內容區
-                    $('html, body').animate({
+                    $target.attr('tabindex', '-1').focus();$('html, body').animate({
                         scrollTop: $('#main-content').offset().top - 20
                     }, 100);
                 }
@@ -293,17 +297,17 @@
                         isPaused = true;
                         $(this).attr('aria-pressed', 'true')
                                .attr('aria-label', '播放輪播圖片')
-                               .html('<i class="fas fa-play" aria-hidden="true"></i> <span>播放輪播</span>');
+                               .html('<i class="fas fa-play me-1" aria-hidden="true"></i> <span>播放輪播</span>');
                     } else {
                         $carousel.carousel('cycle');
                         isPaused = false;
                         $(this).attr('aria-pressed', 'false')
                                .attr('aria-label', '暫停輪播圖片')
-                               .html('<i class="fas fa-pause" aria-hidden="true"></i> <span>暫停輪播</span>');
+                               .html('<i class="fas fa-pause me-1" aria-hidden="true"></i> <span>暫停輪播</span>');
                     }
                 });
 
-                // 當焦點進出輪播區時自動開關輪播
+                // 當鍵盤焦點進出輪播區時自動暫停/恢復輪播
                 $carousel.on('focusin', function() {$carousel.carousel('pause');
                 }).on('focusout', function() {
                     if (!isPaused) {
