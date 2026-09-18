@@ -5,25 +5,6 @@
 @if($setup->title_image_style==2)
     @section('in_head')
         <style>
-            /* 無障礙 2.4.1 Skip Link 樣式：預設隱藏，按 Tab 獲得 focus 時顯示於左上角 */
-            .skip-link {
-                position: absolute;
-                top: -60px;
-                left: 10px;
-                background: #000000;
-                color: #ffffff !important;
-                padding: 10px 18px;
-                z-index: 99999;
-                text-decoration: underline;
-                font-weight: bold;
-                border-radius: 0 0 4px 4px;
-                transition: top 0.2s ease;
-            }
-            .skip-link:focus {
-                top: 0;
-                outline: 3px solid #ffc107 !important;
-            }
-
             .carousel-fade .carousel-inner .carousel-item {
                 opacity: 0;
                 transition-property: opacity;
@@ -53,7 +34,7 @@
                 z-index: 20;
             }
             .carousel-accessibility-control .btn-pause {
-                background-color: rgba(0, 0, 0, 0.75);
+                background-color: rgba(0, 0, 0, 0.85);
                 color: #ffffff;
                 border: 2px solid #ffffff;
                 padding: 5px 12px;
@@ -68,14 +49,14 @@
     @endsection
 @endif
 
-{{-- 無障礙 2.4.1 跳過區塊按鈕：若主版型 layouts.master 有定義 @yield('skip_link') 即可直接印出 --}}
+{{-- 無障礙 2.4.1 跳過區塊按鈕：採用 Bootstrap 4 原生 sr-only sr-only-focusable --}}
 @section('skip_link')
-    <a href="#main-content" class="skip-link">跳到主要內容區塊</a>
+    <a href="#main-content" class="sr-only sr-only-focusable btn btn-dark position-fixed" style="top: 10px; left: 10px; z-index: 99999;">跳到主要內容區塊</a>
 @endsection
 
 @section('top_image')
-    {{-- 保備區：如果 master 未引用 skip_link，直接在 top_image 最前方備用印出 --}}
-    <a href="#main-content" class="skip-link">跳到主要內容區塊</a>
+    {{-- 備用區：採用 Bootstrap 4 原生 sr-only sr-only-focusable --}}
+    <a href="#main-content" class="sr-only sr-only-focusable btn btn-dark position-fixed" style="top: 10px; left: 10px; z-index: 99999;">跳到主要內容區塊</a>
 
     @if($setup->title_image)
         @if(!empty($photo_data))
