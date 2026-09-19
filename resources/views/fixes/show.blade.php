@@ -26,7 +26,12 @@
                 ?>
                 {!! $icon[$fix->situation] !!} {{ $s[$fix->situation] }}
 
-                 / 張貼者 {{ $fix->user->name }}</a>
+                 / 張貼者 
+                @if($fix->user_id == 0)
+                    學生
+                @else
+                    {{ $fix->user->name }}
+                @endif
             </p>
             <hr>
             <p>

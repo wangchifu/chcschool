@@ -53,10 +53,16 @@
                 </form>
             @endif
             <a href="{{ route('fixes.create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增報修</a>
+            @if($fix_admin)
+                <a href="{{ route('fixes.edit_class') }}" class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> 編輯類別</a>
+                <a href="{{ route('fixes.stu_adm') }}" class="btn btn-warning btn-sm"><i class="fas fa-user"></i> 學生管理</a>                
+            @endif
+            <a href="{{ route('fixes.stu_login') }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i> 學生登入</a>
+            
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th>類別 @if($fix_admin)<a href="{{ route('fixes.edit_class') }}" class="btn btn-secondary btn-sm"> <i class="fas fa-edit"></i> 編輯類別</a>@endif</th>
+                    <th>類別</th>
                     <th>處理狀況</th>
                     <th>申報日期</th>
                     <th>申報人</th>
@@ -88,7 +94,11 @@
                             {{ substr($fix->created_at,0,10) }}
                         </td>
                         <td>
-                            {{ $fix->user->name }}
+                            @if($fix->user_id == 0)
+                                學生
+                            @else
+                                {{ $fix->user->name }}
+                            @endif
                         </td>
                         <td>
                             <a href="{{ route('fixes.show',$fix->id) }}">{{ $fix->title }}</a>

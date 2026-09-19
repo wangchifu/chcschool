@@ -149,6 +149,15 @@ Route::get('clubs/{club}/sign_up', 'ClubsController@sign_up')->name('clubs.sign_
 Route::get('clubs/{club_id}/sign_down', 'ClubsController@sign_down')->name('clubs.sign_down');
 Route::get('clubs/{club}/{class_id}/sign_show', 'ClubsController@sign_show')->name('clubs.sign_show');
 
+//學生報修
+Route::get('fixes/stu_login', 'FixController@stu_login')->name('fixes.stu_login');
+Route::get('fixes/stu_logout', 'FixController@stu_logout')->name('fixes.stu_logout');
+Route::post('fixes/stu_do_login', 'FixController@stu_do_login')->name('fixes.stu_do_login');
+Route::get('fixes/stu_list', 'FixController@stu_list')->name('fixes.stu_list');
+Route::get('fixes/stu_create', 'FixController@stu_create')->name('fixes.stu_create');
+Route::post('fixes/stu_store', 'FixController@stu_store')->name('fixes.stu_store');
+Route::get('fixes/stu_show/{fix}', 'FixController@stu_show')->name('fixes.stu_show');
+
 
 //校園部落格
 Route::get('blogs', 'BlogsController@index')->name('blogs.index');
@@ -520,6 +529,13 @@ Route::group(['middleware' => 'exec'], function () {
     Route::get('fixes/edit_class', 'FixController@edit_class')->name('fixes.edit_class');
     Route::post('fixes/edit_class/{fix_class}', 'FixController@update_class')->name('fixes.update_class');
     Route::post('fixes/store_class', 'FixController@store_class')->name('fixes.store_class');
+
+    Route::get('fixes/stu_adm/{semester?}', 'FixController@stu_adm')->name('fixes.stu_adm');
+    Route::get('fixes/{semester}/stu_adm_more/{student_class_id?}', 'FixController@stu_adm_more')->name('fixes.stu_adm_more');
+    Route::post('fixes/{semester}/stu_import', 'FixController@stu_import')->name('fixes.stu_import');
+    Route::get('fixes/{club_student}/stu_backPWD/{student_class_id}', 'FixController@stu_backPWD')->name('fixes.stu_backPWD');
+    Route::get('fixes/{club_student}/stu_edit/{student_class}', 'FixController@stu_edit')->name('fixes.stu_edit');
+    Route::patch('fixes/{club_student}/stu_update', 'FixController@stu_update')->name('fixes.stu_update');
 
 
     //會議文稿
