@@ -54,12 +54,11 @@
                     </a>
                 </li>
 
-                {{-- 2. 網站導覽 (空間優化版：小螢幕顯示圖示，大螢幕顯示「導覽」) --}}
                 <li class="nav-item @yield('nav_sitemap_active')">
                     <?php $is_sitemap_active = (trim($__env->yieldContent('nav_sitemap_active')) == 'active'); ?>
                     <a class="nav-link" href="{{ route('sitemap') }}" @if($is_sitemap_active) aria-current="page" @endif title="網站導覽" aria-label="網站導覽">
                         <i class="fas fa-sitemap" aria-hidden="true"></i>
-                        <span class="d-none d-xl-inline">導覽</span>
+                        <span>導覽</span>
                         @if($is_sitemap_active) <span class="sr-only">(目前頁面)</span> @endif
                     </a>
                 </li>
