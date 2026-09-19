@@ -2,76 +2,93 @@
 $blogs = \App\Blog::orderBy('created_at','DESC')
     ->paginate(5);
 ?>
+
 <style>
-    .image-container{
-        max-width: 90%;
-        margin: 0 5%;
-    }
-
-    .image1{
-        float: right;
-    }
-
-    .image2{
+    /* 文繞圖圖片樣式 */
+    .blog-item-img {
         float: left;
-        margin-right: 1.25rem; /* 無障礙 CS2140401C：將 20px 改為相對單位 1.25rem */
+        margin-right: 1.25rem; /* 對應無障礙 CS2140401C 相對單位 */
+        margin-bottom: 0.5rem;
+        max-width: 7.5rem;   /* 約 120px，避免圖片過大壓迫文字 */
+        height: auto;
+    }
+
+    /* 標題對比度強化 (對比度 > 7:1) */
+    .blog-title-link {
+        color: #004085 !important;
+        text-decoration: underline;
+        font-size: 1.1rem;
+    }
+    .blog-title-link:hover, .blog-title-link:focus {
+        color: #002752 !important;
+    }
+
+    /* 中元資訊對比度修正 (取代原 text-secondary，確保 > 4.5:1) */
+    .blog-meta-text {
+        color: #495057 !important;
+        font-size: 0.875rem;
     }
 </style>
 
 @can('create',\App\Post::class)
-    <a href="{{ route('blogs.create') }}" class="btn btn-success btn-sm mb-2" title="新增校園部落格文章" aria-label="新增校園部落格文章">
+    <a href="{{ route('blogs.create') }}" class="btn btn-success btn-sm mb-3" title="新增校園部落格文章" aria-label="新增校園部落格文章">
         <i class="fas fa-plus" aria-hidden="true"></i> 新增文章
     </a>
 @endcan
 
-{{-- 無障礙表格修復：加入 aria-label 標示表格用途 --}}
-<table class="table table-striped" style="word-break: break-all;" aria-label="最新校園部落格文章列表">
-    <tbody>
+{{-- 無障礙結構優化：使用語意化 ul 清單替代排版用 table --}}
+<ul class="list-unstyled mb-3" aria-label="最新校園部落格文章列表">
     @foreach($blogs as $blog)
-        <tr>
-            <td>
-                {{-- 文章標題連結 --}}
-                <a href="{{ route('blogs.show',$blog->id) }}" style="text-decoration: none" title="閱讀文章：{{ $blog->title }}" aria-label="閱讀文章：{{ $blog->title }}">
-                    <strong>{{ $blog->title }}</strong>
+        <?php
+            $content = str_limit(strip_tags($blog->content), '150');
+            $content = str_replace('&nbsp;', '', $content);
+            
+            $author = !empty($blog->job_title) 
+                ? $blog->job_title 
+                : ($blog->user->name == "系統管理員" ? "系統管理員" : $blog->user->title);
+        ?>
+        <li class="py-3 border-bottom clearfix">
+            
+            {{-- 1. 文章標題 --}}
+            <h3 class="h6 font-weight-bold mb-2">
+                <a href="{{ route('blogs.show', $blog->id) }}" class="blog-title-link" title="閱讀文章：{{ $blog->title }}">
+                    {{ $blog->title }}
                 </a>
-                
-                <?php
-                $content = str_limit(strip_tags($blog->content),'150');
-                $content = str_replace('&nbsp;','',$content);
-                ?>
-                
-                {{-- 圖片連結與替代文字修復 --}}
-                @if($blog->title_image)
-                    <a href="{{ route('blogs.show',$blog->id) }}" title="閱讀文章：{{ $blog->title }}" aria-label="閱讀文章：{{ $blog->title }}">
-                        <img src="{{ asset('storage/'.$school_code.'/blogs/'.$blog->id.'/title_image.png') }}" class="image2 img-fluid rounded" style="max-width: 6.25rem; height: auto;" alt="{{ $blog->title }} 的封面圖片">
-                    </a>
-                @endif
+            </h3>
 
-                <p class="pp1 mt-2">
-                    {{ $content }}
-                    <br>
-                    <small class="text-secondary">
-                        @if(!empty($blog->job_title))
-                            {{ $blog->job_title }}
-                        @else
-                            @if($blog->user->name == "系統管理員")
-                                系統管理員
-                            @else
-                                {{ $blog->user->title }}
-                            @endif
-                        @endif                                        
-                         / {{ $blog->created_at }} / 點閱：{{ $blog->views }}
-                    </small>
-                </p>
-            </td>
-        </tr>
+            {{-- 2. 圖片 (文繞圖浮動) --}}
+            {{-- 加上 tabindex="-1" aria-hidden="true" 避免鍵盤使用者重複 Focus 圖與字 --}}
+            @if($blog->title_image)
+                <a href="{{ route('blogs.show', $blog->id) }}" tabindex="-1" aria-hidden="true" class="d-block">
+                    <img src="{{ asset('storage/'.$school_code.'/blogs/'.$blog->id.'/title_image.png') }}" class="blog-item-img img-fluid rounded shadow-sm" alt="{{ $blog->title }} 的封面圖片">
+                </a>
+            @endif
+
+            {{-- 3. 內文摘要 (自然圍繞圖片) --}}
+            <p class="mb-2" style="color: #212529; line-height: 1.6; word-break: break-all;">
+                {{ $content }}
+            </p>
+
+            {{-- 4. 文章發布資訊 (作者 / 時間 / 點閱數) --}}
+            <div class="blog-meta-text d-flex flex-wrap align-items-center">
+                <span class="mr-3">
+                    <i class="fas fa-user-circle mr-1" aria-hidden="true"></i>{{ $author }}
+                </span>
+                <span class="mr-3">
+                    <i class="far fa-calendar-alt mr-1" aria-hidden="true"></i>{{ $blog->created_at }}
+                </span>
+                <span>
+                    <i class="far fa-eye mr-1" aria-hidden="true"></i>點閱：{{ $blog->views }}
+                </span>
+            </div>
+
+        </li>
     @endforeach
-    </tbody>
-</table>
+</ul>
 
-{{-- 更多文章連結修復 --}}
-<small>
-    <a href="{{ route('blogs.index') }}" title="查看更多校園部落格文章" aria-label="查看更多校園部落格文章">
-        <i class="far fa-hand-point-up" aria-hidden="true"></i> 更多 文章...
+{{-- 更多文章連結 --}}
+<div class="mt-2">
+    <a href="{{ route('blogs.index') }}" class="blog-title-link font-weight-bold" title="查看更多校園部落格文章" aria-label="查看更多校園部落格文章">
+        <i class="far fa-hand-point-up" aria-hidden="true"></i> 更多文章...
     </a>
-</small>
+</div>

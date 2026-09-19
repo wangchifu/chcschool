@@ -36,8 +36,8 @@
                                     <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="fas fa-sign-in-alt"></i> 登入
                                     </button>
-				</div>
-			    </div>
+				                </div>
+			                </div>
                             @include('layouts.errors')
                         </form>
                     </div>
