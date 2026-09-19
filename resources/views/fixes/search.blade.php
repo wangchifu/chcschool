@@ -50,7 +50,11 @@
                             {{ substr($fix->created_at,0,10) }}
                         </td>
                         <td>
-                            {{ $fix->user->name }}
+                            @if($fix->user_id == 0)
+                                學生
+                            @else
+                                {{ $fix->user->name }}
+                            @endif
                         </td>
                         <td>
                             <a href="{{ route('fixes.show',$fix->id) }}">{{ $fix->title }}</a>
