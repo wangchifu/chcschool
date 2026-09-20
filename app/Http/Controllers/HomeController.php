@@ -271,6 +271,16 @@ class HomeController extends Controller
         return view('sitemap',$data);
     }
 
+    public function stu_index(){
+        return view('stu.index');
+    }
+
+    public function stu_logout()
+    {                        
+        session()->forget('stu_data');
+        return redirect()->route('index');
+    }
+
     public function check_file(){
         $check_file = $this->school_check_file[$_SERVER['HTTP_HOST']];        
         $filePath = storage_path('app/public/DNS/'.$check_file.'/DN_CHECK_FILE.htm');

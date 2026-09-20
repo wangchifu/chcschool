@@ -56,9 +56,9 @@
             @if($fix_admin)
                 <a href="{{ route('fixes.edit_class') }}" class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> 編輯類別</a>
                 <a href="{{ route('fixes.stu_adm') }}" class="btn btn-warning btn-sm"><i class="fas fa-user"></i> 學生管理</a>                
-            @endif
-            <a href="{{ route('fixes.stu_login') }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i> 學生登入</a>
-            
+                <a href="{{ route('fixes.stu_login') }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i> 學生登入(方式1)</a>
+                <a href="{{ route('sso') }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i> 學生 EIP 登入(方式2)</a>
+            @endif                                    
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>

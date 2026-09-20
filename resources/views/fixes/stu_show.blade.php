@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>顯示報修</h1>       
-            <a href="{{ route('fixes.stu_logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> 學生登出</a>                             
+            <a href="{{ route('fixes.stu_logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> 登出 ({{ session('stu_data') }})</a>                             
             <p class="lead">
                 <?php
                 $s=['1'=>'處理完畢','2'=>'處理中','3'=>'申報中'];

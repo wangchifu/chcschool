@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-11">
             <h1>學生新增報修</h1>          
-            <a href="{{ route('fixes.stu_logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> 學生登出</a>                          
+            <a href="{{ route('fixes.stu_logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> 登出 ({{ session('stu_data') }})</a>                          
             {{ Form::open(['route' => 'fixes.stu_store', 'method' => 'POST','id'=>'this_form']) }}
             <div class="card my-4">
                 <h3 class="card-header">報修資料</h3>

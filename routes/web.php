@@ -158,6 +158,10 @@ Route::get('fixes/stu_create', 'FixController@stu_create')->name('fixes.stu_crea
 Route::post('fixes/stu_store', 'FixController@stu_store')->name('fixes.stu_store');
 Route::get('fixes/stu_show/{fix}', 'FixController@stu_show')->name('fixes.stu_show');
 
+//學生首頁
+Route::get('stu/index', 'HomeController@stu_index')->name('stu.index');
+Route::get('stu/logout', 'HomeController@stu_logout')->name('stu.logout');
+
 
 //校園部落格
 Route::get('blogs', 'BlogsController@index')->name('blogs.index');

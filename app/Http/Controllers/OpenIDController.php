@@ -121,12 +121,18 @@ class OpenIDController extends Controller
       $user_obj['title'] = $edufile['titles'][0]['titles'][0];
       $user_obj['kind'] = "";
       if ($user_obj['title'] == "學生") {
-        $message = "學生禁止訪問";
-        $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
-        $post_logout_redirect_uri = url('logins');        
-        $id_token_hint = session('id_token');
-        $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
-        return redirect($link)->withErrors(['gsuite_error' => [$message]]);
+        print_r($userinfo);
+        echo "<hr>";
+        print_r($profile);      
+        echo "<hr>";
+        print_r($edufile);      
+        die();
+        //$message = "學生禁止訪問";
+        //$url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+        //$post_logout_redirect_uri = url('logins');        
+        //$id_token_hint = session('id_token');
+        //$link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+        //return redirect($link)->withErrors(['gsuite_error' => [$message]]);
       }else{
         $title_array = $edufile['titles'][0]['titles'];
         $title = "";
