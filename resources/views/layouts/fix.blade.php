@@ -31,7 +31,13 @@ $n=1;
         ?>
         <li class="mb-1">
           <small class="text-muted">{{ substr($fix->created_at,0,10) }}</small>
-          <span class="badge badge-{{ $color }}">{{ substr_cut_name($fix->user->name) }}</span>
+          <span class="badge badge-{{ $color }}">
+            @if($fix->user_id == 0)
+              學生
+            @else
+              {{ substr_cut_name($fix->user->name) }}
+            @endif            
+          </span>
           
           {{-- 無障礙 HM1240401C 修正：改用標準 href，加上開新視窗提示、title 與 aria-label --}}
           <a href="{{ route('fixes.show_clean',$fix->id) }}" onclick="open_window('{{ route('fixes.show_clean',$fix->id) }}','新視窗'); return false;" title="檢視報修詳情：{{ $fix->title }}（另開新視窗）" aria-label="檢視報修詳情：{{ $fix->title }}（另開新視窗）">
@@ -62,7 +68,13 @@ $n=1;
           ?>
           <li class="mb-1">
             <small class="text-muted">{{ substr($fix->created_at,0,10) }}</small>
-            <span class="badge badge-{{ $color }}">{{ substr_cut_name($fix->user->name) }}</span>
+            <span class="badge badge-{{ $color }}">
+            @if($fix->user_id == 0)
+              學生
+            @else
+              {{ substr_cut_name($fix->user->name) }}
+            @endif
+            </span>
             
             <a href="{{ route('fixes.show_clean',$fix->id) }}" onclick="open_window('{{ route('fixes.show_clean',$fix->id) }}','新視窗'); return false;" title="檢視 {{ $fix_class->name }} 報修詳情：{{ $fix->title }}（另開新視窗）" aria-label="檢視 {{ $fix_class->name }} 報修詳情：{{ $fix->title }}（另開新視窗）">
               {{ $fix->title }}

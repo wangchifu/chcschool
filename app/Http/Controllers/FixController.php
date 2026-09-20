@@ -545,7 +545,7 @@ class FixController extends Controller
             if ($request->input('pwd') != $check->pwd) {
                 return back()->withErrors(['error' => ['密碼錯誤！']]);
             } else {
-                session(['stu_fix' => $check->class_num." ".$check->name]);
+                session(['stu_fix' => $check->class_num." ".substr_cut_name($check->name)]);
                 return redirect()->route('fixes.stu_list', $request->input('class_id'));
             };
         }        
