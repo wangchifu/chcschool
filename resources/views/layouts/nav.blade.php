@@ -43,25 +43,28 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 {{-- 1. 首頁 --}}
-                <li class="nav-item @yield('nav_home_active')">
-                    <?php 
-                        $homepage_name = ($setup->homepage_name)?$setup->homepage_name:"首頁"; 
-                        $is_home_active = (trim($__env->yieldContent('nav_home_active')) == 'active');
-                    ?>
-                    <a class="nav-link" href="{{ route('index') }}" @if($is_home_active) aria-current="page" @endif title="前往首頁">
-                        {{ $homepage_name }}
-                        @if($is_home_active) <span class="sr-only">(目前頁面)</span> @endif
-                    </a>
-                </li>
-
-                <li class="nav-item @yield('nav_sitemap_active')">
-                    <?php $is_sitemap_active = (trim($__env->yieldContent('nav_sitemap_active')) == 'active'); ?>
-                    <a class="nav-link" href="{{ route('sitemap') }}" @if($is_sitemap_active) aria-current="page" @endif title="網站導覽" aria-label="網站導覽">
-                        <i class="fas fa-sitemap" aria-hidden="true"></i>
-                        <span>導覽</span>
-                        @if($is_sitemap_active) <span class="sr-only">(目前頁面)</span> @endif
-                    </a>
-                </li>
+                @if(isset($module_setup['首頁']))
+                    <li class="nav-item @yield('nav_home_active')">
+                        <?php 
+                            $homepage_name = ($setup->homepage_name)?$setup->homepage_name:"首頁"; 
+                            $is_home_active = (trim($__env->yieldContent('nav_home_active')) == 'active');
+                        ?>
+                        <a class="nav-link" href="{{ route('index') }}" @if($is_home_active) aria-current="page" @endif title="前往首頁">
+                            {{ $homepage_name }}
+                            @if($is_home_active) <span class="sr-only">(目前頁面)</span> @endif
+                        </a>
+                    </li>
+                @endif
+                @if(isset($module_setup['導覽']))
+                    <li class="nav-item @yield('nav_sitemap_active')">
+                        <?php $is_sitemap_active = (trim($__env->yieldContent('nav_sitemap_active')) == 'active'); ?>
+                        <a class="nav-link" href="{{ route('sitemap') }}" @if($is_sitemap_active) aria-current="page" @endif title="網站導覽" aria-label="網站導覽">
+                            <i class="fas fa-sitemap" aria-hidden="true"></i>
+                            <span>導覽</span>
+                            @if($is_sitemap_active) <span class="sr-only">(目前頁面)</span> @endif
+                        </a>
+                    </li>
+                @endif
 
                 @if(isset($module_setup['公告系統']))
                     <li class="nav-item @yield('nav_post_active')">

@@ -2,6 +2,8 @@
 
 return [
     'modules'=>[
+        'index'=>'首頁',
+        'sitemap'=>'導覽',
         'posts'=>'公告系統',
         'open_files'=>'檔案庫',
         'school_marquee'=>'校園跑馬燈',
