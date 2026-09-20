@@ -151,7 +151,6 @@ Route::get('clubs/{club}/{class_id}/sign_show', 'ClubsController@sign_show')->na
 
 //學生報修
 Route::get('fixes/stu_login', 'FixController@stu_login')->name('fixes.stu_login');
-Route::get('fixes/stu_logout', 'FixController@stu_logout')->name('fixes.stu_logout');
 Route::post('fixes/stu_do_login', 'FixController@stu_do_login')->name('fixes.stu_do_login');
 Route::get('fixes/stu_list', 'FixController@stu_list')->name('fixes.stu_list');
 Route::get('fixes/stu_create', 'FixController@stu_create')->name('fixes.stu_create');

@@ -524,14 +524,7 @@ class FixController extends Controller
             'semester'=>get_date_semester(date('Y-m-d')),
         ];
         return view('fixes.stu_login', $data);
-    }
-
-    public function stu_logout()
-    {                
-        session()->forget('stu_fix');
-        session()->forget('stu_data');
-        return redirect()->route('fixes.stu_login');
-    }
+    }    
 
     public function stu_do_login(Request $request)
     {        

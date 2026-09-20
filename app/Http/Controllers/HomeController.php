@@ -278,7 +278,16 @@ class HomeController extends Controller
     public function stu_logout()
     {                        
         session()->forget('stu_data');
-        return redirect()->route('index');
+        session()->forget('stu_fix');
+        if (session()->has('id_token')) {
+            $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+            $post_logout_redirect_uri = url('index');        
+            $id_token_hint = session('id_token');
+            $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+            return redirect($link);
+        }else{
+            return redirect()->route('index');
+        }        
     }
 
     public function check_file(){

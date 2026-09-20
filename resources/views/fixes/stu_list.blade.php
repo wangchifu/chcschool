@@ -9,7 +9,7 @@
         <div class="col-md-11">
             <h1>學生報修系統</h1>                                    
             <a href="{{ route('fixes.stu_create') }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> 新增報修</a>  
-            <a href="{{ route('fixes.stu_logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> 登出 ({{ session('stu_data') }})</a>                        
+            <a href="{{ route('stu.logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> 登出 ({{ session('stu_data') }})</a>                        
             <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
