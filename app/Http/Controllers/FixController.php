@@ -571,8 +571,8 @@ class FixController extends Controller
 
     public function stu_create(){
         if(empty(session('stu_fix'))) return redirect()->route('fixes.stu_login');
-
-        $fix_classes = FixClass::orderBy('order_by')->get();
+        
+        $fix_classes = FixClass::where('disable',null)->orderBy('order_by')->get();
         $types = [];
         foreach($fix_classes as $fix_class){
             $types[$fix_class->id] = $fix_class->name;
