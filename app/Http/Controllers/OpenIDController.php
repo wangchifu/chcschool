@@ -121,12 +121,11 @@ class OpenIDController extends Controller
       $user_obj['title'] = $edufile['titles'][0]['titles'][0];
       $user_obj['kind'] = "";
       if ($user_obj['title'] == "學生") {
-        print_r($userinfo);
-        echo "<hr>";
-        print_r($profile);      
-        echo "<hr>";
-        print_r($edufile);      
-        die();
+        $user_obj['classno'] = $edufile['classinfo'][0]['grade'].sprintf('%02d', $edufile['classinfo'][0]['classno']);
+        session(['stu_data' => $user_obj['classno']." ".$user_obj['name']]);
+        session(['stu_fix' => $user_obj['classno']." ".$user_obj['name']]);
+        
+        return redirect()->route('stu.index');
         //$message = "學生禁止訪問";
         //$url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
         //$post_logout_redirect_uri = url('logins');        
