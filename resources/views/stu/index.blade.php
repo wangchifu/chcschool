@@ -38,8 +38,22 @@
 
 <div class="row justify-content-center">
     <div class="col-md-11">
-        <h1 class="mb-4 fw-bold">學生首頁 ({{ session('stu_data') }} 已登入)</h1>                                    
-        <a href="{{ route('stu.logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> 登出 ({{ session('stu_data') }})</a>                        
+
+        <!-- 頂部頁頭區塊 -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom gap-2">
+            <div>
+                <h1 class="h2 fw-bold mb-1">學生首頁</h1>
+                <span class="text-secondary small">
+                    <i class="fas fa-user-circle me-1"></i> 已登入帳號：<strong>{{ session('stu_data') }}</strong>
+                </span>
+            </div>
+            <div>
+                <a href="{{ route('stu.logout') }}" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-sign-out-alt me-1"></i> 登出
+                </a>
+            </div>
+        </div>
+
         <!-- 按鈕矩陣區塊 -->
         <div class="row g-4">
 
@@ -48,9 +62,9 @@
                 <a href="{{ route('fixes.stu_list') }}" class="text-decoration-none">
                     <div class="card dashboard-btn-card h-100 shadow-sm text-center p-3">
                         <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                            <!-- 圖示：使用 Bootstrap Icons 或 FontAwesome -->
+                            <!-- Font Awesome 工具圖示 -->
                             <div class="icon-box">
-                                <i class="bi bi-wrench-adjustable-circle fs-2"></i>
+                                <i class="fas fa-tools fs-2"></i>
                             </div>
                             <h5 class="card-title fw-bold text-dark m-0">學生報修</h5>
                         </div>
@@ -58,14 +72,14 @@
                 </a>
             </div>
 
-            <!-- 【按鈕項目 2】：範例預留（未來新增按鈕範例） -->
+            <!-- 【按鈕項目 2】：預留新增按鈕（更換圖示範例） -->
             <!-- 
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="#" class="text-decoration-none">
                     <div class="card dashboard-btn-card h-100 shadow-sm text-center p-3">
                         <div class="card-body d-flex flex-column justify-content-center align-items-center">
                             <div class="icon-box">
-                                <i class="bi bi-person-gear fs-2"></i>
+                                <i class="fas fa-user-cog fs-2"></i>
                             </div>
                             <h5 class="card-title fw-bold text-dark m-0">個人設定</h5>
                         </div>
