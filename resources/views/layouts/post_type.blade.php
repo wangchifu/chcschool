@@ -16,6 +16,28 @@
         text-decoration: underline !important;
     }
 
+    /* 🎯 關鍵修復：提高選擇器權重 (a.btn-success)，強制覆蓋 .tab-content a 的藍色，確保文字一律為白色 */
+    .tab-content a.btn-success,
+    .tab-content button.btn-success,
+    .btn-success {
+        background-color: #146c43 !important;
+        border-color: #13653f !important;
+        color: #ffffff !important; /* 白色文字 */
+        text-decoration: none !important; /* 移除超連結下劃線 */
+    }
+
+    .tab-content a.btn-success:hover,
+    .tab-content a.btn-success:focus,
+    .tab-content button.btn-success:hover,
+    .tab-content button.btn-success:focus,
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active {
+        background-color: #0f5132 !important;
+        border-color: #0e4b2e !important;
+        color: #ffffff !important;
+    }
+
     /* 無障礙 HM1020401C 修正：頁籤與按鈕 Focus 高對比視覺提示 */
     .nav-tabs .nav-link:focus-visible,
     .table a:focus-visible,

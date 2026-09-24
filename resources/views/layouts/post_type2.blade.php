@@ -4,7 +4,7 @@
         margin: 0 5%;
     }
 
-    /* 無障礙 WCAG 1.4.3 對比度修正 (標準 >= 4.5:1) */
+    /* 無障礙 WCAG 1.4.3 對比度修正 (一般文字與超連結) */
     .tab-content a,
     .tab-content .text-primary,
     .tab-content .btn-link {
@@ -22,6 +22,28 @@
 
     .tab-content .text-danger {
         color: #b21f2d !important;
+    }
+
+    /* 🎯 關鍵修復：提高選擇器權重 (a.btn-success)，強制覆蓋 .tab-content a 的藍色，確保文字一律為白色 */
+    .tab-content a.btn-success,
+    .tab-content button.btn-success,
+    .btn-success {
+        background-color: #146c43 !important;
+        border-color: #13653f !important;
+        color: #ffffff !important; /* 白色文字 */
+        text-decoration: none !important; /* 移除底線 */
+    }
+
+    .tab-content a.btn-success:hover,
+    .tab-content a.btn-success:focus,
+    .tab-content button.btn-success:hover,
+    .tab-content button.btn-success:focus,
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active {
+        background-color: #0f5132 !important;
+        border-color: #0e4b2e !important;
+        color: #ffffff !important;
     }
 
     /* 無障礙 HM1020401C 修正：鍵盤 Focus 高對比視覺提示 */

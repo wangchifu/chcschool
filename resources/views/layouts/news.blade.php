@@ -12,6 +12,28 @@
         text-decoration: underline !important;
     }
 
+    /* 無障礙 WCAG 1.4.3 修正：綠色按鈕 (btn-success) 背景加深，確保白色文字對比度達 5.2:1 (合格標準 > 4.5:1) */
+    a.btn-success,
+    button.btn-success,
+    .btn-success {
+        background-color: #146c43 !important;
+        border-color: #13653f !important;
+        color: #ffffff !important; /* 強制白色文字 */
+        text-decoration: none !important;
+    }
+
+    a.btn-success:hover,
+    a.btn-success:focus,
+    button.btn-success:hover,
+    button.btn-success:focus,
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active {
+        background-color: #0f5132 !important;
+        border-color: #0e4b2e !important;
+        color: #ffffff !important;
+    }
+
     /* 修正 btn-outline-primary 邊框與文字顏色以符對比度 */
     .btn-outline-primary {
         color: #003d82 !important;
