@@ -493,146 +493,110 @@ function line_bot($group_id,$token,$string){
     curl_close($ch);
 }
 
-if (!function_exists('clean_font_size_units')) {
-    function clean_font_size_units($html) {
-        if (empty($html)) return $html;
-
-        // 1. 將各種常見的 HTML 實體空白、全形空白、Non-breaking space 統一轉為標準半形空格
-        $html = str_replace(['&nbsp;', '&amp;nbsp;', "\xC2\xA0"], ' ', $html);
-
-        // 2. 匹配 font-size: 14px
-        $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*px/i', function($matches) {
-            $px = floatval($matches[1]);
-            $rem = round($px / 16, 2);
-            return 'font-size: ' . $rem . 'rem';
-        }, $html);
-
-        // 3. 匹配 font-size: 14pt
-        $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*pt/i', function($matches) {
-            $pt = floatval($matches[1]);
-            $rem = round($pt / 12, 2);
-            return 'font-size: ' . $rem . 'rem';
-        }, $html);
-
-        // 【修正無障礙】4. 支援匹配包含屬性 (如 data-path-to-node) 且內容為純空白的 h1~h6
-        $html = preg_replace('/<h[1-6]\b[^>]*>(?:\s|&nbsp;|\xC2\xA0)*<\/h[1-6]>/i', '', $html);
-
-        return $html;
-    }
-}
-
-if (!function_exists('fix_empty_links')) {
-    function fix_empty_links($html) {
+if (!function_exists('sanitize_accessibility_html')) {
+    /**
+     * 無障礙 2.1 AA 級 HTML 內容自動修復器
+     *
+     * @param string $html
+     * @return string
+     */
+    function sanitize_accessibility_html($html) {
         if (empty(trim($html))) return $html;
 
-        // 使用 DOMDocument 安全解析，避免 Regex 誤破壞 <p style="..."> 標籤
+        // 1. 清除常見空白實體字元，並轉化字型單位 px/pt -> rem
+        $html = str_replace(['&nbsp;', '&amp;nbsp;', "\xC2\xA0"], ' ', $html);
+        
+        // 修正 inline style 中的 font-size px/pt 單位
+        $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*px/i', function($matches) {
+            return 'font-size: ' . round(floatval($matches[1]) / 16, 2) . 'rem';
+        }, $html);
+
+        $html = preg_replace_callback('/font-size\s*:\s*([\d\.]+)\s*pt/i', function($matches) {
+            return 'font-size: ' . round(floatval($matches[1]) / 12, 2) . 'rem';
+        }, $html);
+
+        // 2. 載入 DOMDocument 進行精確 DOM 結構修復
         $dom = new \DOMDocument();
-        // 避免 HTML5/UTF-8 解析亂碼與警告
         libxml_use_internal_errors(true);
+        // 使用 UTF-8 HTML-ENTITIES 避免中文字亂碼
         $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
 
-        $links = $dom->getElementsByTagName('a');
-        
-        // 倒序處理節點
-        for ($i = $links->length - 1; $i >= 0; $i--) {
-            $a = $links->item($i);
-            $text = trim($a->textContent);
-            $hasChildImage = $a->getElementsByTagName('img')->length > 0;
-
-            // 如果 <a> 內部沒有文字也沒有 <img> 圖片
-            if ($text === '' && !$hasChildImage) {
-                // 若有 href 屬性，自動補上無障礙 aria-label，否則直接移除空標籤
-                if ($a->hasAttribute('href') && !empty($a->getAttribute('href'))) {
-                    $a->setAttribute('aria-label', '相關連結：' . $a->getAttribute('href'));
-                } else {
-                    $a->parentNode->removeChild($a);
-                }
-            }
-        }
-
-        return $dom->saveHTML();
-    }
-}
-
-if (!function_exists('enhance_content_accessibility')) {
-    /**
-     * 自動修正 FCKeditor 內文連結無障礙問題：
-     * 1. 避免純網址作為連結文字 (轉為清晰說明或網域標示)
-     * 2. 自動偵測檔案格式 (pdf, docx, xlsx, txt 等)
-     * 3. 自動補齊 target="_blank" 的 title 與 sr-only (另開新視窗) 提示
-     */
-    function enhance_content_accessibility($content) {
-        if (empty(trim($content))) {
-            return $content;
-        }
-
-        // 避免 HTML 亂碼，加上 UTF-8 header
-        $dom = new \DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        libxml_clear_errors();
-
-        $links = $dom->getElementsByTagName('a');
-
-        foreach ($links as $link) {
-            $href = trim($link->getAttribute('href'));
-            $text = trim($link->textContent);
-
-            if (empty($href)) {
-                continue;
-            }
-
-            // 1. 自動偵測副檔名 (pdf, docx, xlsx, zip, txt 等)
-            $path = parse_url($href, PHP_URL_PATH);
-            $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-            $is_file = in_array($extension, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', 'txt', 'csv']);
-
-            // 2. 判斷連結文字是否為純網址 (例如以 http://, https://, www. 開頭)
-            $is_raw_url = preg_match('/^(https?:\/\/|www\.)/i', $text);
-
-            if ($is_raw_url) {
-                if ($is_file) {
-                    // 若為檔案純網址，改顯示「下載附件檔案 (副檔名)」
-                    $text = '下載附件檔案 (' . strtoupper($extension) . ')';
-                } else {
-                    // 若為一般網頁純網址，改顯示「前往相關連結網站」
-                    $text = '前往相關連結網站';
-                }
-                $link->textContent = $text;
-            }
-
-            // 3. 處理另開新視窗 (target="_blank") 的無障礙提示
-            $target = $link->getAttribute('target');
-            if ($target === '_blank') {
-                // 確保包含 rel="noopener noreferrer" 安全屬性
-                $link->setAttribute('rel', 'noopener noreferrer');
-
-                // 設定/補充 title 屬性
-                $title_suffix = $is_file 
-                    ? " (檔案格式：{$extension}，另開新視窗)" 
-                    : " (另開新視窗)";
-
-                $title = $link->getAttribute('title');
-                if (empty($title)) {
-                    $link->setAttribute('title', $text . $title_suffix);
-                } elseif (!str_contains($title, '另開新視窗')) {
-                    $link->setAttribute('title', $title . $title_suffix);
-                }
-
-                // 檢查是否已包含無障礙隱藏標籤，沒有則透過 DOM 補上
-                $has_sr = false;
-                foreach ($link->childNodes as $child) {
-                    if ($child->nodeType === XML_ELEMENT_NODE && str_contains($child->getAttribute('class'), 'sr-only')) {
-                        $has_sr = true;
+        // ----------------------------------------------------
+        // A. 修正 HM1130100C：移除「文字內容為空」的 H1~H6 標頭 (包含內含 alt="" 圖片的情況)
+        // ----------------------------------------------------
+        for ($level = 1; $level <= 6; $level++) {
+            $headings = $dom->getElementsByTagName('h' . $level);
+            for ($i = $headings->length - 1; $i >= 0; $i--) {
+                $h = $headings->item($i);
+                $text = trim($h->textContent);
+                
+                // 檢查內部是否有圖片及圖片是否有有效 alt 文字
+                $imgs = $h->getElementsByTagName('img');
+                $hasValidImgAlt = false;
+                foreach ($imgs as $img) {
+                    if ($img->hasAttribute('alt') && trim($img->getAttribute('alt')) !== '') {
+                        $hasValidImgAlt = true;
                         break;
                     }
                 }
 
-                if (!$has_sr) {
-                    $srSpan = $dom->createElement('span', $title_suffix);
-                    $srSpan->setAttribute('class', 'sr-only');
-                    $link->appendChild($srSpan);
+                // 文字為空，且沒有具備有效 alt 的圖片 -> 判定為無意義空標頭，直接剔除或拆解
+                if ($text === '' && !$hasValidImgAlt) {
+                    // 若標頭內有圖片（如校徽），將圖片移出標頭，並刪除 h 標籤
+                    while ($h->firstChild) {
+                        $h->parentNode->insertBefore($h->firstChild, $h);
+                    }
+                    $h->parentNode->removeChild($h);
+                }
+            }
+        }
+
+        // ----------------------------------------------------
+        // B. 修正 HM1410201C：自動補充 iframe 缺失的 title 屬性
+        // ----------------------------------------------------
+        $iframes = $dom->getElementsByTagName('iframe');
+        for ($i = 0; $i < $iframes->length; $i++) {
+            $iframe = $iframes->item($i);
+            $title = trim($iframe->getAttribute('title'));
+            
+            if (empty($title)) {
+                $src = $iframe->getAttribute('src');
+                if (str_contains($src, 'calendar.google.com')) {
+                    $iframe->setAttribute('title', 'Google 行事曆嵌入內容');
+                } elseif (str_contains($src, 'youtube.com') || str_contains($src, 'youtu.be')) {
+                    $iframe->setAttribute('title', 'YouTube 影片播放器');
+                } elseif (str_contains($src, 'maps.google.com')) {
+                    $iframe->setAttribute('title', 'Google 地圖嵌入內容');
+                } else {
+                    $iframe->setAttribute('title', '嵌入式網頁內容');
+                }
+            }
+        }
+
+        // ----------------------------------------------------
+        // C. 修正空連結與超連結無障礙提示 (原 enhance_content_accessibility 邏輯)
+        // ----------------------------------------------------
+        $links = $dom->getElementsByTagName('a');
+        for ($i = $links->length - 1; $i >= 0; $i--) {
+            $link = $links->item($i);
+            $href = trim($link->getAttribute('href'));
+            $text = trim($link->textContent);
+            $hasImg = $link->getElementsByTagName('img')->length > 0;
+
+            if (empty($href)) {
+                if ($text === '' && !$hasImg) {
+                    $link->parentNode->removeChild($link);
+                }
+                continue;
+            }
+
+            // 另開新視窗無障礙處理
+            if ($link->getAttribute('target') === '_blank') {
+                $link->setAttribute('rel', 'noopener noreferrer');
+                $title = $link->getAttribute('title');
+                if (empty($title)) {
+                    $link->setAttribute('title', ($text ?: '相關連結') . ' (另開新視窗)');
                 }
             }
         }

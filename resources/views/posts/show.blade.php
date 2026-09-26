@@ -237,7 +237,7 @@
             @if($can_see)
                 <!-- 使用 clean_font_size_units 與 fix_empty_links 過濾 px/pt 單位及無效空連結 -->
                 <div class="post-content-body">                                                                                                                                             
-                    {!! enhance_content_accessibility(fix_empty_links(clean_font_size_units($post->content))) !!}
+                    {!! sanitize_accessibility_html($post->content) !!}
                 </div>
             @else
                 @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and $post->created_at < date('Y-m-d H:i:s'))
