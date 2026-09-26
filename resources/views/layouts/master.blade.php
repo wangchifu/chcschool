@@ -79,6 +79,41 @@
         .navbar-custom .nav-item:hover .nav-link {
             color: {{ isset($navbar_custom[3]) ? $navbar_custom[3] : '' }};
         }
+        /* 1. 強制防止全站頁面出現橫向溢出 */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* 2. 確保圖片、影片與表格不超過螢幕寬度 */
+        img, iframe, video, table {
+            max-width: 100% !important;
+            height: auto;
+        }
+
+        /* 3. 修復榮譽榜 / 跑馬燈區塊（請替換為你實際使用的 class 或 id） */
+        .honor-banner, .marquee-box {
+            max-width: 100%;
+            overflow: hidden;
+            word-break: break-all;
+        }
+        @media (max-width: 767.98px) {
+        header, .navbar, .fixed-top {
+            position: relative !important;
+        }
+        body {
+            padding-top: 0 !important;
+        }
+        #carouselExampleIndicators {
+            display: block !important;
+            width: 100% !important;
+            margin-top: 0 !important;
+        }
+        #carouselExampleIndicators .carousel-item img {
+            width: 100% !important;
+            height: auto !important;
+        }
+    }
     </style>
     @yield('in_head')
 </head>
