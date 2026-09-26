@@ -66,7 +66,7 @@
                 </h2>
                 <div class="card-body">
                     <div class="table-responsive">
-                    {!! $department->content !!}
+                    {!! enhance_content_accessibility(fix_empty_links(clean_font_size_units($department->content))) !!}                    
                     </div>
                 </div>
             </div>

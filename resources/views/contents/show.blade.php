@@ -56,7 +56,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                     @if($content->power==null)
-                        {!! $content->content !!}
+                        {!! enhance_content_accessibility(fix_empty_links(clean_font_size_units($content->content))) !!}
                     @elseif($content->power==2)
                         <?php
                             if(auth()->check() or check_ip()){
@@ -66,13 +66,13 @@
                             }
                         ?>
                         @if($can_see)
-                            {!! $content->content !!}
+                            {!! enhance_content_accessibility(fix_empty_links(clean_font_size_units($content->content))) !!}
                         @else
                             <h2 class="text-danger">請登入，或在校網內才可觀看</h2>
                         @endif
                     @elseif($content->power==3)
-                        @auth
-                            {!! $content->content !!}
+                        @auth                            
+                            {!! enhance_content_accessibility(fix_empty_links(clean_font_size_units($content->content))) !!}
                         @endauth
                         @guest
                             <h2 class="text-danger">請登入後觀看</h2>

@@ -337,7 +337,7 @@
                                     </div>
                                 @endif
                             @endauth
-                            {!! $setup->footer !!}                            
+                            {!! enhance_content_accessibility(fix_empty_links(clean_font_size_units($setup->footer))) !!}
                         </div>
                     </div>
             </div>
