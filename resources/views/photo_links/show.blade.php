@@ -7,6 +7,9 @@
 @section('content')
 <style>
     /* 🎯 1. 高對比度分類頁籤 (WCAG 1.4.3: 對比度 > 7:1) */
+    .custom-pills {
+        padding-top: 4px; /* 留出鍵盤 Focus 框空間 */
+    }
     .custom-pills .nav-link {
         color: #1e293b;
         background-color: #ffffff;
@@ -39,8 +42,8 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .photo-link-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12) !important;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12) !important;
         border-color: #003d82 !important;
     }
 
@@ -51,21 +54,23 @@
         background-color: #fef3c7 !important;
     }
 
-    /* 📸 4. 圖片區域設定 */
+    /* 📸 4. 圖片區域：大幅提升圖片佔比 (16:9 滿版切齊卡片) */
     .card-img-wrapper {
-        height: 120px;
+        width: 100%;
+        aspect-ratio: 16 / 9; /* 保持 16:9 大比例，可依需求改為 4 / 3 */
         background-color: #f8fafc;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
+        overflow: hidden;
         border-bottom: 1px solid #e2e8f0;
+        position: relative;
     }
     .photo-link-img {
-        max-height: 100%;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 滿版裁切，消除四周空隙 */
+        transition: transform 0.3s ease;
+    }
+    .photo-link-card:hover .photo-link-img {
+        transform: scale(1.06); /* 滑鼠懸浮時微放大 */
     }
 
     /* 5. 標題與文字顏色調深 (確保對比度 9.5:1) */
@@ -110,7 +115,7 @@
             </div>
         </div>
 
-        {{-- 2. 分類頁籤 (標準 Nav 結構) --}}
+        {{-- 2. 分類頁籤 --}}
         <nav class="mb-4" aria-label="圖片連結分類">
             <ul class="nav nav-pills custom-pills">
                 <li class="nav-item">
@@ -129,7 +134,7 @@
             </ul>
         </nav>
 
-        {{-- 3. 卡片網格 (採用 ul/li 語意清單，解決 <h2> 濫用問題) --}}
+        {{-- 3. 大圖片卡片網格 --}}
         <ul class="row list-unstyled row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-0" aria-label="圖片連結清單">
             @forelse($photo_links as $photo_link)
                 @php
@@ -138,15 +143,14 @@
                 @endphp
                 <li class="col mb-4">
                     <div class="card h-100 photo-link-card shadow-sm position-relative">
-                        {{-- 圖片展示 (設定 alt="" 避免與標題文字重複讀報) --}}
+                        {{-- 滿版大圖顯示區域 --}}
                         <div class="card-img-wrapper">
                             <img src="{{ asset($img) }}" class="photo-link-img" alt="" aria-hidden="true">
                         </div>
                         
-                        {{-- 卡片內容 --}}
+                        {{-- 卡片文字內容區域 --}}
                         <div class="card-body d-flex flex-column justify-content-between p-3">
                             <div class="mb-2">
-                                {{-- 🎯 關鍵：全卡片唯一的 <a> 標籤，使用 stretched-link --}}
                                 <a href="{{ $photo_link->url }}" 
                                    target="_blank" 
                                    rel="noopener noreferrer" 
@@ -156,7 +160,7 @@
                                 </a>
                             </div>
                             
-                            {{-- 底部資訊裝飾列 (按鈕與標籤皆非互動式 a 標籤，避免重複焦點) --}}
+                            {{-- 底部資訊 --}}
                             <div class="d-flex align-items-center justify-content-between pt-2 border-top mt-2">
                                 <span class="badge bg-light text-dark border font-weight-bold">
                                     排序 {{ $photo_link->order_by }}
