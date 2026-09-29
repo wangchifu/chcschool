@@ -86,9 +86,15 @@
         }
 
         /* 2. 確保圖片、影片與表格不超過螢幕寬度 */
-        img, iframe, video, table {
+        /* 1. 圖片與影片：寬度隨容器縮放，高度自動等比例調整 */
+        img, video {
             max-width: 100% !important;
             height: auto;
+        }
+
+        /* 2. iframe 與表格：僅限制最大寬度不撐破，高度維持原本設定 */
+        iframe, table {
+            max-width: 100% !important;
         }
 
         /* 3. 修復榮譽榜 / 跑馬燈區塊（請替換為你實際使用的 class 或 id） */
