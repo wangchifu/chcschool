@@ -337,7 +337,7 @@
                                     </div>
                                 @endif
                             @endauth
-                            {!! sanitize_accessibility_html($setup->footer) !!}
+                            {!! $setup->footer !!}
                         </div>
                     </div>
             </div>
