@@ -32,94 +32,29 @@
     <script src="{{ asset('js/jquery.validate.js') }}"></script>
     <script src="{{ asset('js/additional-methods.min.js') }}"></script>
     <script src="{{ asset('js/messages_zh_TW.min.js') }}"></script>
-    <!-- icons -->
-    <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
+    <!-- icons -->    
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('css/bootstrap-navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome-5.15.4/css/all.css') }}" rel="stylesheet">
     
+    <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
+    
     <style>
-        /* 無障礙：鍵盤快速跳至主要內容 */
-        .sr-only-focusable {
-            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-            overflow: hidden;overflow-x: visible; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
-        }
-        .sr-only-focusable:focus {
-            position: fixed; top: 10px; left: 10px; z-index: 9999; width: auto; height: auto;
-            padding: 10px 15px; background-color: #000; color: #fff; clip: auto;
-            white-space: normal; text-decoration: underline; border-radius: 4px;
-        }
-
-        /* 1. 無障礙 WCAG 2.4.7 焦點指示：外框貼合邊界 */
-        a:focus, button:focus, input:focus, select:focus, textarea:focus {
-            outline: 3px solid #0056b3 !important;
-            outline-offset: 0px !important;
-        }
-
-        /* 2. 核心修正：給連結左側預留 4px 空間，讓 3px 外框有地方畫，完全不切邊、不壓字 */
-        .card a, .list-group a, .sidebar a, main a {
-            display: inline-block;
-            margin-left: 4px !important; /* 往右推 4px，留出空間給左外框 */
-        }
-
+        /* 動態導覽欄顏色 (來自後台設定，需保留於 Blade 內) */
         .navbar-custom {
             background-color: {{ $navbar_custom[0] }};
         }
-        /* change the brand and text color */
         .navbar-custom .navbar-brand,
         .navbar-custom .navbar-text {
             color: {{ $navbar_custom[1] }};
         }
-        /* change the link color */
         .navbar-custom .navbar-nav .nav-link {
             color: {{ $navbar_custom[2] }};
         }
-        /* change the color of active or hovered links */
         .navbar-custom .nav-item.active .nav-link,
         .navbar-custom .nav-item:hover .nav-link {
             color: {{ isset($navbar_custom[3]) ? $navbar_custom[3] : '' }};
         }
-        /* 1. 強制防止全站頁面出現橫向溢出 */
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* 2. 確保圖片、影片與表格不超過螢幕寬度 */
-        /* 1. 圖片與影片：寬度隨容器縮放，高度自動等比例調整 */
-        img, video {
-            max-width: 100% !important;
-            height: auto;
-        }
-
-        /* 2. iframe 與表格：僅限制最大寬度不撐破，高度維持原本設定 */
-        iframe, table {
-            max-width: 100% !important;
-        }
-
-        /* 3. 修復榮譽榜 / 跑馬燈區塊（請替換為你實際使用的 class 或 id） */
-        .honor-banner, .marquee-box {
-            max-width: 100%;
-            overflow: hidden;
-            word-break: break-all;
-        }
-        @media (max-width: 767.98px) {
-        header, .navbar, .fixed-top {
-            position: relative !important;
-        }
-        body {
-            padding-top: 0 !important;
-        }
-        #carouselExampleIndicators {
-            display: block !important;
-            width: 100% !important;
-            margin-top: 0 !important;
-        }
-        #carouselExampleIndicators .carousel-item img {
-            width: 100% !important;
-            height: auto !important;
-        }
-    }
     </style>
     @yield('in_head')
 </head>
@@ -157,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 定義匹配 Emoji 的正則表達式
     var emojiRegex = /([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}])/gu;
 
-    // 抓取跑馬燈或榮譽榜的容器元件（請根據您實際的 CSS Class 或 ID 修改，例如 .marquee 或 #honor-board）
+    // 抓取跑馬燈或榮譽榜的容器元件
     var marqueeElements = document.querySelectorAll('.marquee, #honor-board, .marquee-item');
 
     marqueeElements.forEach(function(element) {

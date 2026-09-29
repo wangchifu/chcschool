@@ -2,61 +2,6 @@
 
 @section('nav_home_active', 'active')
 
-@section('in_head')
-    <style>
-        /* 無障礙輪播控制按鈕：懸浮於右上角，不佔用版面高度也不與左右箭頭重疊 */
-        .carousel-accessibility-control {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 30; /* 高於 Bootstrap 預設控制箭頭 (z-index: 1) 與字幕 (z-index: 10) */
-        }
-        .carousel-accessibility-control .btn-pause {
-            background-color: rgba(0, 0, 0, 0.85);
-            color: #ffffff !important;
-            border: 1px solid #ffffff;
-            padding: 4px 12px;
-            font-size: 0.85rem;
-            border-radius: 20px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-        }
-        .carousel-accessibility-control .btn-pause:hover {
-            background-color: #000000;
-        }
-        .carousel-accessibility-control .btn-pause:focus-visible,
-        .carousel-accessibility-control .btn-pause:focus {
-            outline: 3px solid #ffc107 !important;
-            outline-offset: 2px !important;
-        }
-
-        @if($setup->title_image_style==2)
-            .carousel-fade .carousel-inner .carousel-item {
-                opacity: 0;
-                transition-property: opacity;
-                transition-duration: 1s;
-                transition-timing-function: ease;
-            }
-
-            .carousel-fade .carousel-inner .active {
-                opacity: 1;
-            }
-
-            .carousel-fade .carousel-inner .carousel-item-next,
-            .carousel-fade .carousel-inner .carousel-item-prev,
-            .carousel-fade .carousel-inner .carousel-item.active,
-            .carousel-fade .carousel-inner .active.carousel-item-left,
-            .carousel-fade .carousel-inner .active.carousel-item-right {
-                transform: translateX(0);
-                -webkit-transform: translateX(0);
-                -ms-transform: translateX(0);
-            }
-        @endif
-    </style>
-@endsection
-
 {{-- 無障礙 2.4.1 跳過區塊按鈕：採用 Bootstrap 4 原生 sr-only sr-only-focusable --}}
 @section('skip_link')
     <a href="#main-content" class="sr-only sr-only-focusable btn btn-dark position-fixed" style="top: 10px; left: 10px; z-index: 99999;">跳到主要內容區塊</a>
@@ -68,7 +13,7 @@
 
     @if($setup->title_image)
         @if(!empty($photo_data))
-            <?php $carousel_fade =($setup->title_image_style ==2 )?"carousel-fade":""; ?>
+            <?php $carousel_fade = ($setup->title_image_style == 2) ? "carousel-fade" : ""; ?>
             <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }} position-relative" data-ride="carousel" role="region" aria-label="焦點新聞輪播圖">
                 
                 <!-- 無障礙檢測修正：獨立置於右上角半透明按鈕，不擋住左右按鍵 -->
@@ -321,25 +266,20 @@
 
 @section('footer')
     @if(!empty($setup->footer))
-        <style>
-            #footer{background-color:#f8f9fa;}
-            #footer_bottom{background-color: #6c757d; color: #ffffff;}
-            #footer_bottom a{color: #ffffff; text-decoration: underline;}
-        </style>
         <footer class="font-small py-4" id="footer" role="contentinfo" aria-label="頁尾資訊區">
             <div class="container-fluid text-center text-md-left">
-                    <div class="row justify-content-center">
-                        <div class="col-md-11">                            
-                            @auth
-                                @if(auth()->user()->admin==1)  
-                                    <div style="float: right;">
-                                        <a href="javascript:open_window('{{ route('setups.edit_footer') }}','新視窗')" title="編輯頁尾內容" aria-label="編輯頁尾內容">📝</a>
-                                    </div>
-                                @endif
-                            @endauth
-                            {!! $setup->footer !!}
-                        </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-11">                            
+                        @auth
+                            @if(auth()->user()->admin==1)  
+                                <div style="float: right;">
+                                    <a href="javascript:open_window('{{ route('setups.edit_footer') }}','新視窗')" title="編輯頁尾內容" aria-label="編輯頁尾內容">📝</a>
+                                </div>
+                            @endif
+                        @endauth
+                        {!! $setup->footer !!}
                     </div>
+                </div>
             </div>
         </footer>
     @endif

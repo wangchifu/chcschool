@@ -3,33 +3,6 @@ $blogs = \App\Blog::orderBy('created_at','DESC')
     ->paginate(5);
 ?>
 
-<style>
-    /* 文繞圖圖片樣式 */
-    .blog-item-img {
-        float: left;
-        margin-right: 1.25rem; /* 對應無障礙 CS2140401C 相對單位 */
-        margin-bottom: 0.5rem;
-        max-width: 7.5rem;   /* 約 120px，避免圖片過大壓迫文字 */
-        height: auto;
-    }
-
-    /* 標題對比度強化 (對比度 > 7:1) */
-    .blog-title-link {
-        color: #004085 !important;
-        text-decoration: underline;
-        font-size: 1.1rem;
-    }
-    .blog-title-link:hover, .blog-title-link:focus {
-        color: #002752 !important;
-    }
-
-    /* 中元資訊對比度修正 (取代原 text-secondary，確保 > 4.5:1) */
-    .blog-meta-text {
-        color: #495057 !important;
-        font-size: 0.875rem;
-    }
-</style>
-
 @can('create',\App\Post::class)
     <a href="{{ route('blogs.create') }}" class="btn btn-success btn-sm mb-3" title="新增校園部落格文章" aria-label="新增校園部落格文章">
         <i class="fas fa-plus" aria-hidden="true"></i> 新增文章
@@ -64,8 +37,8 @@ $blogs = \App\Blog::orderBy('created_at','DESC')
                 </a>
             @endif
 
-            {{-- 3. 內文摘要 (自然圍繞圖片) --}}
-            <p class="mb-2" style="color: #212529; line-height: 1.6; word-break: break-all;">
+            {{-- 3. 內文摘要 (自然圍繞圖片，已改用 class) --}}
+            <p class="mb-2 blog-summary-text">
                 {{ $content }}
             </p>
 

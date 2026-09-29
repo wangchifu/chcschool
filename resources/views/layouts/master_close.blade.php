@@ -15,7 +15,7 @@
 
         $nav_color = (empty($setup->nav_color))?"navbar-dark bg-dark":"navbar-custom";
         $bg_color = (empty($setup->bg_color))?"#f0f1f6":$setup->bg_color;
-        $navbar_custom = (empty($setup->nav_color))?['0'=>'','1'=>'','2'=>'','3'=>'']:explode(",",$setup->nav_color);
+        $navbar_custom = (empty($setup->nav_color))?['0'=>'','1'=>'','2'=>'','3 me'=>'']:explode(",",$setup->nav_color);
     ?>
     @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
         <link rel="Shortcut Icon" type="image/x-icon" href="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" />
@@ -32,55 +32,27 @@
     <script src="{{ asset('js/jquery.validate.js') }}"></script>
     <script src="{{ asset('js/additional-methods.min.js') }}"></script>
     <script src="{{ asset('js/messages_zh_TW.min.js') }}"></script>
-    <!-- icons -->
-    <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
+    <!-- icons -->    
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
 
+    <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
+
     <style>
+        /* 動態導覽欄顏色 (來自後台設定，需保留於 Blade 內) */
         .navbar-custom {
             background-color: {{ $navbar_custom[0] }};
         }
-        /* change the brand and text color */
         .navbar-custom .navbar-brand,
         .navbar-custom .navbar-text {
             color: {{ $navbar_custom[1] }};
         }
-        /* change the link color */
         .navbar-custom .navbar-nav .nav-link {
             color: {{ $navbar_custom[2] }};
         }
-        /* change the color of active or hovered links */
         .navbar-custom .nav-item.active .nav-link,
         .navbar-custom .nav-item:hover .nav-link {
-            color: {{ $navbar_custom[3] }};
-        }
-
-        /* 無障礙 HM1200100C 修正：跳過主內容區塊（Skip Link）樣式 */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: #000000;
-            color: #ffffff;
-            padding: 8px 16px;
-            z-index: 9999;
-            transition: top 0.2s ease;
-            text-decoration: underline;
-            font-weight: bold;
-        }
-        .skip-link:focus {
-            top: 0;
-        }
-
-        /* 無障礙 HM1020401C 修正：全域鍵盤 Focus 視覺高對比提示 */
-        a:focus-visible, 
-        button:focus-visible, 
-        input:focus-visible, 
-        select:focus-visible, 
-        textarea:focus-visible {
-            outline: 3px solid #0056b3 !important;
-            outline-offset: 2px !important;
+            color: {{ isset($navbar_custom[3]) ? $navbar_custom[3] : '' }};
         }
     </style>
 </head>

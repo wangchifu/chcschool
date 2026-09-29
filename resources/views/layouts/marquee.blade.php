@@ -1,66 +1,21 @@
-<style>
-/* 無障礙高對比 Focus 樣式與通用微調 */
-.honor-marquee-box a:focus-visible,
-.honor-marquee-box button:focus-visible {
-    outline: 3px solid #ffed4a !important;
-    outline-offset: 2px !important;
-}
-.honor-marquee-box a:hover {
-    color: #e3342f !important;
-}
-</style>
-
-<div class="honor-marquee-box" role="region" aria-label="榮譽榜跑馬燈" style="
-    display: flex; 
-    align-items: center; 
-    height: 45px; 
-    background: #fff5f5; 
-    border: 2px solid #e3342f; 
-    border-radius: 8px; 
-    overflow: hidden; 
-    position: relative;
-    box-shadow: 4px 4px 0px #f8d7da;
-    margin-bottom: 15px;
-">
+<div class="honor-marquee-box" role="region" aria-label="榮譽榜跑馬燈">
     <!-- 無障礙 HM1220200C 修正：將暫停按鈕放在組件的最前方，確保鍵盤 Tab 第一個聚焦 -->
     <button id="honor-toggle-btn" 
+            class="honor-toggle-btn"
             type="button"
-            aria-label="暫停跑馬燈"
-            style="
-                z-index: 11;
-                background: #e3342f;
-                color: #ffffff;
-                border: none;
-                height: 100%;
-                padding: 0 12px;
-                cursor: pointer;
-                font-weight: bold;
-                font-size: 0.9rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-            ">
+            aria-label="暫停跑馬燈">
         ⏸ <span class="sr-only">暫停</span>
     </button>
 
-    <div style="background: #e3342f; color: white; padding: 0 15px 0 5px; height: 100%; display: flex; align-items: center; font-weight: bold; font-size: 1.1rem; z-index: 10; white-space: nowrap; flex-shrink: 0;">
+    <div class="honor-badge">
         🏆 榮譽榜
     </div>
 
-    <div id="honor-container" style="flex: 1; height: 100%; position: relative; overflow: hidden;">
-        <div id="honor-content" style="display: flex; flex-direction: row; align-items: center; height: 100%; white-space: nowrap;">
+    <div id="honor-container" class="honor-container">
+        <div id="honor-content" class="honor-content">
             @foreach($honors as$honor)
-                <div style="margin-right: 40px; display: flex; align-items: center;">
-                    <a href="../posts/{{ $honor->id }}" 
-                       style="
-                            text-decoration: none !important;
-                            color: #2D3748; 
-                            font-weight: bold; 
-                            font-size: 1.1rem; 
-                            white-space: nowrap;
-                            transition: color 0.2s;
-                       ">
+                <div class="honor-item">
+                    <a href="../posts/{{ $honor->id }}" class="honor-link">
                         🎉 {{ $honor->title }}
                     </a>
                 </div>

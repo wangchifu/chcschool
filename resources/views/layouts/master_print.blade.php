@@ -7,7 +7,7 @@
         $setup = \App\Setup::find(1);
         $nav_color = (empty($setup->nav_color))?"navbar-dark bg-dark":"navbar-custom";
         $bg_color = (empty($setup->bg_color))?"#f0f1f6":$setup->bg_color;
-        $navbar_custom = (empty($setup->nav_color))?['0'=>'','1'=>'','2'=>'','3'=>'']:explode(",",$setup->nav_color);
+        $navbar_custom = (empty($setup->nav_color))?['0'=>'','1'=>'','2'=>'','3 me'=>'']:explode(",",$setup->nav_color);
     ?>
     @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
         <link rel="Shortcut Icon" type="image/x-icon" href="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" />
@@ -22,30 +22,11 @@
 
     <title>@yield('title') | {{ $setup->site_name }}</title>
     <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
-    <!-- icons -->
-    <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
+    <!-- icons -->    
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
 
-    <style>
-        /* 無障礙 HM1020401C 修正：鍵盤 Focus 視覺高對比提示 */
-        a:focus-visible, 
-        button:focus-visible {
-            outline: 3px solid #0056b3 !important;
-            outline-offset: 2px !important;
-        }
-
-        /* 列印專用樣式優化 */
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background-color: #ffffff !important;
-                color: #000000 !important;
-            }
-        }
-    </style>
+    <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
 </head>
 
 {{-- 無障礙 HM1220200C 修正：移除 onload="window.print();" 強制彈出，避免中斷螢幕閱讀器操作 --}}
@@ -56,7 +37,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <span class="text-secondary small">若要列印此頁面，請點選右側按鈕或使用鍵盤快捷鍵 (Ctrl + P)</span>
         <button type="button" class="btn btn-primary btn-sm font-weight-bold" onclick="window.print();" aria-label="點擊此處開啟列印功能視窗">
-            <i class="fas => print" aria-hidden="true"></i> 列印此頁
+            <i class="fas fa-print" aria-hidden="true"></i> 列印此頁
         </button>
     </div>
 </div>

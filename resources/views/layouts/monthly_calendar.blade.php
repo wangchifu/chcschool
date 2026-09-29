@@ -26,7 +26,7 @@ $first_w = get_date_w($this_month_date[1]);
     <link href="{{ asset('gijgo/css/gijgo.min.css') }}" rel="stylesheet" type="text/css">
     
     {{ Form::open(['route' => 'monthly_calendars.block_store', 'method' => 'POST', 'id' => 'create_calendar_form', 'onsubmit' => 'return false']) }}
-    <div class="row g-2 align-items-center mb-3">
+    <div class="row g-2 align-items-center mb-3 mx-0">
         <div class="col-auto">
             <label for="item_date" class="visually-hidden">選擇日期</label>
             <input id="item_date" name="item_date" class="form-control" required maxlength="10" value="{{ date('Y-m-d') }}" aria-label="選擇日期">
@@ -116,18 +116,22 @@ $first_w = get_date_w($this_month_date[1]);
         data += '<button type="button" class="btn btn-link p-0 text-primary ms-2" aria-label="下一個月" onclick="go_submit(\''+result['next_month']+'\')"><i class="fas fa-arrow-alt-circle-right fa-2x" aria-hidden="true"></i></button>';
         data += '</div>';
 
-        data += '<div class="table-responsive"><table class="table table-bordered align-middle">';
+        data += '<div class="table-responsive"><table class="table table-bordered align-middle" style="table-layout: fixed; width: 100%;">';
         data += '<caption class="visually-hidden">' + result['this_month'] + ' 行事曆</caption>';
-        data += '<thead><tr style="background-color: #333333; color: #ffffff;">';
-        data += '<th scope="col" class="text-warning">日</th>';
-        data += '<th scope="col">一</th><th scope="col">二</th><th scope="col">三</th><th scope="col">四</th><th scope="col">五</th>';
-        data += '<th scope="col" class="text-info">六</th>';
+        data += '<thead style="background-color: #1a365d; color: #ffffff;"><tr class="text-center">';
+        data += '<th scope="col" style="color: #fca5a5; font-weight: bold; padding: 10px; width: 14.28%;">日</th>';
+        data += '<th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">一</th>';
+        data += '<th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">二</th>';
+        data += '<th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">三</th>';
+        data += '<th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">四</th>';
+        data += '<th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">五</th>';
+        data += '<th scope="col" style="color: #93c5fd; font-weight: bold; padding: 10px; width: 14.28%;">六</th>';
         data += '</tr></thead><tbody><tr>';
 
         for(var k in result['this_month_date']){
             if(k == 1){
                 for(i = 1; i <= result['this_month_date_w'][result['this_month_date'][k]]; i++){
-                    data += '<td width="14%"></td>';
+                    data += '<td></td>';
                 }
             }
 
@@ -135,7 +139,7 @@ $first_w = get_date_w($this_month_date[1]);
             var bgStyle = isToday ? 'background-color:#FFFDE7;' : 'background-color:#FFFFFF;';
             var textColor = isToday ? 'color:#006600; font-weight:bold;' : 'color:#000000; font-weight:bold;';
 
-            data += '<td width="14%" style="' + bgStyle + ' vertical-align: top;">';
+            data += '<td style="' + bgStyle + ' vertical-align: top;">';
             data += '<div style="font-size: 1.0625rem; ' + textColor + '">' + result['this_month_date'][k].substring(8,10) + '</div>';
 
             this_date = result['this_month_date'][k].substring(8,10);
@@ -150,19 +154,21 @@ $first_w = get_date_w($this_month_date[1]);
                     var cht = cht_str(result['item_array'][k1]['item'], 20);
                     var q = qq % 6;
 
-                    data += '<button type="button" class="btn btn-sm text-start w-100 my-1 p-1 text-white border-0" ';
-                    data += 'style="background-color:' + bg_array[q] + '; font-size:0.875rem; line-height:1.2;" ';
+                    data += '<div class="d-flex align-items-center my-1 w-100">';
+                    data += '<button type="button" class="btn btn-sm text-start text-white border-0 text-truncate flex-grow-1 p-1" ';
+                    data += 'style="background-color:' + bg_array[q] + '; font-size:0.875rem; line-height:1.2; min-width: 0;" ';
                     data += 'title="' + fullItem + '" ';
                     data += 'onclick="alert(\'' + result['this_month_date'][k] + '\\r\\n' + fullItem + '\')">';
                     data += cht;
                     data += '</button>';
 
                     if(result['user_id'] == result['item_array'][k1]['user_id'] || result['admin'] == "1"){
-                        data += '<button type="button" class="btn btn-link p-0 ms-1 border-0" aria-label="刪除事項" ';
+                        data += '<button type="button" class="btn btn-link p-0 ms-1 border-0 flex-shrink-0" aria-label="刪除事項" ';
                         data += 'onclick="if(confirm(\'確定刪除嗎?\')) del_item(\''+k1+'\',\''+this_month+'\'); else return false">';
                         data += '<img src="{{ asset('images/remove.png') }}" height="15" alt="刪除事項">';
                         data += '</button>';
                     }
+                    data += '</div>';
                     qq++;
                 }
             }
@@ -211,17 +217,17 @@ $first_w = get_date_w($this_month_date[1]);
     </div>
 
     <div class="table-responsive">
-        <table class="table table-bordered align-middle">
+        <table class="table table-bordered align-middle" style="table-layout: fixed; width: 100%;">
             <caption class="visually-hidden">{{ $this_month }} 行事曆</caption>
-            <thead>
-                <tr style="background-color: #333333; color: #ffffff;">
-                    <th scope="col" class="text-warning">日</th>
-                    <th scope="col">一</th>
-                    <th scope="col">二</th>
-                    <th scope="col">三</th>
-                    <th scope="col">四</th>
-                    <th scope="col">五</th>
-                    <th scope="col" class="text-info">六</th>
+            <thead style="background-color: #1a365d; color: #ffffff;">
+                <tr class="text-center">
+                    <th scope="col" style="color: #fca5a5; font-weight: bold; padding: 10px; width: 14.28%;">日</th>
+                    <th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">一</th>
+                    <th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">二</th>
+                    <th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">三</th>
+                    <th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">四</th>
+                    <th scope="col" style="color: #ffffff; font-weight: bold; padding: 10px; width: 14.28%;">五</th>
+                    <th scope="col" style="color: #93c5fd; font-weight: bold; padding: 10px; width: 14.28%;">六</th>
                 </tr>
             </thead>
             <tbody>
@@ -235,11 +241,11 @@ $first_w = get_date_w($this_month_date[1]);
                         ?>
                         @if($k == 1)
                             @for($i = 1; $i <= $first_w; $i++)
-                                <td width="14%"></td>
+                                <td></td>
                             @endfor
                         @endif
 
-                        <td width="14%" style="{{ $bgcolor }} vertical-align: top;">
+                        <td style="{{ $bgcolor }} vertical-align: top;">
                             <?php
                             $num = substr($v, 8, 2);
                             $bg_array = ['#0056b3', '#1e7e34', '#d39e00', '#117a8b', '#5a6268', '#bd2130'];
@@ -252,21 +258,23 @@ $first_w = get_date_w($this_month_date[1]);
                             @foreach($item_array as $k1 => $v1)
                                 <?php $q = $qq % 6; ?>
                                 @if($v1['item_date'] == $v)
-                                    <button type="button" class="btn btn-sm text-start w-100 my-1 p-1 text-white border-0"
-                                            style="background-color: {{ $bg_array[$q] }}; font-size: 0.875rem; line-height: 1.2;"
-                                            title="{{ $v1['item'] }}"
-                                            onclick="alert('{{ $v }}\r\n{{ addslashes($v1['item']) }}')">
-                                        {{ str_limit($v1['item'], 20) }}
-                                    </button>
+                                    <div class="d-flex align-items-center my-1 w-100">
+                                        <button type="button" class="btn btn-sm text-start text-white border-0 text-truncate flex-grow-1 p-1"
+                                                style="background-color: {{ $bg_array[$q] }}; font-size: 0.875rem; line-height: 1.2; min-width: 0;"
+                                                title="{{ $v1['item'] }}"
+                                                onclick="alert('{{ $v }}\r\n{{ addslashes($v1['item']) }}')">
+                                            {{ str_limit($v1['item'], 20) }}
+                                        </button>
 
-                                    @auth
-                                        @if($v1['user_id'] == auth()->user()->id or auth()->user()->admin == 1)
-                                            <button type="button" class="btn btn-link p-0 ms-1 border-0" aria-label="刪除事項"
-                                                    onclick="if(confirm('確定刪除嗎?')) del_item('{{ $k1 }}','{{ $this_month }}'); else return false">
-                                                <img src="{{ asset('images/remove.png') }}" height="15" alt="刪除事項">
-                                            </button>
-                                        @endif
-                                    @endauth
+                                        @auth
+                                            @if($v1['user_id'] == auth()->user()->id or auth()->user()->admin == 1)
+                                                <button type="button" class="btn btn-link p-0 ms-1 border-0 flex-shrink-0" aria-label="刪除事項"
+                                                        onclick="if(confirm('確定刪除嗎?')) del_item('{{ $k1 }}','{{ $this_month }}'); else return false">
+                                                    <img src="{{ asset('images/remove.png') }}" height="15" alt="刪除事項">
+                                                </button>
+                                            @endif
+                                        @endauth
+                                    </div>
                                     <?php $qq++; ?>
                                 @endif
                             @endforeach

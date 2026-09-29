@@ -1,13 +1,3 @@
-<style>
-    /* 無障礙 HM1020401C 修正：RSS 連結 Focus 高對比視覺提示 */
-    .list-group-item:focus-visible,
-    .card-body a:focus-visible {
-        outline: 3px solid #0056b3 !important;
-        outline-offset: 2px !important;
-        z-index: 10;
-    }
-</style>
-
 <?php
 $rss_feeds = \App\RssFeed::all();
 ?>

@@ -1,27 +1,3 @@
-<style>
-    /* 統一圖片與容器樣式 */
-    .photo-link-img {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-        transition: opacity 0.2s ease;
-    }
-    
-    .photo-link-item a:hover img,
-    .photo-link-item a:focus img {
-        opacity: 0.7;
-    }
-
-    /* 無障礙 HM1020401C 修正：鍵盤 Focus 高對比視覺提示 */
-    .photo-link-item a:focus-visible,
-    #myTab button:focus-visible {
-        outline: 3px solid #0056b3 !important;
-        outline-offset: 3px !important;
-    }
-</style>
-
 <!-- 頁籤導覽列 -->
 <ul class="nav nav-tabs" id="myTab" role="tablist" aria-label="圖片連結分類頁籤">
     <li class="nav-item" role="presentation">

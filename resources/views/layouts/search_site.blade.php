@@ -1,13 +1,3 @@
-<style>
-    /* 無障礙 HM1020401C 修正：搜尋輸入框與按鈕 Focus 高對比視覺提示 */
-    #key_word:focus-visible,
-    #key_form button:focus-visible {
-        outline: 3px solid #0056b3 !important;
-        outline-offset: 2px !important;
-        z-index: 5;
-    }
-</style>
-
 <!-- 無障礙修復：移除排版用 table，改用 Bootstrap input-group 結構 -->
 <form method="get" action="{{ asset('search_site.php') }}" target="_blank" id="key_form" aria-label="全站搜尋">
     <div class="input-group">

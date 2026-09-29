@@ -1,60 +1,3 @@
-<style>
-    .image-container {
-        max-width: 90%;
-        margin: 0 5%;
-    }
-
-    /* 無障礙 WCAG 1.4.3 對比度修正 (一般文字與超連結) */
-    .tab-content a,
-    .tab-content .text-primary,
-    .tab-content .btn-link {
-        color: #003d82 !important;
-        font-weight: 600;
-    }
-
-    .tab-content a:hover,
-    .tab-content a:focus,
-    .tab-content .btn-link:hover,
-    .tab-content .btn-link:focus {
-        color: #00224a !important;
-        text-decoration: underline !important;
-    }
-
-    .tab-content .text-danger {
-        color: #b21f2d !important;
-    }
-
-    /* 🎯 關鍵修復：提高選擇器權重 (a.btn-success)，強制覆蓋 .tab-content a 的藍色，確保文字一律為白色 */
-    .tab-content a.btn-success,
-    .tab-content button.btn-success,
-    .btn-success {
-        background-color: #146c43 !important;
-        border-color: #13653f !important;
-        color: #ffffff !important; /* 白色文字 */
-        text-decoration: none !important; /* 移除底線 */
-    }
-
-    .tab-content a.btn-success:hover,
-    .tab-content a.btn-success:focus,
-    .tab-content button.btn-success:hover,
-    .tab-content button.btn-success:focus,
-    .btn-success:hover,
-    .btn-success:focus,
-    .btn-success:active {
-        background-color: #0f5132 !important;
-        border-color: #0e4b2e !important;
-        color: #ffffff !important;
-    }
-
-    /* 無障礙 HM1020401C 修正：鍵盤 Focus 高對比視覺提示 */
-    .nav-tabs .nav-link:focus-visible,
-    .table a:focus-visible,
-    button:focus-visible {
-        outline: 3px solid #003d82 !important;
-        outline-offset: 2px !important;
-    }
-</style>
-
 <!-- 無障礙頁籤導覽列 -->
 <ul class="nav nav-tabs" id="myTab2" role="tablist" aria-label="圖文公告分類頁籤">
     <?php
@@ -198,9 +141,11 @@
             </table>
         </div>
         
-        <a href="{{ route('posts.index') }}" class="btn btn-link text-primary btn-sm">
-            <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多公告...
-        </a>
+        <div class="mt-2">
+            <a href="{{ route('posts.index') }}" class="btn btn-outline-primary btn-sm">
+                <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多公告...
+            </a>
+        </div>
     </div>
     @endif
 
@@ -331,11 +276,12 @@
                     @endforeach
                     </tbody>
                 </table>
+            </div>            
+            <div class="mt-2">
+                <a href="{{ route('posts.type',$post_type->id) }}" class="btn btn-outline-primary btn-sm">
+                    <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多 {{ $post_type->name }}...
+                </a>
             </div>
-            
-            <a href="{{ route('posts.type',$post_type->id) }}" class="btn btn-link text-primary btn-sm">
-                <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多 {{ $post_type->name }}...
-            </a>
         </div>
     @endforeach
 </div>
