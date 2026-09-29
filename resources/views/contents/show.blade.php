@@ -56,7 +56,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                     @if($content->power==null)
-                        {!! sanitize_accessibility_html($content->content) !!}
+                        {!! $content->content !!}
                     @elseif($content->power==2)
                         <?php
                             if(auth()->check() or check_ip()){
@@ -66,13 +66,13 @@
                             }
                         ?>
                         @if($can_see)
-                            {!! sanitize_accessibility_html($content->content) !!}
+                            {!! $content->content !!}
                         @else
                             <h2 class="text-danger">請登入，或在校網內才可觀看</h2>
                         @endif
                     @elseif($content->power==3)
                         @auth                            
-                            {!! sanitize_accessibility_html($content->content) !!}
+                            {!! $content->content !!}
                         @endauth
                         @guest
                             <h2 class="text-danger">請登入後觀看</h2>

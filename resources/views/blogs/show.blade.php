@@ -113,7 +113,7 @@
 
                                 {{-- 文章主要內容 (帶入無障礙與字體清理函式) --}}
                                 <div class="blog-content-body table-responsive">
-                                    {!! sanitize_accessibility_html($blog->content) !!}
+                                    {!! $blog->content !!}
                                 </div>
                             </div>
                         </div>

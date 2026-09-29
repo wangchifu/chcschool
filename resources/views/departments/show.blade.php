@@ -66,7 +66,7 @@
                 </h2>
                 <div class="card-body">
                     <div class="table-responsive">
-                    {!! sanitize_accessibility_html($department->content) !!}                    
+                    {!! $department->content !!}                    
                     </div>
                 </div>
             </div>
