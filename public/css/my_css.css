@@ -627,6 +627,53 @@ button.btn-success:hover, button.btn-success:focus,
     line-height: 1.4;
 }
 
+/* ==========================================================================
+   圖片連結區塊：修復文字遮擋與強制 16:9 圖片比例
+   ========================================================================== */
+
+/* 1. 圖片外層連結容器：強制 16:9 比例與防止內容溢出 */
+.photo-link-item a {
+    display: block !important;
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;     /* 強制所有圖片框為 16:9 比例 */
+    overflow: hidden !important;          /* 裁切超出範圍的圖片內容 */
+    border-radius: var(--radius-md, 8px);/* 圓角邊框 */
+    background-color: #f1f5f9;            /* 圖片載入前的底色 */
+    margin-left: 0 !important;            /* 清除全站 a 標籤預設左邊距 */
+    margin-bottom: 6px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* 2. 圖片本體：滿版自動對齊與裁切 */
+.photo-link-item .photo-link-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;        /* 自動填滿 16:9 容器並保持比例裁切 */
+    object-position: center !important;   /* 圖片重點置中 */
+    transition: transform 0.3s ease, opacity 0.2s ease;
+}
+
+/* Hover 時微放大效果 */
+.photo-link-item a:hover .photo-link-img,
+.photo-link-item a:focus .photo-link-img {
+    transform: scale(1.06);
+    opacity: 0.9;
+}
+
+/* 3. 圖文卡片與下方文字排版：確保文字空間充足不重疊 */
+.photo-link-item figure {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+}
+
+.photo-link-item figcaption {
+    width: 100%;
+    padding-top: 2px;
+    line-height: 1.35;
+    color: var(--text-main, #1e293b);
+}
+
 /* RWD 表格 */
 .rwd-table {
     background: #fff;
