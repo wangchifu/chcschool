@@ -3,7 +3,23 @@
     //$setup = \App\Setup::first();
     $fixed_top = ($setup->fixed_nav)?"fixed-top ":null;
 ?>
-
+@if($nav_color == 'navbar-custom' && isset($navbar_custom[0]))
+<style>
+    .navbar-custom {
+        /* $navbar_custom[0]: Navbar 底色 */
+        background-color: {{ $navbar_custom[0] }} !important;
+        
+        /* $navbar_custom[1]: 網站名稱 / 文字顏色 */
+        --nav-brand-color: {{ $navbar_custom[1] }};
+        
+        /* $navbar_custom[2]: 連結文字顏色 */
+        --nav-link-color: {{ $navbar_custom[2] }};
+        
+        /* $navbar_custom[3]: Hover / Active 文字顏色 */
+        --nav-hover-color: {{ $navbar_custom[3] }};
+    }
+</style>
+@endif
 <nav class="navbar navbar-expand-lg {{ $nav_color }} {{ $fixed_top }}" id="mainNav" role="navigation" aria-label="主要選單導覽">
     <div class="container-fluid">
         {{-- 無障礙定位點：頂部導覽區 U --}}

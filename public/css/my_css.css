@@ -789,17 +789,17 @@ button.btn-success:hover, button.btn-success:focus,
 }
 
 /* ==========================================================================
-   現代感 Navbar：動態底色 + 半透明立體漸層光影
+   現代感 Navbar：支援 $navbar_custom 動態色系 + 半透明立體漸層光影
    ========================================================================== */
 
-/* 1. 主導覽列：疊加半透明光影漸層（保留管理者 {{ $nav_color }} 底色） */
+/* 1. 主導覽列：疊加半透明光影漸層（背景底色由 $navbar_custom[0] 控制） */
 #mainNav {
-    /* 反轉光影：左側疊加深色陰影，右側疊加白色亮光 */
+    /* 半透明光影疊加於底色之上 */
     background-image: linear-gradient(
         135deg, 
-        rgba(0, 0, 0, 0.28) 0%,         /* 左上角深邃陰影 (左深) */
+        rgba(0, 0, 0, 0.28) 0%,         /* 左上角深邃陰影 */
         rgba(0, 0, 0, 0.08) 45%,        /* 中間自然過渡 */
-        rgba(255, 255, 255, 0.22) 100%  /* 右下角微亮光暈 (右淺) */
+        rgba(255, 255, 255, 0.22) 100%  /* 右下角微亮光暈 */
     ) !important;
     
     /* 毛玻璃與立體陰影 */
@@ -815,21 +815,22 @@ button.btn-success:hover, button.btn-success:focus,
     transition: all 0.3s ease;
 }
 
-/* 2. 品牌名稱 (Logo / 標題) 懸浮微光 */
-#mainNav .navbar-brand {
-    color: #ffffff !important;
+/* 2. 品牌名稱 (Logo / 標題) 與一般文字：對應 $navbar_custom[1] */
+#mainNav .navbar-brand,
+#mainNav .navbar-text {
+    color: var(--nav-brand-color, #ffffff) !important;
     font-weight: 700;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 #mainNav .navbar-brand:hover {
     transform: translateY(-1px);
 }
 
-/* 3. 導覽列按鈕 (Nav Links) 亮光氣泡效果 */
+/* 3. 導覽列連結：對應 $navbar_custom[2] */
 #mainNav .nav-link {
-    color: rgba(255, 255, 255, 0.92) !important;
+    color: var(--nav-link-color, rgba(255, 255, 255, 0.92)) !important;
     font-weight: 500;
     padding: 0.5rem 0.9rem !important;
     margin: 0 2px;
@@ -838,28 +839,29 @@ button.btn-success:hover, button.btn-success:focus,
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover 與開啟選單時的透光果凍質感 */
+/* 4. 滑鼠移上去 (Hover) 或選單開啟時：對應 $navbar_custom[3] */
 #mainNav .nav-link:hover,
+#mainNav .nav-item:hover > .nav-link,
 #mainNav .nav-item.show > .nav-link {
-    color: #ffffff !important;
+    color: var(--nav-hover-color, #ffffff) !important;
     background: rgba(255, 255, 255, 0.18) !important;
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3),
                 0 3px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-1px);
 }
 
-/* 當前頁面 active 高亮 */
+/* 當前頁面 (Active) 高亮：對應 $navbar_custom[3] */
 #mainNav .nav-item.active > .nav-link,
 #mainNav .nav-link[aria-current="page"] {
-    color: #ffffff !important;
+    color: var(--nav-hover-color, #ffffff) !important;
     background: rgba(255, 255, 255, 0.28) !important;
     font-weight: 700;
     box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
 }
 
-/* 4. 下拉選單 (Dropdown Menu) 卡片懸浮與毛玻璃質感 */
+/* 5. 下拉選單 (Dropdown Menu) */
 #mainNav .dropdown-menu {
-    z-index: 1050 !important;       /* 最高層級，不被遮擋 */
+    z-index: 1050 !important;
     background: rgba(255, 255, 255, 0.96) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
