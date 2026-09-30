@@ -231,29 +231,67 @@
                 }
             });
 
-            /* 無障礙控制：輪播圖暫停 / 播放 JS 控制器 */
+            /* 無障礙控制：輪播圖暫停 / 播放 JS 控制器（支援手機觸控相容性） */
             var $carousel =$('#carouselExampleIndicators');
             var $toggleBtn =$('#carouselToggleBtn');
             var isPaused = false;
 
-            if ($carousel.length && $toggleBtn.length) {$toggleBtn.on('click', function() {
+            if ($carousel.length &&$toggleBtn.length) {
+
+                // 1. 關鍵修正：阻止點擊與觸控事件向外層冒泡，防止 Bootstrap 接收到 touchend 後自動啟動輪播
+                $toggleBtn.on('touchstart touchend touchmove click', function(e) {
+                    e.stopPropagation();
+                });
+
+                // 2. 切換暫停 / 播放邏輯
+                $toggleBtn.on('click', function(e) {
+                    e.preventDefault();
+
                     if (!isPaused) {
-                        $carousel.carousel('pause');
                         isPaused = true;
+                        $carousel.carousel('pause');
+
+                        // 徹底拔除 Bootstrap 內部的 Timer 計時器
+                        var instance = $carousel.data('bs.carousel');
+                        if (instance) {
+                            instance._isPaused = true;
+                            if (instance._interval) {
+                                clearInterval(instance._interval);
+                                instance._interval = null;
+                            }
+                        }
+
                         $(this).attr('aria-pressed', 'true')
                                .attr('aria-label', '播放輪播圖片')
                                .html('<i class="fas fa-play me-1" aria-hidden="true"></i> <span>播放輪播</span>');
                     } else {
-                        $carousel.carousel('cycle');
                         isPaused = false;
+
+                        var instance = $carousel.data('bs.carousel');
+                        if (instance) {
+                            instance._isPaused = false;
+                        }
+
+                        $carousel.carousel('cycle');
+
                         $(this).attr('aria-pressed', 'false')
                                .attr('aria-label', '暫停輪播圖片')
                                .html('<i class="fas fa-pause me-1" aria-hidden="true"></i> <span>暫停輪播</span>');
                     }
                 });
 
-                // 當鍵盤焦點進出輪播區時自動暫停/恢復輪播
-                $carousel.on('focusin', function() {$carousel.carousel('pause');
+                // 3. 雙重保險：手勢滑動後若處於暫停狀態，強制維持暫停
+                $carousel.on('slide.bs.carousel', function () {
+                    if (isPaused) {
+                        $carousel.carousel('pause');
+                    }
+                });
+
+                // 4. 當鍵盤焦點進出輪播區時自動暫停/恢復輪播（僅在未手動暫停時生效）
+                $carousel.on('focusin', function() {
+                    if (!isPaused) {
+                        $carousel.carousel('pause');
+                    }
                 }).on('focusout', function() {
                     if (!isPaused) {
                         $carousel.carousel('cycle');
@@ -367,7 +405,7 @@
                     }`;
                 } else if (direction === 'down') {
                     keyframes = `@keyframes marqueeMove { 
-                        0% { transform: translateY(-${containerHeight}px); } 
+                        0% { transform: translateY(${containerHeight}px); } 
                         100% { transform: translateY(${containerHeight}px); } 
                     }`;
                 }
