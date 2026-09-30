@@ -14,7 +14,8 @@
     @if($setup->title_image)
         @if(!empty($photo_data))
             <?php $carousel_fade = ($setup->title_image_style == 2) ? "carousel-fade" : ""; ?>
-            <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }} position-relative" data-ride="carousel" role="region" aria-label="焦點新聞輪播圖">
+            <!-- 關鍵修正：加入 data-pause="false" 防止手機觸控離開後自動喚醒輪播 -->
+            <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }} position-relative" data-ride="carousel" data-pause="false" role="region" aria-label="焦點新聞輪播圖">
                 
                 <!-- 無障礙檢測修正：獨立置於右上角半透明按鈕，不擋住左右按鍵 -->
                 <div class="carousel-accessibility-control" style="position: absolute; top: 15px; right: 15px; z-index: 1050;">
@@ -231,30 +232,39 @@
                 }
             });
 
-            /* 無障礙控制：輪播圖暫停 / 播放 JS 控制器（支援手機觸控相容性） */
+            /* 無障礙控制：輪播圖暫停 / 播放 JS 控制器（手機觸控完全相容版） */
             var $carousel =$('#carouselExampleIndicators');
             var $toggleBtn =$('#carouselToggleBtn');
             var isPaused = false;
 
             if ($carousel.length &&$toggleBtn.length) {
 
-                // 1. 關鍵修正：阻止點擊與觸控事件向外層冒泡，防止 Bootstrap 接收到 touchend 後自動啟動輪播
+                // 1. 防止按鈕觸控事件向外傳遞給輪播容器
                 $toggleBtn.on('touchstart touchend touchmove click', function(e) {
                     e.stopPropagation();
                 });
 
-                // 2. 切換暫停 / 播放邏輯
+                // 2. 切換暫停與播放邏輯
                 $toggleBtn.on('click', function(e) {
                     e.preventDefault();
+
+                    var instance = $carousel.data('bs.carousel');
 
                     if (!isPaused) {
                         isPaused = true;
                         $carousel.carousel('pause');
 
-                        // 徹底拔除 Bootstrap 內部的 Timer 計時器
-                        var instance = $carousel.data('bs.carousel');
                         if (instance) {
-                            instance._isPaused = true;
+                            // 關鍵 1：將設定的時間間隔關閉
+                            instance._config.interval = false;
+
+                            // 關鍵 2：徹底清除 Bootstrap 手機觸控放開後排程的喚醒計時器 (touchTimeout)
+                            if (instance.touchTimeout) {
+                                clearTimeout(instance.touchTimeout);
+                                instance.touchTimeout = null;
+                            }
+
+                            // 關鍵 3：清除背景輪播計時器
                             if (instance._interval) {
                                 clearInterval(instance._interval);
                                 instance._interval = null;
@@ -267,9 +277,8 @@
                     } else {
                         isPaused = false;
 
-                        var instance = $carousel.data('bs.carousel');
                         if (instance) {
-                            instance._isPaused = false;
+                            instance._config.interval = 5000; // 恢復預設時間
                         }
 
                         $carousel.carousel('cycle');
@@ -280,14 +289,18 @@
                     }
                 });
 
-                // 3. 雙重保險：手勢滑動後若處於暫停狀態，強制維持暫停
-                $carousel.on('slide.bs.carousel', function () {
+                // 3. 雙重保險：手勢滑動切換圖片時，若處於暫停狀態則強制保持暫停
+                $carousel.on('slide.bs.carousel slid.bs.carousel', function () {
                     if (isPaused) {
                         $carousel.carousel('pause');
+                        var instance = $carousel.data('bs.carousel');
+                        if (instance) {
+                            instance._config.interval = false;
+                        }
                     }
                 });
 
-                // 4. 當鍵盤焦點進出輪播區時自動暫停/恢復輪播（僅在未手動暫停時生效）
+                // 4. 焦點控制（Tab 鍵進入時暫停，離開時恢復）
                 $carousel.on('focusin', function() {
                     if (!isPaused) {
                         $carousel.carousel('pause');
@@ -405,7 +418,7 @@
                     }`;
                 } else if (direction === 'down') {
                     keyframes = `@keyframes marqueeMove { 
-                        0% { transform: translateY(${containerHeight}px); } 
+                        0% { transform: translateY(-${contentHeight}px); } 
                         100% { transform: translateY(${containerHeight}px); } 
                     }`;
                 }
