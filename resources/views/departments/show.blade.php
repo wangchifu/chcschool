@@ -17,14 +17,7 @@
                         </a>
                     </li>                    
                     <li class="breadcrumb-item active" aria-current="page">{{ $department->title }}</li>
-                </ol>
-
-                <div>
-                    <!-- 網站導覽快速連結 -->
-                    <a href="{{ route('sitemap') }}" title="前往網站導覽" aria-label="前往網站導覽" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-sitemap" aria-hidden="true"></i> 網站導覽
-                    </a>
-                </div>
+                </ol>                
             </nav>
 
             <h1>{{ $department->title }}</h1>
