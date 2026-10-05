@@ -217,7 +217,7 @@
                         <td>
                             雲端連結
                             @auth
-                                @if(($folder->user_id == auth()->user()->id and !empty($check_exec)) or ($folder->job_title == auth()->user()->title and !empty($check_exec)) or auth()->user()->admin==1)
+                                @if(($cloud->user_id == auth()->user()->id and !empty($check_exec)) or ($cloud->job_title == auth()->user()->title) or auth()->user()->admin==1)
                                     <button type="button" class="btn btn-link p-0 text-primary" onclick="open_window('{{ route('open_files.edit',[$cloud->id,$file_p]) }}','編輯雲端連結')" aria-label="編輯雲端連結：{{ $cloud->name }}">
                                         <i class='fas fa-edit' aria-hidden="true"></i>
                                     </button>
