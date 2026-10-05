@@ -106,7 +106,7 @@
                             ?>
                             <strong>目錄</strong>
                             @auth                            
-                            @if(($folder->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
+                            @if(($folder->user_id == auth()->user()->id and !empty($check_exec)) or ($folder->job_title == auth()->user()->title and !empty($check_exec)) or auth()->user()->admin==1)
                                     <!-- 無障礙 HM1020401C 修正：改用 button 元素開窗 -->
                                     <button type="button" class="btn btn-link p-0 text-primary" onclick="open_window('{{ route('open_files.edit',[$folder->id,$folder_p]) }}','編輯目錄')" aria-label="編輯目錄：{{ $folder->name }}">
                                         <i class='fas fa-edit' aria-hidden="true"></i>
@@ -163,7 +163,7 @@
                         <td>
                             檔案
                             @auth
-                                @if(($file->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
+                                @if(($file->user_id == auth()->user()->id and !empty($check_exec)) or ($file->job_title == auth()->user()->title and !empty($check_exec)) or auth()->user()->admin==1)
                                     <button type="button" class="btn btn-link p-0 text-primary" onclick="open_window('{{ route('open_files.edit',[$file->id,$file_p]) }}','編輯檔案')" aria-label="編輯檔案：{{ $file->name }}">
                                         <i class='fas fa-edit' aria-hidden="true"></i>
                                     </button>
@@ -217,7 +217,7 @@
                         <td>
                             雲端連結
                             @auth
-                                @if(($cloud->user_id == auth()->user()->id and !empty($check_exec)) or auth()->user()->admin==1)
+                                @if(($folder->user_id == auth()->user()->id and !empty($check_exec)) or ($folder->job_title == auth()->user()->title and !empty($check_exec)) or auth()->user()->admin==1)
                                     <button type="button" class="btn btn-link p-0 text-primary" onclick="open_window('{{ route('open_files.edit',[$cloud->id,$file_p]) }}','編輯雲端連結')" aria-label="編輯雲端連結：{{ $cloud->name }}">
                                         <i class='fas fa-edit' aria-hidden="true"></i>
                                     </button>
