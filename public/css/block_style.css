@@ -11,7 +11,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #000;
+    color: #1a1a1a; /* 17.4:1 */
 }
 .block1 {
     border: 2px solid #35ae55;
@@ -25,7 +25,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #082b12; /* 深墨綠，對比度 5.38:1 */
 }
 
 /* 單色黃 */
@@ -41,7 +41,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #3d2f00; /* 深黃棕，對比度 7.93:1 */
 }
 
 /* 單色藍 */
@@ -57,7 +57,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #03213d; /* 深藏青，對比度 5.12:1 */
 }
 
 /* 單色紅 */
@@ -73,7 +73,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #300500; /* 深酒紅，對比度 4.85:1 */
 }
 
 /* 單色淺綠 */
@@ -89,7 +89,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #203b01; /* 橄欖黑綠，對比度 7.49:1 */
 }
 
 /* 單色淺黃 */
@@ -105,7 +105,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #3d2700; /* 濃咖啡棕，對比度 10.0:1 */
 }
 
 /* 單色淺藍 */
@@ -121,7 +121,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #002f47; /* 深深海藍，對比度 7.00:1 */
 }
 
 /* 單色淺紅 */
@@ -137,7 +137,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #420a0a; /* 濃深紫紅，對比度 7.63:1 */
 }
 
 /* 單色淺藍 */
@@ -153,7 +153,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #0277bd;
+    color: #014d87; /* 深湛藍，對比度 7.56:1 */
 }
 
 /* 單色淺膚色 */
@@ -169,7 +169,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #f9a825;
+    color: #6b3d00; /* 古銅暗棕，對比度 8.74:1 */
 }
 
 /* 單色淺黃 */
@@ -185,7 +185,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #ef6c00;
+    color: #732f00; /* 焦糖深棕，對比度 8.20:1 */
 }
 
 /* 單色淺紅 */
@@ -201,7 +201,7 @@
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #d84315;
+    color: #701a02; /* 磚深紅，對比度 8.11:1 */
 }
 
 /* 漸層紅 */
@@ -212,26 +212,18 @@
     box-shadow: 0 3px 2px 2px #ccc;
 }
 .gradient-title1 {
-    background: #ff9472; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-        to right,
-        #f2709c,
-        #ff9472
-    ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to right,
-        #f2709c,
-        #ff9472
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #ff9472;
+    background: -webkit-linear-gradient(to right, #f2709c, #ff9472);
+    background: linear-gradient(to right, #f2709c, #ff9472);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #360515; /* 暗李紫，全寬對比度 6.37:1 ~ 8.18:1 */
 }
 
-/* 漸層藍 */
+/* 漸層藍 (微調右側顏色以維護全寬白字對比度) */
 .gradient-block2 {
     margin-bottom: 20px;
     padding: 0;
@@ -239,23 +231,15 @@
     box-shadow: 0 3px 2px 2px #ccc;
 }
 .gradient-title2 {
-    background: #1a2980; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-        to left,
-        #26d0ce,
-        #1a2980
-    ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to left,
-        #26d0ce,
-        #1a2980
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #1a2980;
+    background: -webkit-linear-gradient(to left, #007f8c, #1a2980);
+    background: linear-gradient(to left, #007f8c, #1a2980);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #ffffff; /* 白字，全寬對比度 4.88:1 ~ 12.55:1 */
 }
 
 /* 漸層綠 */
@@ -266,23 +250,15 @@
     box-shadow: 0 3px 2px 2px #ccc;
 }
 .gradient-title3 {
-    background: #1d976c; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-        to left,
-        #93f9b9,
-        #1d976c
-    ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to left,
-        #93f9b9,
-        #1d976c
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #1d976c;
+    background: -webkit-linear-gradient(to left, #93f9b9, #1d976c);
+    background: linear-gradient(to left, #93f9b9, #1d976c);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #01170d; /* 深黑翡翠綠，全寬對比度 5.04:1 ~ 14.60:1 */
 }
 
 /* 漸層黃 */
@@ -293,26 +269,18 @@
     box-shadow: 0 3px 2px 2px #ccc;
 }
 .gradient-title4 {
-    background: #fdc830; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-        to right,
-        #f37335,
-        #fdc830
-    ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to right,
-        #f37335,
-        #fdc830
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #fdc830;
+    background: -webkit-linear-gradient(to right, #f37335, #fdc830);
+    background: linear-gradient(to right, #f37335, #fdc830);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #361500; /* 深濃咖啡色，全寬對比度 5.79:1 ~ 10.66:1 */
 }
 
-/* 預設深灰 */
+/* 預設深灰 (微調右側顏色以維護全寬白字對比度) */
 .default-block1 {
     margin-bottom: 20px;
     padding: 0;
@@ -320,23 +288,15 @@
     box-shadow: 0 3px 2px 2px #ccc;
 }
 .default-title1 {
-    background: #707070; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-        to left,
-        #909292,
-        #707070
-    ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to left,
-        #909292,
-        #707070
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #707070;
+    background: -webkit-linear-gradient(to left, #707070, #5c5c5c);
+    background: linear-gradient(to left, #707070, #5c5c5c);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #fff;
+    color: #ffffff; /* 白字，全寬對比度 4.95:1 ~ 6.55:1 */
 }
 
 /* 預設淺灰 */
@@ -347,23 +307,15 @@
     box-shadow: 0 3px 2px 2px #ccc;
 }
 .default-title2 {
-    background: #cfcfcf; /* fallback for old browsers */
-    background: -webkit-linear-gradient(
-        to left,
-        #eef2f3,
-        #cfcfcf
-    ); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to left,
-        #eef2f3,
-        #cfcfcf
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #cfcfcf;
+    background: -webkit-linear-gradient(to left, #eef2f3, #cfcfcf);
+    background: linear-gradient(to left, #eef2f3, #cfcfcf);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     padding-top: 5px;
     padding-left: 10px;
     padding-bottom: 4px;
-    color: #333;
+    color: #333333; /* 暗灰字，全寬對比度 8.11:1 ~ 11.21:1 */
 }
 
 .content2 {

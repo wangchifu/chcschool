@@ -789,33 +789,28 @@ button.btn-success:hover, button.btn-success:focus,
 }
 
 /* ==========================================================================
-   現代感 Navbar：支援 $navbar_custom 動態色系 + 半透明立體漸層光影
+   現代感 Navbar：支援 $navbar_custom 動態色系 + 水凝毛玻璃層次
    ========================================================================== */
 
-/* 1. 主導覽列：疊加半透明光影漸層（背景底色由 $navbar_custom[0] 控制） */
+/* 1. 主導覽列：疊加半透明光影漸層 */
 #mainNav {
-    /* 半透明光影疊加於底色之上 */
     background-image: linear-gradient(
         135deg, 
-        rgba(0, 0, 0, 0.28) 0%,         /* 左上角深邃陰影 */
-        rgba(0, 0, 0, 0.08) 45%,        /* 中間自然過渡 */
-        rgba(255, 255, 255, 0.22) 100%  /* 右下角微亮光暈 */
+        rgba(0, 0, 0, 0.28) 0%, 
+        rgba(0, 0, 0, 0.08) 45%, 
+        rgba(255, 255, 255, 0.22) 100%
     ) !important;
-    
-    /* 毛玻璃與立體陰影 */
     box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25),
                 0 2px 6px -1px rgba(0, 0, 0, 0.12) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    /* 解決選單被下方內容遮擋問題 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 1030 !important;
     overflow: visible !important;
     transition: all 0.3s ease;
 }
 
-/* 2. 品牌名稱 (Logo / 標題) 與一般文字：對應 $navbar_custom[1] */
+/* 2. 品牌名稱 (Logo / 標題) 與一般文字 */
 #mainNav .navbar-brand,
 #mainNav .navbar-text {
     color: var(--nav-brand-color, #ffffff) !important;
@@ -828,61 +823,171 @@ button.btn-success:hover, button.btn-success:focus,
     transform: translateY(-1px);
 }
 
-/* 3. 導覽列連結：對應 $navbar_custom[2] */
+/* 3. 未 Hover 的導覽列連結 */
 #mainNav .nav-link {
-    color: var(--nav-link-color, rgba(255, 255, 255, 0.92)) !important;
+    color: var(--nav-link-color, rgba(255, 255, 255, 0.95)) !important;
     font-weight: 500;
-    padding: 0.5rem 0.9rem !important;
-    margin: 0 2px;
-    border-radius: var(--radius-md, 8px);
-    transition: all 0.22s ease;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 0.55rem 0.95rem !important;
+    margin: 0 3px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* 4. 滑鼠移上去 (Hover) 或選單開啟時：對應 $navbar_custom[3] */
+/* 4. 滑鼠移上去 (Hover) / 選單開啟時：微光玻璃感 (Glassmorphism + 多重立體邊緣) */
 #mainNav .nav-link:hover,
 #mainNav .nav-item:hover > .nav-link,
 #mainNav .nav-item.show > .nav-link {
-    color: var(--nav-hover-color, #ffffff) !important;
-    background: rgba(255, 255, 255, 0.18) !important;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3),
-                0 3px 8px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px);
+    color: #0f172a !important; /* 深灰色字體，與白玻璃對比度達 12:1 */
+    background: linear-gradient(
+        180deg, 
+        rgba(255, 255, 255, 0.85) 0%, 
+        rgba(255, 255, 255, 0.60) 100%
+    ) !important;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    /* 頂部白色高光內陰影 + 底部懸浮氣墊軟影 */
+    box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+        0 4px 14px -2px rgba(0, 0, 0, 0.15),
+        0 2px 4px -1px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-2px);
+    text-shadow: none;
 }
 
-/* 當前頁面 (Active) 高亮：對應 $navbar_custom[3] */
+/* 當前頁面 (Active) 高亮：晶透凝膠玻璃感 */
 #mainNav .nav-item.active > .nav-link,
 #mainNav .nav-link[aria-current="page"] {
-    color: var(--nav-hover-color, #ffffff) !important;
-    background: rgba(255, 255, 255, 0.28) !important;
+    color: #0f172a !important;
+    background: linear-gradient(
+        180deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.75) 100%
+    ) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     font-weight: 700;
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    box-shadow: 
+        inset 0 1px 1px 0 rgba(255, 255, 255, 1),
+        0 6px 16px -2px rgba(0, 0, 0, 0.18) !important;
+        text-shadow: none;
 }
 
-/* 5. 下拉選單 (Dropdown Menu) */
+/* 5. 手機版漢堡選單按鈕 (.custom-toggler)：精緻玻璃按鈕 */
+#mainNav .custom-toggler.navbar-toggler {
+    background: linear-gradient(
+        180deg, 
+        rgba(255, 255, 255, 0.85) 0%, 
+        rgba(255, 255, 255, 0.60) 100%
+    ) !important;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.65) !important;
+    box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+        0 4px 12px -2px rgba(0, 0, 0, 0.12) !important;
+    padding: 0.45rem 0.65rem;
+    border-radius: 10px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#mainNav .custom-toggler.navbar-toggler:hover {
+    background: linear-gradient(
+        180deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.75) 100%
+    ) !important;
+    transform: translateY(-1px);
+    box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 1),
+        0 6px 16px -2px rgba(0, 0, 0, 0.18) !important;
+}
+
+#mainNav .custom-toggler.navbar-toggler:active {
+    transform: translateY(0);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 替換漢堡圖示為深色（確保對比度） */
+#mainNav .custom-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2815, 23, 42, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* 6. 下拉選單 (Dropdown Menu) */
 #mainNav .dropdown-menu {
-    z-index: 1050 !important;
-    background: rgba(255, 255, 255, 0.96) !important;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.22) !important;
-    padding: 8px !important;
-    margin-top: 8px !important;
+    z-index: 1
 }
 
-#mainNav .dropdown-item {
-    color: var(--text-main, #1e293b) !important;
-    font-weight: 500;
-    border-radius: 8px;
-    padding: 8px 14px !important;
-    transition: all 0.2s ease;
+/* ===================================================
+   全站 nav-tabs 頁籤無障礙對比度修正 (符合 WCAG AA >= 4.5:1)
+   =================================================== */
+
+/* 1. 未選中的頁籤：改為較深且清晰的藍色 (#0056b3，對比度 7.04:1) */
+.nav-tabs .nav-link {
+    color: #0056b3;
+    background-color: transparent;
 }
 
-#mainNav .dropdown-item:hover,
-#mainNav .dropdown-item:focus {
-    background-color: var(--primary-color, #003d82) !important;
-    color: #ffffff !important;
-    transform: translateX(4px);
+/* 2. 滑鼠懸停與鍵盤 Focus 狀態：加深藍色 (#003d80，對比度 10.61:1) */
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    color: #003d80;
+    background-color: #f8f9fa;
+    border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+/* 3. 當前選中的頁籤 (active)：採用深黑灰色 (#212529，對比度 15.43:1) */
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: #212529;
+    background-color: #ffffff;
+    border-color: #dee2e6 #dee2e6 #ffffff;
+    font-weight: 600; /* 增加字重，提升視覺辨識度 */
+}
+
+/* ===================================================
+   .btn-outline-primary 無障礙對比度修正 (符合 WCAG AA >= 4.5:1)
+   =================================================== */
+
+/* 1. 預設狀態：文字與邊框改為深藍色 (#0056b3，對比度 7.04:1) */
+.btn-outline-primary {
+    color: #0056b3;
+    border-color: #0056b3;
+    background-color: transparent;
+}
+
+/* 2. 滑鼠懸停 (Hover) 狀態：深藍底白字 (#0056b3 底 + 白字，對比度 7.04:1) */
+.btn-outline-primary:hover {
+    color: #ffffff;
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* 3. 鍵盤聚焦 (Focus) 狀態 */
+.btn-outline-primary:focus,
+.btn-outline-primary.focus {
+    color: #ffffff;
+    background-color: #0056b3;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 0.2rem rgba(0, 86, 179, 0.5);
+}
+
+/* 4. 點擊/按下 (Active) 狀態：更深的藍底 (#004085，對比度 10.13:1) */
+.btn-outline-primary:not(:disabled):not(.disabled):active,
+.btn-outline-primary:not(:disabled):not(.disabled).active,
+.show > .btn-outline-primary.dropdown-toggle {
+    color: #ffffff;
+    background-color: #004085;
+    border-color: #004085;
+}
+
+/* ===================================================
+   .text-danger 高對比修正 (達到 WCAG AAA 最高標準 >= 7:1)
+   =================================================== */
+
+.text-danger {
+    color: #990000 !important;
 }
