@@ -40,7 +40,7 @@
                         @foreach($v1 as $k2=>$v2)
                             <?php 
                                 $active = ($n==0)?"active":""; 
-                                $img_alt = !empty($v2['title']) ? $v2['title'] : (!empty($v2['desc']) ? $v2['desc'] : '橫幅圖片 '.$k1);
+                                $img_alt = !empty($v2['title']) ? $v2['title'] : (!empty($v2['desc']) ? $v2['desc'] : '學生校園活動圖片 '.$k1);
                             ?>
                             <div class="carousel-item {{ $active }}">
                                 @if($v2['link'] != null)
@@ -149,7 +149,7 @@
                                 ?>
                                 <h2 class="h5 {{ $block_position }}">
                                     @if($block_position) 
-                                        {{ $title }}
+                                        {!! a11y_emoji($title) !!}
                                     @endif
                                     @auth
                                         @if(auth()->user()->admin==1)

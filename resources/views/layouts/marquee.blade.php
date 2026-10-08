@@ -4,11 +4,11 @@
             class="honor-toggle-btn"
             type="button"
             aria-label="暫停跑馬燈">
-        ⏸ <span class="sr-only">暫停</span>
+        <span aria-hidden="true">⏸</span> <span class="sr-only">暫停</span>
     </button>
 
     <div class="honor-badge">
-        🏆 榮譽榜
+        <span aria-hidden="true">🏆</span> 榮譽榜
     </div>
 
     <div id="honor-container" class="honor-container">
@@ -16,7 +16,7 @@
             @foreach($honors as$honor)
                 <div class="honor-item">
                     <a href="../posts/{{ $honor->id }}" class="honor-link">
-                        🎉 {{ $honor->title }}
+                        <span aria-hidden="true">🎉</span> {{ $honor->title }}
                     </a>
                 </div>
             @endforeach
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function pauseMarquee() {
         content.style.animationPlayState = 'paused';
         if(toggleBtn) {
-            toggleBtn.innerHTML = '▶ <span class="sr-only">播放</span>';
+            toggleBtn.innerHTML = '<span aria-hidden="true">▶</span> <span class="sr-only">播放</span>';
             toggleBtn.setAttribute('aria-label', '繼續播放跑馬燈');
         }
         isPaused = true;
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function playMarquee() {
         content.style.animationPlayState = 'running';
         if(toggleBtn) {
-            toggleBtn.innerHTML = '⏸ <span class="sr-only">暫停</span>';
+            toggleBtn.innerHTML = '<span aria-hidden="true">⏸</span> <span class="sr-only">暫停</span>';
             toggleBtn.setAttribute('aria-label', '暫停跑馬燈');
         }
         isPaused = false;
