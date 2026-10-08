@@ -50,12 +50,12 @@
             <nav aria-label="麵包屑導覽">
                 <ol class="breadcrumb bg-light border">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('index') }}" style="color: #004085; text-decoration: underline;">首頁</a>
+                        <a href="{{ route('index') }}" style="color: #004085; text-decoration: underline;" title="返回首頁" aria-label="返回首頁">首頁</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('blogs.index') }}" style="color: #004085; text-decoration: underline;">文章列表</a>
+                        <a href="{{ route('blogs.index') }}" style="color: #004085; text-decoration: underline;" title="返回文章列表" aria-label="返回文章列表">文章列表</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page" style="color: #495057;">{{ $blog->title }}</li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color: #495057;">{!! a11y_emoji($blog->title) !!}</li>
                 </ol>
             </nav>
 
@@ -66,7 +66,7 @@
                         {{-- 文章標題與發布資訊區 --}}
                         <div class="card-header bg-white border-bottom py-3">
                             <h2 class="h3 font-weight-bold blog-show-title mb-2">
-                                {{ $blog->title }}
+                                {!! a11y_emoji($blog->title) !!}
                             </h2>
 
                             <div class="d-flex flex-wrap align-items-center justify-content-between pt-1">
@@ -102,8 +102,8 @@
                             </div>
                         </div>
 
-                        {{-- 文章內容區 --}}
-                        <div class="card-body py-4">
+                        {{-- 文章內容區：無障礙 2.1.1 修正，加入 tabindex="0" 使文章內容可接收 Tab 鍵焦點與鍵盤上下方向鍵捲動 --}}
+                        <div class="card-body py-4" tabindex="0" aria-label="{{ $blog->title }} 文章詳細內容區">
                             <div class="blog-image-container clearfix">
                                 @if($blog->title_image)
                                     <a href="{{ asset('storage/'.$school_code.'/blogs/'.$blog->id.'/title_image.png') }}" class="venobox d-inline-block" data-gall="gall1" title="放大檢視封面圖片：{{ $blog->title }}" aria-label="放大檢視封面圖片：{{ $blog->title }}">
@@ -111,9 +111,9 @@
                                     </a>
                                 @endif
 
-                                {{-- 文章主要內容 (帶入無障礙與字體清理函式) --}}
-                                <div class="blog-content-body table-responsive">
-                                    {!! $blog->content !!}
+                                {{-- 文章主要內容 --}}
+                                <div class="blog-content-body table-responsive">                                    
+                                    {!! sanitize_accessibility_html($blog->content) !!}
                                 </div>
                             </div>
                         </div>

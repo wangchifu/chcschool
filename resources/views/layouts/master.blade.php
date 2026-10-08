@@ -70,7 +70,7 @@
 
 <br>
 {{-- 主要內容區 --}}
-<main id="main-content" tabindex="-1" class="container-fluid">
+<main id="main-content" tabindex="-1" class="container-fluid" style="outline: none;">
     @yield('content')
 </main>
 <br>
@@ -87,19 +87,22 @@
 @if($setup->fixed_nav)
 <link href="{{ asset('css/navbar-top-fixed.css') }}" rel="stylesheet">
 @endif
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 定義匹配 Emoji 的正則表達式
-    var emojiRegex = /([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}])/gu;
+    /* 無障礙 2.4.1 全域修復：跳到主要內容區塊之鍵盤焦點鎖定機制 */
+    $(document).on('click', 'a[href="#main-content"]', function(e) {
+        e.preventDefault();
+        var $main = $('#main-content');
+        if ($main.length) {
+            // 強制將 DOM 焦點移至 main 容器，防止 Tab 鍵跳回頂部導覽列
+            $main.attr('tabindex', '-1').focus();
 
-    // 抓取跑馬燈或榮譽榜的容器元件
-    var marqueeElements = document.querySelectorAll('.marquee, #honor-board, .marquee-item');
-
-    marqueeElements.forEach(function(element) {
-        // 替換節點內的 HTML，將 Emoji 自動加上 <span aria-hidden="true">
-        element.innerHTML = element.innerHTML.replace(emojiRegex, function(match) {
-            return '<span aria-hidden="true">' + match + '</span>';
-        });
+            // 平滑滾動至主要內容區頂端
+            $('html, body').animate({
+                scrollTop: $main.offset().top - 15
+            }, 100);
+        }
     });
 });
 </script>

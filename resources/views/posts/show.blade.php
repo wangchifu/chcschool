@@ -5,7 +5,7 @@
 @section('title', $post->title.' | ')
 
 @section('in_head')
-<!-- VenoBox CDN (CSS & JS) -->
+    <!-- VenoBox CDN (CSS & JS) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/venobox/2.1.8/venobox.min.css" type="text/css" media="screen">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/venobox/2.1.8/venobox.min.js"></script>
 @endsection
@@ -20,6 +20,18 @@
         outline: 3px solid #0056b3 !important;
         outline-offset: 2px !important;
         z-index: 5;
+    }
+
+    /* 無障礙 2.4.7 修正：VenoBox 燈箱按鈕 Focus 時高對比黃色外框提示 */
+    .vbox-close:focus,
+    .vbox-prev:focus,
+    .vbox-next:focus,
+    .vbox-left:focus,
+    .vbox-right:focus {
+        outline: 3px solid #ffc107 !important;
+        outline-offset: 3px !important;
+        box-shadow: 0 0 0 2px #000 !important;
+        border-radius: 4px !important;
     }
 
     /* =========================================================
@@ -78,8 +90,8 @@
 
 <div class="row justify-content-center">
 
-    <!-- 主內容區塊 (無障礙 HM1010301C) -->
-    <main class="col-lg-8" aria-label="公告詳細內容">
+    <!-- 主內容區塊 (無障礙修正：避免與 master.blade.php 的 main 重複衝突，改用 role="region") -->
+    <div class="col-lg-8" role="region" aria-label="公告詳細內容">
 
         <?php
         if($post->insite==1){
@@ -110,19 +122,19 @@
         <!-- 麵包屑導覽列 -->
         <nav aria-label="麵包屑導覽">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('index') }}">首頁</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('posts.index') }}">公告列表</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('index') }}" title="返回首頁" aria-label="返回首頁">首頁</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('posts.index') }}" title="返回公告列表" aria-label="返回公告列表">公告列表</a></li>
                 <li class="breadcrumb-item active" aria-current="page">公告內容</li>
             </ol>
         </nav>
 
         <!-- 公告主標題 -->
         @if($can_see)
-            <h1 class="h2 mb-3">{{ $post->title }}</h1>                             
+            <h1 class="h2 mb-3">{!! a11y_emoji($post->title) !!}</h1>                             
         @else
             @if($post->insite==1 and ($post->die_date >= date('Y-m-d') or $post->die_date==null) and $post->created_at < date('Y-m-d H:i:s'))
                 <h1 class="h2 text-danger mb-3">
-                    <i class="fas fa-ban" aria-hidden="true"></i> [ 內部公告 ] {{ $post->title }}
+                    <i class="fas fa-ban" aria-hidden="true"></i> [ 內部公告 ] {!! a11y_emoji($post->title) !!}
                 </h1>                                           
             @endif
             @if($post->die_date < date('Y-m-d') and $post->die_date != null)
@@ -135,7 +147,7 @@
         <!-- 上一則 / 下一則切換導覽 -->
         <nav aria-label="前後公告切換" class="mb-3">
             @if($last_id)
-                <a href="{{ route('posts.show',$last_id) }}" class="btn btn-secondary btn-sm">
+                <a href="{{ route('posts.show',$last_id) }}" class="btn btn-secondary btn-sm" title="前往上一則公告" aria-label="前往上一則公告">
                     <i class="fas fa-arrow-alt-circle-left" aria-hidden="true"></i> 上一則公告
                 </a>
             @else
@@ -145,7 +157,7 @@
             @endif
 
             @if($next_id)
-                <a href="{{ route('posts.show',$next_id) }}" class="btn btn-secondary btn-sm ml-1">
+                <a href="{{ route('posts.show',$next_id) }}" class="btn btn-secondary btn-sm ml-1" title="前往下一則公告" aria-label="前往下一則公告">
                     下一則公告 <i class="fas fa-arrow-alt-circle-right" aria-hidden="true"></i>
                 </a>
             @else
@@ -160,8 +172,8 @@
             <?php
                 $insite = ($post->insite != null) ? $post->insite : 0;
             ?>
-            <span class="mr-2">類別：<a href="{{ route('posts.type',$insite) }}">{{ $post_type_array[$insite] }}</a></span>
-            <span class="mr-2">張貼者：<a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a></span>
+            <span class="mr-2">類別：<a href="{{ route('posts.type',$insite) }}" title="分類：{{ $post_type_array[$insite] }}" aria-label="分類：{{ $post_type_array[$insite] }}">{{ $post_type_array[$insite] }}</a></span>
+            <span class="mr-2">張貼者：<a href="{{ route('posts.job_title',$post->job_title) }}" title="張貼者：{{ $post->job_title }}" aria-label="張貼者：{{ $post->job_title }}">{{ $post->job_title }}</a></span>
             @if($post->die_date)
                 <span class="mr-2">張貼至：{{ $post->die_date }} 止</span>
             @endif
@@ -172,31 +184,31 @@
                         @if(!empty($post->top_date))
                             <span class="badge badge-secondary">置頂至 {{ $post->top_date }}</span>
                         @endif
-                        <a href="{{ route('posts.top_down',$post->id) }}" class="btn btn-warning btn-sm ml-1" onclick="return confirm('確定要取消置頂？')">
+                        <a href="{{ route('posts.top_down',$post->id) }}" class="btn btn-warning btn-sm ml-1" onclick="return confirm('確定要取消置頂？')" title="取消置頂" aria-label="取消置頂">
                             <i class="fas fa-sort-amount-down" aria-hidden="true"></i> 取消置頂
                         </a>
                     @else
-                        <button type="button" class="btn btn-outline-success btn-sm ml-1" data-toggle="modal" data-target="#exampleModal">
+                        <button type="button" class="btn btn-outline-success btn-sm ml-1" data-toggle="modal" data-target="#exampleModal" title="設定置頂" aria-label="設定置頂">
                             <i class="fas fa-sort-amount-up" aria-hidden="true"></i> 置頂
                         </button>
                     @endif
 
                     @if($post->inbox)
-                        <a href="{{ route('posts.inbox',$post->id) }}" class="btn btn-secondary btn-sm ml-1" onclick="return confirm('確定取消常駐公告？')">
+                        <a href="{{ route('posts.inbox',$post->id) }}" class="btn btn-secondary btn-sm ml-1" onclick="return confirm('確定取消常駐公告？')" title="取消常駐公告" aria-label="取消常駐公告">
                             <i class="fas fa-inbox" aria-hidden="true"></i> 取消常駐
                         </a>
                     @else
-                        <a href="{{ route('posts.inbox',$post->id) }}" class="btn btn-outline-warning btn-sm ml-1" onclick="return confirm('確定放進常駐公告區塊？')">
+                        <a href="{{ route('posts.inbox',$post->id) }}" class="btn btn-outline-warning btn-sm ml-1" onclick="return confirm('確定放進常駐公告區塊？')" title="放入常駐公告區塊" aria-label="放入常駐公告區塊">
                             <i class="fas fa-inbox" aria-hidden="true"></i> 常駐
                         </a>
                     @endif
                 @endif
 
                 @if(auth()->user()->id == $post->user_id or auth()->user()->admin == 1)
-                    <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-outline-primary btn-sm ml-1">
+                    <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-outline-primary btn-sm ml-1" title="修改公告" aria-label="修改公告">
                         <i class="fas fa-edit" aria-hidden="true"></i> 修改
                     </a>
-                    <button type="button" class="btn btn-danger btn-sm ml-1" onclick="if(confirm('確定刪除？')) document.getElementById('delete').submit();">
+                    <button type="button" class="btn btn-danger btn-sm ml-1" onclick="if(confirm('確定刪除？')) document.getElementById('delete').submit();" title="刪除公告" aria-label="刪除公告">
                         <i class="fas fa-trash" aria-hidden="true"></i> 刪除
                     </button>
                     {{ Form::open(['route' => ['posts.destroy',$post->id], 'method' => 'DELETE', 'id' => 'delete', 'style' => 'display:none;']) }}
@@ -232,10 +244,9 @@
             <hr>                    
         @endif            
 
-        <!-- 公告內文 -->
-        <article class="p-3 mb-4 rounded border" style="background-color: #ffffff; border-style: dotted !important; border-color: #939699 !important;">
+        <!-- 公告內文區塊：無障礙 2.1.1 修正，加上 tabindex="0" 讓鍵盤可停留並使用方向鍵捲動 -->
+        <article class="p-3 mb-4 rounded border" style="background-color: #ffffff; border-style: dotted !important; border-color: #939699 !important;" tabindex="0" aria-label="{{ $post->title }} 公告詳細內容區">
             @if($can_see)
-                <!-- 使用 clean_font_size_units 與 fix_empty_links 過濾 px/pt 單位及無效空連結 -->
                 <div class="post-content-body">                                                                                                                                             
                     {!! sanitize_accessibility_html($post->content) !!}
                 </div>
@@ -250,14 +261,14 @@
 
         <!-- 相關照片區塊 -->
         @if(!empty($photos) and $can_see)
-            <section class="card my-4" aria-label="相關照片">
+            <section class="card my-4" aria-label="相關照片區塊">
                 <h2 class="card-header h5">相關照片</h2>
                 <div class="card-body">
                     <div class="row">
                     @foreach($photos as $k => $v)
                         <div class="col-lg-3 col-md-4 col-6 mb-3">
-                            <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="venobox d-block" data-gall="gall1" aria-label="放大檢視相關照片第 {{ $k + 1 }} 張">
-                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="相關照片 {{ $k + 1 }}" class="img-thumbnail w-100">
+                            <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="venobox d-block" data-gall="gall1" title="放大檢視相關照片第 {{ $k + 1 }} 張" aria-label="放大檢視相關照片第 {{ $k + 1 }} 張">
+                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="相關照片第 {{ $k + 1 }} 張" class="img-thumbnail w-100">
                             </a>
                         </div>
                     @endforeach
@@ -268,15 +279,13 @@
 
         <!-- 附件下載區塊 -->
         @if(!empty($files) and $can_see)                    
-            <section class="card my-4" aria-label="附件下載">
+            <section class="card my-4" aria-label="附件下載區塊">
                 <h2 class="card-header h5">附件下載</h2>
                 <div class="card-body">
                 @foreach($files as $k => $v)
                     <?php 
-                        // 自動抓取副檔名 (例如 pdf, docx, txt)
                         $ext = pathinfo($v, PATHINFO_EXTENSION);
                     ?>
-                    <!-- 無障礙檢測修正：下載連結明確標示檔名、副檔名及另開新視窗 -->
                     <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/files/'.$v) }}" 
                        class="btn btn-outline-primary btn-sm my-1" 
                        target="_blank" 
@@ -290,21 +299,20 @@
                 </div>
             </section>                    
         @endif            
-    </main>
+    </div>
 
-    <!-- 側邊欄區塊 (無障礙 HM1010301C) -->
+    <!-- 側邊欄區塊 -->
     <aside class="col-lg-3" aria-label="側邊欄資訊">
         <div class="card my-4">
             <h2 class="card-header h5">近月內熱門公告</h2>
             <div class="card-body">
-                <!-- 無障礙修復：正確包覆 ul 標籤 -->
                 <ul class="list-unstyled mb-0">
                 @foreach($hot_posts as $hot_post)
                     <li class="mb-2 pb-2 border-bottom">
                         <small class="text-muted">{{ substr($hot_post->created_at,0,10) }}</small>
-                        <span class="badge badge-danger ml-1" title="點閱數">{{ $hot_post->views }}</span>
+                        <span class="badge badge-danger ml-1" title="點閱數 {{ $hot_post->views }} 次" aria-label="點閱數 {{ $hot_post->views }} 次">{{ $hot_post->views }}</span>
                         <br>
-                        <a href="{{ route('posts.show',$hot_post->id) }}" class="font-weight-normal">
+                        <a href="{{ route('posts.show',$hot_post->id) }}" class="font-weight-normal" title="閱讀公告：{{ $hot_post->title }}" aria-label="閱讀公告：{{ $hot_post->title }}">
                             {{ str_limit($hot_post->title,60) }}
                         </a>
                     </li>
@@ -317,11 +325,11 @@
 </div>
 
 <!-- 置頂日期選擇 Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title h5" id="exampleModalLabel">置頂設定</h3>
+                <h2 class="modal-title h5" id="exampleModalLabel">置頂設定</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="關閉視窗">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -329,7 +337,6 @@
             <form id="top_up_form" action="{{ route('posts.top_up2',$post->id) }}" method="post">
                 @csrf
                 <div class="modal-body">
-                    <!-- 無障礙 HM1150100C 修正：補充 label 對應與清晰提示 -->
                     <div class="form-group">
                         <label for="top_date">置頂至哪一天？<span class="text-danger">*</span></label>
                         <input type="date" name="top_date" id="top_date" class="form-control" required="required">
@@ -353,36 +360,153 @@
         return true;
     }
 
-    // 初始化 VenoBox 並加上無障礙焦點控制 (Focus Management)
+    /* 無障礙 2.1.2 核心修正：VenoBox 燈箱全鍵盤控制與 Focus Trap 鎖定 */
+    var triggerElement = null;
+    var lightboxKeyHandler = null;
+
     var vb = new VenoBox({
         selector: '.venobox',
         numeration: true,
         infinigall: true,
         spinner: 'rotating-plane',
         onPostOpen: function(content, obj, gallIndex, then) {
-            // 1. 視窗開啟後，補充關閉按鈕的無障礙屬性並將焦點自動移至關閉按鈕
+            // 1. 記錄開啟前的觸發元件，供關閉時歸還焦點
+            triggerElement = document.activeElement;
+
             setTimeout(function() {
-                var closeBtn = document.querySelector('.vbox-close');
-                if (closeBtn) {
-                    closeBtn.setAttribute('role', 'button');       // 1. 補充按鈕角色
-                    closeBtn.setAttribute('aria-label', '關閉');   // 2. 補充無障礙讀報名稱
-                    closeBtn.setAttribute('title', '關閉');        // 3. 補充滑鼠懸停名稱
-                    closeBtn.setAttribute('tabindex', '0');        // 4. 確保鍵盤可被 Focus
-                    closeBtn.focus();                              // 5. 強制焦點移入
+                var overlay = document.querySelector('.vbox-overlay');
+                if (!overlay) return;
+
+                // 2. 動態強制修復並取得當前畫面上所有可見的可聚焦按鈕
+                function getFocusables() {
+                    var allControls = overlay.querySelectorAll('.vbox-close, .vbox-prev, .vbox-next, .vbox-left, .vbox-right');
+                    
+                    // 強制為 DOM 內部所有控制按鈕補上 Focus 關鍵屬性
+                    allControls.forEach(function(el) {
+                        el.setAttribute('tabindex', '0');
+                        el.setAttribute('role', 'button');
+                        if (el.classList.contains('vbox-close')) {
+                            el.setAttribute('aria-label', '關閉懸浮視窗');
+                            el.setAttribute('title', '關閉懸浮視窗');
+                        } else if (el.classList.contains('vbox-prev') || el.classList.contains('vbox-left')) {
+                            el.setAttribute('aria-label', '檢視上一張照片');
+                            el.setAttribute('title', '檢視上一張照片');
+                        } else if (el.classList.contains('vbox-next') || el.classList.contains('vbox-right')) {
+                            el.setAttribute('aria-label', '檢視下一張照片');
+                            el.setAttribute('title', '檢視下一張照片');
+                        }
+                    });
+
+                    // 依 HTML DOM 順序選取潛在焦點
+                    var candidates = overlay.querySelectorAll('.vbox-close, .vbox-next, .vbox-prev, .vbox-left, .vbox-right, a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+                    
+                    return Array.from(candidates).filter(function(el) {
+                        var style = window.getComputedStyle(el);
+                        return el.offsetWidth > 0 && 
+                               el.offsetHeight > 0 && 
+                               style.display !== 'none' && 
+                               style.visibility !== 'hidden' && 
+                               style.opacity !== '0';
+                    });
                 }
+
+                // 3. 預設將焦點定在第一個可聚焦按鈕（關閉按鈕）
+                var focusables = getFocusables();
+                if (focusables.length > 0) {
+                    focusables[0].focus();
+                }
+
+                // 4. 一體化鍵盤控制（包含 Tab 鎖定循環、Enter/Space 觸發、Esc 關閉、左右方向鍵）
+                lightboxKeyHandler = function(e) {
+                    var currentOverlay = document.querySelector('.vbox-overlay');
+                    if (!currentOverlay || !document.body.contains(currentOverlay)) return;
+
+                    var key = e.key;
+                    var keyCode = e.keyCode;
+                    var activeEl = document.activeElement;
+
+                    // A. Tab 鍵 Focus Trap (嚴格依據 DOM 順序於燈箱內部循環)
+                    if (key === 'Tab' || keyCode === 9) {
+                        var items = getFocusables();
+                        if (items.length === 0) return;
+
+                        var firstItem = items[0];
+                        var lastItem = items[items.length - 1];
+
+                        if (e.shiftKey) { // Shift + Tab (反向移動)
+                            if (activeEl === firstItem || !currentOverlay.contains(activeEl)) {
+                                e.preventDefault();
+                                lastItem.focus();
+                            }
+                        } else { // Tab (正向移動)
+                            if (activeEl === lastItem || !currentOverlay.contains(activeEl)) {
+                                e.preventDefault();
+                                firstItem.focus();
+                            }
+                        }
+                    }
+
+                    // B. Enter (13) 或 Space (32) 鍵觸發對應動作，並維持焦點不掉落
+                    else if (key === 'Enter' || key === ' ' || keyCode === 13 || keyCode === 32) {
+                        if (activeEl) {
+                            if (activeEl.classList.contains('vbox-close') || activeEl.closest('.vbox-close')) {
+                                e.preventDefault();
+                                vb.close();
+                            } else if (activeEl.classList.contains('vbox-prev') || activeEl.classList.contains('vbox-left') || activeEl.closest('.vbox-prev, .vbox-left')) {
+                                e.preventDefault();
+                                vb.prev();
+                                setTimeout(function() {
+                                    var p = document.querySelector('.vbox-prev, .vbox-left');
+                                    if (p) p.focus();
+                                }, 80);
+                            } else if (activeEl.classList.contains('vbox-next') || activeEl.classList.contains('vbox-right') || activeEl.closest('.vbox-next, .vbox-right')) {
+                                e.preventDefault();
+                                vb.next();
+                                setTimeout(function() {
+                                    var n = document.querySelector('.vbox-next, .vbox-right');
+                                    if (n) n.focus();
+                                }, 80);
+                            }
+                        }
+                    }
+
+                    // C. Escape (27) 關閉懸浮視窗
+                    else if (key === 'Escape' || keyCode === 27) {
+                        e.preventDefault();
+                        vb.close();
+                    }
+
+                    // D. 左右方向鍵 (← / →) 直接切換照片
+                    else if (key === 'ArrowLeft' || keyCode === 37) {
+                        e.preventDefault();
+                        vb.prev();
+                        setTimeout(function() {
+                            var p = document.querySelector('.vbox-prev, .vbox-left');
+                            if (p) p.focus();
+                        }, 80);
+                    } else if (key === 'ArrowRight' || keyCode === 39) {
+                        e.preventDefault();
+                        vb.next();
+                        setTimeout(function() {
+                            var n = document.querySelector('.vbox-next, .vbox-right');
+                            if (n) n.focus();
+                        }, 80);
+                    }
+                };
+
+                document.addEventListener('keydown', lightboxKeyHandler);
             }, 100);
         },
-        onPreClose: function(content, obj, gallIndex, then) {
-            // 2. 關閉視窗時，焦點會自動回到原本點擊的圖片連結上
+        onPostClose: function() {
+            // 5. 關閉燈箱時解除鍵盤監聽，並將焦點歸還給原本點擊的圖片連結
+            if (lightboxKeyHandler) {
+                document.removeEventListener('keydown', lightboxKeyHandler);
+                lightboxKeyHandler = null;
+            }
+            if (triggerElement && typeof triggerElement.focus === 'function') {
+                triggerElement.focus();
+            }
         }
     });
-
-    // 支援點擊以及鍵盤 (Enter / 空白鍵) 操作關閉燈箱
-    $(document).on('click keydown', '.vbox-close', function(e) {
-        if (e.type === 'click' || (e.type === 'keydown' && (e.key === 'Enter' || e.key === ' '))) {
-            e.preventDefault();
-            vb.close();
-        }
-    });    
 </script>
 @endsection

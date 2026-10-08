@@ -77,57 +77,62 @@
                         <td>{{ substr($post->created_at,0,10) }}</td>
                         <td>{{ $post_type_array[$insite] }}</td>
                         
-                        <!-- 整合「圖片 + 標題 + 摘要」至單一內容欄位 -->
+                        <!-- 整合「圖片 + 標題 + 摘要」至單一超連結 (無障礙 2.4.4 / 1.1.1 修正) -->
                         <td>
-                            <div class="d-flex align-items-start py-1">
-                                @if($can_see && $post->title_image)
-                                    <div class="mr-3 flex-shrink-0" style="width: 90px;">
-                                        <a href="{{ route('posts.show',$post->id) }}" aria-label="查看公告：{{ $post->title }}">
-                                            <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded border shadow-sm" style="object-fit: cover; height: 60px; width: 100%;" alt="公告縮圖：{{ $post->title }}">
-                                        </a>
+                            <div class="py-1">
+                                @if($can_see)
+                                    <a href="{{ route('posts.show',$post->id) }}" class="d-flex align-items-start text-decoration-none text-dark w-100" title="查看公告：{{ $post->title }}" aria-label="查看公告：{{ $post->title }}">
+                                        @if($post->title_image)
+                                            <div class="mr-3 flex-shrink-0" style="width: 90px;">
+                                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded border shadow-sm" style="object-fit: cover; height: 60px; width: 100%;" alt="" aria-hidden="true">
+                                            </div>
+                                        @endif
+
+                                        <div class="flex-grow-1">
+                                            <div style="font-size: 1.1rem;" class="mb-1">
+                                                @if($post->top)
+                                                    <span class="badge badge-danger">置頂</span>
+                                                @endif
+                                                @if($post->inbox)
+                                                    <span class="badge badge-warning">常駐</span>
+                                                @endif
+                                                @if($post->insite==1)
+                                                    <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                                @endif
+                                                <span class="font-weight-bold text-primary">{!! a11y_emoji($post->title) !!}</span>
+
+                                                @if(!empty($photos))
+                                                    <span class="text-success ml-1">
+                                                        <i class="fas fa-image" aria-hidden="true"></i>
+                                                        <span class="sr-only">（含圖片附件）</span>
+                                                    </span>
+                                                @endif
+                                                @if(!empty($files))
+                                                    <span class="text-info ml-1">
+                                                        <i class="fas fa-download" aria-hidden="true"></i>
+                                                        <span class="sr-only">（含檔案下載）</span>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            
+                                            <p class="mb-0 text-secondary small">
+                                                {{ $content }}
+                                            </p>
+                                        </div>
+                                    </a>
+                                @else
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div style="font-size: 1.1rem;" class="mb-1">
+                                                <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                                <span class="font-weight-bold text-secondary">{{ $post->title }}</span>
+                                            </div>
+                                            <p class="mb-0 text-secondary small">
+                                                <span class="text-muted">請登入後再查看完整內容</span>
+                                            </p>
+                                        </div>
                                     </div>
                                 @endif
-
-                                <div class="flex-grow-1">
-                                    <div style="font-size: 1.1rem;" class="mb-1">
-                                        @if($post->top)
-                                            <span class="badge badge-danger">置頂</span>
-                                        @endif
-                                        @if($post->inbox)
-                                            <span class="badge badge-warning">常駐</span>
-                                        @endif
-                                        @if($can_see)
-                                            @if($post->insite==1)
-                                                <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                            @endif
-                                            <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
-                                        @else
-                                            <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                            <span class="font-weight-bold">{{ $post->title }}</span>
-                                        @endif
-
-                                        @if(!empty($photos))
-                                            <span class="text-success ml-1">
-                                                <i class="fas fa-image" aria-hidden="true"></i>
-                                                <span class="sr-only">（含圖片附件）</span>
-                                            </span>
-                                        @endif
-                                        @if(!empty($files))
-                                            <span class="text-info ml-1">
-                                                <i class="fas fa-download" aria-hidden="true"></i>
-                                                <span class="sr-only">（含檔案下載）</span>
-                                            </span>
-                                        @endif
-                                    </div>
-                                    
-                                    <p class="mb-0 text-secondary small">
-                                        @if($can_see)
-                                            {{ $content }}
-                                        @else
-                                            <span class="text-muted">請登入後再查看完整內容</span>
-                                        @endif
-                                    </p>
-                                </div>
                             </div>
                         </td>
 
@@ -214,57 +219,71 @@
                             <td>{{ substr($post->created_at,0,10) }}</td>
                             <td>{{ $post_type->name }}</td>
 
-                            <!-- 整合「圖片 + 標題 + 摘要」至單一內容欄位 -->
+                            <!-- 整合「圖片 + 標題 + 摘要」至單一超連結 (無障礙 2.4.4 / 1.1.1 修正) -->
                             <td>
-                                <div class="d-flex align-items-start py-1">
-                                    @if($can_see && $post->title_image)
-                                        <div class="mr-3 flex-shrink-0" style="width: 90px;">
-                                            <a href="{{ route('posts.show',$post->id) }}" aria-label="查看公告：{{ $post->title }}">
-                                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded border shadow-sm" style="object-fit: cover; height: 60px; width: 100%;" alt="公告縮圖：{{ $post->title }}">
-                                            </a>
+                                <div class="py-1">
+                                    @if($can_see)
+                                        <a href="{{ route('posts.show',$post->id) }}" class="d-flex align-items-start text-decoration-none text-dark w-100" title="查看公告：{{ $post->title }}" aria-label="查看公告：{{ $post->title }}">
+                                            @if($post->title_image)
+                                                <div class="mr-3 flex-shrink-0" style="width: 90px;">
+                                                    <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded border shadow-sm" style="object-fit: cover; height: 60px; width: 100%;" alt="" aria-hidden="true">
+                                                </div>
+                                            @endif
+
+                                            <div class="flex-grow-1">
+                                                <div style="font-size: 1.1rem;" class="mb-1">
+                                                    @if($post->top)
+                                                        <span class="badge badge-danger">置頂</span>
+                                                    @endif
+                                                    @if($post->inbox)
+                                                        <span class="badge badge-warning">常駐</span>
+                                                    @endif
+                                                    @if($can_see)
+                                                        @if($post->insite==1)
+                                                            <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                                        @endif
+                                                        <span class="font-weight-bold text-primary">{!! a11y_emoji($post->title) !!}</span>
+                                                    @else
+                                                        <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                                        <span class="font-weight-bold">{{ $post->title }}</span>
+                                                    @endif
+
+                                                    @if(!empty($photos))
+                                                        <span class="text-success ml-1">
+                                                            <i class="fas fa-image" aria-hidden="true"></i>
+                                                            <span class="sr-only">（含圖片附件）</span>
+                                                        </span>
+                                                    @endif
+                                                    @if(!empty($files))
+                                                        <span class="text-info ml-1">
+                                                            <i class="fas fa-download" aria-hidden="true"></i>
+                                                            <span class="sr-only">（含檔案下載）</span>
+                                                        </span>
+                                                    @endif
+                                                </div>
+
+                                                <p class="mb-0 text-secondary small">
+                                                    @if($can_see)
+                                                        {{ $content }}
+                                                    @else
+                                                        <span class="text-muted">請登入後再查看完整內容</span>
+                                                    @endif
+                                                </p>
+                                            </div>
+                                        </a>
+                                    @else
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-grow-1">
+                                                <div style="font-size: 1.1rem;" class="mb-1">
+                                                    <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
+                                                    <span class="font-weight-bold text-secondary">{{ $post->title }}</span>
+                                                </div>
+                                                <p class="mb-0 text-secondary small">
+                                                    <span class="text-muted">請登入後再查看完整內容</span>
+                                                </p>
+                                            </div>
                                         </div>
                                     @endif
-
-                                    <div class="flex-grow-1">
-                                        <div style="font-size: 1.1rem;" class="mb-1">
-                                            @if($post->top)
-                                                <span class="badge badge-danger">置頂</span>
-                                            @endif
-                                            @if($post->inbox)
-                                                <span class="badge badge-warning">常駐</span>
-                                            @endif
-                                            @if($can_see)
-                                                @if($post->insite==1)
-                                                    <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                                @endif
-                                                <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
-                                            @else
-                                                <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                                <span class="font-weight-bold">{{ $post->title }}</span>
-                                            @endif
-
-                                            @if(!empty($photos))
-                                                <span class="text-success ml-1">
-                                                    <i class="fas fa-image" aria-hidden="true"></i>
-                                                    <span class="sr-only">（含圖片附件）</span>
-                                                </span>
-                                            @endif
-                                            @if(!empty($files))
-                                                <span class="text-info ml-1">
-                                                    <i class="fas fa-download" aria-hidden="true"></i>
-                                                    <span class="sr-only">（含檔案下載）</span>
-                                                </span>
-                                            @endif
-                                        </div>
-
-                                        <p class="mb-0 text-secondary small">
-                                            @if($can_see)
-                                                {{ $content }}
-                                            @else
-                                                <span class="text-muted">請登入後再查看完整內容</span>
-                                            @endif
-                                        </p>
-                                    </div>
                                 </div>
                             </td>
 

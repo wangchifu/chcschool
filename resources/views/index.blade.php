@@ -2,18 +2,20 @@
 
 @section('nav_home_active', 'active')
 
-{{-- 無障礙 2.4.1 跳過區塊按鈕：採用 Bootstrap 4 原生 sr-only sr-only-focusable --}}
-@section('skip_link')
-    <a href="#main-content" class="sr-only sr-only-focusable btn btn-dark position-fixed" style="top: 10px; left: 10px; z-index: 99999;">跳到主要內容區塊</a>
-@endsection
-
-@section('top_image')
-    {{-- 備用區：採用 Bootstrap 4 原生 sr-only sr-only-focusable --}}
-    <a href="#main-content" class="sr-only sr-only-focusable btn btn-dark position-fixed" style="top: 10px; left: 10px; z-index: 99999;">跳到主要內容區塊</a>
-
+@section('top_image')    
     @if($setup->title_image)
         @if(!empty($photo_data))
             <?php $carousel_fade = ($setup->title_image_style == 2) ? "carousel-fade" : ""; ?>
+            
+            <!-- 無障礙 2.4.7 焦點可見修正：輪播指示點獲得鍵盤 Focus 時的高對比外框 -->
+            <style>
+                .carousel-indicators li:focus {
+                    outline: 3px solid #ffc107 !important;
+                    outline-offset: 3px;
+                    box-shadow: 0 0 0 2px #000;
+                }
+            </style>
+
             <!-- 關鍵修正：加入 data-pause="false" 防止手機觸控離開後自動喚醒輪播 -->
             <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }} position-relative" data-ride="carousel" data-pause="false" role="region" aria-label="焦點新聞輪播圖">
                 
@@ -24,16 +26,27 @@
                     </button>
                 </div>                
 
-                <ol class="carousel-indicators">
+                <!-- 無障礙 2.1.1 鍵盤控制修正：加入 role="tablist" 與分頁控制可聚焦屬性 -->
+                <ol class="carousel-indicators" role="tablist" aria-label="投影片分頁控制">
                     <?php $n=0; ?>
                     @foreach($photo_data as $k1=>$v1)
                         @foreach($v1 as $k2=>$v2)
-                        <?php $active = ($n==0)?"active":""; ?>
-                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $n }}" class="{{ $active }}" aria-label="切換至第 {{ $n + 1 }} 張投影片"></li>
+                        <?php 
+                            $active = ($n==0) ? "active" : ""; 
+                            $isSelected = ($n==0) ? "true" : "false";
+                        ?>
+                        <li data-target="#carouselExampleIndicators" 
+                            data-slide-to="{{ $n }}" 
+                            class="{{ $active }}" 
+                            tabindex="0" 
+                            role="tab" 
+                            aria-selected="{{ $isSelected }}" 
+                            aria-label="切換至第 {{ $n + 1 }} 張投影片"></li>
                         <?php $n++; ?>
                         @endforeach
                     @endforeach
                 </ol>
+
                 <div class="carousel-inner">
                     <?php $n=0; ?>
                     @foreach($photo_data as $k1=>$v1)
@@ -77,143 +90,137 @@
 @endsection
 
 @section('content')
-    <!-- 無障礙 2.4.1 核心修正：主要內容區容器與焦點接應錨點 -->
-    <main id="main-content" style="outline: none;">
-        <!-- 精確接收 Focus 的隱藏錨點 -->
-        <a id="main-content-target" tabindex="-1" style="outline: none; position: absolute;"></a>
+    <h1 class="sr-only">{{ $setup->site_name }} - 首頁主要內容區</h1>
 
-        <h1 class="sr-only">{{ $setup->site_name }} - 首頁主要內容區</h1>
-
-        <link href="{{ asset('css/block_style.css') }}" rel="stylesheet">
-        <?php $module_setup = get_module_setup(); ?>
-        @if(isset($module_setup['校園跑馬燈']))
-            <?php
-                $school_marquee_width = (empty($setup->school_marquee_width))?"12":$setup->school_marquee_width;
-                $school_marquee_color = (empty($setup->school_marquee_color))?"warning":$setup->school_marquee_color;
-                $school_marquee_behavior = (empty($setup->school_marquee_behavior))?"scroll":$setup->school_marquee_behavior;
-                $school_marquee_direction = (empty($setup->school_marquee_direction))?"up":$setup->school_marquee_direction;
-                $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?"2":$setup->school_marquee_scrollamount;
-            ?>
-            @if($school_marquees->count()>0)
-                <div class="row justify-content-center">
-                    <div class="col-lg-{{ $school_marquee_width }}">
-                        <div class="alert alert-{{ $school_marquee_color }} p-1" style="margin-top: -15px; overflow: hidden;" role="region" aria-label="最新消息跑馬燈">
+    <link href="{{ asset('css/block_style.css') }}" rel="stylesheet">
+    <?php $module_setup = get_module_setup(); ?>
+    @if(isset($module_setup['校園跑馬燈']))
+        <?php
+            $school_marquee_width = (empty($setup->school_marquee_width))?"12":$setup->school_marquee_width;
+            $school_marquee_color = (empty($setup->school_marquee_color))?"warning":$setup->school_marquee_color;
+            $school_marquee_behavior = (empty($setup->school_marquee_behavior))?"scroll":$setup->school_marquee_behavior;
+            $school_marquee_direction = (empty($setup->school_marquee_direction))?"up":$setup->school_marquee_direction;
+            $school_marquee_scrollamount = (empty($setup->school_marquee_scrollamount))?"2":$setup->school_marquee_scrollamount;
+        ?>
+        @if($school_marquees->count()>0)
+            <div class="row justify-content-center">
+                <div class="col-lg-{{ $school_marquee_width }}">
+                    <div class="alert alert-{{ $school_marquee_color }} p-1" style="margin-top: -15px; overflow: hidden;" role="region" aria-label="最新消息跑馬燈">
+                        
+                        <div class="marquee-wrapper" id="marquee-container" tabindex="0"
+                            style="height: 25px; overflow: hidden; position: relative; background: transparent;">                            
                             
-                            <div class="marquee-wrapper" id="marquee-container" tabindex="0"
-                                style="height: 25px; overflow: hidden; position: relative; background: transparent;">                            
-                                
-                                <div class="marquee-inner" id="marquee-content">
-                                    @foreach($school_marquees as$school_marquee)
-                                        <span class="marquee-item" style="margin-right: 50px; display: inline-block;">
-                                            <span aria-hidden="true">📣</span> {{ $school_marquee->title }}
-                                        </span>
-                                    @endforeach
-                                </div>
+                            <div class="marquee-inner" id="marquee-content">
+                                @foreach($school_marquees as$school_marquee)
+                                    <span class="marquee-item" style="margin-right: 50px; display: inline-block;">
+                                        <span aria-hidden="true">📣</span> {!! a11y_emoji($school_marquee->title) !!}
+                                    </span>
+                                @endforeach
                             </div>
-                            
                         </div>
+                        
                     </div>
                 </div>
-            @endif
+            </div>
         @endif
-        <div class="row justify-content-center">
-            @foreach($setup_cols as$setup_col)
-                <div class="col-lg-{{ $setup_col->num }}">
-                    @foreach($blocks[$setup_col->id] as$block)
-                        <?php
-                            if(!is_null($block->block_color)){
-                                $block_color = explode(',',$block->block_color);
-                            }else{
-                                $block_color[0] = "original-block";
-                                $block_color[1] = "original-title";
-                            }
-                            $rounded = ($block->disable_block_line == 1)?"rounded":null;
-                        ?>
+    @endif
+    <div class="row justify-content-center">
+        @foreach($setup_cols as$setup_col)
+            <div class="col-lg-{{ $setup_col->num }}">
+                @foreach($blocks[$setup_col->id] as$block)
+                    <?php
+                        if(!is_null($block->block_color)){
+                            $block_color = explode(',',$block->block_color);
+                        }else{
+                            $block_color[0] = "original-block";
+                            $block_color[1] = "original-title";
+                        }
+                        $rounded = ($block->disable_block_line == 1)?"rounded":null;
+                    ?>
 
-                        @if($block->title == "榮譽榜跑馬燈")                        
-                            <div class="table-responsive">
-                                <div>                                
-                                    @include('layouts.marquee')
-                                </div>
+                    @if($block->title == "榮譽榜跑馬燈")                        
+                        <div class="table-responsive">
+                            <div>                                
+                                @include('layouts.marquee')
                             </div>
-                        @else
-                        @if($block->disable_block_line != 1)
-                        <div class="shadow rounded {{ $block_color[0] }}">
-                        @endif
-                            @if($block->block_position != "disable")
-                            <div class="{{ $block_color[1] }} {{$rounded }}">
-                                <?php
-                                    $title = (empty($block->new_title))?$block->title:$block->new_title;
-                                    $title=str_replace('(系統區塊)','',$title);$title = str_replace_last("_圖文版","",$title);$block_position = ($block->block_position==null)?"text-left":$block->block_position;
-                                    if($block->block_position=="disable") $block_position = null;
-                                ?>
-                                <h2 class="h5 {{ $block_position }}">
-                                    @if($block_position) 
-                                        {!! a11y_emoji($title) !!}
-                                    @endif
-                                    @auth
-                                        @if(auth()->user()->admin==1)
-                                            <div style="float: right;padding-right:10px">
-                                                <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')" title="編輯區塊：{{ $title }}" aria-label="編輯區塊：{{ $title }}">📝</a>
-                                            </div>
-                                        @endif
-                                    @endauth
-                                </h2>
-                            </div>
-                            @endif
-                            <div class="content2" id="block{{ $block->id }}" style="margin-bottom: 5px;">
-                                <div class="table-responsive">
-                                @if($block->title == "最新公告(系統區塊)")
-                                    @include('layouts.news')
-                                @elseif($block->title == "彰化空汙旗(系統區塊)")
-                                    @include('layouts.chc_air')
-                                @elseif($block->title == "樹狀目錄(系統區塊)")
-                                    @include('layouts.dtree')
-                                @elseif($block->title == "圖片連結(系統區塊)")
-                                    @include('layouts.photo_link')
-                                @elseif($block->title == "分類公告(系統區塊)")
-                                    @include('layouts.post_type')
-                                @elseif($block->title == "分類公告_圖文版(系統區塊)")
-                                    @include('layouts.post_type2')
-                                @elseif($block->title == "校園部落格(系統區塊)")
-                                    @include('layouts.blog')
-                                @elseif($block->title == "今日餐點1(系統區塊)")
-                                    @include('layouts.lunch_today1')
-                                @elseif($block->title == "今日餐點2(系統區塊)")
-                                    @include('layouts.lunch_today2')
-                                @elseif($block->title == "今日餐點3(系統區塊)")
-                                    @include('layouts.lunch_today3')
-                                @elseif($block->title == "今日餐點4(系統區塊)")
-                                    @include('layouts.lunch_today4')
-                                @elseif($block->title == "校務月曆(系統區塊)")
-                                    @include('layouts.monthly_calendar')
-                                @elseif($block->title == "教室預約(系統區塊)")
-                                    @include('layouts.classroom_order')
-                                @elseif($block->title == "RSS訊息(系統區塊)")
-                                    @include('layouts.rss_feed')                           
-                                @elseif($block->title == "借用狀態(系統區塊)")
-                                    @include('layouts.lend_list')
-                                @elseif($block->title == "常駐公告(系統區塊)")
-                                    @include('layouts.inbox_posts')
-                                @elseif($block->title == "待修通報(系統區塊)")
-                                    @include('layouts.fix')
-                                @elseif($block->title == "搜尋本站(系統區塊)")
-                                    @include('layouts.search_site')
-                                @else
-                                    {!! $block->content !!}
+                        </div>
+                    @else
+                    @if($block->disable_block_line != 1)
+                    <div class="shadow rounded {{ $block_color[0] }}">
+                    @endif
+                        @if($block->block_position != "disable")
+                        <div class="{{ $block_color[1] }} {{$rounded }}">
+                            <?php
+                                $title = (empty($block->new_title))?$block->title:$block->new_title;
+                                $title=str_replace('(系統區塊)','',$title);$title = str_replace_last("_圖文版","",$title);$block_position = ($block->block_position==null)?"text-left":$block->block_position;
+                                if($block->block_position=="disable") $block_position = null;
+                            ?>
+                            <h2 class="h5 {{ $block_position }}">
+                                @if($block_position) 
+                                    {!! a11y_emoji($title) !!}
                                 @endif
-                            </div>
-                            </div>
-                        @if($block->disable_block_line != 1)
+                                @auth
+                                    @if(auth()->user()->admin==1)
+                                        <div style="float: right;padding-right:10px">
+                                            <a href="javascript:open_window('{{ route('setups.edit_block',$block->id) }}','新視窗')" title="編輯區塊：{{ $title }}" aria-label="編輯區塊：{{ $title }}">📝</a>
+                                        </div>
+                                    @endif
+                                @endauth
+                            </h2>
                         </div>
                         @endif
-                        @endif
-                    @endforeach
-                </div>
-            @endforeach
+                        <div class="content2" id="block{{ $block->id }}" style="margin-bottom: 5px;">
+                            <div class="table-responsive">
+                            @if($block->title == "最新公告(系統區塊)")
+                                @include('layouts.news')
+                            @elseif($block->title == "彰化空汙旗(系統區塊)")
+                                @include('layouts.chc_air')
+                            @elseif($block->title == "樹狀目錄(系統區塊)")
+                                @include('layouts.dtree')
+                            @elseif($block->title == "圖片連結(系統區塊)")
+                                @include('layouts.photo_link')
+                            @elseif($block->title == "分類公告(系統區塊)")
+                                @include('layouts.post_type')
+                            @elseif($block->title == "分類公告_圖文版(系統區塊)")
+                                @include('layouts.post_type2')
+                            @elseif($block->title == "校園部落格(系統區塊)")
+                                @include('layouts.blog')
+                            @elseif($block->title == "今日餐點1(系統區塊)")
+                                @include('layouts.lunch_today1')
+                            @elseif($block->title == "今日餐點2(系統區塊)")
+                                @include('layouts.lunch_today2')
+                            @elseif($block->title == "今日餐點3(系統區塊)")
+                                @include('layouts.lunch_today3')
+                            @elseif($block->title == "今日餐點4(系統區塊)")
+                                @include('layouts.lunch_today4')
+                            @elseif($block->title == "校務月曆(系統區塊)")
+                                @include('layouts.monthly_calendar')
+                            @elseif($block->title == "教室預約(系統區塊)")
+                                @include('layouts.classroom_order')
+                            @elseif($block->title == "RSS訊息(系統區塊)")
+                                @include('layouts.rss_feed')                           
+                            @elseif($block->title == "借用狀態(系統區塊)")
+                                @include('layouts.lend_list')
+                            @elseif($block->title == "常駐公告(系統區塊)")
+                                @include('layouts.inbox_posts')
+                            @elseif($block->title == "待修通報(系統區塊)")
+                                @include('layouts.fix')
+                            @elseif($block->title == "搜尋本站(系統區塊)")
+                                @include('layouts.search_site')
+                            @else
+                                {!! $block->content !!}
+                            @endif
+                        </div>
+                        </div>
+                    @if($block->disable_block_line != 1)
+                    </div>
+                    @endif
+                    @endif
+                @endforeach
+            </div>
+        @endforeach
 
-        </div>
-    </main>
+    </div>
 
     <script>
         function open_window(url,name)
@@ -221,95 +228,98 @@
             window.open(url,name,'statusbar=no,scrollbars=yes,status=yes,resizable=yes,width=900,height=800');
         }
 
-        /* 無障礙 2.4.1 核心 JS 控制：修正鍵盤焦點無法直接跳入主要內容區問題 */
-        $(document).ready(function() {$(document).on('click', 'a[href="#main-content"]', function(e) {
-                e.preventDefault();
-                var $target =$('#main-content-target');
-                if ($target.length) {
-                    $target.attr('tabindex', '-1').focus();$('html, body').animate({
-                        scrollTop: $('#main-content').offset().top - 20
-                    }, 100);
-                }
-            });
-
-            /* 無障礙控制：輪播圖暫停 / 播放 JS 控制器（手機觸控完全相容版） */
+        /* 無障礙控制：輪播圖暫停 / 播放 & 分頁點鍵盤操作控制器 */
+        $(document).ready(function() {
             var $carousel =$('#carouselExampleIndicators');
             var $toggleBtn =$('#carouselToggleBtn');
             var isPaused = false;
 
-            if ($carousel.length &&$toggleBtn.length) {
+            if ($carousel.length) {
 
-                // 1. 防止按鈕觸控事件向外傳遞給輪播容器
-                $toggleBtn.on('touchstart touchend touchmove click', function(e) {
-                    e.stopPropagation();
-                });
-
-                // 2. 切換暫停與播放邏輯
-                $toggleBtn.on('click', function(e) {
-                    e.preventDefault();
-
-                    var instance = $carousel.data('bs.carousel');
-
-                    if (!isPaused) {
-                        isPaused = true;
-                        $carousel.carousel('pause');
-
-                        if (instance) {
-                            // 關鍵 1：將設定的時間間隔關閉
-                            instance._config.interval = false;
-
-                            // 關鍵 2：徹底清除 Bootstrap 手機觸控放開後排程的喚醒計時器 (touchTimeout)
-                            if (instance.touchTimeout) {
-                                clearTimeout(instance.touchTimeout);
-                                instance.touchTimeout = null;
-                            }
-
-                            // 關鍵 3：清除背景輪播計時器
-                            if (instance._interval) {
-                                clearInterval(instance._interval);
-                                instance._interval = null;
-                            }
-                        }
-
-                        $(this).attr('aria-pressed', 'true')
-                               .attr('aria-label', '播放輪播圖片')
-                               .html('<i class="fas fa-play me-1" aria-hidden="true"></i> <span>播放輪播</span>');
-                    } else {
-                        isPaused = false;
-
-                        if (instance) {
-                            instance._config.interval = 5000; // 恢復預設時間
-                        }
-
-                        $carousel.carousel('cycle');
-
-                        $(this).attr('aria-pressed', 'false')
-                               .attr('aria-label', '暫停輪播圖片')
-                               .html('<i class="fas fa-pause me-1" aria-hidden="true"></i> <span>暫停輪播</span>');
+                // 1. 無障礙 2.1.1 核心修正：分頁點支援鍵盤按下 Enter (13) 或 Space (32) 觸發切換
+                $carousel.find('.carousel-indicators li').on('keydown', function(e) {
+                    if (e.which === 13 || e.which === 32) {
+                        e.preventDefault();
+                        $(this).click();
                     }
                 });
 
-                // 3. 雙重保險：手勢滑動切換圖片時，若處於暫停狀態則強制保持暫停
-                $carousel.on('slide.bs.carousel slid.bs.carousel', function () {
-                    if (isPaused) {
-                        $carousel.carousel('pause');
+                // 2. 無障礙狀態同步：當輪播圖切換時，自動同步更新 aria-selected 屬性
+                $carousel.on('slid.bs.carousel', function (e) {
+                    var $indicators =$(this).find('.carousel-indicators li');
+                    $indicators.attr('aria-selected', 'false');$indicators.eq(e.to).attr('aria-selected', 'true');
+                });
+
+                if ($toggleBtn.length) {
+                    // 防止按鈕觸控事件向外傳遞給輪播容器
+                    $toggleBtn.on('touchstart touchend touchmove click', function(e) {
+                        e.stopPropagation();
+                    });
+
+                    // 切換暫停與播放邏輯
+                    $toggleBtn.on('click', function(e) {
+                        e.preventDefault();
+
                         var instance = $carousel.data('bs.carousel');
-                        if (instance) {
-                            instance._config.interval = false;
-                        }
-                    }
-                });
 
-                // 4. 焦點控制（Tab 鍵進入時暫停，離開時恢復）
-                $carousel.on('focusin', function() {
-                    if (!isPaused) {
-                        $carousel.carousel('pause');
-                    }
-                }).on('focusout', function() {
-                    if (!isPaused) {
-                        $carousel.carousel('cycle');
-                    }
-                });
+                        if (!isPaused) {
+                            isPaused = true;
+                            $carousel.carousel('pause');
+
+                            if (instance) {
+                                instance._config.interval = false;
+
+                                if (instance.touchTimeout) {
+                                    clearTimeout(instance.touchTimeout);
+                                    instance.touchTimeout = null;
+                                }
+
+                                if (instance._interval) {
+                                    clearInterval(instance._interval);
+                                    instance._interval = null;
+                                }
+                            }
+
+                            $(this).attr('aria-pressed', 'true')
+                                   .attr('aria-label', '播放輪播圖片')
+                                   .html('<i class="fas fa-play me-1" aria-hidden="true"></i> <span>播放輪播</span>');
+                        } else {
+                            isPaused = false;
+
+                            if (instance) {
+                                instance._config.interval = 5000;
+                            }
+
+                            $carousel.carousel('cycle');
+
+                            $(this).attr('aria-pressed', 'false')
+                                   .attr('aria-label', '暫停輪播圖片')
+                                   .html('<i class="fas fa-pause me-1" aria-hidden="true"></i> <span>暫停輪播</span>');
+                        }
+                    });
+
+                    // 雙重保險：手勢滑動切換圖片時，若處於暫停狀態則強制保持暫停
+                    $carousel.on('slide.bs.carousel slid.bs.carousel', function () {
+                        if (isPaused) {
+                            $carousel.carousel('pause');
+                            var instance = $carousel.data('bs.carousel');
+                            if (instance) {
+                                instance._config.interval = false;
+                            }
+                        }
+                    });
+
+                    // 焦點控制（Tab 鍵進入時暫停，離開時恢復）
+                    $carousel.on('focusin', function() {
+                        if (!isPaused) {
+                            $carousel.carousel('pause');
+                        }
+                    }).on('focusout', function() {
+                        if (!isPaused) {
+                            $carousel.carousel('cycle');
+                        }
+                    });
+                }
             }
         });
     </script>

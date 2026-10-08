@@ -495,7 +495,7 @@ function line_bot($group_id,$token,$string){
 
 if (!function_exists('sanitize_accessibility_html')) {
     /**
-     * 無障礙 2.1 AA 級 HTML 內容自動修復器
+     * 無障礙 2.1 AA 級 HTML 內容自動修復器 (包含 2.4.4 鏈結目的網址轉中文說明)
      *
      * @param string $html
      * @return string
@@ -543,7 +543,6 @@ if (!function_exists('sanitize_accessibility_html')) {
 
                 // 文字為空，且沒有具備有效 alt 的圖片 -> 判定為無意義空標頭，直接剔除或拆解
                 if ($text === '' && !$hasValidImgAlt) {
-                    // 若標頭內有圖片（如校徽），將圖片移出標頭，並刪除 h 標籤
                     while ($h->firstChild) {
                         $h->parentNode->insertBefore($h->firstChild, $h);
                     }
@@ -575,7 +574,7 @@ if (!function_exists('sanitize_accessibility_html')) {
         }
 
         // ----------------------------------------------------
-        // C. 修正空連結與超連結無障礙提示 (原 enhance_content_accessibility 邏輯)
+        // C. 修正無描述性超連結與直接使用網址之連結 (WCAG 2.4.4 鏈結目的修復)
         // ----------------------------------------------------
         $links = $dom->getElementsByTagName('a');
         for ($i = $links->length - 1; $i >= 0; $i--) {
@@ -584,6 +583,7 @@ if (!function_exists('sanitize_accessibility_html')) {
             $text = trim($link->textContent);
             $hasImg = $link->getElementsByTagName('img')->length > 0;
 
+            // 1. 移除無效或完全空白的超連結
             if (empty($href)) {
                 if ($text === '' && !$hasImg) {
                     $link->parentNode->removeChild($link);
@@ -591,13 +591,100 @@ if (!function_exists('sanitize_accessibility_html')) {
                 continue;
             }
 
-            // 另開新視窗無障礙處理
+            // 2. 檢測超連結文字是否「直接為網址」或「無描述性詞彙」
+            $isRawUrl = preg_match('/^(https?:\/\/|www\.)/i', $text);
+            $isVagueText = in_array(mb_strtolower($text, 'UTF-8'), [
+                '點我', '點此', '按我', '按此', '按這裡', '點這裡', '連結', '網址', '相關連結', 
+                '超連結', 'here', 'click here', 'link', 'http', 'https', 'www'
+            ]);
+
+            // 若超連結文字直接是網址，或僅為無描述性詞彙（且內部沒有包裹圖片）
+            if (($isRawUrl || $isVagueText) && !$hasImg) {
+                
+                // A. 前文上下文抓取邏輯 (尋找連結前是否有「活動網站：」、「報名網址：」等中文標記)
+                $descriptiveLabel = '';
+                $parent = $link->parentNode;
+                
+                if ($parent) {
+                    $textBefore = '';
+                    $node = $parent->firstChild;
+                    while ($node && $node !== $link) {
+                        $textBefore .= $node->textContent;
+                        $node = $node->nextSibling;
+                    }
+                    
+                    $textBefore = trim(str_replace(["\r", "\n", "\t", "\xC2\xA0"], ' ', $textBefore));
+
+                    if (!empty($textBefore)) {
+                        // 擷取前文標點符號後最後一組中文短語
+                        $parts = preg_split('/[\s，。；！\:\：\-\_【】\(\)\（\）\<\>\"\'\“\”|請參閱|請至|請上|點選|詳見|觀看|參閱|前往|下載|填寫|連結至|相關|請參照|請點選|如下|請登入]/u', $textBefore);
+                        $parts = array_filter(array_map('trim', $parts));
+                        
+                        if (!empty($parts)) {
+                            $lastPart = end($parts);
+                            // 清除前導數字與條列符號 (如 "1." 或 "一、")
+                            $lastPart = preg_replace('/^[0-9一二三四五六七八九十\.\、\s]+/u', '', $lastPart);
+                            $lastPart = trim($lastPart);
+
+                            if (mb_strlen($lastPart, 'UTF-8') >= 2 && mb_strlen($lastPart, 'UTF-8') <= 12) {
+                                $descriptiveLabel = $lastPart;
+                            }
+                        }
+                    }
+                }
+
+                // B. 生成中文描述性連結文字
+                if (!empty($descriptiveLabel)) {
+                    // 若前文已包含「網址」、「網站」、「表單」、「計畫」、「簡章」等關鍵詞
+                    if (preg_match('/(網址|網站|連結|表單|計畫|簡章|清冊|影片|相簿|說明|專區|檔)$/u', $descriptiveLabel)) {
+                        $newText = '前往' . $descriptiveLabel;
+                    } else {
+                        $newText = '前往' . $descriptiveLabel . '連結';
+                    }
+                } else {
+                    // C. 依據網址域名與副檔名自動判讀備用目的說明
+                    $hrefLower = strtolower($href);
+                    if (str_contains($hrefLower, 'forms.gle') || str_contains($hrefLower, 'docs.google.com/forms')) {
+                        $newText = '填寫線上報名表單';
+                    } elseif (str_contains($hrefLower, 'drive.google.com')) {
+                        $newText = '開啟 Google 雲端硬碟檔案';
+                    } elseif (str_contains($hrefLower, 'calendar.google.com')) {
+                        $newText = '檢視 Google 行事曆';
+                    } elseif (str_contains($hrefLower, 'meet.google.com') || str_contains($hrefLower, 'teams.microsoft.com') || str_contains($hrefLower, 'zoom.us')) {
+                        $newText = '加入線上視訊會議';
+                    } elseif (str_contains($hrefLower, 'youtube.com') || str_contains($hrefLower, 'youtu.be')) {
+                        $newText = '觀看 YouTube 影片';
+                    } elseif (str_contains($hrefLower, 'facebook.com') || str_contains($hrefLower, 'fb.com')) {
+                        $newText = '前往 Facebook 粉絲專頁';
+                    } elseif (str_contains($hrefLower, 'line.me')) {
+                        $newText = '開啟 LINE 官方帳號';
+                    } elseif (str_ends_with($hrefLower, '.pdf')) {
+                        $newText = '檢視 PDF 文件檔案';
+                    } elseif (str_contains($hrefLower, '.doc')) {
+                        $newText = '下載 Word 文件檔案';
+                    } elseif (str_contains($hrefLower, '.xls')) {
+                        $newText = '下載 Excel 試算表檔案';
+                    } elseif (str_contains($hrefLower, '.zip') || str_contains($hrefLower, '.rar') || str_contains($hrefLower, '.7z')) {
+                        $newText = '下載壓縮檔案';
+                    } else {
+                        $newText = '前往相關網站連結';
+                    }
+                }
+
+                // 替換連結文字為具備語意說明的中文
+                $link->nodeValue = htmlspecialchars($newText, ENT_QUOTES, 'UTF-8');
+            } else {
+                $newText = $text;
+            }
+
+            // 3. 另開新視窗與無障礙 Title / ARIA 屬性修復
             if ($link->getAttribute('target') === '_blank') {
                 $link->setAttribute('rel', 'noopener noreferrer');
-                $title = $link->getAttribute('title');
-                if (empty($title)) {
-                    $link->setAttribute('title', ($text ?: '相關連結') . ' (另開新視窗)');
-                }
+                $link->setAttribute('title', $newText . ' (另開新視窗)');
+                $link->setAttribute('aria-label', $newText . ' (另開新視窗)');
+            } else {
+                $link->setAttribute('title', $newText);
+                $link->setAttribute('aria-label', $newText);
             }
         }
 
