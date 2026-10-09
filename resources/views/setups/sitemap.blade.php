@@ -7,9 +7,8 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-11">
-            <h1>
-                網站設定
-            </h1>
+            <h1>網站設定</h1>
+
             <?php
             $active[1] = "";
             $active[2] = "";
@@ -19,37 +18,63 @@
             $active[6] = "";
             $active[7] = "active";
             ?>
-            @include('setups.nav',$active)
-            <div class="card my-4">
-                <h3 class="card-header">網站導覽</h3>
-                <div class="card-body">
-                    {{ Form::open(['route' => 'setups.sitemap_store', 'method' => 'POST','id'=>'this_form','onsubmit'=>"return submitOnce(this)"]) }}
-                    <div class="form-group">
-                        <label for="content"><strong class="text-danger">內文*</strong></label>
-                        <textarea name="sitemap" id="sitemap" class="form-control" rows="30" required placeholder="請輸入內容">{{ $setup->sitemap }}</textarea>
-                    </div>
-                    <script src="{{ asset('mycke/ckeditor.js') }}"></script>
-                    <script>
-                        CKEDITOR.replace('sitemap'
-                            ,{
-                                height: 400,
-                                filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-                                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
-                                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-                                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
-                            });
-                    </script>
-                    <div class="form-group">                        
-                        <button type="submit" id="submit_button" class="btn btn-primary btn-sm" onclick="if(confirm('您確定送出嗎?')){change_button();return true;}else return false">
-                            <i class="fas fa-save"></i> 儲存設定
+            @include('setups.nav', $active)
+
+            <!-- 頂部標題區 -->
+            <div class="d-flex justify-content-between align-items-center my-3">
+                <h3 class="m-0">網站導覽頁面內容編輯</h3>
+            </div>
+
+            <!-- 主卡片容器與表單 -->
+            {{ Form::open(['route' => 'setups.sitemap_store', 'method' => 'POST', 'id' => 'this_form', 'onsubmit' => "return submitOnce(this)"]) }}
+                <div class="card my-3 shadow-sm border">
+                    <!-- 頁首：bg-light text-dark -->
+                    <div class="card-header bg-light text-dark font-weight-bold d-flex justify-content-between align-items-center py-3">
+                        <span style="font-size: 1.1rem;">
+                            <i class="fas fa-sitemap mr-2 text-primary"></i> 網站導覽 (Sitemap) 內容設定
+                        </span>
+                        <button type="submit" id="submit_button_top" class="btn btn-primary btn-sm px-3" onclick="if(confirm('您確定送出嗎?')){change_button();return true;}else return false">
+                            <i class="fas fa-save mr-1"></i> 儲存設定
                         </button>
                     </div>
-                    {{ Form::close() }}                    
+
+                    <div class="card-body bg-light">
+                        <!-- 編輯器內容區塊 -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body bg-white rounded">
+                                <div class="form-group mb-0">
+                                    <label for="sitemap" class="font-weight-bold text-dark mb-2">
+                                        <i class="fas fa-edit text-info mr-1"></i> 網站導覽頁面內文 <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea name="sitemap" id="sitemap" class="form-control" rows="30" required placeholder="請輸入網站導覽相關內容及定位點說明...">{{ $setup->sitemap }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 頁尾儲存按鈕 -->
+                    <div class="card-footer bg-light text-right py-3">
+                        <button type="submit" id="submit_button" class="btn btn-primary px-4" onclick="if(confirm('您確定送出嗎?')){change_button();return true;}else return false">
+                            <i class="fas fa-save mr-1"></i> 儲存網站導覽設定
+                        </button>
+                    </div>
                 </div>
-            </div>
+            {{ Form::close() }}
+
         </div>
-    </div>   
+    </div>
+
+    <!-- CKEditor 編輯器載入與設定 -->
+    <script src="{{ asset('mycke/ckeditor.js') }}"></script>
     <script>
-        var validator = $("#this_form").validate();        
-    </script>     
+        CKEDITOR.replace('sitemap', {
+            height: 450,
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
+        });
+
+        var validator = $("#this_form").validate();
+    </script>
 @endsection
