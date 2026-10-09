@@ -172,6 +172,86 @@
                 </p>
             </div>
         </div>
+        <div class="col-md-3 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title1">
+                <h4>黃底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title2">
+                <h4>綠底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
+        <div class="col-md-2 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title3">
+                <h4>藍底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
+        <div class="col-md-2 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title4">
+                <h4>紅底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title5">
+                <h4>紫底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title6">
+                <h4>橘底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
+        <div class="col-md-2 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title7">
+                <h4>青底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
+        <div class="col-md-2 sp-block1 shadow rounded" style="margin: 10px;">
+            <div class="sp-title8">
+                <h4>灰底線</h4>
+            </div>
+            <div class="content2">
+                <p>
+                    彰化縣網中心首頁代管方案三，歡迎使用！
+                </p>
+            </div>
+        </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-8 default-block1 shadow rounded" style="margin: 10px;">
@@ -196,5 +276,5 @@
                 </p>
             </div>
         </div>
-    </div>
+    </div>    
 @endsection

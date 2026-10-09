@@ -1,3 +1,33 @@
+/* =========================================================
+   1. 全域標題字型與大小統一 (強制 1.6rem + 標楷體 + 粗體)
+   ========================================================= */
+.original-title, .title1, .title2, .title3, .title4,
+.soft-title1, .soft-title2, .soft-title3, .soft-title4, .soft-title5, .soft-title6, .soft-title7, .soft-title8,
+.gradient-title1, .gradient-title2, .gradient-title3, .gradient-title4,
+.sp-title1, .sp-title2, .sp-title3, .sp-title4, .sp-title5, .sp-title6, .sp-title7, .sp-title8,
+.default-title1, .default-title2 {
+    font-family: "DFKai-SB", "BiauKai", "標楷體", "PMingLiU", "Songti TC", serif !important;
+    font-size: 1.6rem !important;
+    font-weight: bold !important;
+}
+
+/* 確保容器內部不論是 div, span, h1~h6, p 都能繼承字型大小與顏色，並消除預設邊距 */
+.original-title *, .title1 *, .title2 *, .title3 *, .title4 *,
+.soft-title1 *, .soft-title2 *, .soft-title3 *, .soft-title4 *, .soft-title5 *, .soft-title6 *, .soft-title7 *, .soft-title8 *,
+.gradient-title1 *, .gradient-title2 *, .gradient-title3 *, .gradient-title4 *,
+.sp-title1 *, .sp-title2 *, .sp-title3 *, .sp-title4 *, .sp-title5 *, .sp-title6 *, .sp-title7 *, .sp-title8 *,
+.default-title1 *, .default-title2 * {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+    margin: 0 !important;
+}
+
+/* =========================================================
+   2. 各區塊原有樣式 (100% 保留顏色、背景與對比度)
+   ========================================================= */
+
 /* 單色綠 */
 .original-block {
     margin-bottom: 20px;
@@ -13,6 +43,7 @@
     padding-bottom: 4px;
     color: #1a1a1a; /* 17.4:1 */
 }
+
 .block1 {
     border: 2px solid #35ae55;
     margin-bottom: 20px;
@@ -223,7 +254,7 @@
     color: #360515; /* 暗李紫，全寬對比度 6.37:1 ~ 8.18:1 */
 }
 
-/* 漸層藍 (微調右側顏色以維護全寬白字對比度) */
+/* 漸層藍 */
 .gradient-block2 {
     margin-bottom: 20px;
     padding: 0;
@@ -280,7 +311,91 @@
     color: #361500; /* 深濃咖啡色，全寬對比度 5.79:1 ~ 10.66:1 */
 }
 
-/* 預設深灰 (微調右側顏色以維護全寬白字對比度) */
+/* =========================================================
+   3. 特殊底線標題區塊 (sp-title1 ~ sp-title8) 共用架構
+   ========================================================= */
+.sp-block1, .sp-block2, .sp-block3, .sp-block4,
+.sp-block5, .sp-block6, .sp-block7, .sp-block8 {
+    background-color: #ffffff;
+    margin-bottom: 25px;
+    padding: 15px;
+}
+
+.sp-title1, .sp-title2, .sp-title3, .sp-title4,
+.sp-title5, .sp-title6, .sp-title7, .sp-title8 {
+    background-color: transparent;
+    padding: 5px 0 5px 0;
+    color: #000000;
+    position: relative;
+}
+
+/* 共通底線位置與形狀 (佔據區塊 75% 寬度、高度 7px) */
+.sp-title1::after, .sp-title1 *::after,
+.sp-title2::after, .sp-title2 *::after,
+.sp-title3::after, .sp-title3 *::after,
+.sp-title4::after, .sp-title4 *::after,
+.sp-title5::after, .sp-title5 *::after,
+.sp-title6::after, .sp-title6 *::after,
+.sp-title7::after, .sp-title7 *::after,
+.sp-title8::after, .sp-title8 *::after {
+    content: "";
+    display: block;
+    width: 75%;
+    height: 7px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+/* --- 特殊底線顏色個別設定 --- */
+
+/* 1. 特殊黃線標題區塊 */
+.sp-title1::after, .sp-title1 *::after {
+    background-color: #ffe082;
+}
+
+/* 2. 特殊綠線標題區塊 */
+.sp-title2::after, .sp-title2 *::after {
+    background-color: #81c784;
+}
+
+/* 3. 特殊藍線標題區塊 */
+.sp-title3::after, .sp-title3 *::after {
+    background-color: #64b5f6;
+}
+
+/* 4. 特殊紅線標題區塊 */
+.sp-title4::after, .sp-title4 *::after {
+    background-color: #e57373;
+}
+
+/* 5. 特殊紫線標題區塊 */
+.sp-title5::after, .sp-title5 *::after {
+    background-color: #ba68c8;
+}
+
+/* 6. 特殊橘線標題區塊 */
+.sp-title6::after, .sp-title6 *::after {
+    background-color: #ffb74d;
+}
+
+/* 7. 特殊青綠線標題區塊 */
+.sp-title7::after, .sp-title7 *::after {
+    background-color: #4dd0e1;
+}
+
+/* 8. 特殊灰線標題區塊 */
+.sp-title8::after, .sp-title8 *::after {
+    background-color: #b0bec5;
+}
+
+/* =========================================================
+   4. 預設灰階標題區塊
+   ========================================================= */
+
+/* 預設深灰 */
 .default-block1 {
     margin-bottom: 20px;
     padding: 0;
@@ -319,5 +434,5 @@
 }
 
 .content2 {
-    padding: 10px;
+    padding: 5px;
 }

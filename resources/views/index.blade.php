@@ -155,7 +155,7 @@
                                 $title=str_replace('(系統區塊)','',$title);$title = str_replace_last("_圖文版","",$title);$block_position = ($block->block_position==null)?"text-left":$block->block_position;
                                 if($block->block_position=="disable") $block_position = null;
                             ?>
-                            <h2 class="h5 {{ $block_position }}">
+                            <div class="{{ $block_position }}">
                                 @if($block_position) 
                                     {!! a11y_emoji($title) !!}
                                 @endif
@@ -166,7 +166,7 @@
                                         </div>
                                     @endif
                                 @endauth
-                            </h2>
+                            </div>
                         </div>
                         @endif
                         <div class="content2" id="block{{ $block->id }}" style="margin-bottom: 5px;">
