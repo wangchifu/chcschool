@@ -327,7 +327,7 @@
 
 @section('footer')
     @if(!empty($setup->footer))
-        <footer class="font-small py-4" id="footer" role="contentinfo" aria-label="頁尾資訊區">
+        <footer class="font-small py-4" id="footer" tabindex="-1" role="contentinfo" aria-label="頁尾資訊區">
             <div class="container-fluid text-center text-md-left">
                 <div class="row justify-content-center">
                     <div class="col-md-11">                            

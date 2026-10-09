@@ -21,16 +21,15 @@
 </style>
 @endif
 <nav class="navbar navbar-expand-lg {{ $nav_color }} {{ $fixed_top }}" id="mainNav" role="navigation" aria-label="主要選單導覽">
-    <div class="container-fluid">
-        {{-- 無障礙定位點：頂部導覽區 U --}}
-        <a href="#page-top" accesskey="U" title="頂部主要導覽區 (AccessKey: U)" style="margin-right: 10px;">
+    <div class="container-fluid">        
+        <a class="navbar-brand js-scroll-trigger d-inline-flex align-items-center" href="{{ route('index') }}" title="返回網站首頁">
             @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
-                <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="d-inline-block align-top" alt="{{ $setup->site_name }}標誌">
+                <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="mr-2" alt="" aria-hidden="true">
             @else
-                <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="d-inline-block align-top" alt="預設的學校標誌">
+                <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="mr-2" alt="" aria-hidden="true">
             @endif
-        </a>
-        <a class="navbar-brand js-scroll-trigger" href="{{ route('index') }}" style="white-space:pre-wrap;" title="返回網站首頁">{{ $setup->site_name }}</a>
+            <span style="white-space: pre-wrap;">{{ $setup->site_name }}</span>
+        </a>        
         
         <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="切換導覽選單顯示">
             <span class="navbar-toggler-icon" aria-hidden="true"></span>
