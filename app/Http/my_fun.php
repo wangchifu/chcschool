@@ -3,13 +3,20 @@
 if (!function_exists('school_code')) {
     function school_code()
     {
-        $database = config('app.database');
-        if (isset($_SERVER['HTTP_HOST'])) {
-            $code = substr($database[$_SERVER['HTTP_HOST']], 1, 6);
-        } else {
-            $code = "";
+        // 1. 如果在 CLI (Artisan 指令) 環境執行，傳回預設空值
+        if (app()->runningInConsole()) {
+            return "";
         }
-        return $code;
+
+        // 2. 取得當前網址 Host 與 mapping 設定
+        $host = request()->getHost();
+        $mapping = config('tenants.mapping', []);
+
+        // 3. 取得對應的資料庫名稱（如 s074308）
+        $dbName = $mapping[$host] ?? "";
+
+        // 4. 擷取學校代碼 (例如 s074308 -> 074308)
+        return $dbName ? substr($dbName, 1, 6) : "";
     }
 }
 
