@@ -32,27 +32,10 @@
                     <div class="card-header bg-light text-dark font-weight-bold d-flex justify-content-between align-items-center py-3">
                         <span style="font-size: 1.1rem;">
                             <i class="fas fa-sitemap mr-2 text-primary"></i> 網站導覽 (Sitemap) 內容設定
-                        </span>
-                        <button type="submit" id="submit_button_top" class="btn btn-primary btn-sm px-3" onclick="if(confirm('您確定送出嗎?')){change_button();return true;}else return false">
-                            <i class="fas fa-save mr-1"></i> 儲存設定
-                        </button>
+                        </span>                        
                     </div>
-
-                    <div class="card-body bg-light">
-                        <!-- 編輯器內容區塊 -->
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body bg-white rounded">
-                                <div class="form-group mb-0">
-                                    <label for="sitemap" class="font-weight-bold text-dark mb-2">
-                                        <i class="fas fa-edit text-info mr-1"></i> 網站導覽頁面內文 <span class="text-danger">*</span>
-                                    </label>
-                                    <textarea name="sitemap" id="sitemap" class="form-control" rows="30" required placeholder="請輸入網站導覽相關內容及定位點說明...">{{ $setup->sitemap }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 頁尾儲存按鈕 -->
+                    <textarea name="sitemap" id="sitemap" class="form-control" rows="30" required placeholder="請輸入網站導覽相關內容及定位點說明...">{{ $setup->sitemap }}</textarea>                  
+                <!-- 頁尾儲存按鈕 -->
                     <div class="card-footer bg-light text-right py-3">
                         <button type="submit" id="submit_button" class="btn btn-primary px-4" onclick="if(confirm('您確定送出嗎?')){change_button();return true;}else return false">
                             <i class="fas fa-save mr-1"></i> 儲存網站導覽設定

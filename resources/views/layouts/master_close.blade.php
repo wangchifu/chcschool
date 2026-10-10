@@ -4,7 +4,7 @@
 <head>
     <?php
         $school_code = school_code();
-        $setup = \App\Setup::find(1);
+        $setup = \App\Setup::first();
 
         $setup_key = "setup".$school_code;
         if(!session($setup_key)){
@@ -24,7 +24,7 @@
     @endif
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="此網站包含一個專屬的網站標誌（Favicon）。">
+    <meta name="description" content="{{ $setup->site_name }}全球資訊網">
     <meta name="author" content="">
     <meta http-equiv="Content-Security-Policy" content="script-src * 'unsafe-inline' 'unsafe-eval';">
     <title>@yield('title'){{ $setup->site_name }}</title>
@@ -34,10 +34,11 @@
     <script src="{{ asset('js/messages_zh_TW.min.js') }}"></script>
     <!-- icons -->    
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-    <link href="{{ asset('fontawesome-5.1.0/css/all.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('css/bootstrap-navbar.css') }}" rel="stylesheet">
+    <link href="{{ asset('fontawesome-5.15.4/css/all.css') }}" rel="stylesheet">
+    
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
-
+    
     <style>
         /* 動態導覽欄顏色 (來自後台設定，需保留於 Blade 內) */
         .navbar-custom {
@@ -54,25 +55,153 @@
         .navbar-custom .nav-item:hover .nav-link {
             color: {{ isset($navbar_custom[3]) ? $navbar_custom[3] : '' }};
         }
+
+        /* =========================================================
+           無障礙 2.4.7 焦點可視 (Focus Visible) 完整四邊橘框修正
+           ========================================================= */
+        
+        /* 1. 「跳過導覽連結」焦點獲得時顯眼彈出樣式 */
+        .sr-only-focusable {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+
+        .sr-only-focusable:focus {
+            position: absolute !important;
+            top: 10px !important;
+            left: 10px !important;
+            z-index: 999999 !important;
+            width: auto !important;
+            height: auto !important;
+            padding: 10px 18px !important;
+            margin: 0 !important;
+            overflow: visible !important;
+            clip: auto !important;
+            white-space: normal !important;
+            background-color: #0d47a1 !important; /* 高對比深藍背景 */
+            color: #ffffff !important;            /* 純白文字 */
+            font-weight: bold !important;
+            font-size: 1.1rem !important;
+            border: 2px solid #ffffff !important;
+            border-radius: 6px !important;
+            outline: 4px solid #d97706 !important;
+            outline-offset: -2px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+            text-decoration: none !important;
+        }
+
+        /* 2. 全站所有聚焦元素呈現完整四邊高對比橘色焦點框 */
+        :focus,
+        :focus-visible {
+            outline: 3px solid #d97706 !important;
+            outline-offset: -3px !important; /* 向內收縮 3px，防止左右邊框被螢幕切掉 */
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3) !important;
+        }
     </style>
+    @yield('in_head')
 </head>
 
-<body id="page-top" style="background-color:{{ $bg_color }};font-family:'Arial','Microsoft JhengHei','微軟正黑體',sans-serif;">
+<body id="page-top" style="background-color:{{ $bg_color }};font-family:'Arial','Microsoft JhengHei','微軟正黑體','黑體',sans-serif;">
 
-<!-- 無障礙 HM1200100C 修正：提供跳過主導覽直接前往主要內容的快速連結 -->
-<a href="#main-content" class="skip-link">跳過主導覽選單，直接存取主要內容區塊</a>
+<!-- 全站統一無障礙跳過導覽 -->
+<a class="sr-only-focusable" href="#navbar" accesskey="U" title="頂部導覽區 (Alt+U)">跳到頂部導覽區</a>
+<a class="sr-only-focusable" href="#main-content" accesskey="C" title="中央內容區 (Alt+C)">跳到中央內容區</a>
 
-<!-- 無障礙 HM1110100C 修正：以 header 區塊包覆頂部導覽列 -->
-<header>
+{{-- 無障礙 2.4.1 關鍵修正：僅在當前頁面有宣告 footer 區塊時，才渲染 Alt+Z 連結，避免子頁面無障礙檢測報錯 --}}
+@hasSection('footer')
+<a class="sr-only-focusable" href="#footer" accesskey="Z" title="底部資訊區 (Alt+Z)">跳到底部資訊區</a>
+@endif
+
+{{-- 上方導覽區 --}}
+<div id="navbar-container">
     @include('layouts.nav_close')
-</header>
+</div>
 
-<!-- 無障礙 HM1110100C 修正：主要內容區使用語義化 <main> 標籤與 role="main" -->
-<main id="main-content" class="container-fluid pt-3" tabindex="-1" role="main">
+@yield('top_image')
+
+<br>
+{{-- 主要內容區 --}}
+<main id="main-content" tabindex="-1" class="container-fluid">
     @yield('content')
 </main>
+<br>
+<br>
 
-<script src="{{ asset('js/popper.min.js') }}"></script>
+{{-- 下方底部資訊區 (由 index.blade.php 等頁面自行注入) --}}
+<div>
+    @yield('footer')
+</div>
+
+<script src="{{ asset('js/popper2.min.js') }}"></script>
 <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-navbar.js') }}"></script>
+
+@if($setup->fixed_nav)
+<link href="{{ asset('css/navbar-top-fixed.css') }}" rel="stylesheet">
+@endif
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    /* =========================================================
+       全域 AccessKey 無障礙快捷鍵與焦點鎖定 (Prevent default URL hash)
+       ========================================================= */
+
+    // 1. 上方主要導覽區 (Alt + U)
+    $(document).on('click', 'a[href="#navbar"], a[href="#page-top"], a[accesskey="U"]', function(e) {
+        e.preventDefault();
+        
+        var $nav = $('#navbar');
+        if (!$nav.length) {
+            $nav = $('.navbar').first();
+        }
+        if (!$nav.length) {
+            $nav = $('#navbar-container');
+        }
+
+        if ($nav.length) {
+            $nav.attr('tabindex', '-1').focus();
+            $('html, body').animate({
+                scrollTop: 0
+            }, 100);
+        }
+    });
+
+    // 2. 中央主要內容區 (Alt + C)
+    $(document).on('click', 'a[href="#main-content"], a[accesskey="C"]', function(e) {
+        e.preventDefault();
+        var $main = $('#main-content');
+        if ($main.length) {
+            $main.attr('tabindex', '-1').focus();
+            $('html, body').animate({
+                scrollTop: $main.offset().top - 15
+            }, 100);
+        }
+    });
+
+    // 3. 下方底部資訊區 (Alt + Z) - 僅在頁面有 #footer 時作用
+    $(document).on('click', 'a[href="#footer"], a[accesskey="Z"]', function(e) {
+        e.preventDefault();
+        var $footer = $('#footer');
+        if (!$footer.length) {
+            $footer = $('footer').first();
+        }
+        if ($footer.length) {
+            $footer.attr('tabindex', '-1').focus();
+            $('html, body').animate({
+                scrollTop: $footer.offset().top - 20
+            }, 100);
+        }
+    });
+
+});
+</script>
 </body>
 </html>

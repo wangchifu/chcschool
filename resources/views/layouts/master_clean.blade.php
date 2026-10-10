@@ -24,7 +24,7 @@
     @endif
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="此網站包含一個專屬的網站標誌（Favicon）。">
+    <meta name="description" content="{{ $setup->site_name }}全球資訊網">
     <meta name="author" content="">
     <meta http-equiv="Content-Security-Policy" content="script-src * 'unsafe-inline' 'unsafe-eval';">
     <title>@yield('title'){{ $setup->site_name }}</title>
@@ -36,10 +36,9 @@
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('css/bootstrap-navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome-5.15.4/css/all.css') }}" rel="stylesheet">
-
+    
     <link href="{{ asset('css/my_css.css') }}" rel="stylesheet">
-    @yield('in_head')
-
+    
     <style>
         /* 動態導覽欄顏色 (來自後台設定，需保留於 Blade 內) */
         .navbar-custom {
@@ -56,25 +55,70 @@
         .navbar-custom .nav-item:hover .nav-link {
             color: {{ isset($navbar_custom[3]) ? $navbar_custom[3] : '' }};
         }
+
+        /* =========================================================
+           無障礙 2.4.7 焦點可視 (Focus Visible) 完整四邊橘框修正
+           ========================================================= */
+        
+        /* 1. 「跳過導覽連結」焦點獲得時顯眼彈出樣式 */
+        .sr-only-focusable {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+
+        .sr-only-focusable:focus {
+            position: absolute !important;
+            top: 10px !important;
+            left: 10px !important;
+            z-index: 999999 !important;
+            width: auto !important;
+            height: auto !important;
+            padding: 10px 18px !important;
+            margin: 0 !important;
+            overflow: visible !important;
+            clip: auto !important;
+            white-space: normal !important;
+            background-color: #0d47a1 !important; /* 高對比深藍背景 */
+            color: #ffffff !important;            /* 純白文字 */
+            font-weight: bold !important;
+            font-size: 1.1rem !important;
+            border: 2px solid #ffffff !important;
+            border-radius: 6px !important;
+            outline: 4px solid #d97706 !important;
+            outline-offset: -2px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+            text-decoration: none !important;
+        }
+
+        /* 2. 全站所有聚焦元素呈現完整四邊高對比橘色焦點框 */
+        :focus,
+        :focus-visible {
+            outline: 3px solid #d97706 !important;
+            outline-offset: -3px !important; /* 向內收縮 3px，防止左右邊框被螢幕切掉 */
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3) !important;
+        }
     </style>
+    @yield('in_head')
 </head>
 
-<body id="page-top" style="background-color:{{ $bg_color }};font-family:'Arial','Microsoft JhengHei','微軟正黑體',sans-serif;">
+<body id="page-top" style="background-color:{{ $bg_color }};font-family:'Arial','Microsoft JhengHei','微軟正黑體','黑體',sans-serif;">
 
-<!-- 無障礙 HM1200100C 修正：提供跳過主導覽直接前往主要內容的快速連結 -->
-<a href="#main-content" class="skip-link">跳過主導覽選單，直接存取主要內容區塊</a>
-
-<!-- 無障礙 HM1110100C 修正：將外層改為具備 HTML5 語意與 role 的 <main> 區塊 -->
-<main id="main-content" class="container-fluid" tabindex="-1" role="main">
+<br>
+{{-- 主要內容區 --}}
+<main id="main-content" tabindex="-1" class="container-fluid">
     @yield('content')
 </main>
-
+<br>
+<br>
 <script src="{{ asset('js/popper2.min.js') }}"></script>
 <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-navbar.js') }}"></script>
-
-@if($setup->fixed_nav)
-<link href="{{ asset('css/navbar-top-fixed.css') }}" rel="stylesheet">
-@endif
 </body>
 </html>
