@@ -46,14 +46,23 @@
                     </div>
                     <script src="{{ asset('mycke/ckeditor.js') }}"></script>
                     <script>
-                        CKEDITOR.replace('my-editor'
-                            ,{
-                                filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-                                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
-                                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-                                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
-                            });
-                    </script>
+                        // 1. 阻止 CKEditor 自動刪除「空的標籤」（例如 FontAwesome 圖示 <i class="fa ..."></i>）
+                        CKEDITOR.dtd.$removeEmpty['i'] = false;
+                        CKEDITOR.dtd.$removeEmpty['span'] = false;
+
+                        // 2. 初始化 CKEditor 並關閉 HTML 自動過濾
+                        CKEDITOR.replace('my-editor', {
+                            fullPage: true,        // 關鍵設定：開啟完整頁面模式，保留 <!DOCTYPE>、<html>、<head>、<title> 等標籤
+                            allowedContent: true,  // 完全關閉 ACF 過濾器，保留所有原始 HTML 標籤與屬性
+                            autoParagraph: false,   // 防止自動在沒有標籤的文字外層包裹 <p> 標籤（可依需求開啟/關閉）
+
+                            // 原本的檔案管理者設定
+                            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+                            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
+                            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
+                        });
+                    </script>                    
                     <hr>
                     <?php
                         if($content->power==null){
