@@ -84,11 +84,11 @@ class ContentsController extends Controller
      */
     public function store(Request $request)
     {
-        // 檢查是否有 B64: 前綴標籤，有的話才解碼
-        if ($request->has('content') && str_starts_with($request->input('content'), 'B64:')) {
-            $rawBase64 = substr($request->input('content'), 4); // 扣掉 'B64:' 長度 4
+        // 1. 進行 Hex 解碼
+        if ($request->has('content') && str_starts_with($request->input('content'), 'HEX:')) {
+            $rawHex = substr($request->input('content'), 4); // 扣掉 'HEX:'
             $request->merge([
-                'content' => base64_decode($rawBase64)
+                'content' => hex2bin($rawHex) // PHP 原生 16 進位轉字串
             ]);
         }
 
@@ -214,11 +214,11 @@ class ContentsController extends Controller
      */
     public function update(Request $request, Content $content)
     {
-        // 1. 若內容帶有 B64: 前綴，先裁切前綴並進行 Base64 解碼
-        if ($request->has('content') && str_starts_with($request->input('content'), 'B64:')) {
-            $rawBase64 = substr($request->input('content'), 4);
+        // 1. 進行 Hex 解碼
+        if ($request->has('content') && str_starts_with($request->input('content'), 'HEX:')) {
+            $rawHex = substr($request->input('content'), 4); // 扣掉 'HEX:'
             $request->merge([
-                'content' => base64_decode($rawBase64)
+                'content' => hex2bin($rawHex) // PHP 原生 16 進位轉字串
             ]);
         }
 

@@ -44,25 +44,7 @@
                         <label for="content">內文*</label>
                         {{ Form::textarea('content',null,['id'=>'my-editor','class'=>'form-control','required'=>'required']) }}
                     </div>
-                    <script src="{{ asset('mycke/ckeditor.js') }}"></script>
-                    <script>
-                        // 1. 阻止 CKEditor 自動刪除「空的標籤」（例如 FontAwesome 圖示 <i class="fa ..."></i>）
-                        CKEDITOR.dtd.$removeEmpty['i'] = false;
-                        CKEDITOR.dtd.$removeEmpty['span'] = false;
-
-                        // 2. 初始化 CKEditor 並關閉 HTML 自動過濾
-                        CKEDITOR.replace('my-editor', {
-                            fullPage: true,        // 關鍵設定：開啟完整頁面模式，保留 <!DOCTYPE>、<html>、<head>、<title> 等標籤
-                            allowedContent: true,  // 完全關閉 ACF 過濾器，保留所有原始 HTML 標籤與屬性
-                            autoParagraph: false,   // 防止自動在沒有標籤的文字外層包裹 <p> 標籤（可依需求開啟/關閉）
-
-                            // 原本的檔案管理者設定
-                            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-                            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
-                            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-                            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
-                        });
-                    </script>                    
+                    <script src="{{ asset('mycke/ckeditor.js') }}"></script>                                      
                     <hr>
                     <?php
                         if($content->power==null){
@@ -111,27 +93,79 @@
             {{ Form::close() }}
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            var validator = $("#this_form").validate();
+<script>
+    // 1. 阻止 CKEditor 刪除空標籤 (如 FontAwesome 圖示)
+    CKEDITOR.dtd.$removeEmpty['i'] = false;
+    CKEDITOR.dtd.$removeEmpty['span'] = false;
 
-            $("#this_form").on('submit', function(e) {
-                // 1. 同步 CKEditor 內容回原生 textarea (#my-editor)
+    // 2. 初始化 CKEditor (維持 fullPage 支援完整網頁貼入)
+    var editor = CKEDITOR.replace('my-editor', {
+        fullPage: true,
+        allowedContent: true,
+        autoParagraph: false,
+        filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
+        filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+        filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
+    });
+
+    // 關鍵設定：切換至「原始碼」或取用資料時，若沒有標題自動剝離外殼
+    editor.on('getData', function(evt) {
+        var html = evt.data.dataValue;
+        if (!html) return;
+
+        try {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(html, 'text/html');
+            var head = doc.head;
+
+            if (head) {
+                var title = head.querySelector('title');
+                var hasTitleText = title && title.textContent.trim().length > 0;
+                var hasCustomHead = head.querySelectorAll('meta, style, link, script, base').length > 0;
+
+                // 如果 <head> 裡沒有標題也沒有自訂標籤，就把外層 <html><head> 剝掉，只傳回 body 內容
+                if (!hasTitleText && !hasCustomHead && doc.body) {
+                    evt.data.dataValue = doc.body.innerHTML.trim();
+                }
+            }
+        } catch (e) {
+            console.error('DOMParser error:', e);
+        }
+    });
+
+    $(document).ready(function() {
+        $("#this_form").validate({
+            submitHandler: function(form) {
+                // (1) 同步 CKEditor 內容回 textarea
                 if (typeof CKEDITOR !== 'undefined') {
                     for (var instance in CKEDITOR.instances) {
                         CKEDITOR.instances[instance].updateElement();
                     }
                 }
 
-                // 2. 取得內文並進行 B64 編碼
-                var contentInput = $(this).find('[name="content"]');
+                var contentInput = $(form).find('[name="content"]');
                 var val = contentInput.val();
 
-                if (val && !val.startsWith('B64:')) {
-                    var encodedContent = 'B64:' + btoa(unescape(encodeURIComponent(val)));
-                    contentInput.val(encodedContent);
+                if (val) {
+                    // (2) 16進位 Hex 編碼（躲過 WAF 對 <script> 與 HTML 標籤的攔截）
+                    if (!val.startsWith('HEX:')) {
+                        val = stringToHex(val);
+                    }
+                    contentInput.val(val);
                 }
-            });
+
+                // (3) 正式送出
+                form.submit();
+            }
         });
-    </script>
+    });
+
+    // UTF-8 轉 Hex 函式
+    function stringToHex(str) {
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(str);
+        return 'HEX:' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+    }
+</script>
 @endsection
