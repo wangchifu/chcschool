@@ -14,7 +14,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Schema::defaultStringLength(191);
+        Schema::defaultStringLength(191);        
+        // 💡 在非 CLI (網頁請求) 環境下，動態將學校代碼帶入 lfm 的 base_directory
+        if (!app()->runningInConsole()) {
+            $schoolCode = school_code();
+
+            if ($schoolCode) {
+                config([
+                    'lfm.base_directory' => 'storage/app/public/' . $schoolCode,
+                ]);
+            }
+        }      
     }
 
     /**
