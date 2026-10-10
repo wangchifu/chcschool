@@ -21,6 +21,26 @@
         </div>
     </div>
     <script>
-        var validator = $("#this_form").validate();
-    </script>
+        $(document).ready(function() {
+            $("#this_form").validate();
+
+            $("#this_form").on('submit', function(e) {
+                // 1. 同步 CKEditor 內容回 textarea
+                if (typeof CKEDITOR !== 'undefined') {
+                    for (var instance in CKEDITOR.instances) {
+                        CKEDITOR.instances[instance].updateElement();
+                    }
+                }
+
+                var contentInput = $(this).find('[name="content"]');
+                var val = contentInput.val();
+
+                // 2. 如果內容存在，且還沒有 B64: 前綴，就進行編碼並加上前綴
+                if (val && !val.startsWith('B64:')) {
+                    var encodedContent = 'B64:' + btoa(unescape(encodeURIComponent(val)));
+                    contentInput.val(encodedContent);
+                }
+            });
+        });
+    </script>    
 @endsection

@@ -103,6 +103,26 @@
         </div>
     </div>
     <script>
-        var validator = $("#this_form").validate();
+        $(document).ready(function() {
+            var validator = $("#this_form").validate();
+
+            $("#this_form").on('submit', function(e) {
+                // 1. 同步 CKEditor 內容回原生 textarea (#my-editor)
+                if (typeof CKEDITOR !== 'undefined') {
+                    for (var instance in CKEDITOR.instances) {
+                        CKEDITOR.instances[instance].updateElement();
+                    }
+                }
+
+                // 2. 取得內文並進行 B64 編碼
+                var contentInput = $(this).find('[name="content"]');
+                var val = contentInput.val();
+
+                if (val && !val.startsWith('B64:')) {
+                    var encodedContent = 'B64:' + btoa(unescape(encodeURIComponent(val)));
+                    contentInput.val(encodedContent);
+                }
+            });
+        });
     </script>
 @endsection

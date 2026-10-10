@@ -84,16 +84,29 @@ class ContentsController extends Controller
      */
     public function store(Request $request)
     {
+        // 檢查是否有 B64: 前綴標籤，有的話才解碼
+        if ($request->has('content') && str_starts_with($request->input('content'), 'B64:')) {
+            $rawBase64 = substr($request->input('content'), 4); // 扣掉 'B64:' 長度 4
+            $request->merge([
+                'content' => base64_decode($rawBase64)
+            ]);
+        }
+
+        // 進行表單驗證
         $request->validate([
             'title' => 'required',
             'content' => 'required',
         ]);
-        $att= $request->all();
-        $att['nothing'] = (empty($request->input('nothing')))?null:1;
-        $att['tags'] = str_replace(" ","",$att['tags']);        
+
+        // 處理其他欄位並寫入資料庫
+        $att = $request->all();
+        $att['nothing'] = empty($request->input('nothing')) ? null : 1;
+        $att['tags'] = isset($att['tags']) ? str_replace(" ", "", $att['tags']) : '';
+
         Content::create($att);
+
         return redirect()->route('contents.index');
-    }
+    }    
 
     /**
      * Display the specified resource.
@@ -201,25 +214,37 @@ class ContentsController extends Controller
      */
     public function update(Request $request, Content $content)
     {
+        // 1. 若內容帶有 B64: 前綴，先裁切前綴並進行 Base64 解碼
+        if ($request->has('content') && str_starts_with($request->input('content'), 'B64:')) {
+            $rawBase64 = substr($request->input('content'), 4);
+            $request->merge([
+                'content' => base64_decode($rawBase64)
+            ]);
+        }
+
+        // 2. 進行欄位驗證（此時 content 已還原為原始 HTML）
         $request->validate([
             'title' => 'required',
             'content' => 'required',
         ]);
-        $att= $request->all();
-        $att['tags'] = str_replace(" ","",$att['tags']);
-        $att['nothing'] = (empty($request->input('nothing')))?null:1;
+
+        // 3. 更新資料
+        $att = $request->all();
+        $att['tags'] = isset($att['tags']) ? str_replace(" ", "", $att['tags']) : '';
+        $att['nothing'] = empty($request->input('nothing')) ? null : 1;
         $content->update($att);
 
+        // 4. 寫入操作日誌 (Log)
         $att['module'] = "content";
         $att['this_id'] = $content->id;
         $att['title'] = $request->input('title');
-        $att['content'] = $request->input('content');
+        $att['content'] = $request->input('content'); // 已解碼的正確內容
         $att['power'] = $request->input('power');
         $att['user_id'] = auth()->user()->id;
         Log::create($att);
-        
+
         return redirect()->route('contents.index');
-    }
+    }    
 
     public function together_update(Request $request, Content $content)
     {
