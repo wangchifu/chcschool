@@ -13,6 +13,7 @@ class Content extends Model
         'power',
         'views',
         'tags',
+        'nothing',
     ];
 
     public function getContentAttribute($value)

@@ -2,6 +2,13 @@
     <h3 class="card-header">內容資料</h3>
     <div class="card-body">
         @include('layouts.errors')
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="nothing" id="nothing" value="1">
+            <label class="form-check-label" for="nothing">
+              套用全空白頁面
+            </label>
+        </div>
+        <hr>
         <div class="form-group">
             <label for="title">標題*</label>
             {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required', 'placeholder' => '標題']) }}

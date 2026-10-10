@@ -89,7 +89,8 @@ class ContentsController extends Controller
             'content' => 'required',
         ]);
         $att= $request->all();
-        $att['tags'] = str_replace(" ","",$att['tags']);
+        $att['nothing'] = (empty($request->input('nothing')))?null:1;
+        $att['tags'] = str_replace(" ","",$att['tags']);        
         Content::create($att);
         return redirect()->route('contents.index');
     }
@@ -206,6 +207,7 @@ class ContentsController extends Controller
         ]);
         $att= $request->all();
         $att['tags'] = str_replace(" ","",$att['tags']);
+        $att['nothing'] = (empty($request->input('nothing')))?null:1;
         $content->update($att);
 
         $att['module'] = "content";

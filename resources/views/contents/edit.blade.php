@@ -21,6 +21,14 @@
                 <div class="card-body">
                     @include('layouts.errors')
                     <div class="form-group">
+                        <div class="form-check">
+                            <?php $nothing_checked = ($content->nothing==1)?"checked":null; ?>
+                            <input class="form-check-input" type="checkbox" name="nothing" id="nothing" value="1" {{ $nothing_checked }}>
+                            <label class="form-check-label" for="nothing">
+                            套用全空白頁面
+                            </label>
+                        </div>
+                        <hr>
                         <label for="title">標題*</label>
                         {{ Form::text('title',null,['id'=>'title','class' => 'form-control','required'=>'required', 'placeholder' => '標題']) }}
                     </div>
