@@ -93,79 +93,84 @@
             {{ Form::close() }}
         </div>
     </div>
-<script>
-    // 1. 阻止 CKEditor 刪除空標籤 (如 FontAwesome 圖示)
-    CKEDITOR.dtd.$removeEmpty['i'] = false;
-    CKEDITOR.dtd.$removeEmpty['span'] = false;
+    <script>
+        // 1. 阻止 CKEditor 刪除空標籤
+        CKEDITOR.dtd.$removeEmpty['i'] = false;
+        CKEDITOR.dtd.$removeEmpty['span'] = false;
 
-    // 2. 初始化 CKEditor (維持 fullPage 支援完整網頁貼入)
-    var editor = CKEDITOR.replace('my-editor', {
-        fullPage: true,
-        allowedContent: true,
-        autoParagraph: false,
-        filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-        filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
-        filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-        filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
-    });
+        // 2. 初始化 CKEditor
+        var editor = CKEDITOR.replace('my-editor', {
+            fullPage: true,
+            allowedContent: true,
+            autoParagraph: false,
+            fillEmptyBlocks: false, // 關鍵 1：關閉空白區塊自動填充 &nbsp; 的機制
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files',
+        });
 
-    // 關鍵設定：切換至「原始碼」或取用資料時，若沒有標題自動剝離外殼
-    editor.on('getData', function(evt) {
-        var html = evt.data.dataValue;
-        if (!html) return;
+        // 3. 處理 getData 事件（過濾 &nbsp; 與剝離 HTML 骨架）
+        editor.on('getData', function(evt) {
+            var html = evt.data.dataValue;
+            if (!html) return;
 
-        try {
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
-            var head = doc.head;
+            try {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, 'text/html');
+                var head = doc.head;
 
-            if (head) {
-                var title = head.querySelector('title');
-                var hasTitleText = title && title.textContent.trim().length > 0;
-                var hasCustomHead = head.querySelectorAll('meta, style, link, script, base').length > 0;
+                if (head) {
+                    var title = head.querySelector('title');
+                    var hasTitleText = title && title.textContent.trim().length > 0;
+                    var hasCustomHead = head.querySelectorAll('meta, style, link, script, base').length > 0;
 
-                // 如果 <head> 裡沒有標題也沒有自訂標籤，就把外層 <html><head> 剝掉，只傳回 body 內容
-                if (!hasTitleText && !hasCustomHead && doc.body) {
-                    evt.data.dataValue = doc.body.innerHTML.trim();
-                }
-            }
-        } catch (e) {
-            console.error('DOMParser error:', e);
-        }
-    });
+                    // 如果 <head> 裡面沒有自訂內容，就剝離外層 <html><head>，只拿 body 內容
+                    if (!hasTitleText && !hasCustomHead && doc.body) {
+                        var inner = doc.body.innerHTML.trim();
 
-    $(document).ready(function() {
-        $("#this_form").validate({
-            submitHandler: function(form) {
-                // (1) 同步 CKEditor 內容回 textarea
-                if (typeof CKEDITOR !== 'undefined') {
-                    for (var instance in CKEDITOR.instances) {
-                        CKEDITOR.instances[instance].updateElement();
+                        // 關鍵 2：如果內文只有 &nbsp; 或空的 <p>，清理為完全空白
+                        if (inner === '&nbsp;' || inner === '<p>&nbsp;</p>' || inner === '<p></p>') {
+                            inner = '';
+                        }
+
+                        evt.data.dataValue = inner;
                     }
                 }
-
-                var contentInput = $(form).find('[name="content"]');
-                var val = contentInput.val();
-
-                if (val) {
-                    // (2) 16進位 Hex 編碼（躲過 WAF 對 <script> 與 HTML 標籤的攔截）
-                    if (!val.startsWith('HEX:')) {
-                        val = stringToHex(val);
-                    }
-                    contentInput.val(val);
-                }
-
-                // (3) 正式送出
-                form.submit();
+            } catch (e) {
+                console.error('DOMParser error:', e);
             }
         });
-    });
 
-    // UTF-8 轉 Hex 函式
-    function stringToHex(str) {
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(str);
-        return 'HEX:' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-    }
-</script>
+        $(document).ready(function() {
+            $("#this_form").validate({
+                submitHandler: function(form) {
+                    if (typeof CKEDITOR !== 'undefined') {
+                        for (var instance in CKEDITOR.instances) {
+                            CKEDITOR.instances[instance].updateElement();
+                        }
+                    }
+
+                    var contentInput = $(form).find('[name="content"]');
+                    var val = contentInput.val();
+
+                    if (val) {
+                        if (!val.startsWith('HEX:')) {
+                            val = stringToHex(val);
+                        }
+                        contentInput.val(val);
+                    }
+
+                    form.submit();
+                }
+            });
+        });
+
+        // UTF-8 轉 Hex 函式
+        function stringToHex(str) {
+            const encoder = new TextEncoder();
+            const bytes = encoder.encode(str);
+            return 'HEX:' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+        }
+    </script>
 @endsection
