@@ -56,6 +56,22 @@
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5) !important;
         }
     }
+
+    /* 修正下拉選單項目過多時在短頁面被裁切的問題 */
+    .navbar .dropdown-menu {
+        max-height: 80vh !important;  /* 限制選單最大高度為螢幕高度的 80% */
+        overflow-y: auto !important;  /* 當項目超出時，自動在選單內部出現垂直滾動條 */
+        z-index: 1050 !important;    /* 確保選單層級高於頁面上的所有卡片與表格 */
+    }
+
+    /* 美化選單內部的滾動條（選填，讓滾動條更精緻） */
+    .navbar .dropdown-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+    .navbar .dropdown-menu::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
 </style>
 
 @if($nav_color == 'navbar-custom' && isset($navbar_custom[0]))
