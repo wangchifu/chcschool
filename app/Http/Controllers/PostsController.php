@@ -140,7 +140,8 @@ class PostsController extends Controller
         $size = round($dir_size / 1024, 2);
         $per = round($size * 100 / 5120, 2);
 
-        $all_types = PostType::where('disable',null)->orderBy('order_by')->pluck('name', 'id')->toArray();        
+        $all_types = PostType::where('disable',null)->orderBy('order_by')->pluck('name', 'id')->toArray();      
+        $types = [];
         foreach ($all_types as $k => $v) {
             $types[$k] = $v;
         }
