@@ -56,33 +56,6 @@
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5) !important;
         }
     }
-/* =========================================================
-   1. 全局所有下拉選單：加大邊界與內距
-   ========================================================= */
-.navbar .dropdown-menu {
-    padding: 8px 12px !important;       /* 上下 10px，左右 16px (避免緊貼選單外框) */
-}
-
-/* =========================================================
-   2. 多項目「雙欄選單」(校務行政、系統設定等) 專屬樣式
-   ========================================================= */
-#navbarDropdownMenuLinkSchoolExec + .dropdown-menu,
-#navbarDropdownMenuLinkAdminSetup + .dropdown-menu {
-    columns: 2 !important;              /* 自動拆分成 2 欄 */
-    column-gap: 24px !important;         /* 加大兩欄中間的距離 */
-    min-width: 500px !important;        /* 適度拓寬選單總寬度，避免文字被擠壓 */
-    padding: 12px 20px !important;      /* 左右邊界加大至 20px */
-}
-
-/* =========================================================
-   3. 選單項目細節微調 (避免文字貼邊)
-   ========================================================= */
-.navbar .dropdown-item {
-    break-inside: avoid !important;
-    padding: 4px 12px !important;       /* 上下 6px，左右 12px (項目內部留白) */
-    font-size: 1rem !important;
-    border-radius: 4px !important;      /* 加入柔和微圓角，滑鼠移上去時更精緻 */
-}
 </style>
 
 @if($nav_color == 'navbar-custom' && isset($navbar_custom[0]))
