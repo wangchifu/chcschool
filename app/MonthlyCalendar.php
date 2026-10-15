@@ -8,6 +8,8 @@ class MonthlyCalendar extends Model
 {
     protected $fillable = [
         'item_date',
+        'item_edate',
+        'item_time',
         'item',
         'user_id',
     ];

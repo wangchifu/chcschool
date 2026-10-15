@@ -6,6 +6,7 @@ use App\MonthlyCalendar;
 use App\Setup;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Redirect;
 
 class MonthlyCalendarController extends Controller
@@ -13,7 +14,6 @@ class MonthlyCalendarController extends Controller
     public function __construct()
     {
         $setup = Setup::first();
-        //檢查有無關閉網站
         if (!empty($setup->close_website)) {
             Redirect::to('close')->send();
         }
@@ -23,22 +23,23 @@ class MonthlyCalendarController extends Controller
             die();
         }
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
     public function index($month = null)
     {
         $this_month = (empty($month)) ? date('Y-m') : $month;
 
-        $items = MonthlyCalendar::where('item_date', 'like', $this_month . '%')->get();
+        // 建議將查詢擴大或一併取出相關欄位
+        $items = MonthlyCalendar::where('item_date', 'like', $this_month . '%')
+            ->orWhere('item_edate', 'like', $this_month . '%')
+            ->get();
+
         $item_array = [];
         foreach ($items as $item) {
-            $item_array[$item->id]['user_id'] = $item->user_id;
+            $item_array[$item->id]['user_id']   = $item->user_id;
             $item_array[$item->id]['item_date'] = $item->item_date;
-            $item_array[$item->id]['item'] = $item->item;
+            $item_array[$item->id]['item_edate'] = $item->item_edate ?? $item->item_date;
+            $item_array[$item->id]['item_time']  = $item->item_time ?? '';
+            $item_array[$item->id]['item']       = $item->item;
         }
 
         $data = [
@@ -48,21 +49,10 @@ class MonthlyCalendarController extends Controller
         return view('monthly_calendars.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create($semester)
     {
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $att = $request->all();
@@ -90,45 +80,18 @@ class MonthlyCalendarController extends Controller
         return;
     }
 
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit()
     {
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(MonthlyCalendar $monthly_calendar)
     {
         if ($monthly_calendar->user_id == auth()->user()->id or auth()->user()->admin == 1) {
@@ -150,46 +113,150 @@ class MonthlyCalendarController extends Controller
 
     public function file(Request $request)
     {
-        //處理檔案上傳
         if ($request->hasFile('filename')) {
-            $filename = $request->file('filename');
+            $file = $request->file('filename');
+            $content = file_get_contents($file->getRealPath());
 
-            $file = fopen($filename, "r");
-            $str = "";
-            if ($file != NULL) {
-                while (!feof($file)) {
-                    $str .= fgets($file);
-                }
-                fclose($file);
-            }
-            $str_array = explode('BEGIN:VEVENT', $str);
+            // 1. 處理長行折疊
+            $content = preg_replace("/\r\n[ \t]/", '', $content);
 
-            //
+            // 2. 切割事件區塊
+            $events = explode('BEGIN:VEVENT', $content);
+            array_shift($events);
+
             $item = [];
-            foreach ($str_array as $k => $v) {
-                if ($k > 0) {
-                    $str_array2 = preg_split('/[\r\n]+/s', $v);
-                    foreach ($str_array2 as $k1 => $v1) {
-                        if (substr($v1, 0, 7) == "DTSTART") {
-                            $dtstart = substr($v1, -8);
-                            $item[$dtstart][$k]['DTSTART'] = substr($v1, -8);
+            $sessionEvents = [];
+            $today = date('Ymd');
+            $eventId = 0;
+
+            foreach ($events as $v) {
+                $lines = preg_split('/[\r\n]+/', $v);
+
+                $rawDtstart = null;
+                $rawDtend = null;
+                $isAllDay = false;
+                $summary = '（無標題）';
+
+                foreach ($lines as $line) {
+                    $line = trim($line);
+
+                    if (strpos($line, 'DTSTART') === 0) {
+                        $rawDtstart = preg_replace('/^DTSTART.*?:/i', '', $line);
+                    }
+
+                    if (strpos($line, 'DTEND') === 0) {
+                        if (strpos($line, 'VALUE=DATE') !== false) {
+                            $isAllDay = true;
                         }
-                        if (substr($v1, 0, 5) == "DTEND") {
-                            $item[$dtstart][$k]['DTEND'] = substr($v1, -8);
+                        $rawDtend = preg_replace('/^DTEND.*?:/i', '', $line);
+                    }
+
+                    if (strpos($line, 'SUMMARY') === 0) {
+                        $summary = preg_replace('/^SUMMARY.*?:/i', '', $line);
+                        $summary = str_replace(['\,', '\;', '\N', '\n'], [',', ';', ' ', ' '], $summary);
+                        $summary = trim($summary);
+                    }
+                }
+
+                // 3. 解析 DTSTART 日期與時間
+                $dtstart = null;
+                $itemTime = null; // 存入 item_time 的時間格式 (HH:mm)
+
+                if ($rawDtstart) {
+                    if (strpos($rawDtstart, 'T') !== false) {
+                        try {
+                            if (substr($rawDtstart, -1) === 'Z') {
+                                // UTC 時間轉為 Asia/Taipei 當地時間
+                                $startCarbon = Carbon::createFromFormat('Ymd\THis\Z', $rawDtstart, 'UTC')
+                                    ->setTimezone('Asia/Taipei');
+                            } else {
+                                $startCarbon = Carbon::createFromFormat('Ymd\THis', substr($rawDtstart, 0, 15), 'Asia/Taipei');
+                            }
+                            $dtstart = $startCarbon->format('Ymd');
+                            $itemTime = $startCarbon->format('H:i'); // 格式如 14:00 (若要包含秒數可改 'H:i:s')
+                        } catch (\Exception $e) {
+                            if (preg_match('/(\d{8})/', $rawDtstart, $m)) {
+                                $dtstart = $m[1];
+                            }
                         }
-                        if (substr($v1, 0, 7) == "SUMMARY") {
-                            $item[$dtstart][$k]['SUMMARY'] = str_replace('SUMMARY:', '', $v1);
+                    } else {
+                        if (preg_match('/(\d{8})/', $rawDtstart, $m)) {
+                            $dtstart = $m[1];
                         }
                     }
+                }
+
+                // 4. 解析 DTEND 日期
+                $dtend = null;
+                if ($rawDtend) {
+                    if (strpos($rawDtend, 'T') !== false) {
+                        try {
+                            if (substr($rawDtend, -1) === 'Z') {
+                                $endCarbon = Carbon::createFromFormat('Ymd\THis\Z', $rawDtend, 'UTC')
+                                    ->setTimezone('Asia/Taipei');
+                            } else {
+                                $endCarbon = Carbon::createFromFormat('Ymd\THis', substr($rawDtend, 0, 15), 'Asia/Taipei');
+                            }
+                            $dtend = $endCarbon->format('Ymd');
+                        } catch (\Exception $e) {
+                            if (preg_match('/(\d{8})/', $rawDtend, $m)) {
+                                $dtend = $m[1];
+                            }
+                        }
+                    } else {
+                        if (preg_match('/(\d{8})/', $rawDtend, $m)) {
+                            $dtend = $m[1];
+                        }
+                    }
+                }
+
+                if ($dtstart) {
+                    $actualDtend = !empty($dtend) ? $dtend : $dtstart;
+
+                    // 處理 ICS 全天事項 DTEND 不包含當天的問題（減去 1 天）
+                    if (!empty($dtend) && ($isAllDay || strlen($dtend) === 8)) {
+                        $endDateObj = \DateTime::createFromFormat('Ymd', $dtend);
+                        if ($endDateObj) {
+                            $endDateObj->modify('-1 day');
+                            $actualDtend = $endDateObj->format('Ymd');
+                        }
+                    }
+
+                    $startDateFormatted = substr($dtstart, 0, 4) . '-' . substr($dtstart, 4, 2) . '-' . substr($dtstart, 6, 2);
+
+                    if ($actualDtend && $actualDtend > $dtstart) {
+                        $endDateFormatted = substr($actualDtend, 0, 4) . '-' . substr($actualDtend, 4, 2) . '-' . substr($actualDtend, 6, 2);
+                        $dateDisplay = $startDateFormatted . ' ~ ' . $endDateFormatted;
+                    } else {
+                        $dateDisplay = $startDateFormatted;
+                        $actualDtend = $dtstart;
+                    }
+
+                    // 判斷是否過期
+                    $isExpired = ($actualDtend < $today);
+
+                    $eventData = [
+                        'id'           => $eventId,
+                        'DTSTART'      => $dtstart,
+                        'DTEND'        => $actualDtend,
+                        'ITEM_TIME'    => $itemTime, // 時間 (如 "14:00" 或 null)
+                        'DATE_DISPLAY' => $dateDisplay,
+                        'SUMMARY'      => $summary,
+                        'IS_EXPIRED'   => $isExpired,
+                    ];
+
+                    $item[$dtstart][] = $eventData;
+                    $sessionEvents[$eventId] = $eventData;
+                    $eventId++;
                 }
             }
 
             ksort($item);
 
-            $data = [
-                'item' => $item,
-            ];
-            return view('monthly_calendars.ics', $data);
+            // 將解析好的行程資料暫存到 Session
+            session(['ics_import_events' => $sessionEvents]);
+
+            return view('monthly_calendars.ics', ['item' => $item]);
         }
 
         return redirect()->back();
@@ -197,19 +264,91 @@ class MonthlyCalendarController extends Controller
 
     public function file_store(Request $request)
     {
-        $items = $request->input('items');
-        $att['user_id'] = auth()->user()->id;
-        foreach ($items as $k => $v) {
-            $att['item_date'] = substr($k, 0, 4) . '-' . substr($k, 4, 2) . '-' . substr($k, 6, 2);
-            $att['item'] = $v;
-            $check = MonthlyCalendar::where('item_date', $att['item_date'])
-                ->where('item', $att['item'])
-                ->first();
-            if (empty($check)) {
-                MonthlyCalendar::create($att);
+        // 取得被勾選的行程 ID 陣列
+        $selectedIds   = $request->input('selected_ids', []);
+        $sessionEvents = session('ics_import_events', []);
+
+        if (empty($selectedIds)) {
+            return redirect()->route('monthly_calendars.index')
+                ->with('warning', '匯入失敗：未勾選任何行程（若行程已過期，請點選「全選 / 取消全選」或手動勾選後再匯入）。');
+        }
+
+        $userId = auth()->user()->id;
+        $successCount = 0;
+        $existCount = 0;
+
+        foreach ($selectedIds as $id) {
+            if (!isset($sessionEvents[$id])) {
+                continue;
+            }
+
+            $event     = $sessionEvents[$id];
+            $summary   = trim($event['SUMMARY'] ?? '');
+            $startDate = trim($event['DTSTART'] ?? '');
+            $endDate   = trim($event['DTEND'] ?? $startDate);
+            $itemTime  = $event['ITEM_TIME'] ?? null; // 取得時間
+
+            if (empty($startDate) || empty($summary)) {
+                continue;
+            }
+
+            // 格式化 YYYYMMDD -> YYYY-MM-DD
+            if (strlen($startDate) === 8 && is_numeric($startDate)) {
+                $startDate = substr($startDate, 0, 4) . '-' . substr($startDate, 4, 2) . '-' . substr($startDate, 6, 2);
+            }
+            if (strlen($endDate) === 8 && is_numeric($endDate)) {
+                $endDate = substr($endDate, 0, 4) . '-' . substr($endDate, 4, 2) . '-' . substr($endDate, 6, 2);
+            }
+
+            try {
+                $start = Carbon::parse($startDate);
+                $end   = Carbon::parse($endDate);
+
+                if ($end->lt($start)) {
+                    $end = $start->copy();
+                }
+
+                $period = CarbonPeriod::create($start, $end);
+
+                foreach ($period as $dateObj) {
+                    $itemDate = $dateObj->format('Y-m-d');
+
+                    $check = MonthlyCalendar::where('item_date', $itemDate)
+                        ->where('item', $summary)
+                        ->first();
+
+                    if (empty($check)) {
+                        MonthlyCalendar::create([
+                            'user_id'   => $userId,
+                            'item_date' => $itemDate,
+                            'item_time' => $itemTime, // 寫入時間欄位
+                            'item'      => $summary,
+                        ]);
+                        $successCount++;
+                    } else {
+                        $existCount++;
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('校務月曆寫入失敗：' . $e->getMessage());
             }
         }
-        return redirect()->route('monthly_calendars.index');
+
+        // 清除暫存
+        session()->forget('ics_import_events');
+
+        if ($successCount > 0) {
+            return redirect()->route('monthly_calendars.index')
+                ->with('success', "成功匯入 {$successCount} 筆行程事項！");
+        }
+
+        if ($existCount > 0) {
+            return redirect()->route('monthly_calendars.index')
+                ->with('warning', '未新增任何行程（您勾選的行程在資料庫中皆已存在）。');
+        }
+
+        return redirect()->route('monthly_calendars.index')
+            ->with('warning', '未寫入任何行程，請檢查資料。');
     }
 
     public function return_month(Request $request)
@@ -221,14 +360,16 @@ class MonthlyCalendarController extends Controller
         foreach ($items as $item) {
             $item_array[$item->id]['user_id'] = $item->user_id;
             $item_array[$item->id]['item_date'] = $item->item_date;
+            $item_array[$item->id]['item_edate'] = $item->item_edate ?? $item->item_date;
+            $item_array[$item->id]['item_time']  = $item->item_time ?? '';
             $item_array[$item->id]['item'] = $item->item;
         }
 
         $d = explode('-', $this_month);
-        $dt = Carbon::create($d[0], $d[1],1);        
+        $dt = Carbon::create($d[0], $d[1], 1);        
         $next_month = $dt->addMonthsNoOverflow(1)->format('Y-m');
         
-        $dt2 = Carbon::create($d[0], $d[1],1);
+        $dt2 = Carbon::create($d[0], $d[1], 1);
         $last_month = $dt2->subMonthsNoOverflow(1)->format('Y-m');
         
         $this_month_date = get_month_date($this_month);

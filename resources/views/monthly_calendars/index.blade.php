@@ -18,8 +18,12 @@
     $this_month_date = get_month_date($this_month);
     $first_w = get_date_w($this_month_date[1]);
     ?>
-    <script src="{{ asset('gijgo/js/gijgo.min.js') }}" type="text/javascript"></script>
-    <link href="{{ asset('gijgo/css/gijgo.min.css') }}" rel="stylesheet" type="text/css">
+    <!-- Flatpickr CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- 繁體中文語系檔 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
 
     <div class="row justify-content-center">
         <div class="col-md-11">
@@ -36,18 +40,54 @@
                 </div>
             </div>
 
+            <!-- 顯示成功/警告訊息 (Session Flash) -->
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+
+            @if(session('warning'))
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-1"></i> {{ session('warning') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+
             <!-- 新增事項表單 -->
             <div class="card mb-4 border-0 shadow-sm bg-light">
                 <div class="card-body p-3">
                     {{ Form::open(['route' => 'monthly_calendars.store', 'method' => 'POST', 'id' => 'this_form', 'class' => 'row g-2 align-items-center']) }}
+                        <!-- 開始日期 (必填) -->
                         <div class="col-auto">
                             <label for="item_date" class="sr-only">選擇日期</label>
-                            <input id="item_date" name="item_date" class="form-control form-control-sm" required maxlength="10" value="{{ date('Y-m-d') }}" aria-label="選擇日期">
+                            <input id="item_date" name="item_date" class="form-control form-control-sm" required maxlength="10" value="{{ date('Y-m-d') }}" placeholder="開始日期" aria-label="選擇日期">
                         </div>
+
+                        <!-- 結束日期 (可不填) -->
+                        <div class="col-auto">
+                            <label for="item_edate" class="sr-only">結束日期</label>
+                            <input id="item_edate" name="item_edate" class="form-control form-control-sm" maxlength="10" placeholder="結束日期 (選填)" aria-label="結束日期">
+                        </div>
+
+                        <!-- 事項時間 (可不填) -->
+                        <div class="col-auto">
+                            <label for="item_time" class="sr-only">事項時間</label>
+                            <input id="item_time" name="item_time" class="form-control form-control-sm" maxlength="10" placeholder="時間 (選填)" aria-label="事項時間">
+                        </div>
+
+                        <!-- 事項說明 (必填) -->
                         <div class="col-auto flex-grow-1">
                             <label for="item" class="sr-only">事項說明</label>
                             {{ Form::text('item', null, ['id' => 'item', 'class' => 'form-control form-control-sm', 'required' => 'required', 'placeholder' => '新增事項說明', 'aria-label' => '事項說明']) }}
                         </div>
+
+                        <!-- 按鈕 -->
                         <div class="col-auto">
                             <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('確定儲存嗎？')">
                                 <i class="fas fa-plus" aria-hidden="true"></i> 新增事項
@@ -56,14 +96,21 @@
                         <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                     {{ Form::close() }}
                 </div>
-            </div>
-
-            <script src="{{ asset('gijgo/js/messages/messages.zh-TW.js') }}"></script>
+            </div>            
+            
             <script>
-                $('#item_date').datepicker({
-                    uiLibrary: 'bootstrap4',
-                    format: 'yyyy-mm-dd',
-                    locale: 'zh-TW',
+                flatpickr("#item_date, #item_edate", {
+                    locale: "zh_tw",      // 使用繁體中文
+                    dateFormat: "Y-m-d",  // 格式化為 2026-10-15
+                    allowInput: true,     // 允許使用者手動輸入數字
+                    disableMobile: true   // 避免手機端強制彈出原生的簡易選擇器
+                });
+                flatpickr("#item_time", {
+                    enableTime: true,     // 開啟時間選擇
+                    noCalendar: true,     // 隱藏日曆面板，只留時間
+                    dateFormat: "H:i",    // 24 小時制 (例如 14:30)
+                    time_24hr: true,      // 強制 24 小時制
+                    minuteIncrement: 5    // 分鐘間隔 (預設為 5 分鐘一格)
                 });
             </script>
 
@@ -108,7 +155,6 @@
                                     $this_date_w = get_date_w($v);
                                     $is_today = ($v == date('Y-m-d'));
                                     $num = substr($v, 8, 2);
-                                    // 無障礙 AA 驗證高對比色庫（白字對比度 >= 4.5:1）
                                     $bg_array = ['#01579b', '#0b6623', '#bf360c', '#6a1b9a', '#1a237e', '#b71c1c', '#004d40', '#880e4f'];
                                     $qq = 0;
                                 ?>
@@ -131,19 +177,59 @@
                                     </div>
 
                                     @foreach($item_array as $k1 => $v1)
-                                        <?php $q = $qq % count($bg_array); ?>
-                                        @if($v1['item_date'] == $v)
-                                            <div class="d-flex align-items-center my-1 w-100" style="min-width: 0;">
-                                                <!-- AA 級高對比膠囊事項說明 -->
+                                        @php
+                                            $q = $qq % count($bg_array);
+                                            $startDate = $v1['item_date'] ?? '';
+                                            $endDate   = !empty($v1['item_edate']) ? $v1['item_edate'] : $startDate;
+                                            $time      = !empty($v1['item_time']) ? $v1['item_time'] : '';
+                                            $isMultiDay = ($startDate !== $endDate);
+                                            $itemSafe  = addslashes($v1['item'] ?? '');
+                                        @endphp
+
+                                        {{-- 判斷當前日期是否在行程範圍內 --}}
+                                        @if($v >= $startDate && $v <= $endDate)
+                                            @php
+                                                // 判斷是否為「開始日或週日」與「結束日或週六」
+                                                $isStartDay = ($v === $startDate || $this_date_w == 0);
+                                                $isEndDay   = ($v === $endDate || $this_date_w == 6);
+
+                                                // 根據跨日狀態調整圓角與負邊距，形塑 Google 日曆風格的連續橫條
+                                                $borderRadius = '4px';
+                                                $marginStyle  = '';
+
+                                                if ($isMultiDay) {
+                                                    if ($isStartDay && !$isEndDay) {
+                                                        $borderRadius = '4px 0 0 4px';
+                                                        $marginStyle  = 'margin-right: -5px;';
+                                                    } elseif (!$isStartDay && $isEndDay) {
+                                                        $borderRadius = '0 4px 4px 0';
+                                                        $marginStyle  = 'margin-left: -5px;';
+                                                    } elseif (!$isStartDay && !$isEndDay) {
+                                                        $borderRadius = '0';
+                                                        $marginStyle  = 'margin-left: -5px; margin-right: -5px;';
+                                                    }
+                                                }
+                                            @endphp
+
+                                            <div class="d-flex align-items-center my-1 w-100" style="min-width: 0; {{ $marginStyle }}">
                                                 <div class="px-2 text-white text-truncate flex-grow-1"
-                                                     style="background-color: {{ $bg_array[$q] }}; font-size: 12px; line-height: 22px; height: 22px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;"
-                                                     title="{{ $v1['item'] }}"
+                                                     style="background-color: {{ $bg_array[$q] }}; font-size: 12px; line-height: 22px; height: 22px; border-radius: {{ $borderRadius }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; cursor: pointer;"
+                                                     title="{{ $startDate }}{{ $isMultiDay ? ' ~ ' . $endDate : '' }} {{ $time ? $time . ' ' : '' }}{{ $v1['item'] }}"
+                                                     onclick="alert('【校務行程】\n日期：{{ $startDate }}{{ $isMultiDay ? ' ~ ' . $endDate : '' }}\n時間：{{ $time ? $time : '全天' }}\n事項：{{ $itemSafe }}')"
                                                      aria-label="{{ $v }} 事項：{{ $v1['item'] }}">
+
+                                                    {{-- 若設定時間，在開頭標示 --}}
+                                                    @if($time && ($v === $startDate || !$isMultiDay))
+                                                        <span class="font-weight-bold mr-1" style="opacity: 0.95;">{{ $time }}</span>
+                                                    @endif
+
+                                                    {{-- 事項名稱 --}}
                                                     {{ $v1['item'] }}
                                                 </div>
 
+                                                {{-- 刪除按鈕：跨日行程僅在開始當天顯示，避免重複顯示占空間 --}}
                                                 @auth
-                                                    @if($v1['user_id'] == auth()->user()->id or auth()->user()->admin == 1)
+                                                    @if($v === $startDate && ($v1['user_id'] == auth()->user()->id or auth()->user()->admin == 1))
                                                         <a href="{{ route('monthly_calendars.destroy', $k1) }}"
                                                            class="ms-1 flex-shrink-0 text-danger d-inline-flex align-items-center justify-content-center"
                                                            style="width: 20px; height: 20px;"
