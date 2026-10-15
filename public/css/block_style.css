@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap');
 /* =========================================================
    1. 全域標題字型與大小統一 (強制 1.6rem + 標楷體 + 粗體)
    ========================================================= */
@@ -6,7 +7,7 @@
 .gradient-title1, .gradient-title2, .gradient-title3, .gradient-title4,
 .sp-title1, .sp-title2, .sp-title3, .sp-title4, .sp-title5, .sp-title6, .sp-title7, .sp-title8,
 .default-title1, .default-title2 {
-    font-family: "DFKai-SB", "BiauKai", "標楷體", "PMingLiU", "Songti TC", serif !important;
+    font-family: "LXGW WenKai TC", "DFKai-SB", "BiauKai", "Songti TC", serif !important;    
     font-size: 1.4rem !important;
     font-weight: bold !important;
 }
