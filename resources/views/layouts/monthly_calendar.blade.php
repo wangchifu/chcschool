@@ -90,21 +90,22 @@ $first_w = get_date_w($this_month_date[1]);
         })
     }
 
-    function go_submit(month){
+    function go_submit(month) {
         $('#item_month').val(month);
         $.ajax({
-            url: '{{ route('monthly_calendars.return_month') }}',
-            type : 'post',
-            dataType : 'json',
-            data : $('#calendar_month').serialize(),
-            success : function(result) {
+            url: 'http://s079999.localhost:8080/monthly_calendars/return_month',
+            type: 'post',
+            dataType: 'json',
+            data: $('#calendar_month').serialize(),
+            success: function(result) {
                 if(result != 'failed') {
                     total_data = show_calendar(result);
                     document.getElementById('calendar_content').innerHTML = total_data;
                 }
             },
-            error: function(result) {
-                alert('失敗！');
+            error: function(xhr) {
+                // 直接彈出伺服器回傳的狀態碼與詳細錯誤頁面內容
+                alert('HTTP 狀態碼：' + xhr.status + '\n\n詳細錯誤訊息：\n' + xhr.responseText.substring(0, 300));
             }
         })
     }
