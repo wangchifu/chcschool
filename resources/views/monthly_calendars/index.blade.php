@@ -131,6 +131,11 @@
             </div>            
             
             <script>
+                // 開啟新視窗函式
+                function open_window(url, name) {
+                    window.open(url, name, 'width=650,height=520,toolbar=no,scrollbars=yes,resizable=yes');
+                }
+
                 // 動態切換 Select 本身的背景顏色
                 function updateSelectColor(select) {
                     if (!select) return;
@@ -179,7 +184,7 @@
                        aria-label="下一個月 ({{ $next_month }})">
                         <i class="fas fa-chevron-right" style="font-size: 1rem;" aria-hidden="true"></i>
                     </a>
-                    <h2 class="h4 mb-0 px-3 font-weight-bold" style="color: #202124;">{{ $this_month }}</h2>
+                    <h2 class="h4 mb-0 font-weight-bold" style="color: #202124;">{{ $this_month }}</h2>
                 </div>
 
                 {{-- 類別顏色圖例 --}}
@@ -257,7 +262,7 @@
                                                 $isStartDay = ($v === $startDate || $this_date_w == 0);
                                                 $isEndDay   = ($v === $endDate || $this_date_w == 6);
 
-                                                // 根據跨日狀態調整圓角與負邊距，形塑 Google 日曆風格的連續橫條
+                                                // 根據跨日狀態調整圓角與負邊距
                                                 $borderRadius = '4px';
                                                 $marginStyle  = '';
 
@@ -291,11 +296,21 @@
                                                     {{ $v1['item'] }}
                                                 </div>
 
-                                                {{-- 刪除按鈕：跨日行程僅在開始當天顯示，避免重複顯示占空間 --}}
+                                                {{-- 編輯與刪除按鈕：跨日行程僅在開始當天顯示 --}}
                                                 @auth
                                                     @if($v === $startDate && ($v1['user_id'] == auth()->user()->id or auth()->user()->admin == 1))
+                                                        {{-- 編輯按鈕 --}}
+                                                        <a href="javascript:open_window('{{ route('monthly_calendars.edit', $k1) }}','新視窗')"
+                                                           class="ml-1 flex-shrink-0 text-secondary d-inline-flex align-items-center justify-content-center"
+                                                           style="width: 20px; height: 20px;"
+                                                           title="編輯"
+                                                           aria-label="編輯事項：{{ $v1['item'] }}">
+                                                            <i class="fas fa-edit text-primary" style="font-size: 12px;"></i>
+                                                        </a>
+
+                                                        {{-- 刪除按鈕 --}}
                                                         <a href="{{ route('monthly_calendars.destroy', $k1) }}"
-                                                           class="ms-1 flex-shrink-0 text-danger d-inline-flex align-items-center justify-content-center"
+                                                           class="ml-1 flex-shrink-0 text-danger d-inline-flex align-items-center justify-content-center"
                                                            style="width: 20px; height: 20px;"
                                                            onclick="return confirm('確定刪除嗎？')"
                                                            aria-label="刪除事項：{{ $v1['item'] }}">
@@ -355,7 +370,7 @@
                                 <li>前往個人 Google 日曆，點選<strong>「設定」&rarr;「匯出日曆」</strong>，系統將自動下載 ZIP 壓縮檔。</li>
                                 <li>將 ZIP 檔解壓縮後會取得 <code>.ics</code> 檔案。</li>
                                 <li>在本頁點選選擇檔案並上傳該 <code>.ics</code> 檔即可將行程匯入校務月曆。</li>
-                                <li>提示：您也可直接下載 <a href="https://calendar.google.com/calendar/ical/zh.taiwan%23holiday%40group.v.calendar.google.com/public/basic.ics" target="_blank" rel="noopener noreferrer" class="font-weight-bold text-primary">台灣節日.ics</a> 進行匯入使用。</li>
+                                <li>提示：您也可專用下載 <a href="https://calendar.google.com/calendar/ical/zh.taiwan%23holiday%40group.v.calendar.google.com/public/basic.ics" target="_blank" rel="noopener noreferrer" class="font-weight-bold text-primary">台灣節日.ics</a> 進行匯入使用。</li>
                             </ol>
                         </div>
                     </div>

@@ -551,6 +551,8 @@ Route::group(['middleware' => 'exec'], function () {
     Route::post('monthly_calendars/file/store', 'MonthlyCalendarController@file_store')->name('monthly_calendars.file_store');
     Route::get('monthly_calendars/destroy/{monthly_calendar}', 'MonthlyCalendarController@destroy')->name('monthly_calendars.destroy');
     Route::get('monthly_calendars/block_destroy/{monthly_calendar}', 'MonthlyCalendarController@block_destroy')->name('monthly_calendars.block_destroy');
+    Route::get('monthly_calendars/edit/{monthly_calendar}', 'MonthlyCalendarController@edit')->name('monthly_calendars.edit');
+    Route::post('monthly_calendars/update/{monthly_calendar}', 'MonthlyCalendarController@update')->name('monthly_calendars.update');
 
 
     //行政人員編輯

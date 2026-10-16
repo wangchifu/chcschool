@@ -85,12 +85,41 @@ class MonthlyCalendarController extends Controller
     {
     }
 
-    public function edit()
+    public function edit(MonthlyCalendar $monthly_calendar)
     {
+        // 檢查權限 (同刪除權限：建立者本人 或 系統管理員)
+        if ($monthly_calendar->user_id == auth()->user()->id or auth()->user()->admin == 1) {
+            return view('monthly_calendars.edit', compact('monthly_calendar'));
+        }
+
+        return "<script>alert('您無存取權限！'); window.close();</script>";
     }
 
-    public function update(Request $request)
+    public function update(Request $request, MonthlyCalendar $monthly_calendar)
     {
+        // 檢查權限
+        if ($monthly_calendar->user_id == auth()->user()->id or auth()->user()->admin == 1) {
+            $att = $request->all();
+
+            // 若未指定結束日期，設為與開始日期一致
+            if (empty($att['item_edate'])) {
+                $att['item_edate'] = $att['item_date'];
+            }
+
+            $monthly_calendar->update($att);
+
+            // 修改成功後自動重新整理母視窗並關閉開彈視窗
+            echo "<script>
+                alert('修改成功！');
+                if (window.opener) {
+                    window.opener.location.reload();
+                }
+                window.close();
+            </script>";
+            return;
+        }
+
+        return redirect()->back()->with('warning', '您無修改權限！');
     }
 
     public function destroy(MonthlyCalendar $monthly_calendar)

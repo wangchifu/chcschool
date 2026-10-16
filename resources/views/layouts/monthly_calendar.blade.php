@@ -95,6 +95,11 @@ $first_w = get_date_w($this_month_date[1]);
         </div>
     </div>    
     <script>
+        // 開啟新視窗函式
+        function open_window(url, name) {
+            window.open(url, name, 'width=650,height=520,toolbar=no,scrollbars=yes,resizable=yes');
+        }
+
         // 動態切換 Select 本身的背景顏色
         function updateSelectColor(select) {
             if (!select) return;
@@ -136,8 +141,8 @@ $first_w = get_date_w($this_month_date[1]);
         0: '#01579b', // 校務行政
         1: '#0b6623', // 教務
         2: '#bf360c', // 學務
-        3: '#6a1b9a', // 總務
-        4: '#880e4f'  // 輔導室
+        3: '#4e342e', // 總務
+        4: '#6a1b9a'  // 輔導室
     };
 
     var globalKindNames = {
@@ -310,8 +315,18 @@ $first_w = get_date_w($this_month_date[1]);
                     data += rawItem;
                     data += '</button>';
 
-                    // 外置獨立紅色圖示刪除按鈕
+                    // 外置獨立編輯與刪除按鈕
                     if(showDelete){
+                        var editUrl = '{{ url('monthly_calendars/edit') }}/' + k1;
+                        // 編輯按鈕
+                        data += '<button type="button" class="btn btn-link p-0 ms-1 border-0 flex-shrink-0 d-inline-flex align-items-center justify-content-center" ';
+                        data += 'style="width: 20px; height: 20px;" ';
+                        data += 'onclick="open_window(\'' + editUrl + '\', \'新視窗\')" ';
+                        data += 'aria-label="編輯事項：' + fullItem + '">';
+                        data += '<i class="fas fa-edit text-primary" style="font-size: 12px;"></i>';
+                        data += '</button>';
+
+                        // 刪除按鈕
                         data += '<button type="button" class="btn btn-link p-0 ms-1 border-0 flex-shrink-0 d-inline-flex align-items-center justify-content-center" ';
                         data += 'style="width: 20px; height: 20px;" ';
                         data += 'onclick="if(confirm(\'確定刪除嗎？\')) del_item(\''+k1+'\', \''+this_month+'\'); else return false;" ';
@@ -466,9 +481,19 @@ $first_w = get_date_w($this_month_date[1]);
                                             {{ $v1['item'] }}
                                         </button>
 
-                                        {{-- 獨立紅色圓圈刪除鈕 --}}
+                                        {{-- 獨立編輯與紅色圓圈刪除鈕 --}}
                                         @auth
                                             @if($v === $startDate && ($v1['user_id'] == auth()->user()->id or auth()->user()->admin == 1))
+                                                {{-- 編輯按鈕 --}}
+                                                <button type="button" 
+                                                        class="btn btn-link p-0 ms-1 border-0 flex-shrink-0 d-inline-flex align-items-center justify-content-center"
+                                                        style="width: 20px; height: 20px;"
+                                                        onclick="open_window('{{ route('monthly_calendars.edit', $k1) }}', '新視窗')"
+                                                        aria-label="編輯事項：{{ $v1['item'] }}">
+                                                    <i class="fas fa-edit text-primary" style="font-size: 12px;"></i>
+                                                </button>
+
+                                                {{-- 刪除按鈕 --}}
                                                 <button type="button" 
                                                         class="btn btn-link p-0 ms-1 border-0 flex-shrink-0 d-inline-flex align-items-center justify-content-center"
                                                         style="width: 20px; height: 20px;"
