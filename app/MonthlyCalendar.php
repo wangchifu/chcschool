@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MonthlyCalendar extends Model
 {
     protected $fillable = [
+        'item_kind',
         'item_date',
         'item_edate',
         'item_time',

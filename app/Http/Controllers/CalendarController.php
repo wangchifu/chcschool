@@ -162,6 +162,7 @@ class CalendarController extends Controller
 
         //寫入校務月曆
         foreach ($item as $k => $v) {
+            $att3['item_kind'] = $request->input('calendar_kind');    
             $att3['item_date'] = $k;
             $att3['item'] = $v;
             $att3['user_id'] = auth()->user()->id;

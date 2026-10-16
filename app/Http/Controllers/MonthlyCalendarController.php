@@ -40,6 +40,7 @@ class MonthlyCalendarController extends Controller
             $item_array[$item->id]['item_edate'] = $item->item_edate ?? $item->item_date;
             $item_array[$item->id]['item_time']  = $item->item_time ?? '';
             $item_array[$item->id]['item']       = $item->item;
+            $item_array[$item->id]['item_kind']  = $item->item_kind;
         }
 
         $data = [
@@ -363,6 +364,7 @@ class MonthlyCalendarController extends Controller
             $item_array[$item->id]['item_edate'] = $item->item_edate ?? $item->item_date;
             $item_array[$item->id]['item_time']  = $item->item_time ?? '';
             $item_array[$item->id]['item'] = $item->item;
+            $item_array[$item->id]['item_kind'] = $item->item_kind;
         }
 
         $d = explode('-', $this_month);

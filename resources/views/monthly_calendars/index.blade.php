@@ -17,6 +17,23 @@
 
     $this_month_date = get_month_date($this_month);
     $first_w = get_date_w($this_month_date[1]);
+
+    // 五大類別對應顏色定義 (0或null:校務行政, 1:教務, 2:學務, 3:總務, 4:輔導室)
+    $kind_colors = [
+        0 => '#01579b', // 校務行政 (深藍)
+        1 => '#0b6623', // 教務 (深綠)
+        2 => '#bf360c', // 學務 (磚紅)
+        3 => '#4e342e', // 總務 (深棕色/大地咖啡)
+        4 => '#6a1b9a', // 輔導室 (深紫)
+    ];
+
+    $calendarKinds = config('chcschool.calendar_kind', [
+        0 => '校務行政',
+        1 => '教務',
+        2 => '學務',
+        3 => '總務',
+        4 => '輔導室'
+    ]);
     ?>
     <!-- Flatpickr CSS & JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -63,6 +80,21 @@
             <div class="card mb-4 border-0 shadow-sm bg-light">
                 <div class="card-body p-3">
                     {{ Form::open(['route' => 'monthly_calendars.store', 'method' => 'POST', 'id' => 'this_form', 'class' => 'row g-2 align-items-center']) }}
+                        <!-- 選擇類別 -->
+                        <div class="col-auto">
+                            <label for="item_kind" class="sr-only">選擇類別</label>
+                            <select name="item_kind" id="item_kind" class="form-control form-control-sm text-white font-weight-bold" onchange="updateSelectColor(this)">
+                                @foreach($calendarKinds as $kValue => $kName)
+                                    @php
+                                        $optBg = $kind_colors[$kValue] ?? '#01579b';
+                                    @endphp
+                                    <option value="{{ $kValue }}" style="background-color: {{ $optBg }}; color: #ffffff;" {{ old('item_kind') == $kValue ? 'selected' : '' }}>
+                                        {{ $kName }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    
                         <!-- 開始日期 (必填) -->
                         <div class="col-auto">
                             <label for="item_date" class="sr-only">選擇日期</label>
@@ -99,6 +131,23 @@
             </div>            
             
             <script>
+                // 動態切換 Select 本身的背景顏色
+                function updateSelectColor(select) {
+                    if (!select) return;
+                    const selectedOption = select.options[select.selectedIndex];
+                    if (selectedOption) {
+                        select.style.backgroundColor = selectedOption.style.backgroundColor;
+                        select.style.color = '#ffffff';
+                    }
+                }
+
+                document.addEventListener("DOMContentLoaded", function() {
+                    const itemKindSelect = document.getElementById("item_kind");
+                    if (itemKindSelect) {
+                        updateSelectColor(itemKindSelect);
+                    }
+                });
+
                 flatpickr("#item_date, #item_edate", {
                     locale: "zh_tw",      // 使用繁體中文
                     dateFormat: "Y-m-d",  // 格式化為 2026-10-15
@@ -114,9 +163,10 @@
                 });
             </script>
 
-            <!-- 月份切換區域 (Google 經典 36x36px 大按鈕) -->
-            <div class="d-flex align-items-center justify-content-between my-3 px-1 pb-2" style="border-bottom: 1px solid #e0e0e0;">
-                <div class="d-flex align-items-center">
+            <!-- 月份切換區域與顏色圖例 -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between my-3 px-1 pb-2" style="border-bottom: 1px solid #e0e0e0;">
+                {{-- 月份切換按鈕 --}}
+                <div class="d-flex align-items-center my-1">
                     <a href="{{ route('monthly_calendars.index', $last_month) }}" 
                        class="btn btn-light rounded-circle p-0 me-2 d-inline-flex align-items-center justify-content-center text-dark" 
                        style="width: 36px; height: 36px; border: 1px solid #dadce0;" 
@@ -130,6 +180,19 @@
                         <i class="fas fa-chevron-right" style="font-size: 1rem;" aria-hidden="true"></i>
                     </a>
                     <h2 class="h4 mb-0 font-weight-bold" style="color: #202124;">{{ $this_month }}</h2>
+                </div>
+
+                {{-- 類別顏色圖例 --}}
+                <div class="d-flex align-items-center flex-wrap my-1">
+                    <span class="small font-weight-bold text-secondary mr-2 mb-1">
+                        <i class="fas fa-palette me-1"></i>圖例：
+                    </span>
+                    @foreach($calendarKinds as $kValue => $kName)
+                        <span class="badge text-white px-2 py-1 mr-1 mb-1" 
+                              style="background-color: {{ $kind_colors[$kValue] ?? '#01579b' }}; font-size: 12px; font-weight: normal;">
+                            {{ $kName }}
+                        </span>
+                    @endforeach
                 </div>
             </div>
 
@@ -155,8 +218,6 @@
                                     $this_date_w = get_date_w($v);
                                     $is_today = ($v == date('Y-m-d'));
                                     $num = substr($v, 8, 2);
-                                    $bg_array = ['#01579b', '#0b6623', '#bf360c', '#6a1b9a', '#1a237e', '#b71c1c', '#004d40', '#880e4f'];
-                                    $qq = 0;
                                 ?>
 
                                 @if($k == 1)
@@ -178,12 +239,15 @@
 
                                     @foreach($item_array as $k1 => $v1)
                                         @php
-                                            $q = $qq % count($bg_array);
                                             $startDate = $v1['item_date'] ?? '';
                                             $endDate   = !empty($v1['item_edate']) ? $v1['item_edate'] : $startDate;
                                             $time      = !empty($v1['item_time']) ? $v1['item_time'] : '';
                                             $isMultiDay = ($startDate !== $endDate);
                                             $itemSafe  = addslashes($v1['item'] ?? '');
+
+                                            // 取得 item_kind，若為 null 或未填寫則預設為 0 (校務行政)
+                                            $itemKind = isset($v1['item_kind']) ? (int)$v1['item_kind'] : 0;
+                                            $bgColor = $kind_colors[$itemKind] ?? $kind_colors[0];
                                         @endphp
 
                                         {{-- 判斷當前日期是否在行程範圍內 --}}
@@ -213,7 +277,7 @@
 
                                             <div class="d-flex align-items-center my-1 w-100" style="min-width: 0; {{ $marginStyle }}">
                                                 <div class="px-2 text-white text-truncate flex-grow-1"
-                                                     style="background-color: {{ $bg_array[$q] }}; font-size: 12px; line-height: 22px; height: 22px; border-radius: {{ $borderRadius }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; cursor: pointer;"
+                                                     style="background-color: {{ $bgColor }}; font-size: 12px; line-height: 22px; height: 22px; border-radius: {{ $borderRadius }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; cursor: pointer;"
                                                      title="{{ $startDate }}{{ $isMultiDay ? ' ~ ' . $endDate : '' }} {{ $time ? $time . ' ' : '' }}{{ $v1['item'] }}"
                                                      onclick="alert('【校務行程】\n日期：{{ $startDate }}{{ $isMultiDay ? ' ~ ' . $endDate : '' }}\n時間：{{ $time ? $time : '全天' }}\n事項：{{ $itemSafe }}')"
                                                      aria-label="{{ $v }} 事項：{{ $v1['item'] }}">
@@ -240,7 +304,6 @@
                                                     @endif
                                                 @endauth
                                             </div>
-                                            <?php $qq++; ?>
                                         @endif
                                     @endforeach
                                 </td>
