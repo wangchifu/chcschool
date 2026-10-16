@@ -161,20 +161,19 @@ class MonthlyCalendarController extends Controller
 
                 // 3. 解析 DTSTART 日期與時間
                 $dtstart = null;
-                $itemTime = null; // 存入 item_time 的時間格式 (HH:mm)
+                $itemTime = null;
 
                 if ($rawDtstart) {
                     if (strpos($rawDtstart, 'T') !== false) {
                         try {
                             if (substr($rawDtstart, -1) === 'Z') {
-                                // UTC 時間轉為 Asia/Taipei 當地時間
                                 $startCarbon = Carbon::createFromFormat('Ymd\THis\Z', $rawDtstart, 'UTC')
                                     ->setTimezone('Asia/Taipei');
                             } else {
                                 $startCarbon = Carbon::createFromFormat('Ymd\THis', substr($rawDtstart, 0, 15), 'Asia/Taipei');
                             }
                             $dtstart = $startCarbon->format('Ymd');
-                            $itemTime = $startCarbon->format('H:i'); // 格式如 14:00 (若要包含秒數可改 'H:i:s')
+                            $itemTime = $startCarbon->format('H:i');
                         } catch (\Exception $e) {
                             if (preg_match('/(\d{8})/', $rawDtstart, $m)) {
                                 $dtstart = $m[1];
@@ -214,8 +213,8 @@ class MonthlyCalendarController extends Controller
                 if ($dtstart) {
                     $actualDtend = !empty($dtend) ? $dtend : $dtstart;
 
-                    // 處理 ICS 全天事項 DTEND 不包含當天的問題（減去 1 天）
-                    if (!empty($dtend) && ($isAllDay || strlen($dtend) === 8)) {
+                    // 只有在「全天行程」且「結束日期大於開始日期」時，才將 DTEND 減去 1 天
+                    if ($isAllDay && !empty($dtend) && $dtend > $dtstart) {
                         $endDateObj = \DateTime::createFromFormat('Ymd', $dtend);
                         if ($endDateObj) {
                             $endDateObj->modify('-1 day');
@@ -223,24 +222,28 @@ class MonthlyCalendarController extends Controller
                         }
                     }
 
+                    // 確保結束日期不小於開始日期
+                    if ($actualDtend < $dtstart) {
+                        $actualDtend = $dtstart;
+                    }
+
                     $startDateFormatted = substr($dtstart, 0, 4) . '-' . substr($dtstart, 4, 2) . '-' . substr($dtstart, 6, 2);
 
-                    if ($actualDtend && $actualDtend > $dtstart) {
+                    if ($actualDtend > $dtstart) {
                         $endDateFormatted = substr($actualDtend, 0, 4) . '-' . substr($actualDtend, 4, 2) . '-' . substr($actualDtend, 6, 2);
                         $dateDisplay = $startDateFormatted . ' ~ ' . $endDateFormatted;
                     } else {
                         $dateDisplay = $startDateFormatted;
-                        $actualDtend = $dtstart;
                     }
 
-                    // 判斷是否過期
+                    // 正確於日期計算完成後，才判斷是否過期
                     $isExpired = ($actualDtend < $today);
 
                     $eventData = [
                         'id'           => $eventId,
                         'DTSTART'      => $dtstart,
                         'DTEND'        => $actualDtend,
-                        'ITEM_TIME'    => $itemTime, // 時間 (如 "14:00" 或 null)
+                        'ITEM_TIME'    => $itemTime,
                         'DATE_DISPLAY' => $dateDisplay,
                         'SUMMARY'      => $summary,
                         'IS_EXPIRED'   => $isExpired,
@@ -254,8 +257,8 @@ class MonthlyCalendarController extends Controller
 
             ksort($item);
 
-            // 將解析好的行程資料暫存到 Session
             session(['ics_import_events' => $sessionEvents]);
+            session()->save();
 
             return view('monthly_calendars.ics', ['item' => $item]);
         }
@@ -302,33 +305,23 @@ class MonthlyCalendarController extends Controller
             }
 
             try {
-                $start = Carbon::parse($startDate);
-                $end   = Carbon::parse($endDate);
+                // 檢查是否已存在相同開始日期與事項名稱的紀錄
+                $check = MonthlyCalendar::where('item_date', $startDate)
+                    ->where('item', $summary)
+                    ->first();
 
-                if ($end->lt($start)) {
-                    $end = $start->copy();
-                }
-
-                $period = CarbonPeriod::create($start, $end);
-
-                foreach ($period as $dateObj) {
-                    $itemDate = $dateObj->format('Y-m-d');
-
-                    $check = MonthlyCalendar::where('item_date', $itemDate)
-                        ->where('item', $summary)
-                        ->first();
-
-                    if (empty($check)) {
-                        MonthlyCalendar::create([
-                            'user_id'   => $userId,
-                            'item_date' => $itemDate,
-                            'item_time' => $itemTime, // 寫入時間欄位
-                            'item'      => $summary,
-                        ]);
-                        $successCount++;
-                    } else {
-                        $existCount++;
-                    }
+                if (empty($check)) {
+                    MonthlyCalendar::create([
+                        'user_id'    => $userId,
+                        'item_date'  => $startDate,
+                        'item_edate' => ($startDate !== $endDate) ? $endDate : $startDate, // 寫入結束日期
+                        'item_time'  => $itemTime,
+                        'item'       => $summary,
+                        'item_kind'  => 0, // 預設為校務行政 (0)
+                    ]);
+                    $successCount++;
+                } else {
+                    $existCount++;
                 }
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('校務月曆寫入失敗：' . $e->getMessage());
