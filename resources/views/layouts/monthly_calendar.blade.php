@@ -208,7 +208,7 @@ $first_w = get_date_w($this_month_date[1]);
         data += '<div class="d-flex align-items-center my-1">';
         data += '<button type="button" class="btn btn-light rounded-circle p-0 me-2 d-inline-flex align-items-center justify-content-center text-dark" style="width: 36px; height: 36px; border: 1px solid #dadce0;" aria-label="上一個月" onclick="go_submit(\''+result['last_month']+'\')"><i class="fas fa-chevron-left" style="font-size: 1rem;" aria-hidden="true"></i></button>';
         data += '<button type="button" class="btn btn-light rounded-circle p-0 me-3 d-inline-flex align-items-center justify-content-center text-dark" style="width: 36px; height: 36px; border: 1px solid #dadce0;" aria-label="下一個月" onclick="go_submit(\''+result['next_month']+'\')"><i class="fas fa-chevron-right" style="font-size: 1rem;" aria-hidden="true"></i></button>';
-        data += '<h2 class="h4 mb-0 font-weight-bold" style="color: #202124;">' + result['this_month'] + '</h2>';
+        data += '<h2 class="h4 mb-0 px-3 font-weight-bold" style="color: #202124;">' + result['this_month'] + '</h2>';
         data += '</div>';
 
         // 動態生成圖例區塊
@@ -358,7 +358,7 @@ $first_w = get_date_w($this_month_date[1]);
                     aria-label="下一個月" onclick="go_submit('{{ $next_month }}')">
                 <i class="fas fa-chevron-right" style="font-size: 1rem;" aria-hidden="true"></i>
             </button>
-            <h2 class="h4 mb-0 font-weight-bold" style="color: #202124;">{{ $this_month }}</h2>
+            <h2 class="h4 mb-0 px-3 font-weight-bold" style="color: #202124;">{{ $this_month }}</h2>
         </div>
 
         {{-- 類別顏色圖例 --}}

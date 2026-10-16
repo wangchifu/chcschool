@@ -179,7 +179,7 @@
                        aria-label="下一個月 ({{ $next_month }})">
                         <i class="fas fa-chevron-right" style="font-size: 1rem;" aria-hidden="true"></i>
                     </a>
-                    <h2 class="h4 mb-0 font-weight-bold" style="color: #202124;">{{ $this_month }}</h2>
+                    <h2 class="h4 mb-0 px-3 font-weight-bold" style="color: #202124;">{{ $this_month }}</h2>
                 </div>
 
                 {{-- 類別顏色圖例 --}}
