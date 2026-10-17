@@ -32,13 +32,13 @@
                                         <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">自管</span></a>
                                     @endif                            
                                     @if($schools[$v2['school']] == "50")
-                                        <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm text-white m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">公版-1</span></a>
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-info btn-sm text-white m-1" data-toggle="tooltip" data-placement="top" title="{{ $k2 }}" target="_blank" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">公版-1</span></a>
                                     @endif
                                     @if($schools[$v2['school']] == "49")
-                                        <a href="http://{{ $v2['website'] }}" class="btn btn-primary btn-sm m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">公版-2</span></a>
+                                        <a href="http://{{ $v2['website'] }}" class="btn btn-primary btn-sm m-1" data-toggle="tooltip" data-placement="top" title="{{ $k2 }}" target="_blank">{{ $v2['school'] }} <span class="badge bg-light text-dark">公版-2</span></a>
                                     @endif
                                 @else    
-                                    <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm m-1" target="_blank">{{ $v2['school'] }} <span class="badge bg-dark">自管</span></a>
+                                    <a href="http://{{ $v2['website'] }}" class="btn btn-secondary btn-sm m-1" data-toggle="tooltip" data-placement="top" title="{{ $k2 }}" target="_blank">{{ $v2['school'] }} <span class="badge bg-dark">自管</span></a>
                                 @endif                           
                             @endforeach
                             </div>
