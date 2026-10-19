@@ -62,8 +62,8 @@
                         </div>
                         <div class="mt-3">       
                             <select name="answers[{{ $item->id }}]" class="form-control" required onchange="this.style.borderColor=''">
-                                <option value="" disabled {{ !isset($answers[$item->id]) ? 'selected' : '' }}>--請選擇--</option>                                
-                                
+                                <option value="" disabled {{ !isset($answers[$item->id]) ? 'selected' : '' }}>--請選擇--</option>
+                                <option value="1999999{{ $class_num }}">不填報</option>                                                                                                                                                      
                                 @foreach($all_students as $id => $name)
                                     <option value="{{ $id }}" 
                                         {{ (isset($answers[$item->id]) && $answers[$item->id] == $id) ? 'selected' : '' }}>

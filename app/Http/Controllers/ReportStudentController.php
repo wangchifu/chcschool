@@ -82,6 +82,7 @@ class ReportStudentController extends Controller
             'girls'=>$girls,
             'all_students'=>$all_students,
             'answers'=>$answers,
+            'class_num'=>$class_num,
         ];
         return view('report_students.teacher_fill',$data);
     }
@@ -95,7 +96,7 @@ class ReportStudentController extends Controller
         $data = [];
         foreach ($answers['answers'] as $item_id => $student_id) {
             // 只有當 student_id 有值時才加入（預防前端傳回空值）
-            if ($student_id) {
+            if ($student_id or $student_id=="0") {
                 $data[] = [
                     'report_student_id'      => $report_student->id,
                     'report_student_item_id' => $item_id,
@@ -171,7 +172,11 @@ class ReportStudentController extends Controller
         $answer_data = [];
         foreach($answers as $answer){
             $student = ClubStudent::find($answer->student_id);
-            $answer_data[substr($student->class_num,0,-2)][$answer->report_student_item_id]['name'] = $student->name;
+            if($student){
+                $answer_data[substr($student->class_num,0,-2)][$answer->report_student_item_id]['name'] = $student->name;
+            }else{
+                $answer_data[substr($answer->student_id,-3)][$answer->report_student_item_id]['name'] = "不填報";
+            }            
         }    
         ksort($answer_data);
         foreach($answer_data as $class_num => $data){
@@ -202,7 +207,11 @@ class ReportStudentController extends Controller
         $answer_data = [];
         foreach($answers as $answer){
             $student = ClubStudent::find($answer->student_id);
-            $answer_data[substr($student->class_num,0,-2)][$answer->report_student_item_id]['name'] = $student->name;
+            if($student){
+                $answer_data[substr($student->class_num,0,-2)][$answer->report_student_item_id]['name'] = $student->name;
+            }else{
+                $answer_data[substr($answer->student_id,-3)][$answer->report_student_item_id]['name'] = "不填報";
+            }                        
         }    
         ksort($answer_data);
         foreach($answer_data as $class_num => $data){
