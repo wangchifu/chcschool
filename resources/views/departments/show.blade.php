@@ -61,7 +61,7 @@
                 <!-- 無障礙 2.1.1 修正：加上 tabindex="0" 使文章內容區可接收 Tab 鍵焦點與方向鍵捲動 -->
                 <div class="card-body" tabindex="0" aria-label="{{ $department->title }} 文章詳細內容區">
                     <div class="table-responsive">
-                    {!! sanitize_accessibility_html($department->content) !!}                    
+                    {!! $department->content !!}                    
                     </div>
                 </div>
             </div>
