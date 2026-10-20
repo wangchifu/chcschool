@@ -113,7 +113,7 @@
 
                                 {{-- 文章主要內容 --}}
                                 <div class="blog-content-body table-responsive">                                    
-                                    {!! sanitize_accessibility_html($blog->content) !!}
+                                    {!! $blog->content !!}
                                 </div>
                             </div>
                         </div>
