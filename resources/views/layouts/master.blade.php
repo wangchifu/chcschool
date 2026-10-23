@@ -97,7 +97,26 @@
             text-decoration: none !important;
         }
 
-        /* 2. 全站所有聚焦元素呈現完整四邊高對比橘色焦點框 */
+        /* 2. Alt+C 主要內容區獲得焦點時呈現顯眼橘框標示 (解決隱藏視覺問題) */
+        #main-content-target:focus {
+            position: relative !important;
+            display: inline-block !important;
+            width: auto !important;
+            height: auto !important;
+            padding: 4px 10px !important;
+            margin-bottom: 8px !important;
+            overflow: visible !important;
+            clip: auto !important;
+            background-color: #0d47a1 !important;
+            color: #ffffff !important;
+            font-weight: bold !important;
+            border-radius: 4px !important;
+            outline: 3px solid #d97706 !important;
+            outline-offset: 2px !important;
+            text-decoration: none !important;
+        }
+
+        /* 3. 全站所有聚焦元素呈現完整四邊高對比橘色焦點框 */
         :focus,
         :focus-visible {
             outline: 3px solid #d97706 !important;
@@ -128,7 +147,7 @@
 <br>
 {{-- 主要內容區 --}}
 <main id="main-content" class="container-fluid">
-    <!-- 無障礙 Alt+C 精準焦點定位點 (防止 NVDA 語音自動連續朗讀整頁內容) -->
+    <!-- 無障礙 Alt+C 精準焦點定位點 (獲得焦點時透過 CSS 展開顯示橘框，防止 NVDA 自動連續朗讀) -->
     <a id="main-content-target" tabindex="-1" class="sr-only">::: 主要內容區</a>
     @yield('content')
 </main>
