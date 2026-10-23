@@ -268,7 +268,7 @@
                     @foreach($photos as $k => $v)
                         <div class="col-lg-3 col-md-4 col-6 mb-3">
                             <a href="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" class="venobox d-block" data-gall="gall1" title="放大檢視相關照片第 {{ $k + 1 }} 張" aria-label="放大檢視相關照片第 {{ $k + 1 }} 張">
-                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="相關照片第 {{ $k + 1 }} 張" class="img-thumbnail w-100">
+                                <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/photos/'.$v) }}" alt="{{ $post->title }}的相關圖片第 {{ $k + 1 }} 張" class="img-thumbnail w-100">
                             </a>
                         </div>
                     @endforeach

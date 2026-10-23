@@ -101,7 +101,7 @@
         :focus,
         :focus-visible {
             outline: 3px solid #d97706 !important;
-            outline-offset: -3px !important; /* 向內收縮 3px，防止左右邊框被螢幕切掉 */
+            outline-offset: -3px !important;
             box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3) !important;
         }
     </style>
@@ -110,11 +110,10 @@
 
 <body id="page-top" style="background-color:{{ $bg_color }};font-family:'Arial','Microsoft JhengHei','微軟正黑體','黑體',sans-serif;">
 
-<!-- 全站統一無障礙跳過導覽 -->
-<a class="sr-only-focusable" href="#navbar" accesskey="U" title="頂部導覽區 (Alt+U)">跳到頂部導覽區</a>
-<a class="sr-only-focusable" href="#main-content" accesskey="C" title="中央內容區 (Alt+C)">跳到中央內容區</a>
+<!-- 無障礙 2.4.1 關鍵修正：將「跳到主要內容」設為全頁第一個鍵盤焦點 -->
+<a class="sr-only-focusable" href="#main-content-target" accesskey="C" title="主要內容區 (Alt+C)">跳到主要內容</a>
 
-{{-- 無障礙 2.4.1 關鍵修正：僅在當前頁面有宣告 footer 區塊時，才渲染 Alt+Z 連結，避免子頁面無障礙檢測報錯 --}}
+{{-- 僅在當前頁面有宣告 footer 區塊時，才渲染 Alt+Z 連結 --}}
 @hasSection('footer')
 <a class="sr-only-focusable" href="#footer" accesskey="Z" title="底部資訊區 (Alt+Z)">跳到底部資訊區</a>
 @endif
@@ -128,13 +127,15 @@
 
 <br>
 {{-- 主要內容區 --}}
-<main id="main-content" tabindex="-1" class="container-fluid">
+<main id="main-content" class="container-fluid">
+    <!-- 無障礙 Alt+C 精準焦點定位點 (防止 NVDA 語音自動連續朗讀整頁內容) -->
+    <a id="main-content-target" tabindex="-1" class="sr-only">::: 主要內容區</a>
     @yield('content')
 </main>
 <br>
 <br>
 
-{{-- 下方底部資訊區 (由 index.blade.php 等頁面自行注入) --}}
+{{-- 下方底部資訊區 --}}
 <div>
     @yield('footer')
 </div>
@@ -151,42 +152,25 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     /* =========================================================
-       全域 AccessKey 無障礙快捷鍵與焦點鎖定 (Prevent default URL hash)
+       全域 AccessKey 無障礙快捷鍵與焦點精準定位
        ========================================================= */
 
-    // 1. 上方主要導覽區 (Alt + U)
-    $(document).on('click', 'a[href="#navbar"], a[href="#page-top"], a[accesskey="U"]', function(e) {
+    // 中央主要內容區 (Alt + C)
+    $(document).on('click', 'a[href="#main-content"], a[href="#main-content-target"], a[accesskey="C"]', function(e) {
         e.preventDefault();
-        
-        var $nav = $('#navbar');
-        if (!$nav.length) {
-            $nav = $('.navbar').first();
+        var $target = $('#main-content-target');
+        if (!$target.length) {
+            $target = $('#main-content');
         }
-        if (!$nav.length) {
-            $nav = $('#navbar-container');
-        }
-
-        if ($nav.length) {
-            $nav.attr('tabindex', '-1').focus();
+        if ($target.length) {
+            $target.focus();
             $('html, body').animate({
-                scrollTop: 0
+                scrollTop: $target.offset().top - 15
             }, 100);
         }
     });
 
-    // 2. 中央主要內容區 (Alt + C)
-    $(document).on('click', 'a[href="#main-content"], a[accesskey="C"]', function(e) {
-        e.preventDefault();
-        var $main = $('#main-content');
-        if ($main.length) {
-            $main.attr('tabindex', '-1').focus();
-            $('html, body').animate({
-                scrollTop: $main.offset().top - 15
-            }, 100);
-        }
-    });
-
-    // 3. 下方底部資訊區 (Alt + Z) - 僅在頁面有 #footer 時作用
+    // 下方底部資訊區 (Alt + Z)
     $(document).on('click', 'a[href="#footer"], a[accesskey="Z"]', function(e) {
         e.preventDefault();
         var $footer = $('#footer');

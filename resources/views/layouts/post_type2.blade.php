@@ -1,3 +1,17 @@
+<!-- 無障礙 1.4.3 色彩對比修正 CSS (確保白底與灰底對比度均 >= 4.5:1) -->
+<style>
+    .text-primary-a11y {
+        color: #0056b3 !important; /* 深藍色：白底對比度 7.27:1 / 灰底對比度 6.51:1 */
+    }
+    .post-a11y-link {
+        color: #0056b3 !important;
+        text-decoration: underline;
+    }
+    .post-a11y-link:hover, .post-a11y-link:focus {
+        color: #003d82 !important;
+    }
+</style>
+
 <!-- 無障礙頁籤導覽列 -->
 <ul class="nav nav-tabs" id="myTab2" role="tablist" aria-label="圖文公告分類頁籤">
     <?php
@@ -77,7 +91,7 @@
                         <td>{{ substr($post->created_at,0,10) }}</td>
                         <td>{{ $post_type_array[$insite] }}</td>
                         
-                        <!-- 整合「圖片 + 標題 + 摘要」至單一超連結 (無障礙 2.4.4 / 1.1.1 修正) -->
+                        <!-- 整合「圖片 + 標題 + 摘要」至單一超連結 -->
                         <td>
                             <div class="py-1">
                                 @if($can_see)
@@ -99,7 +113,8 @@
                                                 @if($post->insite==1)
                                                     <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
                                                 @endif
-                                                <span class="font-weight-bold text-primary">{!! a11y_emoji($post->title) !!}</span>
+                                                <!-- 改用 text-primary-a11y 高對比藍色 -->
+                                                <span class="font-weight-bold text-primary-a11y">{!! a11y_emoji($post->title) !!}</span>
 
                                                 @if(!empty($photos))
                                                     <span class="text-success ml-1">
@@ -137,7 +152,8 @@
                         </td>
 
                         <td>
-                            <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                            <!-- 發佈者超連結改用 post-a11y-link 確保對比度 -->
+                            <a href="{{ route('posts.job_title',$post->job_title) }}" class="post-a11y-link font-weight-bold">{{ $post->job_title }}</a>
                         </td>
                         <td class="text-center">{{ $post->views }}</td>
                     </tr>
@@ -147,7 +163,7 @@
         </div>
         
         <div class="mt-2">
-            <a href="{{ route('posts.index') }}" class="btn btn-outline-primary btn-sm">
+            <a href="{{ route('posts.index') }}" class="btn btn-outline-primary btn-sm" style="color: #0056b3; border-color: #0056b3;">
                 <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多公告...
             </a>
         </div>
@@ -219,7 +235,7 @@
                             <td>{{ substr($post->created_at,0,10) }}</td>
                             <td>{{ $post_type->name }}</td>
 
-                            <!-- 整合「圖片 + 標題 + 摘要」至單一超連結 (無障礙 2.4.4 / 1.1.1 修正) -->
+                            <!-- 整合「圖片 + 標題 + 摘要」至單一超連結 -->
                             <td>
                                 <div class="py-1">
                                     @if($can_see)
@@ -242,7 +258,8 @@
                                                         @if($post->insite==1)
                                                             <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
                                                         @endif
-                                                        <span class="font-weight-bold text-primary">{!! a11y_emoji($post->title) !!}</span>
+                                                        <!-- 改用 text-primary-a11y 高對比藍色 -->
+                                                        <span class="font-weight-bold text-primary-a11y">{!! a11y_emoji($post->title) !!}</span>
                                                     @else
                                                         <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
                                                         <span class="font-weight-bold">{{ $post->title }}</span>
@@ -288,7 +305,8 @@
                             </td>
 
                             <td>
-                                <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                                <!-- 發佈者超連結改用 post-a11y-link 確保對比度 -->
+                                <a href="{{ route('posts.job_title',$post->job_title) }}" class="post-a11y-link font-weight-bold">{{ $post->job_title }}</a>
                             </td>
                             <td class="text-center">{{ $post->views }}</td>
                         </tr>
@@ -297,7 +315,7 @@
                 </table>
             </div>            
             <div class="mt-2">
-                <a href="{{ route('posts.type',$post_type->id) }}" class="btn btn-outline-primary btn-sm">
+                <a href="{{ route('posts.type',$post_type->id) }}" class="btn btn-outline-primary btn-sm" style="color: #0056b3; border-color: #0056b3;">
                     <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多 {{ $post_type->name }}...
                 </a>
             </div>

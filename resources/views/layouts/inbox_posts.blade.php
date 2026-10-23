@@ -1,3 +1,15 @@
+<!-- 無障礙 1.4.3 色彩對比修正 CSS (確保白底與灰底對比度均 >= 4.5:1) -->
+<style>
+    .post-a11y-link {
+        color: #0056b3 !important;
+        text-decoration: none;
+    }
+    .post-a11y-link:hover, .post-a11y-link:focus {
+        color: #003d82 !important;
+        text-decoration: underline !important;
+    }
+</style>
+
 <?php
 $inbox_posts = \App\Post::where('inbox',1)
                 ->where(function ($query) {
@@ -8,7 +20,8 @@ $inbox_posts = \App\Post::where('inbox',1)
 ?>
 <div class="table-responsive">
     {{-- 無障礙表格結構修正：加入 aria-label 描述表格用途 --}}
-    <table class="table table-striped" style="word-break:break-all;" aria-label="常駐公告列表">
+    <table class="table table-striped align-middle" style="word-break:break-all;" aria-label="常駐公告列表">
+        <caption class="sr-only">常駐公告表格列表</caption>
         <thead class="thead-light">
         <tr>
             {{-- 無障礙 CS2140401C 修正：將 120px, 100px, 250px, 80px 全數改為 rem 相對單位 --}}
@@ -22,7 +35,7 @@ $inbox_posts = \App\Post::where('inbox',1)
                 標題
             </th>
             <th scope="col" class="text-nowrap" style="width: 6.25rem;">發佈者</th>
-            <th scope="col" class="text-nowrap" style="width: 5rem;">點閱</th>
+            <th scope="col" class="text-nowrap text-center" style="width: 5rem;">點閱</th>
         </tr>
         </thead>
         <tbody>
@@ -61,14 +74,14 @@ $inbox_posts = \App\Post::where('inbox',1)
                 $photos = get_files(storage_path('app/public/'.$school_code.'/posts/'.$post->id.'/photos'));
                 ?>
                 @if($post->insite==1)
-                    <span class="text-danger">[ 內部公告 ]</span>
+                    <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
                 @endif
 
-                {{-- 無障礙 HM1240401C 修正：補上完整標題提示說明 --}}
+                {{-- 改用高對比藍色連結與 a11y_emoji --}}
                 @if($can_see)
-                    <a href="{{ route('posts.show',$post->id) }}" title="閱讀公告：{{ $post->title }}" aria-label="閱讀公告：{{ $post->title }}">{{ $title }}</a>
+                    <a href="{{ route('posts.show',$post->id) }}" class="post-a11y-link font-weight-bold" title="閱讀公告：{{ $post->title }}" aria-label="閱讀公告：{{ $post->title }}">{!! a11y_emoji($title) !!}</a>
                 @else
-                    {{ $title }}
+                    <span class="text-secondary">{{ $title }}</span>
                 @endif
 
                 {{-- 無障礙 1.1.1 修正：圖示補上 aria-hidden 與隱藏朗讀文字 --}}
@@ -86,10 +99,10 @@ $inbox_posts = \App\Post::where('inbox',1)
                 @endif
             </td>
             <td>
-                {{-- 無障礙 HM1240401C 修正：補上 title 與 aria-label --}}
-                <a href="{{ route('posts.job_title',$post->job_title) }}" title="查看發佈者 {{ $post->job_title }} 的所有公告" aria-label="查看發佈者 {{ $post->job_title }} 的所有公告">{{ $post->job_title }}</a>
+                {{-- 發佈者超連結套用高對比藍色 --}}
+                <a href="{{ route('posts.job_title',$post->job_title) }}" class="post-a11y-link font-weight-bold" title="查看發佈者 {{ $post->job_title }} 的所有公告" aria-label="查看發佈者 {{ $post->job_title }} 的所有公告">{{ $post->job_title }}</a>
             </td>
-            <td>
+            <td class="text-center">
                 {{ $post->views }}
             </td>
         </tr>

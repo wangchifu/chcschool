@@ -19,6 +19,9 @@
             <!-- 關鍵修正：加入 data-pause="false" 防止手機觸控離開後自動喚醒輪播 -->
             <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }} position-relative" data-ride="carousel" data-pause="false" role="region" aria-label="焦點新聞輪播圖">
                 
+                <!-- 無障礙檢測修正：新增即時動態報讀區塊 (aria-live region) -->
+                <div id="carouselAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
                 <!-- 無障礙檢測修正：獨立置於右上角半透明按鈕，不擋住左右按鍵 -->
                 <div class="carousel-accessibility-control" style="position: absolute; top: 15px; right: 15px; z-index: 1050;">
                     <button type="button" id="carouselToggleBtn" class="btn btn-pause" aria-label="暫停輪播圖片" aria-pressed="false">
@@ -230,8 +233,9 @@
 
         /* 無障礙控制：輪播圖暫停 / 播放 & 分頁點鍵盤操作控制器 */
         $(document).ready(function() {
-            var $carousel =$('#carouselExampleIndicators');
-            var $toggleBtn =$('#carouselToggleBtn');
+            var $carousel = $('#carouselExampleIndicators');
+            var $toggleBtn = $('#carouselToggleBtn');
+            var $announcer = $('#carouselAnnouncer');
             var isPaused = false;
 
             if ($carousel.length) {
@@ -244,10 +248,22 @@
                     }
                 });
 
-                // 2. 無障礙狀態同步：當輪播圖切換時，自動同步更新 aria-selected 屬性
+                // 2. 無障礙狀態同步與即時語音報讀（解決上一張、下一張與分頁切換時報讀器無反應之問題）
                 $carousel.on('slid.bs.carousel', function (e) {
-                    var $indicators =$(this).find('.carousel-indicators li');
-                    $indicators.attr('aria-selected', 'false');$indicators.eq(e.to).attr('aria-selected', 'true');
+                    var $indicators = $(this).find('.carousel-indicators li');
+                    $indicators.attr('aria-selected', 'false');
+                    $indicators.eq(e.to).attr('aria-selected', 'true');
+
+                    // 擷取切換後當前 Active 圖片之 alt 說明
+                    var $activeItem = $(e.relatedTarget);
+                    var imgAlt = $activeItem.find('img').attr('alt') || '';
+                    var currentIndex = e.to + 1;
+                    var totalSlides = $indicators.length;
+
+                    // 寫入 aria-live 動態區塊，觸發螢幕閱讀器自動報讀當前圖片訊息
+                    if ($announcer.length) {
+                        $announcer.text('已切換至第 ' + currentIndex + ' 張投影片（共 ' + totalSlides + ' 張）：' + imgAlt);
+                    }
                 });
 
                 if ($toggleBtn.length) {

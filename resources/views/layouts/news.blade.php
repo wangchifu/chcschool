@@ -1,3 +1,19 @@
+<!-- 無障礙 1.4.3 色彩對比修正 CSS (確保白底與灰底對比度均 >= 4.5:1) -->
+<style>
+    .text-primary-a11y {
+        color: #0056b3 !important; /* 深藍色：白底對比度 7.04:1 / 灰底對比度 6.29:1 */
+    }
+    .btn-outline-primary-a11y {
+        color: #0056b3 !important;
+        border-color: #0056b3 !important;
+    }
+    .btn-outline-primary-a11y:hover, .btn-outline-primary-a11y:focus {
+        color: #ffffff !important;
+        background-color: #0056b3 !important;
+        border-color: #0056b3 !important;
+    }
+</style>
+
 @auth
     @can('create',\App\Post::class)
         <a href="{{ route('posts.create') }}" class="btn btn-success btn-sm">
@@ -49,13 +65,13 @@
             <!-- 編號欄 -->
             <th scope="row" class="text-center align-top pt-3">{{ $i }}</th>
             
-            <!-- 內容與縮圖整合欄 (無障礙 2.4.4 / 1.1.1 修正：將縮圖與文字合併為單一超連結，縮圖設為 aria-hidden) -->
+            <!-- 內容與縮圖整合欄 -->
             <td>
                 <div class="py-1">
                     @if($can_see)
                         <a href="{{ route('posts.show',$post->id) }}" class="d-flex flex-column flex-md-row align-items-start text-decoration-none w-100" title="查看公告：{{ $post->title }}" aria-label="查看公告：{{ $post->title }}">
                             
-                            {{-- 有縮圖時置左呈現，alt="" 且 aria-hidden="true" 避免語音重複報讀 --}}
+                            {{-- 有縮圖時置左呈現 --}}
                             @if($post->title_image)
                                 <div class="mr-md-3 mb-2 mb-md-0 flex-shrink-0" style="width: 120px;">
                                     <img src="{{ asset('storage/'.$school_code.'/posts/'.$post->id.'/title_image.png') }}" class="img-fluid rounded border shadow-sm" alt="" aria-hidden="true" style="object-fit: cover; height: 80px; width: 100%;">
@@ -74,7 +90,8 @@
                                     @if($post->insite==1)
                                         <span class="badge badge-danger">內部公告</span>
                                     @endif
-                                    <span class="font-weight-bold text-primary">{!! a11y_emoji($post->title) !!}</span>
+                                    <!-- 改用 text-primary-a11y 高對比藍色 -->
+                                    <span class="font-weight-bold text-primary-a11y">{!! a11y_emoji($post->title) !!}</span>
                                 </div>
                                 
                                 <?php
@@ -132,8 +149,8 @@
     </tbody>
 </table>
 
-<div class="mt-2">
-    <a href="{{ route('posts.index') }}" class="btn btn-outline-primary btn-sm">
+<div class="mt-2"> 
+    <a href="{{ route('posts.index') }}" class="btn btn-outline-primary-a11y btn-sm">
         <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多公告...
     </a>
 </div>

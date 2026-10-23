@@ -78,13 +78,14 @@
 
 <nav class="navbar navbar-expand-lg {{ $nav_color }} {{ $fixed_top }}" id="mainNav" role="navigation" aria-label="主要選單導覽">
     <div class="container-fluid">        
-        <a class="navbar-brand js-scroll-trigger d-inline-flex align-items-center" href="{{ route('index') }}" title="返回網站首頁">
+        {{-- 無障礙 1.1.1 修正：提供機關標誌完整 alt 說明，並將相鄰重複文字設為 aria-hidden --}}
+        <a class="navbar-brand js-scroll-trigger d-inline-flex align-items-center" href="{{ route('index') }}" title="返回首頁 - {{ $setup->site_name }}">
             @if(file_exists(storage_path('app/public/'.$school_code.'/title_image/logo.ico')))
-                <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="mr-2" alt="" aria-hidden="true">
+                <img src="{{ asset('storage/'.$school_code.'/title_image/logo.ico') }}" width="30" height="30" class="mr-2" alt="{{ $setup->site_name }}標誌">
             @else
-                <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="mr-2" alt="" aria-hidden="true">
+                <img src="{{ asset('images/site_logo.png') }}" width="30" height="30" class="mr-2" alt="{{ $setup->site_name }}標誌">
             @endif
-            <span style="white-space: nowrap;">{{ $setup->site_name }}</span>
+            <span style="white-space: nowrap;" aria-hidden="true">{{ $setup->site_name }}</span>
         </a>        
         
         <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="切換導覽選單顯示">
@@ -111,7 +112,7 @@
                         <?php $is_sitemap_active = (trim($__env->yieldContent('nav_sitemap_active')) == 'active'); ?>
                         <a class="nav-link" href="{{ route('sitemap') }}" @if($is_sitemap_active) aria-current="page" @endif title="網站導覽" aria-label="網站導覽">
                             <i class="fas fa-sitemap" aria-hidden="true"></i>
-                            <span>導覽</span>
+                            <span>網站導覽</span>
                             @if($is_sitemap_active) <span class="sr-only">(目前頁面)</span> @endif
                         </a>
                     </li>

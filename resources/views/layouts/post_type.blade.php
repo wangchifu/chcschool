@@ -1,3 +1,24 @@
+<!-- 無障礙 1.4.3 色彩對比修正 CSS (確保白底與灰底對比度均 >= 4.5:1) -->
+<style>
+    .post-a11y-link {
+        color: #0056b3 !important;
+        text-decoration: none !important; /* 平時無底線 */
+    }
+    .post-a11y-link:hover, .post-a11y-link:focus {
+        color: #003d82 !important;
+        text-decoration: underline !important; /* 滑鼠游標移入或 Tab 鍵焦點時顯示底線 */
+    }
+    .btn-outline-primary-a11y {
+        color: #0056b3 !important;
+        border-color: #0056b3 !important;
+    }
+    .btn-outline-primary-a11y:hover, .btn-outline-primary-a11y:focus {
+        color: #ffffff !important;
+        background-color: #0056b3 !important;
+        border-color: #0056b3 !important;
+    }
+</style>
+
 <!-- 無障礙頁籤導覽列 -->
 <ul class="nav nav-tabs" id="postTab" role="tablist" aria-label="公告分類頁籤">
     @if($setup->all_post)
@@ -44,7 +65,7 @@
             @endauth
 
             <div class="table-responsive">
-                <table class="table table-striped" style="word-break:break-all;" aria-label="全部公告列表">
+                <table class="table table-striped align-middle" style="word-break:break-all;" aria-label="全部公告列表">
                     <caption class="sr-only">全部公告表格列表</caption>
                     <thead class="thead-light">
                     <tr>
@@ -52,7 +73,7 @@
                         <th scope="col" style="width: 100px;">類別</th>
                         <th scope="col" style="min-width: 250px;">標題</th>
                         <th scope="col" style="width: 120px;">發佈者</th>
-                        <th scope="col" style="width: 80px;">點閱</th>
+                        <th scope="col" style="width: 80px;" class="text-center">點閱</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -85,9 +106,10 @@
                                     @endif
                                     
                                     @if($can_see)
-                                        <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
+                                        <!-- 改用高對比藍色連結與 a11y_emoji -->
+                                        <a href="{{ route('posts.show',$post->id) }}" class="post-a11y-link font-weight-bold">{!! a11y_emoji($post->title) !!}</a>
                                     @else                    
-                                        <span>{{ $post->title }}</span>
+                                        <span class="text-secondary">{{ $post->title }}</span>
                                     @endif
 
                                     {{-- 無障礙 HM1120201C 修正：補充隱藏式文字說明與 aria-hidden --}}
@@ -105,16 +127,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                                    <!-- 發佈者超連結套用高對比藍色 -->
+                                    <a href="{{ route('posts.job_title',$post->job_title) }}" class="post-a11y-link font-weight-bold">{{ $post->job_title }}</a>
                                 </td>
-                                <td>{{ $post->views }}</td>
+                                <td class="text-center">{{ $post->views }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <div class="mt-2">
-                <a href="{{ route('posts.index') }}" class="btn btn-outline-primary btn-sm">
+                <a href="{{ route('posts.index') }}" class="btn btn-outline-primary-a11y btn-sm">
                     <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多公告...
                 </a>
             </div>            
@@ -156,7 +179,7 @@
             @endauth
 
             <div class="table-responsive">
-                <table class="table table-striped" style="word-break:break-all;" aria-label="{{ $post_type->name }} 分類公告列表">
+                <table class="table table-striped align-middle" style="word-break:break-all;" aria-label="{{ $post_type->name }} 分類公告列表">
                     <caption class="sr-only">{{ $post_type->name }} 分類公告表格列表</caption>
                     <thead class="thead-light">
                     <tr>
@@ -164,7 +187,7 @@
                         <th scope="col" style="width: 100px;">類別</th>
                         <th scope="col" style="min-width: 250px;">標題</th>
                         <th scope="col" style="width: 120px;">發佈者</th>
-                        <th scope="col" style="width: 80px;">點閱</th>
+                        <th scope="col" style="width: 80px;" class="text-center">點閱</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -194,9 +217,10 @@
                                     @endif
 
                                     @if($can_see)
-                                        <a href="{{ route('posts.show',$post->id) }}" class="font-weight-bold">{{ $post->title }}</a>
+                                        <!-- 改用高對比藍色連結與 a11y_emoji -->
+                                        <a href="{{ route('posts.show',$post->id) }}" class="post-a11y-link font-weight-bold">{!! a11y_emoji($post->title) !!}</a>
                                     @else
-                                        <span>{{ $post->title }}</span>
+                                        <span class="text-secondary">{{ $post->title }}</span>
                                     @endif
 
                                     @if(!empty($photos))
@@ -213,16 +237,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('posts.job_title',$post->job_title) }}">{{ $post->job_title }}</a>
+                                    <!-- 發佈者超連結套用高對比藍色 -->
+                                    <a href="{{ route('posts.job_title',$post->job_title) }}" class="post-a11y-link font-weight-bold">{{ $post->job_title }}</a>
                                 </td>
-                                <td>{{ $post->views }}</td>
+                                <td class="text-center">{{ $post->views }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <div class="mt-2">
-                <a href="{{ route('posts.type',$post_type->id) }}" class="btn btn-outline-primary btn-sm">
+                <a href="{{ route('posts.type',$post_type->id) }}" class="btn btn-outline-primary-a11y btn-sm">
                     <i class="far fa-hand-point-up" aria-hidden="true"></i> 查看更多 {{ $post_type->name }}...
                 </a>
             </div>
