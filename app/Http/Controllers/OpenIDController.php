@@ -13,7 +13,7 @@ define('CLIENT_SECRET', env('CLIENT_SECRET'));
 define('AUTH_SECRET', '');
 //define('REDIR_URI0', 'http://openid.zipko.info/callback.php');
 //define('REDIR_URI0', 'https://newstu.chc.edu.tw/auth/callback');
-$url = $_SERVER['SERVER_NAME'];
+$url = request()->getHost();
 define('REDIR_URI0', 'https://'.$url.'/auth/callback');
 define('WELL_KNOWN_URL', 'https://chc.sso.edu.tw/.well-known/openid-configuration');
 // 預設0由設定檔的URL決定；設定為1則每次皆由WELL_KNOWN取回END POINT URL
