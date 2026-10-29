@@ -128,6 +128,22 @@ class DepartmentController extends Controller
         return view('logs.department_log', $data);
     }
 
+    public function edit_log(Log $log)
+    {
+        $department = Department::find($log->this_id);
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [
+            'log'=>$log,
+            'department'=>$department,
+            'group_array'=>$group_array,
+        ];
+        return view('departments.edit_log', $data);
+    }
+
     public function delete_log(Log $log)
     {        
         $log->delete();        

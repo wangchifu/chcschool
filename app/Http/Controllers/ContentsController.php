@@ -144,6 +144,22 @@ class ContentsController extends Controller
         return view('logs.content_log', $data);
     }
 
+    public function edit_log(Log $log)
+    {       
+        $content = Content::find($log->this_id);        
+        $groups = Group::orderBy('id')->get();
+        $group_array = [];
+        foreach($groups as $group){
+            $group_array[$group->id] = $group->name;
+        }
+        $data = [     
+            'log'=>$log,
+            'content'=>$content,
+            'group_array'=>$group_array,
+        ];
+        return view('contents.edit_log',$data);
+    }
+
     public function delete_log(Log $log)
     {        
         $log->delete();        

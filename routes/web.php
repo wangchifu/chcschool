@@ -693,6 +693,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('departments', 'DepartmentController@index')->name('departments.index');
     Route::get('departments/create', 'DepartmentController@create')->name('departments.create');
     Route::get('departments/show_log/{id}', 'DepartmentController@show_log')->name('departments.show_log');
+    Route::get('departments/edit_log/{log}', 'DepartmentController@edit_log')->name('departments.edit_log');
     Route::get('departments/delete_log/{log}', 'DepartmentController@delete_log')->name('departments.delete_log');
     Route::post('departments', 'DepartmentController@store')->name('departments.store');
     Route::delete('departments/{department}', 'DepartmentController@destroy')->name('departments.destroy');
@@ -704,6 +705,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('contents/search/{tag}', 'ContentsController@search')->name('contents.search');
     Route::get('contents/create', 'ContentsController@create')->name('contents.create');
     Route::get('contents/show_log/{id}', 'ContentsController@show_log')->name('contents.show_log');
+    Route::get('contents/edit_log/{log}', 'ContentsController@edit_log')->name('contents.edit_log');
     Route::get('contents/delete_log/{log}', 'ContentsController@delete_log')->name('contents.delete_log');
     Route::post('contents/store', 'ContentsController@store')->name('contents.store');
     Route::delete('contents/{content}', 'ContentsController@destroy')->name('contents.destroy');

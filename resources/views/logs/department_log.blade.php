@@ -10,6 +10,7 @@
                 <div class="card my-4">
                     <h3 class="card-header text-danger">
                         {{ $log->created_at }} 由 {{ $log->user->name }} 送出
+                        <a href="{{  route('departments.edit_log',$log->id) }}" class="btn btn-primary btn-sm">載入編輯此 log</a>
                         <a href="{{  route('departments.delete_log',$log->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('確定？')">刪除此 log</a>                    
                     </h3>                    
                     <div class="card-body">
