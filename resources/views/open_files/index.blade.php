@@ -6,12 +6,40 @@
 
 @section('content')
 <style>
+    /* ==========================================================================
+       無障礙 WCAG 1.4.3 對比度修正 (修復藍字白底 3.98:1 與藍字灰底 3.54:1 缺失)
+       ========================================================================== */
+    /* 全區連結、文字與按鈕藍色色彩覆蓋 (#0056b3 對白底 7.04:1 / 對灰底 #F2F2F2 為 6.29:1) */
+    a,
+    .text-primary,
+    .btn-link,
+    .table a,
+    nav a {
+        color: #0056b3 !important;
+    }
+
+    a:hover,
+    a:focus,
+    .text-primary:hover,
+    .btn-link:hover,
+    .btn-link:focus,
+    .table a:hover,
+    nav a:hover {
+        color: #00224a !important;
+    }
+
+    /* 補充修飾：次要灰色說明文字對比度提升 (#495057 對白底為 7.5:1) */
+    .text-secondary {
+        color: #495057 !important;
+    }
+
     /* 無障礙 HM1020401C 修正：鍵盤 Focus 高對比視覺提示 */
     .table a:focus-visible,
     .table button:focus-visible,
     .card button:focus-visible,
-    .card a:focus-visible {
-        outline: 3px solid #0056b3 !important;
+    .card a:focus-visible,
+    nav a:focus-visible {
+        outline: 3px solid #003d82 !important;
         outline-offset: 2px !important;
     }
 </style>
