@@ -7,63 +7,64 @@
 @section('content')
 <style>
     /* ==========================================================================
-       無障礙 WCAG 1.4.3 對比度修正 (修正藍字白底 3.98 與藍字灰底 3.35 缺失)
+       無障礙 WCAG 1.4.3 對比度修正 (僅限定於 .post-content-zone，防干擾導覽列 #mainNav)
        ========================================================================== */
-    /* 全區公告連結與文字色彩覆蓋 (#0056b3 對白底 7.04:1 / 對灰底 #F2F2F2 為 6.57:1) */
-    a,
-    .text-primary,
-    .btn-link {
+    /* 1. 限定公告內容區域內的連結與文字色彩 */
+    .post-content-zone a,
+    .post-content-zone .text-primary,
+    .post-content-zone .btn-link {
         color: #0056b3 !important;
     }
 
-    a:hover,
-    a:focus,
-    .text-primary:hover,
-    .btn-link:hover,
-    .btn-link:focus {
+    .post-content-zone a:hover,
+    .post-content-zone a:focus,
+    .post-content-zone .text-primary:hover,
+    .post-content-zone .btn-link:hover,
+    .post-content-zone .btn-link:focus {
         color: #00224a !important;
     }
 
-    /* 1. 頁籤連結：非作用中 #0056b3 (7.04:1)，作用中/Focus #003d82 (10.36:1) */
-    .nav-tabs .nav-link {
+    /* 2. 頁籤連結：非作用中 #0056b3 (7.04:1)，作用中/Focus #003d82 (10.36:1) */
+    .post-content-zone .nav-tabs .nav-link {
         color: #0056b3 !important;
         font-weight: 600;
     }
-    .nav-tabs .nav-link.active {
+    .post-content-zone .nav-tabs .nav-link.active {
         color: #003d82 !important;
         font-weight: 700;
         border-bottom: 3px solid #003d82 !important;
     }
 
-    /* 2. 分頁導覽：對比度提升至 7.04:1 (白底) */
-    .pagination .page-link {
+    /* 3. 分頁導覽：對比度提升至 7.04:1 (白底) */
+    .post-content-zone .pagination .page-link {
         color: #0056b3 !important;
         font-weight: 600;
     }
 
-    .pagination .page-item.active .page-link {
+    .post-content-zone .pagination .page-item.active .page-link {
         color: #ffffff !important;
         background-color: #0056b3 !important;
         border-color: #0056b3 !important;
     }
 
-    .pagination .page-link:hover,
-    .pagination .page-link:focus {
+    .post-content-zone .pagination .page-link:hover,
+    .post-content-zone .pagination .page-link:focus {
         color: #00224a !important;
         background-color: #e9ecef !important;
     }
 
-    /* 無障礙 2.4.7 焦點可見修正 */
-    a:focus-visible,
-    .nav-tabs .nav-link:focus-visible,
-    .pagination .page-link:focus-visible {
+    /* 4. 無障礙 2.4.7 焦點可見修正 */
+    .post-content-zone a:focus-visible,
+    .post-content-zone .nav-tabs .nav-link:focus-visible,
+    .post-content-zone .pagination .page-link:focus-visible {
         outline: 3px solid #003d82 !important;
         outline-offset: 2px !important;
         z-index: 5;
     }
 </style>
 
-<div class="row justify-content-center">
+<!-- 加上 post-content-zone 類別做範圍隔離 -->
+<div class="row justify-content-center post-content-zone">
     <div class="col-md-11">
         <!-- 無障礙 HM1010301C 修正：語意化頁面主標題 -->
         <h1 class="h2 mb-3">
