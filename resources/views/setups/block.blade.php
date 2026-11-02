@@ -37,52 +37,54 @@
                     @if(isset($setup_cols) && count($setup_cols) > 0)
                         <div class="row justify-content-center">
                             @foreach($setup_cols as $setup_col)
-                                <div class="col-lg-{{ $setup_col->num }} mb-3">
-                                    <div class="column-box p-3 bg-white border border-info rounded h-100 shadow-sm">
-                                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                                            <strong class="text-info">
-                                                <i class="fas fa-columns"></i> 欄位 ID: {{ $setup_col->id }}
-                                            </strong>
-                                            <span class="badge badge-info">col-lg-{{ $setup_col->num }}</span>
-                                        </div>
+                                @if($setup_col->num > 0)
+                                    <div class="col-lg-{{ $setup_col->num }} mb-3">
+                                        <div class="column-box p-3 bg-white border border-info rounded h-100 shadow-sm">
+                                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                                                <strong class="text-info">
+                                                    <i class="fas fa-columns"></i> {{ $setup_col->title }} <small>ID: {{ $setup_col->id }}</small>
+                                                </strong>                                            
+                                                <span class="badge badge-info">col-lg-{{ $setup_col->num }}</span>
+                                            </div>
 
-                                        <?php 
-                                            // 取得該欄位內的區塊資料
-                                            $col_blocks = isset($up_blocks[$setup_col->id]) ? $up_blocks[$setup_col->id] : (isset($blocks[$setup_col->id]) ? $blocks[$setup_col->id] : []);
-                                        ?>
+                                            <?php 
+                                                // 取得該欄位內的區塊資料
+                                                $col_blocks = isset($up_blocks[$setup_col->id]) ? $up_blocks[$setup_col->id] : (isset($blocks[$setup_col->id]) ? $blocks[$setup_col->id] : []);
+                                            ?>
 
-                                        @if(count($col_blocks) > 0)
-                                            @foreach($col_blocks as $k1 => $v1)
-                                                <?php
-                                                    $is_sys = (str_contains($v1['title'], "(系統區塊)") || str_contains($v1['title'], "榮譽榜跑馬燈"));
-                                                    $text_color = $is_sys ? "text-info font-weight-bold" : "text-dark font-weight-bold";
-                                                ?>
-                                                <!-- 單一區塊框線卡片 -->
-                                                <div class="card mb-2 border border-secondary shadow-sm">
-                                                    <div class="card-body p-2">
-                                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                                            <span class="badge badge-secondary">排序: {{ $v1['order_by'] }}</span>
-                                                            <small class="text-muted"><code>id="block{{ $k1 }}"</code></small>
-                                                        </div>
-                                                        <div class="my-2 {{ $text_color }}">
-                                                            {{ $v1['title'] }}
-                                                        </div>
-                                                        <div class="d-flex justify-content-between align-items-center mt-2 pt-1 border-top">
-                                                            <small class="text-muted"><i class="fas fa-tag"></i> {{ $v1['col'] }}</small>
-                                                            <a href="javascript:open_window('{{ route('setups.edit_block', $k1) }}','新視窗')" class="btn btn-outline-primary btn-sm px-2 py-0">
-                                                                <i class="fas fa-edit"></i> 編輯
-                                                            </a>
+                                            @if(count($col_blocks) > 0)
+                                                @foreach($col_blocks as $k1 => $v1)
+                                                    <?php
+                                                        $is_sys = (str_contains($v1['title'], "(系統區塊)") || str_contains($v1['title'], "榮譽榜跑馬燈"));
+                                                        $text_color = $is_sys ? "text-info font-weight-bold" : "text-dark font-weight-bold";
+                                                    ?>
+                                                    <!-- 單一區塊框線卡片 -->
+                                                    <div class="card mb-2 border border-secondary shadow-sm">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <span class="badge badge-secondary">排序: {{ $v1['order_by'] }}</span>
+                                                                <small class="text-muted"><code>id="block{{ $k1 }}"</code></small>
+                                                            </div>
+                                                            <div class="my-2 {{ $text_color }}">
+                                                                {{ $v1['title'] }}
+                                                            </div>
+                                                            <div class="d-flex justify-content-between align-items-center mt-2 pt-1 border-top">
+                                                                <small class="text-muted"><i class="fas fa-tag"></i> {{ $v1['col'] }}</small>
+                                                                <a href="javascript:open_window('{{ route('setups.edit_block', $k1) }}','新視窗')" class="btn btn-outline-primary btn-sm px-2 py-0">
+                                                                    <i class="fas fa-edit"></i> 編輯
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                @endforeach
+                                            @else
+                                                <div class="text-center text-muted py-4 border border-dashed rounded bg-light">
+                                                    <small>此欄位暫無上架區塊</small>
                                                 </div>
-                                            @endforeach
-                                        @else
-                                            <div class="text-center text-muted py-4 border border-dashed rounded bg-light">
-                                                <small>此欄位暫無上架區塊</small>
-                                            </div>
-                                        @endif
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             @endforeach
                         </div>
                     @else
