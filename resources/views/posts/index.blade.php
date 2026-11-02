@@ -6,7 +6,24 @@
 
 @section('content')
 <style>
-    /* 無障礙 WCAG 1.4.3 對比度修正：頁籤、分頁與焦點高對比樣式 */
+    /* ==========================================================================
+       無障礙 WCAG 1.4.3 對比度修正 (修正藍字白底 3.98 與藍字灰底 3.35 缺失)
+       ========================================================================== */
+    /* 全區公告連結與文字色彩覆蓋 (#0056b3 對白底 7.04:1 / 對灰底 #F2F2F2 為 6.57:1) */
+    a,
+    .text-primary,
+    .btn-link {
+        color: #0056b3 !important;
+    }
+
+    a:hover,
+    a:focus,
+    .text-primary:hover,
+    .btn-link:hover,
+    .btn-link:focus {
+        color: #00224a !important;
+    }
+
     /* 1. 頁籤連結：非作用中 #0056b3 (7.04:1)，作用中/Focus #003d82 (10.36:1) */
     .nav-tabs .nav-link {
         color: #0056b3 !important;
@@ -37,6 +54,7 @@
     }
 
     /* 無障礙 2.4.7 焦點可見修正 */
+    a:focus-visible,
     .nav-tabs .nav-link:focus-visible,
     .pagination .page-link:focus-visible {
         outline: 3px solid #003d82 !important;

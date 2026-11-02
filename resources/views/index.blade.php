@@ -19,8 +19,8 @@
             <!-- 關鍵修正：加入 data-pause="false" 防止手機觸控離開後自動喚醒輪播 -->
             <div id="carouselExampleIndicators" class="carousel slide {{ $carousel_fade }} position-relative" data-ride="carousel" data-pause="false" role="region" aria-label="焦點新聞輪播圖">
                 
-                <!-- 無障礙檢測修正：新增即時動態報讀區塊 (aria-live region) -->
-                <div id="carouselAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+                <!-- 無障礙檢測 AR2410301E 修正：即時動態狀態報讀區塊 (role="status" aria-live="polite") -->
+                <div id="carouselAnnouncer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
                 <!-- 無障礙檢測修正：獨立置於右上角半透明按鈕，不擋住左右按鍵 -->
                 <div class="carousel-accessibility-control" style="position: absolute; top: 15px; right: 15px; z-index: 1050;">
@@ -114,7 +114,7 @@
                             style="height: 25px; overflow: hidden; position: relative; background: transparent;">                            
                             
                             <div class="marquee-inner" id="marquee-content">
-                                @foreach($school_marquees as$school_marquee)
+                                @foreach($school_marquees as $school_marquee)
                                     <span class="marquee-item" style="margin-right: 50px; display: inline-block;">
                                         <span aria-hidden="true">📣</span> {!! a11y_emoji($school_marquee->title) !!}
                                     </span>
@@ -128,9 +128,9 @@
         @endif
     @endif
     <div class="row justify-content-center">
-        @foreach($setup_cols as$setup_col)
+        @foreach($setup_cols as $setup_col)
             <div class="col-lg-{{ $setup_col->num }}">
-                @foreach($blocks[$setup_col->id] as$block)
+                @foreach($blocks[$setup_col->id] as $block)
                     <?php
                         if(!is_null($block->block_color)){
                             $block_color = explode(',',$block->block_color);
@@ -237,10 +237,36 @@
             var $toggleBtn = $('#carouselToggleBtn');
             var $announcer = $('#carouselAnnouncer');
             var isPaused = false;
+            var userActionPrefix = ''; // 記錄使用者手動點擊或按鍵切換的動作類型 ('上一張', '下一張', '第 X 張')
 
             if ($carousel.length) {
 
-                // 1. 無障礙 2.1.1 核心修正：分頁點支援鍵盤按下 Enter (13) 或 Space (32) 觸發切換
+                // 1. 監聽使用者手動觸發按鈕，賦予動作前綴詞
+                $carousel.find('.carousel-control-prev').on('click keydown', function() {
+                    userActionPrefix = '上一張';
+                });
+
+                $carousel.find('.carousel-control-next').on('click keydown', function() {
+                    userActionPrefix = '下一張';
+                });
+
+                $carousel.find('.carousel-indicators li').on('click keydown', function(e) {
+                    if (e.type === 'click' || e.which === 13 || e.which === 32) {
+                        var idx = $(this).data('slide-to') + 1;
+                        userActionPrefix = '第 ' + idx + ' 張';
+                    }
+                });
+
+                // 2. 鍵盤左右方向鍵切換 (當焦點在輪播區域內時)
+                $carousel.on('keydown', function(e) {
+                    if (e.which === 37) { // Left arrow
+                        userActionPrefix = '上一張';
+                    } else if (e.which === 39) { // Right arrow
+                        userActionPrefix = '下一張';
+                    }
+                });
+
+                // 3. 無障礙 2.1.1 修正：分頁點支援鍵盤按下 Enter (13) 或 Space (32) 觸發切換
                 $carousel.find('.carousel-indicators li').on('keydown', function(e) {
                     if (e.which === 13 || e.which === 32) {
                         e.preventDefault();
@@ -248,21 +274,27 @@
                     }
                 });
 
-                // 2. 無障礙狀態同步與即時語音報讀（解決上一張、下一張與分頁切換時報讀器無反應之問題）
+                // 4. 無障礙狀態同步與即時語音報讀 (關鍵修正：僅在「使用者手動切換」時報讀，背景自動播放時保持靜默)
                 $carousel.on('slid.bs.carousel', function (e) {
                     var $indicators = $(this).find('.carousel-indicators li');
                     $indicators.attr('aria-selected', 'false');
                     $indicators.eq(e.to).attr('aria-selected', 'true');
 
-                    // 擷取切換後當前 Active 圖片之 alt 說明
-                    var $activeItem = $(e.relatedTarget);
-                    var imgAlt = $activeItem.find('img').attr('alt') || '';
-                    var currentIndex = e.to + 1;
-                    var totalSlides = $indicators.length;
+                    // 僅當 userActionPrefix 不為空（即使用者主動操作）時才更新語音報讀區塊
+                    if (userActionPrefix !== '') {
+                        var $activeItem = $(e.relatedTarget);
+                        var imgAlt = $activeItem.find('img').attr('alt') || '';
+                        var announcementText = userActionPrefix + '，' + imgAlt;
 
-                    // 寫入 aria-live 動態區塊，觸發螢幕閱讀器自動報讀當前圖片訊息
-                    if ($announcer.length) {
-                        $announcer.text('已切換至第 ' + currentIndex + ' 張投影片（共 ' + totalSlides + ' 張）：' + imgAlt);
+                        if ($announcer.length) {
+                            $announcer.text(''); // 先清空舊內容，確保螢幕報讀器能偵測到 DOM 變化
+                            setTimeout(function() {
+                                $announcer.text(announcementText);
+                            }, 50);
+                        }
+
+                        // 報讀後立刻重置，防止影響隨後的背景自動播放
+                        userActionPrefix = '';
                     }
                 });
 
