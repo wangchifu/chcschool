@@ -46,7 +46,7 @@
                         @endif
                         @if(auth()->user()->admin)                        
                             <a href="#" class="btn btn-danger btn-sm" onclick="if(confirm('確定刪除？')) document.getElementById('delete{{ $department->id }}').submit();else return false;" title="刪除此頁面" aria-label="刪除此頁面"><i class="fas fa-trash" aria-hidden="true"></i> 刪除</a>
-                            {{ Form::open(['route' => ['contents.destroy',$department->id], 'method' => 'DELETE','id'=>'delete'.$department->id]) }}
+                            {{ Form::open(['route' => ['departments.destroy',$department->id], 'method' => 'DELETE','id'=>'delete'.$department->id]) }}
                             {{ Form::close() }}
                         @endif                        
                         @if(auth()->user()->admin)

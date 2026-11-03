@@ -99,8 +99,20 @@ class OpenIDController extends Controller
       $userinfo = $obj->getUserinfo($token_ep2 ,session('access_token'), true);
       $profile = $obj->getUserinfo("https://chc.sso.edu.tw/cncresource/api/v1/personid" ,session('access_token'), true);
       $edufile = $obj->getUserinfo("https://chc.sso.edu.tw/cncresource/api/v1/eduinfo" ,session('access_token'), true);
-      if( !$userinfo) {
+      if( !$userinfo ) {
         die ("無法取得 USER INFO");
+      }
+
+      if( !$profile ){
+        die ("無法取得 PROFILE");
+      }
+
+      if( empty($profile['personid']) ){
+        die ("無法取得 PERSONID");
+      }      
+
+      if( !$edufile ){
+        die ("無法取得 EDUFILE");
       }
 
 
