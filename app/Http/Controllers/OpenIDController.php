@@ -212,7 +212,8 @@ class OpenIDController extends Controller
             }
             
           //是否已有此帳號
-            $user = User::where('edu_key', $user_obj['personid'])                
+            $user = User::where('edu_key', $user_obj['personid'])
+                ->where('login_type','openID')
                 ->first();
 
             if (empty($user)) {
