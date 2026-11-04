@@ -253,7 +253,8 @@ class openid {
           'content' => ''
         ));
       $context = stream_context_create($options);
-      $result = file_get_contents(WELL_KNOWN_URL, false, $context);
+      $result = @file_get_contents(WELL_KNOWN_URL, false, $context);
+      if(!$result) die("從以下網址取資料失敗" . WELL_KNOWN_URL);
       $u = json_decode($result, $rtn_array);
       return $u;
     }
@@ -271,7 +272,8 @@ class openid {
             'content' => http_build_query($data)
           ));
       $context = stream_context_create($options);
-      $result = file_get_contents($token_ep, false, $context);
+      $result = @file_get_contents($token_ep, false, $context);
+      if(!$result) die("從以下網址取資料失敗" . $token_ep);
       $j = json_decode($result, $rtn_array);
       return $j;
     }
@@ -284,7 +286,8 @@ class openid {
           'content' => ''
         ));
       $context = stream_context_create($options);
-      $result = file_get_contents($jwks_uri, false, $context);
+      $result = @file_get_contents($jwks_uri, false, $context);
+      if(!$result) die("從以下網址取資料失敗" . $jwks_uri);
       $u = json_decode($result, true);
       return $u;
     }
@@ -298,7 +301,8 @@ class openid {
             'content' => ''
           ));
       $context = stream_context_create($options);
-      $result = file_get_contents($token_ep, false, $context);
+      $result = @file_get_contents($token_ep, false, $context);
+      if(!$result) die("從以下網址取資料失敗" . $token_ep);
       $u = json_decode($result,$rtn_array);
       return $u;
     }
