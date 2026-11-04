@@ -9,8 +9,10 @@ use App\User;
 // RP申請獲得
 define('CLIENT_ID', env('CLIENT_ID'));
 define('CLIENT_SECRET', env('CLIENT_SECRET'));
+//
 define('AUTH_SECRET', '');
-
+//define('REDIR_URI0', 'http://openid.zipko.info/callback.php');
+//define('REDIR_URI0', 'https://newstu.chc.edu.tw/auth/callback');
 $url = request()->getHost();
 define('REDIR_URI0', 'https://'.$url.'/auth/callback');
 define('WELL_KNOWN_URL', 'https://chc.sso.edu.tw/.well-known/openid-configuration');
@@ -21,25 +23,33 @@ define('AUTH_ENDPOINT', 'https://chc.sso.edu.tw/oidc/v1/azp');
 define('TOKEN_ENDPOINT', 'https://chc.sso.edu.tw/oidc/v1/token');
 define('USERINFO_ENDPOINT', 'https://chc.sso.edu.tw/oidc/v1/userinfo');
 define('JWKS_URI', 'https://chc.sso.edu.tw/oidc/v1/jwksets');
+//
+// PROFILE URL
 define('PROFILE_ENDPOINT', 'https://chc.sso.edu.tw/moeresource/api/v1/oidc/profile');
 
 class OpenIDController extends Controller
 {
     public function sso(){
-        $obj = new openid();
-        session(['azp_state' => rand(0, 9999999)]);
+        //session_start();
+        $obj= new openid();
+        session(['azp_state'=>rand(0,9999999)]);
         if(!session()->has('nonce')){
-            session(['nonce' => base64_encode(session('azp_state'))]);
+            session(['nonce'=>base64_encode(session('azp_state'))]);
         }else{
-            session(['nonce' => session('nonce')]);
+            session(['nonce'=>session('nonce')]);
         }
 
-        $auth_ep = AUTH_ENDPOINT;
+        //$_SESSION['azp_state']=rand(0,9999999); //隨機產生state值
+        //$_SESSION['nonce']=isset($_SESSION['nonce'])? $_SESSION['nonce']:base64_encode($_SESSION['azp_state']);
+
+        $auth_ep=AUTH_ENDPOINT;
         if(DYNAMICAL_ENDPOINT){
-            $auth_ep = $obj->getEndPoint()->authorization_endpoint;
+            $auth_ep=$obj->getEndPoint()->authorization_endpoint;
         }
         $link = $auth_ep . "?response_type=code&client_id=". CLIENT_ID ."&redirect_uri=".urlencode(REDIR_URI0) ."&scope=openid+email+profile+eduinfo+personid&state=".session('azp_state')."&nonce=".session('nonce');
+    //       dd($link);
         return redirect($link);
+
     }
 
     public function callback(Request $request){
@@ -59,7 +69,7 @@ class OpenIDController extends Controller
       
       $token_ep = TOKEN_ENDPOINT;
       if(DYNAMICAL_ENDPOINT){
-         $token_ep = $obj->getEndPoint()->token_endpoint;
+         $token_ep = $obj->getEndPoint()->token_endpoint; // 修正原始程式中未定義 $ep 的問題
       }
       
       // 2. 取得 Access Token
@@ -77,7 +87,7 @@ class OpenIDController extends Controller
 
       $token_ep2 = USERINFO_ENDPOINT;
       if(DYNAMICAL_ENDPOINT){
-        $token_ep2 = $obj->getEndPoint()->userinfo_endpoint;
+        $token_ep2 = $obj->getEndPoint()->userinfo_endpoint; // 修正原始程式中未定義 $ep 的問題
       }
 
       // 3. 取得 UserInfo / Profile / Edufile 資料
@@ -110,25 +120,28 @@ class OpenIDController extends Controller
         die("【除錯 10 失敗】EDUFILE 中的 titles 結構不符或為空！<br>Edufile 內容：<pre>" . print_r($edufile, true) . "</pre>");
       }
 
-      $user_obj['username'] = isset($userinfo['sub']) ? $userinfo['sub'] : '';
+      $user_obj['username'] = $userinfo['sub'] ?? '';
       $user_obj['password'] = "openID";
       $user_obj['success']  = 1;
-      $user_obj['name']     = isset($userinfo['name']) ? $userinfo['name'] : '';      
+      $user_obj['name']     = $userinfo['name'] ?? '';      
       $user_obj['personid'] = $profile['personid'];
       $user_obj['code']     = $edufile['schoolid'];
       $user_obj['title']    = $edufile['titles'][0]['titles'][0];
       $user_obj['kind']     = "";
               
       if ($user_obj['success']) {            
-          // 5. 由 config/tenants.php 讀取 Domain 與 資料庫名稱 mapping
-          $host = $request->getHost();
-          $mapping = config('tenants.mapping', []);
+          // 5. 多網域 / 多資料庫 Config 設定檢查
+          $database = config('app.database');
+          $host = $_SERVER['HTTP_HOST'] ?? '';
           
-          // 解析目前域名對應的資料庫名稱 (例如 s074308)
-          $d = isset($mapping[$host]) ? $mapping[$host] : config('tenants.default');
+          if (is_array($database) && isset($database[$host])) {
+              $d = $database[$host];
+          } else {
+              $d = env('DB_DATABASE');
+          }
 
           if (empty($d)) {
-              die("【除錯 11 失敗】無法解析對應的資料庫名稱 \$d！<br>Host: {$host}<br>tenants.mapping config: <pre>" . print_r($mapping, true) . "</pre>");
+              die("【除錯 11 失敗】無法解析對應的資料庫名稱 \$d！<br>Host: {$host}<br>app.database config: <pre>" . print_r($database, true) . "</pre>");
           }
 
           // 6. 學校 Config 檢查
@@ -149,13 +162,13 @@ class OpenIDController extends Controller
             return redirect($link)->withErrors(['gsuite_error' => [$message]]);              
           }
 
-          // 學校代碼與資料庫名稱比對 (如 s074308 -> 074308)
+          // 學校代碼比對邏輯
           if ($schoolCode != substr($d, 1, 6)) {
               $check_code = 0;
-              if(substr($d, 1, 6) == "074760" && $schoolCode == "074543"){ $check_code = 1; }
-              if(substr($d, 1, 6) == "074541" && $schoolCode == "074774"){ $check_code = 1; }
-              if(substr($d, 1, 6) == "074542" && $schoolCode == "074778"){ $check_code = 1; }
-              if(substr($d, 1, 6) == "074537" && $schoolCode == "074745"){ $check_code = 1; }                                                
+              if(substr($d, 1, 6) == "074760" and $schoolCode == "074543"){ $check_code = 1; }
+              if(substr($d, 1, 6) == "074541" and $schoolCode == "074774"){ $check_code = 1; }
+              if(substr($d, 1, 6) == "074542" and $schoolCode == "074778"){ $check_code = 1; }
+              if(substr($d, 1, 6) == "074537" and $schoolCode == "074745"){ $check_code = 1; }                                                
               
               if ($check_code == 0) {
                   $message = "非本校教職員生";
@@ -183,7 +196,7 @@ class OpenIDController extends Controller
                 die("【除錯 14 失敗】路由 'stu.index' 不存在！錯誤訊息：" . $e->getMessage());
             }
           } else {
-            $title_array = isset($edufile['titles'][0]['titles']) ? $edufile['titles'][0]['titles'] : [];
+            $title_array = $edufile['titles'][0]['titles'] ?? [];
             $title = implode(',', $title_array);
             $user_obj['kind'] = $title;      
           }
@@ -240,11 +253,14 @@ class OpenIDController extends Controller
           } catch (\Exception $e) {
               die("【除錯 16 失敗】Auth 登入或跳轉路由 'index' 失敗！<br>錯誤訊息：" . $e->getMessage());
           }
-      }      
+      };      
     }
 }
 
 class openid {
+    /**
+     *
+    */
     public function getEndPoint($rtn_array=false){
       $options = array(
         'http' => array(
@@ -254,15 +270,15 @@ class openid {
         ));
       $context = stream_context_create($options);
       $result = file_get_contents(WELL_KNOWN_URL, false, $context);
-      $u = json_decode($result, $rtn_array);
-      return $u;
+      $u= json_decode($result, $rtn_array);
+      return $u; //object
     }
   
     public function getAccessToken($token_ep='' ,$code='', $redir_uri='' ,$rtn_array=false){
       $hash = base64_encode( CLIENT_ID . ":" . CLIENT_SECRET);
       $data = array('grant_type' => 'authorization_code', 'code'=> $code,
         'redirect_uri' => $redir_uri);
-      $header = array( "Content-type: application/x-www-form-urlencoded",
+      $header= array( "Content-type: application/x-www-form-urlencoded",
          "Authorization: Basic $hash" ) ;
       $options = array(
           'http' => array(
@@ -272,10 +288,9 @@ class openid {
           ));
       $context = stream_context_create($options);
       $result = file_get_contents($token_ep, false, $context);
-      $j = json_decode($result, $rtn_array);
+      $j= json_decode($result, $rtn_array);
       return $j;
     }
-
     public function getModnExp($jwks_uri){
       $options = array(
         'http' => array(
@@ -285,12 +300,12 @@ class openid {
         ));
       $context = stream_context_create($options);
       $result = file_get_contents($jwks_uri, false, $context);
-      $u = json_decode($result, true);
-      return $u;
+      $u= json_decode($result, true);
+      return $u; //object
     }
    
     public function getUserinfo($token_ep='' ,$accesstoken='',$rtn_array=false){
-      $header = array( "Authorization: Bearer $accesstoken" );
+      $header= array( "Authorization: Bearer $accesstoken" );
       $options = array(
           'http' => array(
             'header'  => $header,
@@ -299,10 +314,9 @@ class openid {
           ));
       $context = stream_context_create($options);
       $result = file_get_contents($token_ep, false, $context);
-      $u = json_decode($result,$rtn_array);
+      $u= json_decode($result,$rtn_array);
       return $u;
     }
-
     public function urlsafeB64Encode($input)
     {
       return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
@@ -317,4 +331,5 @@ class openid {
       }
       return base64_decode(strtr($input, '-_', '+/'));
     }       
-}
+  
+  }
