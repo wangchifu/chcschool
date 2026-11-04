@@ -44,7 +44,7 @@ class OpenIDController extends Controller
 
         $auth_ep=AUTH_ENDPOINT;
         if(DYNAMICAL_ENDPOINT){
-            $auth_ep=$ep->getEndPoint()->authorization_endpoint;
+            $auth_ep=$obj->getEndPoint()->authorization_endpoint;
         }
         $link = $auth_ep . "?response_type=code&client_id=". CLIENT_ID ."&redirect_uri=".urlencode(REDIR_URI0) ."&scope=openid+email+profile+eduinfo+personid&state=".session('azp_state')."&nonce=".session('nonce');
     //       dd($link);
@@ -53,214 +53,208 @@ class OpenIDController extends Controller
     }
 
     public function callback(Request $request){
-      $code= $_GET['code'];
-      $state= $_GET['state'];
+      $code  = $request->input('code');
+      $state = $request->input('state');
       
-      //驗證 $state
-      if( !isset($_GET['code']) ||  !isset($_GET['state'])){
-        die ("認證伺服器回傳結果失敗！");
+      // 1. 驗證 $state 與 $code
+      if( !$code || !$state ){
+        die("【除錯 1 失敗】認證伺服器回傳結果失敗！未取得 code 或 state。<br>GET 參數：" . json_encode($_GET));
       }
       
-      if( strcmp($state, session('azp_state'))){
-        die ("錯誤的認證狀態，請重新嘗試！");
+      if( strcmp($state, session('azp_state')) !== 0 ){
+        die("【除錯 2 失敗】錯誤的認證狀態！<br>Session azp_state: " . session('azp_state') . "<br>GET state: " . $state);
       }      
       
-      $obj= new openid();
+      $obj = new openid();
       
-      $token_ep=TOKEN_ENDPOINT;
+      $token_ep = TOKEN_ENDPOINT;
       if(DYNAMICAL_ENDPOINT){
-         $token_ep=$ep->getEndPoint()->token_endpoint;
+         $token_ep = $obj->getEndPoint()->token_endpoint; // 修正原始程式中未定義 $ep 的問題
       }
       
-      $acctoken= $obj->getAccessToken($token_ep ,$code, REDIR_URI0);
+      // 2. 取得 Access Token
+      $acctoken = $obj->getAccessToken($token_ep, $code, REDIR_URI0);
       if( !$acctoken || !isset($acctoken->access_token) ) {
-        die ("無法取得ACCESS TOKEN");
+        die("【除錯 3 失敗】無法取得 ACCESS TOKEN！<br>SSO 端點回傳內容：<pre>" . print_r($acctoken, true) . "</pre>");
       }
-      // 把access token, id_token記到session中
-      // 未來需要取得其他scope再用此access token 來做
-      session(['access_token'=>$acctoken->access_token]);
-      session(['id_token'=>$acctoken->id_token]);
       
-        //驗證 access token
+      session(['access_token' => $acctoken->access_token]);
+      session(['id_token' => $acctoken->id_token]);
+      
       if(!session()->has('access_token')){
-        die ("無存取用權杖，無法取回使用者資料！");
+        die("【除錯 4 失敗】Session 無法存入 access_token！");
       }
 
-      //取回access token
-      //include "config.php";
-      //include "library.class.php";
-      //$obj= new openid();
-
-      $token_ep2=USERINFO_ENDPOINT;
+      $token_ep2 = USERINFO_ENDPOINT;
       if(DYNAMICAL_ENDPOINT){
-        $token_ep2=$ep->getEndPoint()->userinfo_endpoint;
+        $token_ep2 = $obj->getEndPoint()->userinfo_endpoint; // 修正原始程式中未定義 $ep 的問題
       }
 
-      $userinfo = $obj->getUserinfo($token_ep2 ,session('access_token'), true);
-      $profile = $obj->getUserinfo("https://chc.sso.edu.tw/cncresource/api/v1/personid" ,session('access_token'), true);
-      $edufile = $obj->getUserinfo("https://chc.sso.edu.tw/cncresource/api/v1/eduinfo" ,session('access_token'), true);
+      // 3. 取得 UserInfo / Profile / Edufile 資料
+      $userinfo = $obj->getUserinfo($token_ep2, session('access_token'), true);
+      $profile  = $obj->getUserinfo("https://chc.sso.edu.tw/cncresource/api/v1/personid", session('access_token'), true);
+      $edufile  = $obj->getUserinfo("https://chc.sso.edu.tw/cncresource/api/v1/eduinfo", session('access_token'), true);
+
       if( !$userinfo ) {
-        die ("無法取得 USER INFO");
+        die("【除錯 5 失敗】無法取得 USER INFO 資料。");
       }
 
       if( !$profile ){
-        die ("無法取得 PROFILE");
+        die("【除錯 6 失敗】無法取得 PROFILE 資料。");
       }
 
       if( empty($profile['personid']) ){
-        die ("無法取得 PERSONID");
+        die("【除錯 7 失敗】PROFILE 中無法取得 PERSONID！<br>Profile 回傳內容：<pre>" . print_r($profile, true) . "</pre>");
       }      
 
       if( !$edufile ){
-        die ("無法取得 EDUFILE");
+        die("【除錯 8 失敗】無法取得 EDUFILE 資料。");
       }
 
+      // 4. 檢查 edufile 基本陣列結構
+      if (empty($edufile['schoolid'])) {
+        die("【除錯 9 失敗】EDUFILE 中缺少 schoolid！<br>Edufile 內容：<pre>" . print_r($edufile, true) . "</pre>");
+      }
 
-      // 把access token記到session中
-      //print_r($userinfo);
-      //echo "<hr>";
-      //print_r($profile);      
-      //echo "<hr>";
-      //print_r($edufile);      
-      //die();
+      if (!isset($edufile['titles'][0]['titles'][0])) {
+        die("【除錯 10 失敗】EDUFILE 中的 titles 結構不符或為空！<br>Edufile 內容：<pre>" . print_r($edufile, true) . "</pre>");
+      }
 
-      $user_obj['username'] = $userinfo['sub'];
+      $user_obj['username'] = $userinfo['sub'] ?? '';
       $user_obj['password'] = "openID";
-      $user_obj['success'] = 1;
-      $user_obj['name'] = $userinfo['name'];      
+      $user_obj['success']  = 1;
+      $user_obj['name']     = $userinfo['name'] ?? '';      
       $user_obj['personid'] = $profile['personid'];
-      $user_obj['code'] = $edufile['schoolid'];
-      $user_obj['title'] = $edufile['titles'][0]['titles'][0];
-      $user_obj['kind'] = "";
+      $user_obj['code']     = $edufile['schoolid'];
+      $user_obj['title']    = $edufile['titles'][0]['titles'][0];
+      $user_obj['kind']     = "";
               
-        if ($user_obj['success']) {            
-            
-            $database = config('app.database');
-            if (isset($_SERVER['HTTP_HOST'])) {
-                $d = $database[$_SERVER['HTTP_HOST']];
-            } else {
-                $d = env('DB_DATABASE');
-            }
-
-            $code = $user_obj['code']; 
-            $schools_array = config('chcschool.schools');
-            if(isset($schools_array[$user_obj['code']])){
-              $school = $schools_array[$user_obj['code']];
-            }else{
-              $message = "非學校教職員";
-              $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
-              $post_logout_redirect_uri = url('logins');        
-              $id_token_hint = session('id_token');
-              $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
-              return redirect($link)->withErrors(['gsuite_error' => [$message]]);              
-            }
-            
-
-            if ($user_obj['code'] != substr($d, 1, 6)) {
-                $check_code = 0;
-                //民權國小 國中互登
-                if(substr($d, 1, 6) == "074760" and $user_obj['code']=="074543"){
-                    $check_code = 1;
-                    $code = $user_obj['code'];
-                }
-                //信義國小 國中互登
-                if(substr($d, 1, 6) == "074541" and $user_obj['code']=="074774"){
-                    $check_code = 1;
-                    $code = $user_obj['code'];
-                }
-                //鹿江國小 國中互登
-                if(substr($d, 1, 6) == "074542" and $user_obj['code']=="074778"){
-                    $check_code = 1;
-                    $code = $user_obj['code'];
-                }
-                //原斗國小 國中互登
-                if(substr($d, 1, 6) == "074537" and $user_obj['code']=="074745"){
-                    $check_code = 1;
-                    $code = $user_obj['code'];
-                }                                                
-                
-                if ($check_code == 0) {
-                    $message = "非本校教職員生";
-                    $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
-                    $post_logout_redirect_uri = url('logins');        
-                    $id_token_hint = session('id_token');
-                    $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
-                    return redirect($link)->withErrors(['gsuite_error' => [$message]]);                                                    
-                }
-            }
+      if ($user_obj['success']) {            
+          // 5. 多網域 / 多資料庫 Config 設定檢查
+          $database = config('app.database');
+          $host = $_SERVER['HTTP_HOST'] ?? '';
           
-            if ($user_obj['title'] == "學生") {
-              $user_obj['classno'] = $edufile['classinfo'][0]['grade'].sprintf('%02d', $edufile['classinfo'][0]['classno']);
-              session(['stu_data' => $user_obj['classno']." ".$user_obj['name']]);
-              session(['stu_fix' => $user_obj['classno']." ".$user_obj['name']]);
+          if (is_array($database) && isset($database[$host])) {
+              $d = $database[$host];
+          } else {
+              $d = env('DB_DATABASE');
+          }
+
+          if (empty($d)) {
+              die("【除錯 11 失敗】無法解析對應的資料庫名稱 \$d！<br>Host: {$host}<br>app.database config: <pre>" . print_r($database, true) . "</pre>");
+          }
+
+          // 6. 學校 Config 檢查
+          $schools_array = config('chcschool.schools');
+          if (is_null($schools_array)) {
+              die("【除錯 12 失敗】無法讀取到 config('chcschool.schools')，請檢查 config/chcschool.php 設定檔。");
+          }
+
+          $schoolCode = $user_obj['code']; 
+          if(isset($schools_array[$schoolCode])){
+            $school = $schools_array[$schoolCode];
+          } else {
+            $message = "非學校教職員";
+            $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+            $post_logout_redirect_uri = url('logins');        
+            $id_token_hint = session('id_token');
+            $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+            return redirect($link)->withErrors(['gsuite_error' => [$message]]);              
+          }
+
+          // 學校代碼比對邏輯
+          if ($schoolCode != substr($d, 1, 6)) {
+              $check_code = 0;
+              if(substr($d, 1, 6) == "074760" and $schoolCode == "074543"){ $check_code = 1; }
+              if(substr($d, 1, 6) == "074541" and $schoolCode == "074774"){ $check_code = 1; }
+              if(substr($d, 1, 6) == "074542" and $schoolCode == "074778"){ $check_code = 1; }
+              if(substr($d, 1, 6) == "074537" and $schoolCode == "074745"){ $check_code = 1; }                                                
               
-              return redirect()->route('stu.index');
-              //$message = "學生禁止訪問";
-              //$url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
-              //$post_logout_redirect_uri = url('logins');        
-              //$id_token_hint = session('id_token');
-              //$link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
-              //return redirect($link)->withErrors(['gsuite_error' => [$message]]);
-            }else{
-              $title_array = $edufile['titles'][0]['titles'];
-              $title = "";
-              foreach($title_array as $k =>$v){
-                $title .= $v.',';
-              }
-              $title = rtrim($title, ',');
-              $user_obj['kind'] = $title;      
-            }
-            
-          //是否已有此帳號
-            $user = User::where('edu_key', $user_obj['personid'])
-                ->where('login_type','openID')
-                ->first();
-
-            if (empty($user)) {
-                //無使用者，即建立使用者資料
-                $att['username'] = $user_obj['username'];
-                $att['name'] = $user_obj['name'];
-                $att['edu_key'] = $user_obj['personid'];
-                $att['uid'] = "openID";
-                $att['password'] = $user_obj['password'];
-                $att['code'] = $code;
-                $att['school'] = $school;
-                $att['kind'] = $user_obj['kind'];
-                $att['title'] = $user_obj['title'];
-                $att['login_type'] = "openID";
-
-                $user = User::create($att);
-            } else {
-                if($user->disable==1){
-                  $message = "你被停權了";
+              if ($check_code == 0) {
+                  $message = "非本校教職員生";
                   $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
                   $post_logout_redirect_uri = url('logins');        
                   $id_token_hint = session('id_token');
                   $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
                   return redirect($link)->withErrors(['gsuite_error' => [$message]]);                                                    
-                }
-
-                //有此使用者，即更新使用者資料
-                $att['username'] = $user_obj['username'];
-                $att['name'] = $user_obj['name'];
-                $att['edu_key'] = $user_obj['personid'];
-                $att['uid'] = "openID";
-                $att['password'] = $user_obj['password'];
-                $att['code'] = $code;
-                $att['school'] = $school;
-                $att['kind'] = $user_obj['kind'];
-                //$att['title'] = $user_obj['title'];     
-                $att['login_type'] = "openID";           
-
-                $user->update($att);
+              }
+          }
+        
+          // 7. 學生身份處理與 classinfo 防護檢查
+          if ($user_obj['title'] == "學生") {
+            if (!isset($edufile['classinfo'][0]['grade']) || !isset($edufile['classinfo'][0]['classno'])) {
+              die("【除錯 13 失敗】學生身份缺少班級資料 (classinfo)！<br>Edufile 內容：<pre>" . print_r($edufile, true) . "</pre>");
             }
 
+            $user_obj['classno'] = $edufile['classinfo'][0]['grade'] . sprintf('%02d', $edufile['classinfo'][0]['classno']);
+            session(['stu_data' => $user_obj['classno']." ".$user_obj['name']]);
+            session(['stu_fix'  => $user_obj['classno']." ".$user_obj['name']]);
             
-            Auth::login($user);
-            return redirect()->route('index');
-        };      
+            try {
+                return redirect()->route('stu.index');
+            } catch (\Exception $e) {
+                die("【除錯 14 失敗】路由 'stu.index' 不存在！錯誤訊息：" . $e->getMessage());
+            }
+          } else {
+            $title_array = $edufile['titles'][0]['titles'] ?? [];
+            $title = implode(',', $title_array);
+            $user_obj['kind'] = $title;      
+          }
+          
+          // 8. 資料庫 User 讀寫檢查
+          try {
+              $user = User::where('edu_key', $user_obj['personid'])          
+                  ->where('login_type','openID')                  
+                  ->first();
 
-    }    
+              if (empty($user)) {
+                  $att['username']   = $user_obj['username'];
+                  $att['name']       = $user_obj['name'];
+                  $att['edu_key']    = $user_obj['personid'];
+                  $att['uid']        = "openID";
+                  $att['password']   = $user_obj['password'];
+                  $att['code']       = $schoolCode;
+                  $att['school']     = $school;
+                  $att['kind']       = $user_obj['kind'];
+                  $att['title']      = $user_obj['title'];
+                  $att['login_type'] = "openID";
+
+                  $user = User::create($att);
+              } else {
+                  if($user->disable == 1){
+                    $message = "你被停權了";
+                    $url = "https://chc.sso.edu.tw/oidc/v1/logout-to-go";
+                    $post_logout_redirect_uri = url('logins');        
+                    $id_token_hint = session('id_token');
+                    $link = $url . "?post_logout_redirect_uri=".$post_logout_redirect_uri."&id_token_hint=" . $id_token_hint;
+                    return redirect($link)->withErrors(['gsuite_error' => [$message]]);                                                    
+                  }
+
+                  $att['username']   = $user_obj['username'];
+                  $att['name']       = $user_obj['name'];
+                  $att['edu_key']    = $user_obj['personid'];
+                  $att['uid']        = "openID";
+                  $att['password']   = $user_obj['password'];
+                  $att['code']       = $schoolCode;
+                  $att['school']     = $school;
+                  $att['kind']       = $user_obj['kind'];
+                  $att['login_type'] = "openID";           
+
+                  $user->update($att);
+              }
+          } catch (\Exception $e) {
+              die("【除錯 15 失敗】User 資料庫操作失敗！<br>錯誤訊息：" . $e->getMessage());
+          }
+
+          // 9. 登入與路由跳轉檢查
+          try {
+              Auth::login($user);
+              return redirect()->route('index');
+          } catch (\Exception $e) {
+              die("【除錯 16 失敗】Auth 登入或跳轉路由 'index' 失敗！<br>錯誤訊息：" . $e->getMessage());
+          }
+      };      
+    }
 }
 
 class openid {
