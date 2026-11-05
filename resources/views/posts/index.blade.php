@@ -10,12 +10,6 @@
        無障礙 WCAG 1.4.3 對比度修正 (僅限定於 .post-content-zone，防干擾導覽列 #mainNav)
        ========================================================================== */
     /* 1. 限定公告內容區域內的連結與文字色彩 */
-    .post-content-zone a,
-    .post-content-zone .text-primary,
-    .post-content-zone .btn-link {
-        color: #0056b3 !important;
-    }
-
     .post-content-zone a:hover,
     .post-content-zone a:focus,
     .post-content-zone .text-primary:hover,
