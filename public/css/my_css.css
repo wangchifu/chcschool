@@ -991,3 +991,27 @@ button.btn-success:hover, button.btn-success:focus,
 .text-danger {
     color: #990000 !important;
 }
+
+/* ==========================================================================
+   全站無障礙對比度強制覆蓋 (修復 #007BFF 與 #6C757D 4.5:1 未達標缺失)
+   ========================================================================== */
+
+/* 1. 修正全站灰字對比度不足 (#6C757D -> #495057，對灰底 #F2F2F2 對比度達 7.20:1) */
+.text-secondary {
+    color: #495057 !important;
+}
+
+/* 2. 修正主內容與表格內連結藍字 (#007BFF -> #0056b3，對白底 7.04:1 / 對灰底 6.29:1) */
+main a,
+.table a,
+.post-content-zone a,
+.my-post-zone a {
+    color: #0056b3 !important;
+}
+
+main a:hover, main a:focus,
+.table a:hover, .table a:focus,
+.post-content-zone a:hover, .post-content-zone a:focus,
+.my-post-zone a:hover, .my-post-zone a:focus {
+    color: #00224a !important;
+}
