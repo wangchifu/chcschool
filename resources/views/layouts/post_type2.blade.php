@@ -10,6 +10,10 @@
     .post-a11y-link:hover, .post-a11y-link:focus {
         color: #003d82 !important;
     }
+    /* 新增：摘要 $content 與次要文字高對比深灰色 (白底對比度 8.18:1 / 灰底對比度 7.30:1) */
+    .text-secondary-a11y {
+        color: #495057 !important;
+    }
 </style>
 
 <!-- 無障礙頁籤導覽列 -->
@@ -130,7 +134,8 @@
                                                 @endif
                                             </div>
                                             
-                                            <p class="mb-0 text-secondary small">
+                                            <!-- 摘要 $content 改用高對比深灰 text-secondary-a11y -->
+                                            <p class="mb-0 text-secondary-a11y small">
                                                 {{ $content }}
                                             </p>
                                         </div>
@@ -140,10 +145,10 @@
                                         <div class="flex-grow-1">
                                             <div style="font-size: 1.1rem;" class="mb-1">
                                                 <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                                <span class="font-weight-bold text-secondary">{{ $post->title }}</span>
+                                                <span class="font-weight-bold text-secondary-a11y">{{ $post->title }}</span>
                                             </div>
-                                            <p class="mb-0 text-secondary small">
-                                                <span class="text-muted">請登入後再查看完整內容</span>
+                                            <p class="mb-0 text-secondary-a11y small">
+                                                <span>請登入後再查看完整內容</span>
                                             </p>
                                         </div>
                                     </div>
@@ -279,11 +284,12 @@
                                                     @endif
                                                 </div>
 
-                                                <p class="mb-0 text-secondary small">
+                                                <!-- 摘要 $content 改用高對比深灰 text-secondary-a11y -->
+                                                <p class="mb-0 text-secondary-a11y small">
                                                     @if($can_see)
                                                         {{ $content }}
                                                     @else
-                                                        <span class="text-muted">請登入後再查看完整內容</span>
+                                                        <span>請登入後再查看完整內容</span>
                                                     @endif
                                                 </p>
                                             </div>
@@ -293,10 +299,10 @@
                                             <div class="flex-grow-1">
                                                 <div style="font-size: 1.1rem;" class="mb-1">
                                                     <span class="text-danger font-weight-bold">[ 內部公告 ]</span>
-                                                    <span class="font-weight-bold text-secondary">{{ $post->title }}</span>
+                                                    <span class="font-weight-bold text-secondary-a11y">{{ $post->title }}</span>
                                                 </div>
-                                                <p class="mb-0 text-secondary small">
-                                                    <span class="text-muted">請登入後再查看完整內容</span>
+                                                <p class="mb-0 text-secondary-a11y small">
+                                                    <span>請登入後再查看完整內容</span>
                                                 </p>
                                             </div>
                                         </div>
