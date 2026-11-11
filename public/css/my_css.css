@@ -1002,16 +1002,21 @@ button.btn-success:hover, button.btn-success:focus,
 }
 
 /* 2. 修正主內容與表格內連結藍字 (#007BFF -> #0056b3，對白底 7.04:1 / 對灰底 6.29:1) */
-main a,
-.table a,
-.post-content-zone a,
-.my-post-zone a {
+/* 修正主內容與表格內連結藍字：排除按鈕(.btn)、導覽頁籤(.nav-link)、徽章(.badge)、下拉選單(.dropdown-item) */
+main a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item),
+.table a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item),
+.post-content-zone a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item),
+.my-post-zone a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item) {
     color: #0056b3 !important;
 }
 
-main a:hover, main a:focus,
-.table a:hover, .table a:focus,
-.post-content-zone a:hover, .post-content-zone a:focus,
-.my-post-zone a:hover, .my-post-zone a:focus {
+main a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):hover,
+main a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):focus,
+.table a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):hover,
+.table a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):focus,
+.post-content-zone a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):hover,
+.post-content-zone a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):focus,
+.my-post-zone a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):hover,
+.my-post-zone a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item):focus {
     color: #00224a !important;
 }
