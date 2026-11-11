@@ -34,7 +34,7 @@
                     <h4>學生資料</h4>
                      {{ Form::open(['route' => ['sport_meeting.stu_import'], 'method' => 'POST', 'files' => true]) }}
                      @csrf
-                     學年<input type="semester" name="semester" value="{{ get_date_semester(date('Y-m-d')) }}" style="width:80px" required maxlength="4">
+                     請輪入四碼學期代號 <input type="semester" name="semester" value="{{ get_date_semester(date('Y-m-d')) }}" style="width:80px" required maxlength="4">
                     <input type="file" name="file" required>
                     <input type="submit" class="btn btn-success btn-sm" value="匯入學生" onclick="return confirm('要等一下子，確定嗎？')">
                     {{ Form::close() }}
@@ -60,6 +60,7 @@
                         @foreach($class_num as $k=>$v)                      
                         <tr>
                             <td>
+                              <a href="{{ route('sport_meeting.stu_delete',$k) }}" class="btn btn-danger btn-sm small" onclick="return confirm('會刪除此學期的班級及學生，若有社團報名及午餐模組用到這些學生資料，可能會出錯，請注意！')">刪除此學期</a>
                               {{ $k }}
                             </td>
                             <td>

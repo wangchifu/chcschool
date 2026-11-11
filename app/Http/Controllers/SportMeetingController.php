@@ -110,8 +110,22 @@ class SportMeetingController extends Controller
         return view('sport_meetings.admin', $data);
     }
 
+    public function stu_delete($semester){
+        StudentClass::where('semester',$semester)->delete();
+        ClubStudent::where('semester',$semester)->delete();
+        return back();
+    }
+
     public function stu_import(Request $request)
     {
+        // 驗證失敗時，自動 return back() 並附帶錯誤訊息與舊輸入值
+        $request->validate([
+            'semester' => ['required', 'regex:/^\d{3}[12]$/'],
+        ], [
+            'semester.required' => '學期欄位為必填',
+            'semester.regex' => '學期必須為 4 位數字，且最後一碼必須是 1 或 2',
+        ]);
+        
         $admin = check_power('運動會報名', 'A', auth()->user()->id);        
         if (!$admin) return back();
 
